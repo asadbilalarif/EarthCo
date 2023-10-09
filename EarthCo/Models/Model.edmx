@@ -33,6 +33,7 @@
           <Property Name="CompanyName" Type="nvarchar" MaxLength="500" />
           <Property Name="Address" Type="nvarchar" MaxLength="500" />
           <Property Name="CustomerId" Type="int" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="500" />
           <Property Name="CreatedBy" Type="int" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="EditBy" Type="int" />
@@ -272,6 +273,7 @@
           <Property Name="SRFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FileName" Type="nvarchar" MaxLength="500" />
           <Property Name="Caption" Type="nvarchar" MaxLength="500" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="500" />
           <Property Name="SRId" Type="int" />
           <Property Name="CreatedBy" Type="int" />
           <Property Name="CreatedDate" Type="datetime" />
@@ -666,6 +668,7 @@
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
           <NavigationProperty Name="tblCustomer" Relationship="Self.FK__tblContan__Custo__32E0915F" FromRole="tblContant" ToRole="tblCustomer" />
+          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="tblController">
           <Key>
@@ -914,6 +917,7 @@
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
           <NavigationProperty Name="tblServiceRequest" Relationship="Self.FK__tblSRFile__SRId__4E88ABD4" FromRole="tblSRFile" ToRole="tblServiceRequest" />
+          <Property Name="FilePath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="tblSRItem">
           <Key>
@@ -1311,6 +1315,7 @@
           <EntitySetMapping Name="tblContants">
             <EntityTypeMapping TypeName="earthcoModel.tblContant">
               <MappingFragment StoreEntitySet="tblContant">
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
                 <ScalarProperty Name="ContantId" ColumnName="ContantId" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
@@ -1552,6 +1557,7 @@
           <EntitySetMapping Name="tblSRFiles">
             <EntityTypeMapping TypeName="earthcoModel.tblSRFile">
               <MappingFragment StoreEntitySet="tblSRFile">
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
                 <ScalarProperty Name="SRFileId" ColumnName="SRFileId" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="Caption" ColumnName="Caption" />

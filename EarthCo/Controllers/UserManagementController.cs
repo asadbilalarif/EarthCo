@@ -47,7 +47,7 @@ namespace EarthCo.Controllers
                 //HttpCookie cookieObj = Request.Cookies["User"];
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
-                int UserId = 1;
+                int UserId = 2;
                 if (User.UserId == 0)
                 {
                     if (DB.tblUsers.Select(r => r).Where(x => x.Email == User.Email).FirstOrDefault() == null)
@@ -183,7 +183,7 @@ namespace EarthCo.Controllers
             tblUser Data = new tblUser();
             //HttpCookie cookieObj = Request.Cookies["User"];
             //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int CUserId = 1;
+            int CUserId = 2;
             int? RoleID = 0;
             try
             {
@@ -232,7 +232,7 @@ namespace EarthCo.Controllers
                 //HttpCookie cookieObj = Request.Cookies["User"];
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
-                int UserId = 1;
+                int UserId = 2;
                 if (RoleData.RoleId == 0)
                 {
 

@@ -9,125 +9,127 @@ using System.Web.Http;
 
 namespace EarthCo.Controllers
 {
-    public class CustomerController : ApiController
+    public class EstimateController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public List<tblContant> GetCustomersList()
+        public List<tblEstimate> GetEstimateList()
         {
-            DB.Configuration.ProxyCreationEnabled = false;
-            List<tblContant> Data = new List<tblContant>();
-            Data = DB.tblContants.ToList();
+            List<tblEstimate> Data = new List<tblEstimate>();
+            Data = DB.tblEstimates.ToList();
             return Data;
         }
 
         [HttpGet]
-        public List<tblContant> GetCustomer(int id)
+        public tblEstimate GetEstimate(int id)
         {
-            DB.Configuration.ProxyCreationEnabled = false;
-            List<tblContant> Data = new List<tblContant>();
-            Data = DB.tblContants.Where(x=>x.CustomerId==id).ToList();
+            //DB.Configuration.ProxyCreationEnabled = false;
+            tblEstimate Data = new tblEstimate();
+            List<tblEstimateItem> EstimateItems = new List<tblEstimateItem>();
+            Data = DB.tblEstimates.Where(x => x.EstimateId == id).FirstOrDefault();
             return Data;
         }
 
         [HttpPost]
-        public String AddCustomer([FromBody] CustomerContacts Customer)
+        public String AddEstimate([FromBody] tblEstimate Estimate)
         {
-            tblCustomer Data = new tblCustomer();
+            tblEstimate Data = new tblEstimate();
             try
             {
                 //HttpCookie cookieObj = Request.Cookies["User"];
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
                 int UserId = 2;
-                if (Customer.CustomerData.CustomerId== 0)
+                if (Estimate.EstimateId == 0)
                 {
-                    Data.CustomerName = Customer.CustomerData.CustomerName;
+                    Data = Estimate;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.CreatedBy = UserId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = Customer.CustomerData.isActive;
-                    DB.tblCustomers.Add(Data);
+                    Data.isActive = Estimate.isActive;
+                    DB.tblEstimates.Add(Data);
                     DB.SaveChanges();
 
-                    if(Customer.ContactData!=null&& Customer.ContactData.Count != 0)
+                    if (Estimate.tblEstimateItems!= null && Estimate.tblEstimateItems.Count != 0)
                     {
-                        tblContant ConData = null;
+                        tblEstimateItem ConData = null;
 
-                        foreach (var item in Customer.ContactData)
+                        foreach (var item in Estimate.tblEstimateItems)
                         {
-                            ConData = new tblContant();
+                            ConData = new tblEstimateItem();
                             ConData = item;
-                            ConData.CustomerName = Data.CustomerName;
                             ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             ConData.CreatedBy = UserId;
                             ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             ConData.EditBy = UserId;
                             ConData.isActive = item.isActive;
-                            ConData.CustomerId = Data.CustomerId;
-                            DB.tblContants.Add(ConData);
+                            ConData.EstimateId = Data.EstimateId;
+                            DB.tblEstimateItems.Add(ConData);
                             DB.SaveChanges();
                         }
-
                     }
 
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
-                    LogData.Action = "Add Customer";
+                    LogData.Action = "Add Estimate";
                     LogData.CreatedDate = DateTime.Now;
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
-                    return "Customer has been added successfully.";
+                    return "Estimate has been added successfully.";
                 }
                 else
                 {
-                    Data = DB.tblCustomers.Select(r => r).Where(x => x.CustomerId == Customer.CustomerData.CustomerId).FirstOrDefault();
+                    Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == Estimate.EstimateId).FirstOrDefault();
 
-                    Data.CustomerName = Customer.CustomerData.CustomerName;
+
+                    Data.EstimateNumber = Estimate.EstimateNumber;
+                    Data.ServiceLocation = Estimate.ServiceLocation;
+                    Data.Email = Estimate.Email;
+                    Data.IssueDate = DateTime.Now;
+                    Data.EstimateStatusId = Estimate.EstimateStatusId;
+                    Data.CustomerId = Estimate.CustomerId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = Customer.CustomerData.isActive;
+                    Data.isActive = Estimate.isActive;
                     DB.Entry(Data);
                     DB.SaveChanges();
 
-                    List<tblContant> ConList = DB.tblContants.Where(x => x.CustomerId == Customer.CustomerData.CustomerId).ToList();
-                    if(ConList!=null && ConList.Count!=0)
+                    List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId== Estimate.EstimateId).ToList();
+                    if (ConList != null && ConList.Count != 0)
                     {
-                        DB.tblContants.RemoveRange(ConList);
+                        DB.tblEstimateItems.RemoveRange(ConList);
                         DB.SaveChanges();
                     }
 
-                    if (Customer.ContactData != null && Customer.ContactData.Count != 0)
+                    if (Estimate.tblEstimateItems != null && Estimate.tblEstimateItems.Count != 0)
                     {
-                        tblContant ConData = null;
+                        tblEstimateItem ConData = null;
 
-                        foreach (var item in Customer.ContactData)
+                        foreach (var item in Estimate.tblEstimateItems)
                         {
-                            ConData = new tblContant();
+                            ConData = new tblEstimateItem();
                             ConData = item;
-                            ConData.CustomerName = Data.CustomerName;
                             ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             ConData.CreatedBy = UserId;
                             ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             ConData.EditBy = UserId;
                             ConData.isActive = item.isActive;
-                            ConData.CustomerId = Data.CustomerId;
-                            DB.tblContants.Add(ConData);
+                            ConData.EstimateId = Data.EstimateId;
+                            DB.tblEstimateItems.Add(ConData);
                             DB.SaveChanges();
                         }
-
                     }
 
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
-                    LogData.Action = "Update Customer";
+                    LogData.Action = "Update Estimate";
                     LogData.CreatedDate = DateTime.Now;
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
 
-                    return "Customer has been Update successfully.";
+                    return "Estimate has been Update successfully.";
                 }
             }
             catch (Exception ex)
@@ -137,33 +139,33 @@ namespace EarthCo.Controllers
         }
 
         [HttpDelete]
-        public string DeleteCustomer(int id)
+        public string DeleteEstimate(int id)
         {
-            tblCustomer Data = new tblCustomer();
+            tblEstimate Data = new tblEstimate();
             //HttpCookie cookieObj = Request.Cookies["User"];
             //int CUserId = Int32.Parse(cookieObj["UserId"]);
             int CUserId = 2;
             try
             {
 
-                List<tblContant> ConList = DB.tblContants.Where(x => x.CustomerId == id).ToList();
+                List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == id).ToList();
                 if (ConList != null && ConList.Count != 0)
                 {
-                    DB.tblContants.RemoveRange(ConList);
+                    DB.tblEstimateItems.RemoveRange(ConList);
                     DB.SaveChanges();
                 }
 
-                Data = DB.tblCustomers.Select(r => r).Where(x => x.CustomerId== id).FirstOrDefault();
+                Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == id).FirstOrDefault();
                 DB.Entry(Data).State = EntityState.Deleted;
                 DB.SaveChanges();
 
                 tblLog LogData = new tblLog();
                 LogData.UserId = CUserId;
-                LogData.Action = "Delete Customer";
+                LogData.Action = "Delete Estimate";
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
-                return "Customer has been deleted successfully.";
+                return "Estimate has been deleted successfully.";
             }
             catch (Exception ex)
             {
