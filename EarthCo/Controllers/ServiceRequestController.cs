@@ -14,6 +14,24 @@ namespace EarthCo.Controllers
     public class ServiceRequestController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
+
+        [HttpGet]
+        public List<tblServiceRequest> GetServiceRequestList()
+        {
+            List<tblServiceRequest> Data = new List<tblServiceRequest>();
+            Data = DB.tblServiceRequests.ToList();
+            return Data;
+        }
+
+        [HttpGet]
+        public tblServiceRequest GetServiceRequest(int id)
+        {
+            //DB.Configuration.ProxyCreationEnabled = false;
+            tblServiceRequest Data = new tblServiceRequest();
+            Data = DB.tblServiceRequests.Where(x => x.ServiceRequestId == id).FirstOrDefault();
+            return Data;
+        }
+
         [HttpPost]
         public String AddServiceRequest([FromBody] tblServiceRequest ServiceRequest, HttpPostedFile[] Files)
         {
@@ -102,7 +120,6 @@ namespace EarthCo.Controllers
                     Data.DueDate = ServiceRequest.DueDate;
                     Data.CustomerId = ServiceRequest.CustomerId;
                     Data.SRTypeId = ServiceRequest.SRTypeId;
-                    Data.SRStatusId = ServiceRequest.SRStatusId;
                     Data.SRStatusId = ServiceRequest.SRStatusId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
@@ -219,6 +236,81 @@ namespace EarthCo.Controllers
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
                 return "Service Request has been deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+
+        [HttpPost]
+        public string UpdateAllSelectedServiceRequestStatus(int[] id, int StatusId)
+        {
+            tblServiceRequest Data = new tblServiceRequest();
+            //HttpCookie cookieObj = Request.Cookies["User"];
+            //int CUserId = Int32.Parse(cookieObj["UserId"]);
+            int CUserId = 2;
+            try
+            {
+                foreach (var item in id)
+                {
+
+                    Data = DB.tblServiceRequests.Select(r => r).Where(x => x.ServiceRequestId == item).FirstOrDefault();
+                    Data.SRStatusId = StatusId;
+                    DB.Entry(Data);
+                    DB.SaveChanges();
+                }
+
+                tblLog LogData = new tblLog();
+                LogData.UserId = CUserId;
+                LogData.Action = "Update All Selected Service Request status";
+                LogData.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(LogData);
+                DB.SaveChanges();
+                return "All selected Service Request status has been updated successfully.";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        [HttpDelete]
+        public string DeleteAllSelectedServiceRequest(int[] id)
+        {
+            tblServiceRequest Data = new tblServiceRequest();
+            //HttpCookie cookieObj = Request.Cookies["User"];
+            //int CUserId = Int32.Parse(cookieObj["UserId"]);
+            int CUserId = 2;
+            try
+            {
+                foreach (var item in id)
+                {
+                    List<tblSRItem> ConList = DB.tblSRItems.Where(x => x.SRId == item).ToList();
+                    if (ConList != null && ConList.Count != 0)
+                    {
+                        DB.tblSRItems.RemoveRange(ConList);
+                        DB.SaveChanges();
+                    }
+                    List<tblSRFile> ConFList = DB.tblSRFiles.Where(x => x.SRId == item).ToList();
+                    if (ConFList != null && ConFList.Count != 0)
+                    {
+                        DB.tblSRFiles.RemoveRange(ConFList);
+                        DB.SaveChanges();
+                    }
+                    Data = DB.tblServiceRequests.Select(r => r).Where(x => x.ServiceRequestId == item).FirstOrDefault();
+                    DB.Entry(Data).State = EntityState.Deleted;
+                    DB.SaveChanges();
+                }
+
+                tblLog LogData = new tblLog();
+                LogData.UserId = CUserId;
+                LogData.Action = "Delete All Selected Service Request";
+                LogData.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(LogData);
+                DB.SaveChanges();
+                return "All selected Service Request has been deleted successfully.";
             }
             catch (Exception ex)
             {

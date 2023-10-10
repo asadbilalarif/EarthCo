@@ -11,6 +11,7 @@ using System.Web.Http;
 
 namespace EarthCo.Controllers
 {
+    [Authorize]
     public class UserManagementController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
@@ -223,88 +224,88 @@ namespace EarthCo.Controllers
             return Role;
         }
         
-        [HttpPost]
-        public String AddRole([FromBody] tblRole RoleData)
-        {
-            tblRole Data = new tblRole();
-            try
-            {
-                //HttpCookie cookieObj = Request.Cookies["User"];
-                //int UserId = Int32.Parse(cookieObj["UserId"]);
-                //int RoleId = Int32.Parse(cookieObj["RoleId"]);
-                int UserId = 2;
-                if (RoleData.RoleId == 0)
-                {
+        //[HttpPost]
+        //public String AddRole([FromBody] tblRole RoleData)
+        //{
+        //    tblRole Data = new tblRole();
+        //    try
+        //    {
+        //        //HttpCookie cookieObj = Request.Cookies["User"];
+        //        //int UserId = Int32.Parse(cookieObj["UserId"]);
+        //        //int RoleId = Int32.Parse(cookieObj["RoleId"]);
+        //        int UserId = 2;
+        //        if (RoleData.RoleId == 0)
+        //        {
 
-                    if (DB.tblRoles.Select(r => r).Where(x => x.Role == RoleData.Role).FirstOrDefault() == null)
-                    {
-                        Data.Role = RoleData.Role;
-                        Data.isActive = true;
-                        Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
-                        Data.CreatedBy = UserId;
-                        Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
-                        Data.EditBy = UserId;
-                        DB.tblRoles.Add(Data);
-                        DB.SaveChanges();
+        //            if (DB.tblRoles.Select(r => r).Where(x => x.Role == RoleData.Role).FirstOrDefault() == null)
+        //            {
+        //                Data.Role = RoleData.Role;
+        //                Data.isActive = true;
+        //                Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+        //                Data.CreatedBy = UserId;
+        //                Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+        //                Data.EditBy = UserId;
+        //                DB.tblRoles.Add(Data);
+        //                DB.SaveChanges();
 
                         
 
-                        tblLog LogData = new tblLog();
-                        LogData.UserId = UserId;
-                        LogData.Action = "Create Role";
-                        LogData.CreatedDate = DateTime.Now;
-                        DB.tblLogs.Add(LogData);
-                        DB.SaveChanges();
+        //                tblLog LogData = new tblLog();
+        //                LogData.UserId = UserId;
+        //                LogData.Action = "Create Role";
+        //                LogData.CreatedDate = DateTime.Now;
+        //                DB.tblLogs.Add(LogData);
+        //                DB.SaveChanges();
 
-                        return "Role has been added successfully.";
-                    }
-                    else
-                    {
-                        return "Role already exsist!!!";
-                    }
-                }
-                else
-                {
-                    var check = DB.tblRoles.Select(r => r).Where(x => x.Role == RoleData.Role).FirstOrDefault();
-                    if (check == null || check.RoleId == RoleData.RoleId)
-                    {
-                        Data = DB.tblRoles.Select(r => r).Where(x => x.RoleId == RoleData.RoleId).FirstOrDefault();
-
-
-                        Data.Role = RoleData.Role;
-                        Data.isActive = true;
-                        Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
-                        Data.CreatedBy = UserId;
-                        Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
-                        Data.EditBy = UserId;
-                        DB.tblRoles.Add(Data);
-                        DB.SaveChanges();
-
-                        tblLog LogData = new tblLog();
-                        LogData.UserId = UserId;
-                        LogData.Action = "Update Role";
-                        LogData.CreatedDate = DateTime.Now;
-                        DB.tblLogs.Add(LogData);
-                        DB.SaveChanges();
-
-                        return "Role has been Update successfully.";
-                    }
-                    else
-                    {
-                        return "Role already exsist!!!";
-                    }
-
-                }
+        //                return "Role has been added successfully.";
+        //            }
+        //            else
+        //            {
+        //                return "Role already exsist!!!";
+        //            }
+        //        }
+        //        else
+        //        {
+        //            var check = DB.tblRoles.Select(r => r).Where(x => x.Role == RoleData.Role).FirstOrDefault();
+        //            if (check == null || check.RoleId == RoleData.RoleId)
+        //            {
+        //                Data = DB.tblRoles.Select(r => r).Where(x => x.RoleId == RoleData.RoleId).FirstOrDefault();
 
 
-            }
-            catch (Exception ex)
-            {
+        //                Data.Role = RoleData.Role;
+        //                Data.isActive = true;
+        //                Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+        //                Data.CreatedBy = UserId;
+        //                Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+        //                Data.EditBy = UserId;
+        //                DB.tblRoles.Add(Data);
+        //                DB.SaveChanges();
 
-                return ex.Message;
-            }
+        //                tblLog LogData = new tblLog();
+        //                LogData.UserId = UserId;
+        //                LogData.Action = "Update Role";
+        //                LogData.CreatedDate = DateTime.Now;
+        //                DB.tblLogs.Add(LogData);
+        //                DB.SaveChanges();
 
-        }
+        //                return "Role has been Update successfully.";
+        //            }
+        //            else
+        //            {
+        //                return "Role already exsist!!!";
+        //            }
+
+        //        }
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return ex.Message;
+        //    }
+
+        //}
 
         [HttpDelete]
         public string DeleteRole(int id)
@@ -387,167 +388,163 @@ namespace EarthCo.Controllers
 
 
 
-        //[HttpPost]
-        //public ActionResult CreateAccessLevel(List<tblAccessLevel> Items, string Role, int RoleId = 0)
-        //{
-        //    tblRole Data = new tblRole();
-        //    try
-        //    {
-        //        //HttpCookie cookieObj = Request.Cookies["User"];
-        //        //int UserId = Int32.Parse(cookieObj["UserId"]);
-        //        int UserId = 1;
+        [HttpPost]
+        public string CreateAccessLevel(List<tblAccessLevel> Items, string Role, int RoleId = 0)
+        {
+            tblRole Data = new tblRole();
+            try
+            {
+                //HttpCookie cookieObj = Request.Cookies["User"];
+                //int UserId = Int32.Parse(cookieObj["UserId"]);
+                int UserId = 2;
 
-        //        if (RoleId != 0)
-        //        {
+                if (RoleId != 0)
+                {
 
-        //            tblRole check = DB.tblRoles.Select(r => r).Where(x => x.Role == Role).FirstOrDefault();
-        //            if (check == null || check.RoleId == RoleId)
-        //            {
-        //                Data = DB.tblRoles.Select(r => r).Where(x => x.RoleId == RoleId).FirstOrDefault();
+                    tblRole check = DB.tblRoles.Select(r => r).Where(x => x.Role == Role).FirstOrDefault();
+                    if (check == null || check.RoleId == RoleId)
+                    {
+                        Data = DB.tblRoles.Select(r => r).Where(x => x.RoleId == RoleId).FirstOrDefault();
 
-        //                Data.Role = Role;
-        //                Data.isActive = true;
-        //                Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
-        //                Data.EditBy = UserId;
-        //                DB.Entry(Data);
-        //                DB.SaveChanges();
-        //                foreach (tblAccessLevel AccessLevel in Items)
-        //                {
-        //                    var Del = DB.tblAccessLevels.Select(r => r).Where(x => x.RoleId == AccessLevel.RoleId && x.MenuId == AccessLevel.MenuId).FirstOrDefault();
-        //                    if (Del != null)
-        //                    {
-        //                        DB.tblAccessLevels.Remove(Del);
-        //                    }
-        //                }
+                        Data.Role = Role;
+                        Data.isActive = true;
+                        Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+                        Data.EditBy = UserId;
+                        DB.Entry(Data);
+                        DB.SaveChanges();
+                        foreach (tblAccessLevel AccessLevel in Items)
+                        {
+                            var Del = DB.tblAccessLevels.Select(r => r).Where(x => x.RoleId == AccessLevel.RoleId && x.MenuId == AccessLevel.MenuId).FirstOrDefault();
+                            if (Del != null)
+                            {
+                                DB.tblAccessLevels.Remove(Del);
+                            }
+                        }
 
-        //                foreach (tblAccessLevel AccessLevel in Items)
-        //                {
-        //                    AccessLevel.RoleId = Data.RoleId;
-        //                    AccessLevel.CreatedDate = DateTime.Now;
-        //                    AccessLevel.CreatedBy = UserId;
-        //                    AccessLevel.EditDate = DateTime.Now;
-        //                    AccessLevel.EditBy = UserId;
-        //                    //AccessLevel.tblMenu = DB.tblMenus.Select(r => r).Where(x => x.MenuID == AccessLevel.MenuID).FirstOrDefault();
-        //                    //AccessLevel.tblRole = DB.tblRoles.Select(r => r).Where(x => x.RoleID == AccessLevel.RoleID).FirstOrDefault();
-        //                    DB.tblAccessLevels.Add(AccessLevel);
-        //                    DB.SaveChanges();
-        //                }
-        //                DB.SaveChanges();
+                        foreach (tblAccessLevel AccessLevel in Items)
+                        {
+                            AccessLevel.RoleId = Data.RoleId;
+                            AccessLevel.CreatedDate = DateTime.Now;
+                            AccessLevel.CreatedBy = UserId;
+                            AccessLevel.EditDate = DateTime.Now;
+                            AccessLevel.EditBy = UserId;
+                            //AccessLevel.tblMenu = DB.tblMenus.Select(r => r).Where(x => x.MenuID == AccessLevel.MenuID).FirstOrDefault();
+                            //AccessLevel.tblRole = DB.tblRoles.Select(r => r).Where(x => x.RoleID == AccessLevel.RoleID).FirstOrDefault();
+                            DB.tblAccessLevels.Add(AccessLevel);
+                            DB.SaveChanges();
+                        }
+                        DB.SaveChanges();
 
-        //                tblLog LogData = new tblLog();
-        //                LogData.UserId = UserId;
-        //                LogData.Action = "Update Role";
-        //                LogData.CreatedDate = DateTime.Now;
-        //                DB.tblLogs.Add(LogData);
-        //                DB.SaveChanges();
+                        tblLog LogData = new tblLog();
+                        LogData.UserId = UserId;
+                        LogData.Action = "Update Role";
+                        LogData.CreatedDate = DateTime.Now;
+                        DB.tblLogs.Add(LogData);
+                        DB.SaveChanges();
 
-        //                return Json(1);
-        //            }
-        //            else
-        //            {
-        //                return Json(2);
-        //            }
+                        return "Role has been Update successfully.";
+                    }
+                    else
+                    {
+                        return "Role already exsist.";
+                    }
 
-        //        }
-        //        else
-        //        {
-        //            if (DB.tblRoles.Select(r => r).Where(x => x.Role == Role).FirstOrDefault() == null)
-        //            {
-        //                Data.Role = Role;
-        //                Data.isActive = true;
-        //                Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
-        //                Data.CreatedBy = UserId;
-        //                Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
-        //                Data.EditBy = UserId;
-        //                DB.tblRoles.Add(Data);
-        //                DB.SaveChanges();
+                }
+                else
+                {
+                    if (DB.tblRoles.Select(r => r).Where(x => x.Role == Role).FirstOrDefault() == null)
+                    {
+                        Data.Role = Role;
+                        Data.isActive = true;
+                        Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+                        Data.CreatedBy = UserId;
+                        Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+                        Data.EditBy = UserId;
+                        DB.tblRoles.Add(Data);
+                        DB.SaveChanges();
 
-        //                foreach (tblAccessLevel AccessLevel in Items)
-        //                {
-        //                    var Del = DB.tblAccessLevels.Select(r => r).Where(x => x.RoleId == Data.RoleId && x.MenuId == AccessLevel.MenuId).FirstOrDefault();
-        //                    if (Del != null)
-        //                    {
-        //                        DB.tblAccessLevels.Remove(Del);
-        //                    }
-        //                }
+                        foreach (tblAccessLevel AccessLevel in Items)
+                        {
+                            var Del = DB.tblAccessLevels.Select(r => r).Where(x => x.RoleId == Data.RoleId && x.MenuId == AccessLevel.MenuId).FirstOrDefault();
+                            if (Del != null)
+                            {
+                                DB.tblAccessLevels.Remove(Del);
+                            }
+                        }
 
-        //                foreach (tblAccessLevel AccessLevel in Items)
-        //                {
-        //                    AccessLevel.RoleId = Data.RoleId;
-        //                    AccessLevel.CreatedDate = DateTime.Now;
-        //                    AccessLevel.CreatedBy = UserId;
-        //                    AccessLevel.EditDate = DateTime.Now;
-        //                    AccessLevel.EditBy = UserId;
-        //                    //AccessLevel.tblMenu = DB.tblMenus.Select(r => r).Where(x => x.MenuID == AccessLevel.MenuID).FirstOrDefault();
-        //                    //AccessLevel.tblRole = DB.tblRoles.Select(r => r).Where(x => x.RoleID == AccessLevel.RoleID).FirstOrDefault();
-        //                    DB.tblAccessLevels.Add(AccessLevel);
-        //                    DB.SaveChanges();
-        //                }
-        //                DB.SaveChanges();
+                        foreach (tblAccessLevel AccessLevel in Items)
+                        {
+                            AccessLevel.RoleId = Data.RoleId;
+                            AccessLevel.CreatedDate = DateTime.Now;
+                            AccessLevel.CreatedBy = UserId;
+                            AccessLevel.EditDate = DateTime.Now;
+                            AccessLevel.EditBy = UserId;
+                            //AccessLevel.tblMenu = DB.tblMenus.Select(r => r).Where(x => x.MenuID == AccessLevel.MenuID).FirstOrDefault();
+                            //AccessLevel.tblRole = DB.tblRoles.Select(r => r).Where(x => x.RoleID == AccessLevel.RoleID).FirstOrDefault();
+                            DB.tblAccessLevels.Add(AccessLevel);
+                            DB.SaveChanges();
+                        }
+                        DB.SaveChanges();
 
-        //                tblLog LogData = new tblLog();
-        //                LogData.UserId = UserId;
-        //                LogData.Action = "Create Role";
-        //                LogData.CreatedDate = DateTime.Now;
-        //                DB.tblLogs.Add(LogData);
-        //                DB.SaveChanges();
+                        tblLog LogData = new tblLog();
+                        LogData.UserId = UserId;
+                        LogData.Action = "Create Role";
+                        LogData.CreatedDate = DateTime.Now;
+                        DB.tblLogs.Add(LogData);
+                        DB.SaveChanges();
 
-        //                return Json(0);
-        //            }
-        //            else
-        //            {
-        //                return Json(2);
-        //            }
-        //        }
-
-
+                        return "Role has been added successfully.";
+                    }
+                    else
+                    {
+                        return "Role already exsist.";
+                    }
+                }
 
 
-        //    }
-        //    catch (Exception ex)
-        //    {
 
-        //        ViewBag.Error = ex.Message;
-        //        Console.WriteLine("Error" + ex.Message);
-        //    }
 
-        //    return Json(0);
-        //}
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error" + ex.Message);
+            }
 
-        //[HttpPost]
-        //public ActionResult GetAccessLevel(int RoleId = 0)
-        //{
-        //    List<MenuAccess> MenuAccess = new List<MenuAccess>();
-        //    List<tblMenu> Menu = new List<tblMenu>();
-        //    DB.Configuration.ProxyCreationEnabled = false;
-        //    try
-        //    {
-        //        Menu = DB.tblMenus.ToList();
-        //        MenuAccess = (from h in DB.tblMenus
-        //                      join t in DB.tblAccessLevels.Where(x => x.RoleId == RoleId) on h.MenuId equals t.MenuId into gj
-        //                      from acc in gj.DefaultIfEmpty()
-        //                      select new MenuAccess
-        //                      {
-        //                          menu = h,
-        //                          //accesslevelid = acc.accesslevelid,
-        //                          accessedit = acc.EditAccess,
-        //                          accessdelete = acc.DeleteAccess,
-        //                          accesscreate = acc.CreateAccess,
-        //                          isactive = acc.isActive,
-        //                          roleid = RoleId,
-        //                          menuid = h.MenuId,
+            return "Role has been added successfully.";
+        }
 
-        //                      }).ToList();
-        //    }
-        //    catch (Exception ex)
-        //    {
+        [HttpPost]
+        public List<MenuAccess> GetAccessLevel(int RoleId = 0)
+        {
+            List<MenuAccess> MenuAccess = new List<MenuAccess>();
+            List<tblMenu> Menu = new List<tblMenu>();
+            DB.Configuration.ProxyCreationEnabled = false;
+            try
+            {
+                Menu = DB.tblMenus.ToList();
+                MenuAccess = (from h in DB.tblMenus
+                              join t in DB.tblAccessLevels.Where(x => x.RoleId == RoleId) on h.MenuId equals t.MenuId into gj
+                              from acc in gj.DefaultIfEmpty()
+                              select new MenuAccess
+                              {
+                                  menu = h,
+                                  //accesslevelid = acc.accesslevelid,
+                                  accessedit = acc.EditAccess,
+                                  accessdelete = acc.DeleteAccess,
+                                  accesscreate = acc.CreateAccess,
+                                  isactive = acc.isActive,
+                                  roleid = RoleId,
+                                  menuid = h.MenuId,
 
-        //        ViewBag.ex = ex.Message;
-        //        Console.WriteLine("Error" + ex.Message);
-        //    }
+                              }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error" + ex.Message);
+            }
 
-        //    return Json(MenuAccess, JsonRequestBehavior.AllowGet);
-        //}
+            return MenuAccess;
+        }
 
     }
 }

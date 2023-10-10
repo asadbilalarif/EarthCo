@@ -26,6 +26,7 @@ namespace EarthCo.Models
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
+        public string AfterPhotoPath { get; set; }
     
         public virtual tblPunchlist tblPunchlist { get; set; }
     }

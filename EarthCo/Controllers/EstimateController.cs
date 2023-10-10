@@ -172,5 +172,74 @@ namespace EarthCo.Controllers
                 return ex.Message;
             }
         }
+
+        [HttpPost]
+        public string UpdateAllSelectedEstimateStatus(int[] id,int StatusId)
+        {
+            tblEstimate Data = new tblEstimate();
+            //HttpCookie cookieObj = Request.Cookies["User"];
+            //int CUserId = Int32.Parse(cookieObj["UserId"]);
+            int CUserId = 2;
+            try
+            {
+                foreach (var item in id)
+                {
+                    
+                    Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == item).FirstOrDefault();
+                    Data.EstimateStatusId = StatusId;
+                    DB.Entry(Data);
+                    DB.SaveChanges();
+                }
+
+                tblLog LogData = new tblLog();
+                LogData.UserId = CUserId;
+                LogData.Action = "Update All Selected Estimate status";
+                LogData.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(LogData);
+                DB.SaveChanges();
+                return "All selected Estimate status has been updated successfully.";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+
+        [HttpDelete]
+        public string DeleteAllSelectedEstimate(int[] id)
+        {
+            tblEstimate Data = new tblEstimate();
+            //HttpCookie cookieObj = Request.Cookies["User"];
+            //int CUserId = Int32.Parse(cookieObj["UserId"]);
+            int CUserId = 2;
+            try
+            {
+                foreach (var item in id)
+                {
+                    List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == item).ToList();
+                    if (ConList != null && ConList.Count != 0)
+                    {
+                        DB.tblEstimateItems.RemoveRange(ConList);
+                        DB.SaveChanges();
+                    }
+                    Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == item).FirstOrDefault();
+                    DB.Entry(Data).State = EntityState.Deleted;
+                    DB.SaveChanges();
+                }
+
+                tblLog LogData = new tblLog();
+                LogData.UserId = CUserId;
+                LogData.Action = "Delete All Selected Estimate";
+                LogData.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(LogData);
+                DB.SaveChanges();
+                return "All selected Estimate has been deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
     }
 }

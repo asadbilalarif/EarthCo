@@ -13,7 +13,6 @@
         <EntityTypeShape EntityType="earthcoModel.tblEstimate" Width="1.5" PointX="6" PointY="12.75" IsExpanded="true" />
         <EntityTypeShape EntityType="earthcoModel.tblEstimateItem" Width="1.5" PointX="8.25" PointY="13" IsExpanded="true" />
         <EntityTypeShape EntityType="earthcoModel.tblEstimateStatu" Width="1.5" PointX="3.75" PointY="4.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="earthcoModel.tblIrrigation" Width="1.5" PointX="10.75" PointY="17.125" IsExpanded="true" />
         <EntityTypeShape EntityType="earthcoModel.tblLog" Width="1.5" PointX="5.75" PointY="2.875" IsExpanded="true" />
         <EntityTypeShape EntityType="earthcoModel.tblMenu" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="earthcoModel.tblPunchlist" Width="1.5" PointX="3" PointY="7.625" IsExpanded="true" />
@@ -28,7 +27,6 @@
         <AssociationConnector Association="earthcoModel.FK_AccessManu" ManuallyRouted="false" />
         <AssociationConnector Association="earthcoModel.FK_AccessRole" ManuallyRouted="false" />
         <AssociationConnector Association="earthcoModel.FK__tblContan__Custo__32E0915F" ManuallyRouted="false" />
-        <AssociationConnector Association="earthcoModel.FK__tblContro__Irrig__5441852A" ManuallyRouted="false" />
         <AssociationConnector Association="earthcoModel.FK__tblEstima__Custo__398D8EEE" ManuallyRouted="false" />
         <AssociationConnector Association="earthcoModel.FK__tblPunchl__Custo__571DF1D5" ManuallyRouted="false" />
         <AssociationConnector Association="earthcoModel.FK__tblServic__Custo__440B1D61" ManuallyRouted="false" />
@@ -43,6 +41,8 @@
         <AssociationConnector Association="earthcoModel.FK__tblSRItem__SRId__4BAC3F29" ManuallyRouted="false" />
         <EntityTypeShape EntityType="earthcoModel.tblSetting" Width="1.5" PointX="15.25" PointY="10.375" />
         <AssociationConnector Association="earthcoModel.FK_tblSetting_tblUser" />
+        <EntityTypeShape EntityType="earthcoModel.tblIrrigation" Width="1.5" PointX="10.75" PointY="17" />
+        <AssociationConnector Association="earthcoModel.FK__tblContro__Irrig__5441852A" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

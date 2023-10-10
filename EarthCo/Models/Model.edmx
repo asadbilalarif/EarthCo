@@ -144,7 +144,8 @@
             <PropertyRef Name="IrrigationId" />
           </Key>
           <Property Name="IrrigationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CustomerName" Type="nvarchar" MaxLength="500" />
+          <Property Name="IrrigationNumber" Type="nvarchar" MaxLength="500" />
+          <Property Name="CustomerId" Type="int" />
           <Property Name="CreatedBy" Type="int" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="EditBy" Type="int" />
@@ -206,6 +207,7 @@
           <Property Name="Notes" Type="nvarchar" MaxLength="500" />
           <Property Name="Address" Type="nvarchar" MaxLength="500" />
           <Property Name="isAfterPhoto" Type="bit" />
+          <Property Name="AfterPhotoPath" Type="nvarchar" MaxLength="500" />
           <Property Name="isComplete" Type="bit" />
           <Property Name="PunchlistId" Type="int" />
           <Property Name="CreatedBy" Type="int" />
@@ -700,7 +702,7 @@
           <Property Name="EditBy" Type="Int32" />
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblIrrigation" Relationship="Self.FK__tblContro__Irrig__5441852A" FromRole="tblController" ToRole="tblIrrigation" />
+          <NavigationProperty Name="tblIrrigation" Relationship="earthcoModel.FK__tblContro__Irrig__5441852A" FromRole="tblController" ToRole="tblIrrigation" />
         </EntityType>
         <EntityType Name="tblCustomer">
           <Key>
@@ -779,19 +781,6 @@
           <Property Name="Status" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="tblEstimates" Relationship="Self.FK__tblEstima__Estim__3A81B327" FromRole="tblEstimateStatus" ToRole="tblEstimate" />
         </EntityType>
-        <EntityType Name="tblIrrigation">
-          <Key>
-            <PropertyRef Name="IrrigationId" />
-          </Key>
-          <Property Name="IrrigationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblControllers" Relationship="Self.FK__tblContro__Irrig__5441852A" FromRole="tblIrrigation" ToRole="tblController" />
-        </EntityType>
         <EntityType Name="tblLog">
           <Key>
             <PropertyRef Name="LogId" />
@@ -859,6 +848,7 @@
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
           <NavigationProperty Name="tblPunchlist" Relationship="Self.FK__tblPunchl__Punch__5AEE82B9" FromRole="tblPunchlistItem" ToRole="tblPunchlist" />
+          <Property Name="AfterPhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="tblRole">
           <Key>
@@ -1009,18 +999,6 @@
             </Principal>
             <Dependent Role="tblContant">
               <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblContro__Irrig__5441852A">
-          <End Role="tblIrrigation" Type="Self.tblIrrigation" Multiplicity="0..1" />
-          <End Role="tblController" Type="Self.tblController" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblIrrigation">
-              <PropertyRef Name="IrrigationId" />
-            </Principal>
-            <Dependent Role="tblController">
-              <PropertyRef Name="IrrigationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1177,7 +1155,6 @@
           <EntitySet Name="tblEstimates" EntityType="Self.tblEstimate" />
           <EntitySet Name="tblEstimateItems" EntityType="Self.tblEstimateItem" />
           <EntitySet Name="tblEstimateStatus" EntityType="Self.tblEstimateStatu" />
-          <EntitySet Name="tblIrrigations" EntityType="Self.tblIrrigation" />
           <EntitySet Name="tblLogs" EntityType="Self.tblLog" />
           <EntitySet Name="tblMenus" EntityType="Self.tblMenu" />
           <EntitySet Name="tblPunchlists" EntityType="Self.tblPunchlist" />
@@ -1200,10 +1177,6 @@
           <AssociationSet Name="FK__tblContan__Custo__32E0915F" Association="Self.FK__tblContan__Custo__32E0915F">
             <End Role="tblCustomer" EntitySet="tblCustomers" />
             <End Role="tblContant" EntitySet="tblContants" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblContro__Irrig__5441852A" Association="Self.FK__tblContro__Irrig__5441852A">
-            <End Role="tblIrrigation" EntitySet="tblIrrigations" />
-            <End Role="tblController" EntitySet="tblControllers" />
           </AssociationSet>
           <AssociationSet Name="FK__tblEstima__Custo__398D8EEE" Association="Self.FK__tblEstima__Custo__398D8EEE">
             <End Role="tblCustomer" EntitySet="tblCustomers" />
@@ -1258,6 +1231,11 @@
             <End Role="tblUser" EntitySet="tblUsers" />
             <End Role="tblSetting" EntitySet="tblSettings" />
           </AssociationSet>
+          <EntitySet Name="tblIrrigations" EntityType="earthcoModel.tblIrrigation" />
+          <AssociationSet Name="FK__tblContro__Irrig__5441852A" Association="earthcoModel.FK__tblContro__Irrig__5441852A">
+            <End Role="tblIrrigation" EntitySet="tblIrrigations" />
+            <End Role="tblController" EntitySet="tblControllers" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="tblSetting">
           <Key>
@@ -1286,6 +1264,32 @@
             </Principal>
             <Dependent Role="tblSetting">
               <PropertyRef Name="Editby" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblIrrigation">
+          <Key>
+            <PropertyRef Name="IrrigationId" />
+          </Key>
+          <Property Name="IrrigationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IrrigationNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <NavigationProperty Name="tblControllers" Relationship="earthcoModel.FK__tblContro__Irrig__5441852A" FromRole="tblIrrigation" ToRole="tblController" />
+        </EntityType>
+        <Association Name="FK__tblContro__Irrig__5441852A">
+          <End Type="earthcoModel.tblIrrigation" Role="tblIrrigation" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblController" Role="tblController" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblIrrigation">
+              <PropertyRef Name="IrrigationId" />
+            </Principal>
+            <Dependent Role="tblController">
+              <PropertyRef Name="IrrigationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1437,19 +1441,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblIrrigations">
-            <EntityTypeMapping TypeName="earthcoModel.tblIrrigation">
-              <MappingFragment StoreEntitySet="tblIrrigation">
-                <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
-                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblLogs">
             <EntityTypeMapping TypeName="earthcoModel.tblLog">
               <MappingFragment StoreEntitySet="tblLog">
@@ -1502,6 +1493,7 @@
           <EntitySetMapping Name="tblPunchlistItems">
             <EntityTypeMapping TypeName="earthcoModel.tblPunchlistItem">
               <MappingFragment StoreEntitySet="tblPunchlistItem">
+                <ScalarProperty Name="AfterPhotoPath" ColumnName="AfterPhotoPath" />
                 <ScalarProperty Name="PunchlistItemId" ColumnName="PunchlistItemId" />
                 <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
@@ -1641,6 +1633,20 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="SecretKey" ColumnName="SecretKey" />
                 <ScalarProperty Name="SettingId" ColumnName="SettingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblIrrigations">
+            <EntityTypeMapping TypeName="earthcoModel.tblIrrigation">
+              <MappingFragment StoreEntitySet="tblIrrigation">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="IrrigationNumber" ColumnName="IrrigationNumber" />
+                <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
