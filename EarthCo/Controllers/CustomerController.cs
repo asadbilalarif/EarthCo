@@ -8,28 +8,28 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace EarthCo.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class CustomerController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public List<tblContant> GetCustomersList()
+        public List<tblCustomer> GetCustomersList()
         {
-            DB.Configuration.ProxyCreationEnabled = false;
-            List<tblContant> Data = new List<tblContant>();
-            Data = DB.tblContants.ToList();
+            List<tblCustomer> Data = new List<tblCustomer>();
+            Data = DB.tblCustomers.ToList();
             return Data;
         }
 
         [HttpGet]
-        public List<tblContant> GetCustomer(int id)
+        public tblCustomer GetCustomer(int id)
         {
-            DB.Configuration.ProxyCreationEnabled = false;
-            List<tblContant> Data = new List<tblContant>();
-            Data = DB.tblContants.Where(x=>x.CustomerId==id).ToList();
+            tblCustomer Data = new tblCustomer();
+            Data = DB.tblCustomers.Where(x=>x.CustomerId==id).FirstOrDefault();
             return Data;
         }
 

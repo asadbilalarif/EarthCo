@@ -13,9 +13,11 @@ using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace EarthCo.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AccountController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
@@ -173,17 +175,17 @@ namespace EarthCo.Controllers
 
 
                     string body1 = "";
-                    body1 += "Welcome to Automatische!";
+                    body1 += "Welcome to EarthCo!";
                     body1 += "<br />To Change your password, please click on the button below: ";
                     body1 += "<br /> <button style='padding: 10px 28px 11px 28px;color: #fff;background:#333333;'><a style='color:white !important' href = '" + link + "?Email=" + encrypted + "&&Expire=" + encryptedTime + "'>Change Account Password</a></button>";
-                    body1 += "<br /><br />Yours,<br />The Automatische Team";
+                    body1 += "<br /><br />Yours,<br />The EarthCo Team";
 
                     string body = "";
                     body += "<body  style='background-color:white !important'>";
                     body += " <div>";
                     //body += "<h3>Hello " + sa.ReceiveName + ",</h3>";
                     body += " <table style='background-color: #f2f3f8; max-width:670px;' width='100%' border='0'  cellpadding='0' cellspacing='0'>";
-                    body += " <tbody> <tr style='background-color:#333333;'><td style='padding: 0 35px; background-color:#333333;text-align: center;'><a><img src='https://ci6.googleusercontent.com/proxy/Ia8xyYsLq6FtQcWzOyAOvF7XpZC5N9JGdMFlTO2LwH6Q_PSpKXU2LVHg6bmHoSGjTN1EKugOuHt6dFMCU82XXyTadS1p1EfV7a70vjNPbIkMB7z9H6h_9hgZNRA9bAJNWW-fi4jazw=s0-d-e1-ft#https://automatische-gartenberegnung.de/wp-content/uploads/2020/05/logo-1_200x50.png' style='padding-top: 1%;' alt='Alternate Text' />  </a></td> </tr>";
+                    body += " <tbody> <tr style='background-color:#333333;'><td style='padding: 0 35px; background-color:#333333;text-align: center;'><a><img src='https://ci6.googleusercontent.com/proxy/Ia8xyYsLq6FtQcWzOyAOvF7XpZC5N9JGdMFlTO2LwH6Q_PSpKXU2LVHg6bmHoSGjTN1EKugOuHt6dFMCU82XXyTadS1p1EfV7a70vjNPbIkMB7z9H6h_9hgZNRA9bAJNWW-fi4jazw=s0-d-e1-ft#https://EarthCo-gartenberegnung.de/wp-content/uploads/2020/05/logo-1_200x50.png' style='padding-top: 1%;' alt='Alternate Text' />  </a></td> </tr>";
                     body += "<tr style='color:#455056; font-size:15px;line-height:35px;text-align: center;'><td style='padding:6px;text-align: center;'></td></tr><tr style='color:#455056; font-size:15px;line-height:35px;text-align: center;'><td style='padding:6px;text-align: center;'>" + body1 + "</td></tr>";
                     body += "  </tbody></table>";
                     body += "</body>";
@@ -235,23 +237,20 @@ namespace EarthCo.Controllers
 
 
         [HttpPost]
-        public IHttpActionResult ChangeForgetPassword(string NewPassword, string ConfirmPassword, string Email)
+        public IHttpActionResult ChangeForgetPassword([FromBody] ChangePassword ParaData)
         {
             string pass = null;
             try
             {
-
-
                 byte[] EncDataBtye = null;
                 tblUser Data = new tblUser();
-                Data = DB.tblUsers.Select(r => r).Where(x => x.Email == Email).FirstOrDefault();
+                Data = DB.tblUsers.Select(r => r).Where(x => x.Email == ParaData.Email).FirstOrDefault();
                 if (Data != null)
                 {
-
-                    if (NewPassword == ConfirmPassword)
+                    if (ParaData.NewPassword == ParaData.ConfirmPassword)
                     {
-                        EncDataBtye = new byte[NewPassword.Length];
-                        EncDataBtye = System.Text.Encoding.UTF8.GetBytes(NewPassword);
+                        EncDataBtye = new byte[ParaData.NewPassword.Length];
+                        EncDataBtye = System.Text.Encoding.UTF8.GetBytes(ParaData.NewPassword);
                         pass = Convert.ToBase64String(EncDataBtye);
                     }
                     else
@@ -291,16 +290,16 @@ namespace EarthCo.Controllers
 
 
                     //string body1 = "";
-                    //body1 += "Welcome to Automatische!";
+                    //body1 += "Welcome to EarthCo!";
                     //body1 += "<br />Your password successfully changed";
-                    //body1 += "<br /><br />Yours,<br />The Automatische Team";
+                    //body1 += "<br /><br />Yours,<br />The EarthCo Team";
 
                     //string body = "";
                     //body += "<body  style='background-color:white !important'>";
                     //body += " <div>";
                     ////body += "<h3>Hello " + sa.ReceiveName + ",</h3>";
                     //body += " <table style='background-color: #f2f3f8; max-width:670px;' width='100%' border='0'  cellpadding='0' cellspacing='0'>";
-                    //body += " <tbody> <tr style='background-color: #333333;'><td style='padding: 0 35px; background-color:#333333;text-align: center;'><a><img src='https://ci6.googleusercontent.com/proxy/Ia8xyYsLq6FtQcWzOyAOvF7XpZC5N9JGdMFlTO2LwH6Q_PSpKXU2LVHg6bmHoSGjTN1EKugOuHt6dFMCU82XXyTadS1p1EfV7a70vjNPbIkMB7z9H6h_9hgZNRA9bAJNWW-fi4jazw=s0-d-e1-ft#https://automatische-gartenberegnung.de/wp-content/uploads/2020/05/logo-1_200x50.png' style='padding-top: 1%;' alt='Alternate Text' />  </a></td> </tr>";
+                    //body += " <tbody> <tr style='background-color: #333333;'><td style='padding: 0 35px; background-color:#333333;text-align: center;'><a><img src='https://ci6.googleusercontent.com/proxy/Ia8xyYsLq6FtQcWzOyAOvF7XpZC5N9JGdMFlTO2LwH6Q_PSpKXU2LVHg6bmHoSGjTN1EKugOuHt6dFMCU82XXyTadS1p1EfV7a70vjNPbIkMB7z9H6h_9hgZNRA9bAJNWW-fi4jazw=s0-d-e1-ft#https://EarthCo-gartenberegnung.de/wp-content/uploads/2020/05/logo-1_200x50.png' style='padding-top: 1%;' alt='Alternate Text' />  </a></td> </tr>";
                     //body += "<tr style='color:#455056; font-size:15px;line-height:35px;text-align: center;'><td style='padding:6px;text-align: center;'></td></tr><tr style='color:#455056; font-size:15px;line-height:35px;text-align: center;'><td style='padding:6px;text-align: center;'>" + body1 + "</td></tr>";
                     //body += "  </tbody></table>";
                     //body += "</body>";
