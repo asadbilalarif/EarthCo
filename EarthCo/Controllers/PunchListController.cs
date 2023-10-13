@@ -28,7 +28,7 @@ namespace EarthCo.Controllers
         {
             //DB.Configuration.ProxyCreationEnabled = false;
             tblPunchlist Data = new tblPunchlist();
-            Data = DB.tblPunchlists.Where(x => x.ServiceRequestId == id).FirstOrDefault();
+            Data = DB.tblPunchlists.Where(x => x.PunchlistId == id).FirstOrDefault();
             return Data;
         }
 
@@ -156,7 +156,7 @@ namespace EarthCo.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpGet]
         public string DeletePunchlist(int id)
         {
             tblPunchlist Data = new tblPunchlist();

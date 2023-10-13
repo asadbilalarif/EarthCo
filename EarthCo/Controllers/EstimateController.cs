@@ -43,6 +43,17 @@ namespace EarthCo.Controllers
                 int UserId = 2;
                 if (Estimate.EstimateId == 0)
                 {
+
+                    if (Estimate.tblEstimateItems != null && Estimate.tblEstimateItems.Count != 0)
+                    {
+                        foreach (var item in Estimate.tblEstimateItems)
+                        {
+                            item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EstimateId = Data.EstimateId;
+                        }
+                    }
+
                     Data = Estimate;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.CreatedBy = UserId;
@@ -52,24 +63,24 @@ namespace EarthCo.Controllers
                     DB.tblEstimates.Add(Data);
                     DB.SaveChanges();
 
-                    if (Estimate.tblEstimateItems!= null && Estimate.tblEstimateItems.Count != 0)
-                    {
-                        tblEstimateItem ConData = null;
+                    //if (Estimate.tblEstimateItems!= null && Estimate.tblEstimateItems.Count != 0)
+                    //{
+                    //    tblEstimateItem ConData = null;
 
-                        foreach (var item in Estimate.tblEstimateItems)
-                        {
-                            ConData = new tblEstimateItem();
-                            ConData = item;
-                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.CreatedBy = UserId;
-                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.EditBy = UserId;
-                            ConData.isActive = item.isActive;
-                            ConData.EstimateId = Data.EstimateId;
-                            DB.tblEstimateItems.Add(ConData);
-                            DB.SaveChanges();
-                        }
-                    }
+                    //    foreach (var item in Estimate.tblEstimateItems)
+                    //    {
+                    //        ConData = new tblEstimateItem();
+                    //        ConData = item;
+                    //        ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    //        ConData.CreatedBy = UserId;
+                    //        ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    //        ConData.EditBy = UserId;
+                    //        ConData.isActive = item.isActive;
+                    //        ConData.EstimateId = Data.EstimateId;
+                    //        DB.tblEstimateItems.Add(ConData);
+                    //        DB.SaveChanges();
+                    //    }
+                    //}
 
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
@@ -81,7 +92,24 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
+                    List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == Estimate.EstimateId).ToList();
+                    if (ConList != null && ConList.Count != 0)
+                    {
+                        DB.tblEstimateItems.RemoveRange(ConList);
+                        DB.SaveChanges();
+                    }
+
                     Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == Estimate.EstimateId).FirstOrDefault();
+
+                    if (Estimate.tblEstimateItems != null && Estimate.tblEstimateItems.Count != 0)
+                    {
+                        foreach (var item in Estimate.tblEstimateItems)
+                        {
+                            item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EstimateId = Data.EstimateId;
+                        }
+                    }
 
 
                     Data.EstimateNumber = Estimate.EstimateNumber;
@@ -96,31 +124,26 @@ namespace EarthCo.Controllers
                     DB.Entry(Data);
                     DB.SaveChanges();
 
-                    List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId== Estimate.EstimateId).ToList();
-                    if (ConList != null && ConList.Count != 0)
-                    {
-                        DB.tblEstimateItems.RemoveRange(ConList);
-                        DB.SaveChanges();
-                    }
+                    
 
-                    if (Estimate.tblEstimateItems != null && Estimate.tblEstimateItems.Count != 0)
-                    {
-                        tblEstimateItem ConData = null;
+                    //if (Estimate.tblEstimateItems != null && Estimate.tblEstimateItems.Count != 0)
+                    //{
+                    //    tblEstimateItem ConData = null;
 
-                        foreach (var item in Estimate.tblEstimateItems)
-                        {
-                            ConData = new tblEstimateItem();
-                            ConData = item;
-                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.CreatedBy = UserId;
-                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.EditBy = UserId;
-                            ConData.isActive = item.isActive;
-                            ConData.EstimateId = Data.EstimateId;
-                            DB.tblEstimateItems.Add(ConData);
-                            DB.SaveChanges();
-                        }
-                    }
+                    //    foreach (var item in Estimate.tblEstimateItems)
+                    //    {
+                    //        ConData = new tblEstimateItem();
+                    //        ConData = item;
+                    //        ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    //        ConData.CreatedBy = UserId;
+                    //        ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    //        ConData.EditBy = UserId;
+                    //        ConData.isActive = item.isActive;
+                    //        ConData.EstimateId = Data.EstimateId;
+                    //        DB.tblEstimateItems.Add(ConData);
+                    //        DB.SaveChanges();
+                    //    }
+                    //}
 
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
@@ -138,7 +161,7 @@ namespace EarthCo.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpGet]
         public string DeleteEstimate(int id)
         {
             tblEstimate Data = new tblEstimate();
@@ -174,7 +197,7 @@ namespace EarthCo.Controllers
         }
 
         [HttpPost]
-        public string UpdateAllSelectedEstimateStatus(int[] id,int StatusId)
+        public string UpdateAllSelectedEstimateStatus(UpdateStatus ParaData)
         {
             tblEstimate Data = new tblEstimate();
             //HttpCookie cookieObj = Request.Cookies["User"];
@@ -182,11 +205,10 @@ namespace EarthCo.Controllers
             int CUserId = 2;
             try
             {
-                foreach (var item in id)
+                foreach (var item in ParaData.id)
                 {
-                    
                     Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == item).FirstOrDefault();
-                    Data.EstimateStatusId = StatusId;
+                    Data.EstimateStatusId = ParaData.StatusId;
                     DB.Entry(Data);
                     DB.SaveChanges();
                 }
@@ -206,8 +228,8 @@ namespace EarthCo.Controllers
         }
 
 
-        [HttpDelete]
-        public string DeleteAllSelectedEstimate(int[] id)
+        [HttpPost]
+        public string DeleteAllSelectedEstimate(DeleteSelected ParaData)
         {
             tblEstimate Data = new tblEstimate();
             //HttpCookie cookieObj = Request.Cookies["User"];
@@ -215,7 +237,7 @@ namespace EarthCo.Controllers
             int CUserId = 2;
             try
             {
-                foreach (var item in id)
+                foreach (var item in ParaData.id)
                 {
                     List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == item).ToList();
                     if (ConList != null && ConList.Count != 0)

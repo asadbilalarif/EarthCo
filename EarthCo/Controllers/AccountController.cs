@@ -242,9 +242,12 @@ namespace EarthCo.Controllers
             string pass = null;
             try
             {
+                byte[] b = Convert.FromBase64String(ParaData.Email);
+                string decrypted = System.Text.ASCIIEncoding.ASCII.GetString(b);
+                
                 byte[] EncDataBtye = null;
                 tblUser Data = new tblUser();
-                Data = DB.tblUsers.Select(r => r).Where(x => x.Email == ParaData.Email).FirstOrDefault();
+                Data = DB.tblUsers.Select(r => r).Where(x => x.Email == decrypted).FirstOrDefault();
                 if (Data != null)
                 {
                     if (ParaData.NewPassword == ParaData.ConfirmPassword)

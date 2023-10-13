@@ -16,7 +16,7 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public List<tblIrrigation> GetServiceRequestList()
+        public List<tblIrrigation> GetIrrigationList()
         {
             List<tblIrrigation> Data = new List<tblIrrigation>();
             Data = DB.tblIrrigations.ToList();
@@ -24,7 +24,7 @@ namespace EarthCo.Controllers
         }
 
         [HttpGet]
-        public tblIrrigation GetServiceRequest(int id)
+        public tblIrrigation GetIrrigation(int id)
         {
             //DB.Configuration.ProxyCreationEnabled = false;
             tblIrrigation Data = new tblIrrigation();
@@ -206,7 +206,7 @@ namespace EarthCo.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpGet]
         public string DeleteIrrigation(int id)
         {
             tblIrrigation Data = new tblIrrigation();

@@ -247,7 +247,9 @@
     </Compile>
     <Compile Include="Models\ChangePassword.cs" />
     <Compile Include="Models\ControllerClass.cs" />
+    <Compile Include="Models\CreateAccessLevelClass.cs" />
     <Compile Include="Models\CustomerContacts.cs" />
+    <Compile Include="Models\DeleteSelected.cs" />
     <Compile Include="Models\InviteEmployee.cs" />
     <Compile Include="Models\IrrigationControllerClass.cs" />
     <Compile Include="Models\MenuAccess.cs" />
@@ -329,6 +331,7 @@
     <Compile Include="Models\tblUser.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\UpdateStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

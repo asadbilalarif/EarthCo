@@ -18,13 +18,6 @@ namespace EarthCo.Controllers
     {
         earthcoEntities DB = new earthcoEntities();
 
-        private List<tblUser> _users = new List<tblUser>
-    {
-        new tblUser { UserId = 1, FirstName = "user1", Email = "user1@example.com" },
-        new tblUser { UserId = 2, FirstName = "user2", Email = "user2@example.com" },
-        // Add more users as needed
-    };
-
         [HttpGet]
         public List<tblUser> Users()
         {
@@ -180,7 +173,7 @@ namespace EarthCo.Controllers
 
         }
 
-        [HttpDelete]
+        [HttpGet]
         public string DeleteUser(int id)
         {
             tblUser Data = new tblUser();
@@ -309,7 +302,7 @@ namespace EarthCo.Controllers
 
         //}
 
-        [HttpDelete]
+        [HttpGet]
         public string DeleteRole(int id)
         {
             tblRole Data = new tblRole();
@@ -388,10 +381,8 @@ namespace EarthCo.Controllers
         //    }
         //}
 
-
-
         [HttpPost]
-        public string CreateAccessLevel(List<tblAccessLevel> Items, string Role, int RoleId = 0)
+        public string CreateAccessLevel(CreateAccessLevelClass PataData)
         {
             tblRole Data = new tblRole();
             try
@@ -400,21 +391,21 @@ namespace EarthCo.Controllers
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 int UserId = 2;
 
-                if (RoleId != 0)
+                if (PataData.RoleId != 0)
                 {
 
-                    tblRole check = DB.tblRoles.Select(r => r).Where(x => x.Role == Role).FirstOrDefault();
-                    if (check == null || check.RoleId == RoleId)
+                    tblRole check = DB.tblRoles.Select(r => r).Where(x => x.Role == PataData.Role).FirstOrDefault();
+                    if (check == null || check.RoleId == PataData.RoleId)
                     {
-                        Data = DB.tblRoles.Select(r => r).Where(x => x.RoleId == RoleId).FirstOrDefault();
+                        Data = DB.tblRoles.Select(r => r).Where(x => x.RoleId == PataData.RoleId).FirstOrDefault();
 
-                        Data.Role = Role;
+                        Data.Role = PataData.Role;
                         Data.isActive = true;
                         Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
                         Data.EditBy = UserId;
                         DB.Entry(Data);
                         DB.SaveChanges();
-                        foreach (tblAccessLevel AccessLevel in Items)
+                        foreach (tblAccessLevel AccessLevel in PataData.AccessLevels)
                         {
                             var Del = DB.tblAccessLevels.Select(r => r).Where(x => x.RoleId == AccessLevel.RoleId && x.MenuId == AccessLevel.MenuId).FirstOrDefault();
                             if (Del != null)
@@ -423,7 +414,7 @@ namespace EarthCo.Controllers
                             }
                         }
 
-                        foreach (tblAccessLevel AccessLevel in Items)
+                        foreach (tblAccessLevel AccessLevel in PataData.AccessLevels)
                         {
                             AccessLevel.RoleId = Data.RoleId;
                             AccessLevel.CreatedDate = DateTime.Now;
@@ -454,9 +445,9 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
-                    if (DB.tblRoles.Select(r => r).Where(x => x.Role == Role).FirstOrDefault() == null)
+                    if (DB.tblRoles.Select(r => r).Where(x => x.Role == PataData.Role).FirstOrDefault() == null)
                     {
-                        Data.Role = Role;
+                        Data.Role = PataData.Role;
                         Data.isActive = true;
                         Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
                         Data.CreatedBy = UserId;
@@ -465,7 +456,7 @@ namespace EarthCo.Controllers
                         DB.tblRoles.Add(Data);
                         DB.SaveChanges();
 
-                        foreach (tblAccessLevel AccessLevel in Items)
+                        foreach (tblAccessLevel AccessLevel in PataData.AccessLevels)
                         {
                             var Del = DB.tblAccessLevels.Select(r => r).Where(x => x.RoleId == Data.RoleId && x.MenuId == AccessLevel.MenuId).FirstOrDefault();
                             if (Del != null)
@@ -474,7 +465,7 @@ namespace EarthCo.Controllers
                             }
                         }
 
-                        foreach (tblAccessLevel AccessLevel in Items)
+                        foreach (tblAccessLevel AccessLevel in PataData.AccessLevels)
                         {
                             AccessLevel.RoleId = Data.RoleId;
                             AccessLevel.CreatedDate = DateTime.Now;
@@ -503,19 +494,17 @@ namespace EarthCo.Controllers
                     }
                 }
 
-
-
-
             }
             catch (Exception ex)
             {
+                return "Request failed.";
                 Console.WriteLine("Error" + ex.Message);
             }
 
             return "Role has been added successfully.";
         }
 
-        [HttpPost]
+        [HttpGet]
         public List<MenuAccess> GetAccessLevel(int RoleId = 0)
         {
             List<MenuAccess> MenuAccess = new List<MenuAccess>();

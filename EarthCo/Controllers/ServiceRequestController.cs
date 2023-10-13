@@ -201,7 +201,7 @@ namespace EarthCo.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpGet]
         public string DeleteServiceRequest(int id)
         {
             tblServiceRequest Data = new tblServiceRequest();
@@ -245,7 +245,7 @@ namespace EarthCo.Controllers
 
 
         [HttpPost]
-        public string UpdateAllSelectedServiceRequestStatus(int[] id, int StatusId)
+        public string UpdateAllSelectedServiceRequestStatus(UpdateStatus ParaData)
         {
             tblServiceRequest Data = new tblServiceRequest();
             //HttpCookie cookieObj = Request.Cookies["User"];
@@ -253,11 +253,11 @@ namespace EarthCo.Controllers
             int CUserId = 2;
             try
             {
-                foreach (var item in id)
+                foreach (var item in ParaData.id)
                 {
 
                     Data = DB.tblServiceRequests.Select(r => r).Where(x => x.ServiceRequestId == item).FirstOrDefault();
-                    Data.SRStatusId = StatusId;
+                    Data.SRStatusId = ParaData.StatusId;
                     DB.Entry(Data);
                     DB.SaveChanges();
                 }
@@ -276,8 +276,8 @@ namespace EarthCo.Controllers
             }
         }
 
-        [HttpDelete]
-        public string DeleteAllSelectedServiceRequest(int[] id)
+        [HttpPost]
+        public string DeleteAllSelectedServiceRequest(DeleteSelected ParaData)
         {
             tblServiceRequest Data = new tblServiceRequest();
             //HttpCookie cookieObj = Request.Cookies["User"];
@@ -285,7 +285,7 @@ namespace EarthCo.Controllers
             int CUserId = 2;
             try
             {
-                foreach (var item in id)
+                foreach (var item in ParaData.id)
                 {
                     List<tblSRItem> ConList = DB.tblSRItems.Where(x => x.SRId == item).ToList();
                     if (ConList != null && ConList.Count != 0)

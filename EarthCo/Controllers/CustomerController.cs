@@ -138,7 +138,7 @@ namespace EarthCo.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpGet]
         public string DeleteCustomer(int id)
         {
             tblCustomer Data = new tblCustomer();
