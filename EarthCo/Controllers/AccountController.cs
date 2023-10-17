@@ -23,7 +23,7 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpPost]
-        public string Register(tblUser User)
+        public IHttpActionResult Register(tblUser User)
         {
             tblUser Data = new tblUser();
             try
@@ -42,17 +42,20 @@ namespace EarthCo.Controllers
                     Data.isActive = true;
                     DB.tblUsers.Add(Data);
                     DB.SaveChanges();
-                    return "User has been added successfully.";
+                    return Ok("User has been added successfully.");
                 }
                 else
                 {
                     //ViewBag.Error = "User Already Exsist!!!";
-                    return "User already exsist.";
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                    responseMessage.Content = new StringContent("User already exists.");
+                    return ResponseMessage(responseMessage);
+                    //return "User already exsist.";
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return InternalServerError(ex);
             }
         }
 
@@ -104,18 +107,24 @@ namespace EarthCo.Controllers
                     if (UserCheck != null && (UserCheck.isActive == false || UserCheck.isActive == null))
                     {
                         //ViewBag.Error = "Your account is in-active";
-                        return Ok(new { status = "Unauthorized: Your account is in-active." });
+                        //return Ok(new { status = "Unauthorized: Your account is in-active." });
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                        responseMessage.Content = new StringContent("Your account is in-active.");
+                        return ResponseMessage(responseMessage);
                     }
                     else
                     {
                         //ViewBag.Error = "Invalid email or password";
-                        return Ok(new { status = "Unauthorized: Invalid email or password." });
+                        //return Ok(new { status = "Unauthorized: Invalid email or password." });
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                        responseMessage.Content = new StringContent("Unauthorized: Invalid email or password.");
+                        return ResponseMessage(responseMessage);
                     }
                 }
             }
             catch (Exception ex)
             {
-                return Ok(new { status ="Error: "+ ex.Message });
+                return InternalServerError(ex);
             }
         }
 
@@ -209,13 +218,16 @@ namespace EarthCo.Controllers
                 else
                 {
                     //ViewBag.Error = "User not register";
-                    return Ok(new { status = "Email not register."});
+                    //return NotFound(new { status = "Email not register."});
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    responseMessage.Content = new StringContent("Email not register.");
+                    return ResponseMessage(responseMessage);
                 }
 
             }
             catch (Exception ex)
             {
-                return Ok(new { status = "Error: " + ex.Message });
+                return InternalServerError(ex);
             }
         }
 
@@ -320,7 +332,11 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
-                    return Ok(new { status = "Email is not correct." });
+                    //return Ok(new { status = "Email is not correct." });
+
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    responseMessage.Content = new StringContent("Email is not correct.");
+                    return ResponseMessage(responseMessage);
                 }
 
 
@@ -328,7 +344,7 @@ namespace EarthCo.Controllers
             catch (Exception ex)
             {
 
-                return Ok(new { status = "Error: " + ex.Message });
+                return InternalServerError(ex);
             }
         }
 
@@ -345,7 +361,7 @@ namespace EarthCo.Controllers
             //Create a List of Claims, Keep claims name short    
             var permClaims = new List<Claim>();
             permClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-            permClaims.Add(new Claim("userid", "userId"));
+            permClaims.Add(new Claim("userid", userId));
 
             //Create Security Token object by giving required parameters    
             var token = new JwtSecurityToken(issuer, //Issure    
@@ -355,6 +371,24 @@ namespace EarthCo.Controllers
                             signingCredentials: credentials);
             var jwt_token = new JwtSecurityTokenHandler().WriteToken(token);
             return new {  data=jwt_token };
+        }
+
+        public string GetUserIdFromToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+
+            if (securityToken != null)
+            {
+                var userIdClaim = securityToken.Claims.FirstOrDefault(claim => claim.Type == "userid");
+
+                if (userIdClaim != null)
+                {
+                    return userIdClaim.Value;
+                }
+            }
+
+            return null; // User ID not found in the token
         }
     }
 }

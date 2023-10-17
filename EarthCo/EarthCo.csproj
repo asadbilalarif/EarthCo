@@ -237,11 +237,13 @@
     <Compile Include="Controllers\EstimateController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IrrigationController.cs" />
+    <Compile Include="Controllers\MonthlyLandsacpeController.cs" />
     <Compile Include="Controllers\PunchListController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ServiceRequestController.cs" />
     <Compile Include="Controllers\UserManagementController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\WeeklyReportController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -250,6 +252,8 @@
     <Compile Include="Models\CreateAccessLevelClass.cs" />
     <Compile Include="Models\CustomerContacts.cs" />
     <Compile Include="Models\DeleteSelected.cs" />
+    <Compile Include="Models\GetCustomerContact.cs" />
+    <Compile Include="Models\GetEstimateItem.cs" />
     <Compile Include="Models\InviteEmployee.cs" />
     <Compile Include="Models\IrrigationControllerClass.cs" />
     <Compile Include="Models\MenuAccess.cs" />
@@ -268,10 +272,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\PunchlistDetailItems.cs" />
     <Compile Include="Models\tblAccessLevel.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\tblContant.cs">
+    <Compile Include="Models\tblContact.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblController.cs">
@@ -284,6 +289,9 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblEstimate.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblEstimateFile.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblEstimateItem.cs">
@@ -301,7 +309,13 @@
     <Compile Include="Models\tblMenu.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblMonthlyLandsacpe.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tblPunchlist.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblPunchlistDetail.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblPunchlistItem.cs">
@@ -329,6 +343,12 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblUser.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblWeeklyReport.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblWeeklyReportFile.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UpdateStatus.cs" />

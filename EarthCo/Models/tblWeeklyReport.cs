@@ -12,37 +12,34 @@ namespace EarthCo.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tblEstimate
+    public partial class tblWeeklyReport
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tblEstimate()
+        public tblWeeklyReport()
         {
-            this.tblEstimateItems = new HashSet<tblEstimateItem>();
-            this.tblEstimateFiles = new HashSet<tblEstimateFile>();
+            this.tblWeeklyReportFiles = new HashSet<tblWeeklyReportFile>();
         }
     
-        public int EstimateId { get; set; }
-        public string EstimateNumber { get; set; }
-        public string ServiceLocation { get; set; }
-        public string Email { get; set; }
-        public Nullable<System.DateTime> IssueDate { get; set; }
+        public int WeeklyReportId { get; set; }
         public Nullable<int> CustomerId { get; set; }
-        public Nullable<int> EstimateStatusId { get; set; }
-        public string QBStatus { get; set; }
-        public string EstimateNotes { get; set; }
-        public string ServiceLocationNotes { get; set; }
-        public string PrivateNotes { get; set; }
+        public Nullable<int> ServiceRequestId { get; set; }
+        public Nullable<int> ContactId { get; set; }
+        public string JobName { get; set; }
+        public string Notes { get; set; }
+        public Nullable<int> AssignTo { get; set; }
+        public Nullable<System.DateTime> ReportForWeekOf { get; set; }
+        public Nullable<int> Thisweekrotation { get; set; }
+        public Nullable<int> Nextweekrotation { get; set; }
+        public string ProposalsCompleted { get; set; }
+        public string ProposalsSubmitted { get; set; }
+        public string ProposalsNotes { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
     
-        public virtual tblCustomer tblCustomer { get; set; }
-        public virtual tblEstimateStatu tblEstimateStatu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblEstimateItem> tblEstimateItems { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblEstimateFile> tblEstimateFiles { get; set; }
+        public virtual ICollection<tblWeeklyReportFile> tblWeeklyReportFiles { get; set; }
     }
 }

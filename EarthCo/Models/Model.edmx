@@ -21,11 +21,11 @@
           <Property Name="EditDate" Type="datetime" />
           <Property Name="isActive" Type="bit" />
         </EntityType>
-        <EntityType Name="tblContant">
+        <EntityType Name="tblContact">
           <Key>
-            <PropertyRef Name="ContantId" />
+            <PropertyRef Name="ContactId" />
           </Key>
-          <Property Name="ContantId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ContactId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="500" />
           <Property Name="LastName" Type="nvarchar" MaxLength="500" />
           <Property Name="Email" Type="nvarchar" MaxLength="500" />
@@ -39,6 +39,7 @@
           <Property Name="EditBy" Type="int" />
           <Property Name="EditDate" Type="datetime" />
           <Property Name="isActive" Type="bit" />
+          <Property Name="isPrimary" Type="bit" />
         </EntityType>
         <EntityType Name="tblController">
           <Key>
@@ -110,6 +111,26 @@
           <Property Name="IssueDate" Type="datetime" />
           <Property Name="CustomerId" Type="int" />
           <Property Name="EstimateStatusId" Type="int" />
+          <Property Name="QBStatus" Type="nvarchar" MaxLength="500" />
+          <Property Name="EstimateNotes" Type="nvarchar" MaxLength="500" />
+          <Property Name="ServiceLocationNotes" Type="nvarchar" MaxLength="500" />
+          <Property Name="PrivateNotes" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="tblEstimateFile">
+          <Key>
+            <PropertyRef Name="EstimateFileId" />
+          </Key>
+          <Property Name="EstimateFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="500" />
+          <Property Name="Caption" Type="nvarchar" MaxLength="500" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="500" />
+          <Property Name="Share" Type="nvarchar" MaxLength="500" />
+          <Property Name="EstimateId" Type="int" />
           <Property Name="CreatedBy" Type="int" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="EditBy" Type="int" />
@@ -125,6 +146,7 @@
           <Property Name="Description" Type="nvarchar" MaxLength="500" />
           <Property Name="Qty" Type="int" />
           <Property Name="Rate" Type="float" />
+          <Property Name="Amount" Type="float" />
           <Property Name="EstimateId" Type="int" />
           <Property Name="CreatedBy" Type="int" />
           <Property Name="CreatedDate" Type="datetime" />
@@ -180,6 +202,37 @@
           <Property Name="ElementId" Type="nvarchar(max)" />
           <Property Name="OrderBy" Type="int" />
         </EntityType>
+        <EntityType Name="tblMonthlyLandsacpe">
+          <Key>
+            <PropertyRef Name="MonthlyLandsacpeId" />
+          </Key>
+          <Property Name="MonthlyLandsacpeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerId" Type="int" />
+          <Property Name="ContactId" Type="int" />
+          <Property Name="SupervisorVisitedthejobweekly" Type="bit" />
+          <Property Name="CompletedLitterpickupofgroundareas" Type="bit" />
+          <Property Name="Completedsweepingorblowingofwalkways" Type="bit" />
+          <Property Name="HighpriorityareaswereVisitedweekly" Type="bit" />
+          <Property Name="VDitcheswerecleanedandinspected" Type="bit" />
+          <Property Name="WeepscreeninspectedandcleanedinrotationsectionId" Type="int" />
+          <Property Name="Fertilizationoftrufoccoured" Type="nvarchar" MaxLength="500" />
+          <Property Name="Trufwasmovedandedgedweekly" Type="bit" />
+          <Property Name="Shrubstrimmedaccordingtorotationschedule" Type="bit" />
+          <Property Name="FertilizationofShrubsoccoured" Type="nvarchar" MaxLength="500" />
+          <Property Name="WateringofflowerbedsCompletedandchecked" Type="bit" />
+          <Property Name="Headswereadjustedformaximumcoverage" Type="bit" />
+          <Property Name="Repairsweremadetomaintainaneffectivesystem" Type="bit" />
+          <Property Name="Controllerswereinspectedandadjusted" Type="bit" />
+          <Property Name="Mainlinewasrepaired" Type="bit" />
+          <Property Name="Valvewasrepaired" Type="bit" />
+          <Property Name="Thismonthexpectedrotationschedule" Type="nvarchar" MaxLength="500" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" />
+        </EntityType>
         <EntityType Name="tblPunchlist">
           <Key>
             <PropertyRef Name="PunchlistId" />
@@ -198,11 +251,11 @@
           <Property Name="EditDate" Type="datetime" />
           <Property Name="isActive" Type="bit" />
         </EntityType>
-        <EntityType Name="tblPunchlistItem">
+        <EntityType Name="tblPunchlistDetail">
           <Key>
-            <PropertyRef Name="PunchlistItemId" />
+            <PropertyRef Name="PunchlistDetailId" />
           </Key>
-          <Property Name="PunchlistItemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PunchlistDetailId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PhotoPath" Type="nvarchar" MaxLength="500" />
           <Property Name="Notes" Type="nvarchar" MaxLength="500" />
           <Property Name="Address" Type="nvarchar" MaxLength="500" />
@@ -210,6 +263,23 @@
           <Property Name="AfterPhotoPath" Type="nvarchar" MaxLength="500" />
           <Property Name="isComplete" Type="bit" />
           <Property Name="PunchlistId" Type="int" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="tblPunchlistItem">
+          <Key>
+            <PropertyRef Name="PunchlistItemId" />
+          </Key>
+          <Property Name="PunchlistItemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="500" />
+          <Property Name="Qty" Type="int" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Rate" Type="float" />
+          <Property Name="Tax" Type="nvarchar" MaxLength="500" />
+          <Property Name="PunchlistDetailId" Type="int" />
           <Property Name="CreatedBy" Type="int" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="EditBy" Type="int" />
@@ -335,18 +405,45 @@
           <Property Name="EditDate" Type="datetime" />
           <Property Name="isActive" Type="bit" />
         </EntityType>
-        <Association Name="FK__tblContan__Custo__32E0915F">
-          <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
-          <End Role="tblContant" Type="Self.tblContant" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="tblContant">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
+        <EntityType Name="tblWeeklyReport">
+          <Key>
+            <PropertyRef Name="WeeklyReportId" />
+          </Key>
+          <Property Name="WeeklyReportId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerId" Type="int" />
+          <Property Name="ServiceRequestId" Type="int" />
+          <Property Name="ContactId" Type="int" />
+          <Property Name="JobName" Type="nvarchar" MaxLength="500" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="500" />
+          <Property Name="AssignTo" Type="int" />
+          <Property Name="ReportForWeekOf" Type="datetime" />
+          <Property Name="Thisweekrotation" Type="int" />
+          <Property Name="Nextweekrotation" Type="int" />
+          <Property Name="ProposalsCompleted" Type="nvarchar" MaxLength="500" />
+          <Property Name="ProposalsSubmitted" Type="nvarchar" MaxLength="500" />
+          <Property Name="ProposalsNotes" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="tblWeeklyReportFile">
+          <Key>
+            <PropertyRef Name="WeeklyReportFileId" />
+          </Key>
+          <Property Name="WeeklyReportFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="500" />
+          <Property Name="Caption" Type="nvarchar" MaxLength="500" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="500" />
+          <Property Name="Share" Type="nvarchar" MaxLength="500" />
+          <Property Name="WeeklyReportId" Type="int" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" />
+        </EntityType>
         <Association Name="FK__tblContro__Irrig__5441852A">
           <End Role="tblIrrigation" Type="Self.tblIrrigation" Multiplicity="0..1" />
           <End Role="tblController" Type="Self.tblController" Multiplicity="*" />
@@ -408,14 +505,14 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__tblPunchl__Punch__5AEE82B9">
-          <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="0..1" />
+          <End Role="tblPunchlistDetail" Type="Self.tblPunchlistDetail" Multiplicity="0..1" />
           <End Role="tblPunchlistItem" Type="Self.tblPunchlistItem" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="tblPunchlist">
-              <PropertyRef Name="PunchlistId" />
+            <Principal Role="tblPunchlistDetail">
+              <PropertyRef Name="PunchlistDetailId" />
             </Principal>
             <Dependent Role="tblPunchlistItem">
-              <PropertyRef Name="PunchlistId" />
+              <PropertyRef Name="PunchlistDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -515,6 +612,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_tblContact_tblCustomer">
+          <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
+          <End Role="tblContact" Type="Self.tblContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="tblContact">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEstimateFile_tblEstimate">
+          <End Role="tblEstimate" Type="Self.tblEstimate" Multiplicity="0..1" />
+          <End Role="tblEstimateFile" Type="Self.tblEstimateFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEstimate">
+              <PropertyRef Name="EstimateId" />
+            </Principal>
+            <Dependent Role="tblEstimateFile">
+              <PropertyRef Name="EstimateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlistDetail_tblPunchlist">
+          <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="0..1" />
+          <End Role="tblPunchlistDetail" Type="Self.tblPunchlistDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPunchlist">
+              <PropertyRef Name="PunchlistId" />
+            </Principal>
+            <Dependent Role="tblPunchlistDetail">
+              <PropertyRef Name="PunchlistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_tblSetting_tblUser">
           <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
           <End Role="tblSetting" Type="Self.tblSetting" Multiplicity="*" />
@@ -539,19 +672,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_tblWeeklyReportFile_tblWeeklyReport">
+          <End Role="tblWeeklyReport" Type="Self.tblWeeklyReport" Multiplicity="0..1" />
+          <End Role="tblWeeklyReportFile" Type="Self.tblWeeklyReportFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblWeeklyReport">
+              <PropertyRef Name="WeeklyReportId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportFile">
+              <PropertyRef Name="WeeklyReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="earthcoModelStoreContainer">
           <EntitySet Name="tblAccessLevel" EntityType="Self.tblAccessLevel" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="tblContant" EntityType="Self.tblContant" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblContact" EntityType="Self.tblContact" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblController" EntityType="Self.tblController" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblCustomer" EntityType="Self.tblCustomer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblEmployee" EntityType="Self.tblEmployee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblEstimate" EntityType="Self.tblEstimate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblEstimateFile" EntityType="Self.tblEstimateFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblEstimateItem" EntityType="Self.tblEstimateItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblEstimateStatus" EntityType="Self.tblEstimateStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblIrrigation" EntityType="Self.tblIrrigation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblLog" EntityType="Self.tblLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblMenu" EntityType="Self.tblMenu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblMonthlyLandsacpe" EntityType="Self.tblMonthlyLandsacpe" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPunchlist" EntityType="Self.tblPunchlist" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPunchlistDetail" EntityType="Self.tblPunchlistDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPunchlistItem" EntityType="Self.tblPunchlistItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblRole" EntityType="Self.tblRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblServiceRequest" EntityType="Self.tblServiceRequest" Schema="dbo" store:Type="Tables" />
@@ -561,10 +709,8 @@
           <EntitySet Name="tblSRStatus" EntityType="Self.tblSRStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblSRType" EntityType="Self.tblSRType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblUser" EntityType="Self.tblUser" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__tblContan__Custo__32E0915F" Association="Self.FK__tblContan__Custo__32E0915F">
-            <End Role="tblCustomer" EntitySet="tblCustomer" />
-            <End Role="tblContant" EntitySet="tblContant" />
-          </AssociationSet>
+          <EntitySet Name="tblWeeklyReport" EntityType="Self.tblWeeklyReport" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblWeeklyReportFile" EntityType="Self.tblWeeklyReportFile" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__tblContro__Irrig__5441852A" Association="Self.FK__tblContro__Irrig__5441852A">
             <End Role="tblIrrigation" EntitySet="tblIrrigation" />
             <End Role="tblController" EntitySet="tblController" />
@@ -586,7 +732,7 @@
             <End Role="tblPunchlist" EntitySet="tblPunchlist" />
           </AssociationSet>
           <AssociationSet Name="FK__tblPunchl__Punch__5AEE82B9" Association="Self.FK__tblPunchl__Punch__5AEE82B9">
-            <End Role="tblPunchlist" EntitySet="tblPunchlist" />
+            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetail" />
             <End Role="tblPunchlistItem" EntitySet="tblPunchlistItem" />
           </AssociationSet>
           <AssociationSet Name="FK__tblPunchl__Servi__5812160E" Association="Self.FK__tblPunchl__Servi__5812160E">
@@ -621,6 +767,18 @@
             <End Role="tblRole" EntitySet="tblRole" />
             <End Role="tblAccessLevel" EntitySet="tblAccessLevel" />
           </AssociationSet>
+          <AssociationSet Name="FK_tblContact_tblCustomer" Association="Self.FK_tblContact_tblCustomer">
+            <End Role="tblCustomer" EntitySet="tblCustomer" />
+            <End Role="tblContact" EntitySet="tblContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEstimateFile_tblEstimate" Association="Self.FK_tblEstimateFile_tblEstimate">
+            <End Role="tblEstimate" EntitySet="tblEstimate" />
+            <End Role="tblEstimateFile" EntitySet="tblEstimateFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlistDetail_tblPunchlist" Association="Self.FK_tblPunchlistDetail_tblPunchlist">
+            <End Role="tblPunchlist" EntitySet="tblPunchlist" />
+            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetail" />
+          </AssociationSet>
           <AssociationSet Name="FK_tblSetting_tblUser" Association="Self.FK_tblSetting_tblUser">
             <End Role="tblUser" EntitySet="tblUser" />
             <End Role="tblSetting" EntitySet="tblSetting" />
@@ -628,6 +786,10 @@
           <AssociationSet Name="FK_tblUser_tblRole" Association="Self.FK_tblUser_tblRole">
             <End Role="tblRole" EntitySet="tblRole" />
             <End Role="tblUser" EntitySet="tblUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblWeeklyReportFile_tblWeeklyReport" Association="Self.FK_tblWeeklyReportFile_tblWeeklyReport">
+            <End Role="tblWeeklyReport" EntitySet="tblWeeklyReport" />
+            <End Role="tblWeeklyReportFile" EntitySet="tblWeeklyReportFile" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -651,26 +813,6 @@
           <Property Name="isActive" Type="Boolean" />
           <NavigationProperty Name="tblMenu" Relationship="Self.FK_AccessManu" FromRole="tblAccessLevel" ToRole="tblMenu" />
           <NavigationProperty Name="tblRole" Relationship="Self.FK_AccessRole" FromRole="tblAccessLevel" ToRole="tblRole" />
-        </EntityType>
-        <EntityType Name="tblContant">
-          <Key>
-            <PropertyRef Name="ContantId" />
-          </Key>
-          <Property Name="ContantId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="LastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Phone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CustomerId" Type="Int32" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblCustomer" Relationship="Self.FK__tblContan__Custo__32E0915F" FromRole="tblContant" ToRole="tblCustomer" />
-          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="tblController">
           <Key>
@@ -715,10 +857,10 @@
           <Property Name="EditBy" Type="Int32" />
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblContants" Relationship="Self.FK__tblContan__Custo__32E0915F" FromRole="tblCustomer" ToRole="tblContant" />
-          <NavigationProperty Name="tblEstimates" Relationship="Self.FK__tblEstima__Custo__398D8EEE" FromRole="tblCustomer" ToRole="tblEstimate" />
           <NavigationProperty Name="tblPunchlists" Relationship="Self.FK__tblPunchl__Custo__571DF1D5" FromRole="tblCustomer" ToRole="tblPunchlist" />
           <NavigationProperty Name="tblServiceRequests" Relationship="Self.FK__tblServic__Custo__440B1D61" FromRole="tblCustomer" ToRole="tblServiceRequest" />
+          <NavigationProperty Name="tblContacts" Relationship="earthcoModel.FK_tblContact_tblCustomer" FromRole="tblCustomer" ToRole="tblContact" />
+          <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK__tblEstima__Custo__398D8EEE" FromRole="tblCustomer" ToRole="tblEstimate" />
         </EntityType>
         <EntityType Name="tblEmployee">
           <Key>
@@ -736,50 +878,13 @@
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
         </EntityType>
-        <EntityType Name="tblEstimate">
-          <Key>
-            <PropertyRef Name="EstimateId" />
-          </Key>
-          <Property Name="EstimateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EstimateNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ServiceLocation" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="IssueDate" Type="DateTime" Precision="3" />
-          <Property Name="CustomerId" Type="Int32" />
-          <Property Name="EstimateStatusId" Type="Int32" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblCustomer" Relationship="Self.FK__tblEstima__Custo__398D8EEE" FromRole="tblEstimate" ToRole="tblCustomer" />
-          <NavigationProperty Name="tblEstimateStatu" Relationship="Self.FK__tblEstima__Estim__3A81B327" FromRole="tblEstimate" ToRole="tblEstimateStatus" />
-          <NavigationProperty Name="tblEstimateItems" Relationship="Self.FK__tblEstima__Estim__3D5E1FD2" FromRole="tblEstimate" ToRole="tblEstimateItem" />
-        </EntityType>
-        <EntityType Name="tblEstimateItem">
-          <Key>
-            <PropertyRef Name="EstimateItemId" />
-          </Key>
-          <Property Name="EstimateItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Qty" Type="Int32" />
-          <Property Name="Rate" Type="Double" />
-          <Property Name="EstimateId" Type="Int32" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblEstimate" Relationship="Self.FK__tblEstima__Estim__3D5E1FD2" FromRole="tblEstimateItem" ToRole="tblEstimate" />
-        </EntityType>
         <EntityType Name="tblEstimateStatu">
           <Key>
             <PropertyRef Name="EstimateStatusId" />
           </Key>
           <Property Name="EstimateStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Status" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="tblEstimates" Relationship="Self.FK__tblEstima__Estim__3A81B327" FromRole="tblEstimateStatus" ToRole="tblEstimate" />
+          <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK__tblEstima__Estim__3A81B327" FromRole="tblEstimateStatu" ToRole="tblEstimate" />
         </EntityType>
         <EntityType Name="tblLog">
           <Key>
@@ -828,27 +933,8 @@
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
           <NavigationProperty Name="tblCustomer" Relationship="Self.FK__tblPunchl__Custo__571DF1D5" FromRole="tblPunchlist" ToRole="tblCustomer" />
-          <NavigationProperty Name="tblPunchlistItems" Relationship="Self.FK__tblPunchl__Punch__5AEE82B9" FromRole="tblPunchlist" ToRole="tblPunchlistItem" />
           <NavigationProperty Name="tblServiceRequest" Relationship="Self.FK__tblPunchl__Servi__5812160E" FromRole="tblPunchlist" ToRole="tblServiceRequest" />
-        </EntityType>
-        <EntityType Name="tblPunchlistItem">
-          <Key>
-            <PropertyRef Name="PunchlistItemId" />
-          </Key>
-          <Property Name="PunchlistItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="isAfterPhoto" Type="Boolean" />
-          <Property Name="isComplete" Type="Boolean" />
-          <Property Name="PunchlistId" Type="Int32" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblPunchlist" Relationship="Self.FK__tblPunchl__Punch__5AEE82B9" FromRole="tblPunchlistItem" ToRole="tblPunchlist" />
-          <Property Name="AfterPhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblPunchlistDetails" Relationship="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" FromRole="tblPunchlist" ToRole="tblPunchlistDetail" />
         </EntityType>
         <EntityType Name="tblRole">
           <Key>
@@ -990,30 +1076,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__tblContan__Custo__32E0915F">
-          <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
-          <End Role="tblContant" Type="Self.tblContant" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="tblContant">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblEstima__Custo__398D8EEE">
-          <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
-          <End Role="tblEstimate" Type="Self.tblEstimate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="tblEstimate">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__tblPunchl__Custo__571DF1D5">
           <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
           <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="*" />
@@ -1035,42 +1097,6 @@
             </Principal>
             <Dependent Role="tblServiceRequest">
               <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblEstima__Estim__3A81B327">
-          <End Role="tblEstimateStatus" Type="Self.tblEstimateStatu" Multiplicity="0..1" />
-          <End Role="tblEstimate" Type="Self.tblEstimate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblEstimateStatus">
-              <PropertyRef Name="EstimateStatusId" />
-            </Principal>
-            <Dependent Role="tblEstimate">
-              <PropertyRef Name="EstimateStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblEstima__Estim__3D5E1FD2">
-          <End Role="tblEstimate" Type="Self.tblEstimate" Multiplicity="0..1" />
-          <End Role="tblEstimateItem" Type="Self.tblEstimateItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblEstimate">
-              <PropertyRef Name="EstimateId" />
-            </Principal>
-            <Dependent Role="tblEstimateItem">
-              <PropertyRef Name="EstimateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblPunchl__Punch__5AEE82B9">
-          <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="0..1" />
-          <End Role="tblPunchlistItem" Type="Self.tblPunchlistItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblPunchlist">
-              <PropertyRef Name="PunchlistId" />
-            </Principal>
-            <Dependent Role="tblPunchlistItem">
-              <PropertyRef Name="PunchlistId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1148,17 +1174,13 @@
         </Association>
         <EntityContainer Name="earthcoEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="tblAccessLevels" EntityType="Self.tblAccessLevel" />
-          <EntitySet Name="tblContants" EntityType="Self.tblContant" />
           <EntitySet Name="tblControllers" EntityType="Self.tblController" />
           <EntitySet Name="tblCustomers" EntityType="Self.tblCustomer" />
           <EntitySet Name="tblEmployees" EntityType="Self.tblEmployee" />
-          <EntitySet Name="tblEstimates" EntityType="Self.tblEstimate" />
-          <EntitySet Name="tblEstimateItems" EntityType="Self.tblEstimateItem" />
           <EntitySet Name="tblEstimateStatus" EntityType="Self.tblEstimateStatu" />
           <EntitySet Name="tblLogs" EntityType="Self.tblLog" />
           <EntitySet Name="tblMenus" EntityType="Self.tblMenu" />
           <EntitySet Name="tblPunchlists" EntityType="Self.tblPunchlist" />
-          <EntitySet Name="tblPunchlistItems" EntityType="Self.tblPunchlistItem" />
           <EntitySet Name="tblRoles" EntityType="Self.tblRole" />
           <EntitySet Name="tblServiceRequests" EntityType="Self.tblServiceRequest" />
           <EntitySet Name="tblSRFiles" EntityType="Self.tblSRFile" />
@@ -1174,14 +1196,6 @@
             <End Role="tblRole" EntitySet="tblRoles" />
             <End Role="tblAccessLevel" EntitySet="tblAccessLevels" />
           </AssociationSet>
-          <AssociationSet Name="FK__tblContan__Custo__32E0915F" Association="Self.FK__tblContan__Custo__32E0915F">
-            <End Role="tblCustomer" EntitySet="tblCustomers" />
-            <End Role="tblContant" EntitySet="tblContants" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblEstima__Custo__398D8EEE" Association="Self.FK__tblEstima__Custo__398D8EEE">
-            <End Role="tblCustomer" EntitySet="tblCustomers" />
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-          </AssociationSet>
           <AssociationSet Name="FK__tblPunchl__Custo__571DF1D5" Association="Self.FK__tblPunchl__Custo__571DF1D5">
             <End Role="tblCustomer" EntitySet="tblCustomers" />
             <End Role="tblPunchlist" EntitySet="tblPunchlists" />
@@ -1189,18 +1203,6 @@
           <AssociationSet Name="FK__tblServic__Custo__440B1D61" Association="Self.FK__tblServic__Custo__440B1D61">
             <End Role="tblCustomer" EntitySet="tblCustomers" />
             <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblEstima__Estim__3A81B327" Association="Self.FK__tblEstima__Estim__3A81B327">
-            <End Role="tblEstimateStatus" EntitySet="tblEstimateStatus" />
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblEstima__Estim__3D5E1FD2" Association="Self.FK__tblEstima__Estim__3D5E1FD2">
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-            <End Role="tblEstimateItem" EntitySet="tblEstimateItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblPunchl__Punch__5AEE82B9" Association="Self.FK__tblPunchl__Punch__5AEE82B9">
-            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
-            <End Role="tblPunchlistItem" EntitySet="tblPunchlistItems" />
           </AssociationSet>
           <AssociationSet Name="FK__tblPunchl__Servi__5812160E" Association="Self.FK__tblPunchl__Servi__5812160E">
             <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
@@ -1236,6 +1238,47 @@
             <End Role="tblIrrigation" EntitySet="tblIrrigations" />
             <End Role="tblController" EntitySet="tblControllers" />
           </AssociationSet>
+          <EntitySet Name="tblContacts" EntityType="earthcoModel.tblContact" />
+          <AssociationSet Name="FK_tblContact_tblCustomer" Association="earthcoModel.FK_tblContact_tblCustomer">
+            <End Role="tblCustomer" EntitySet="tblCustomers" />
+            <End Role="tblContact" EntitySet="tblContacts" />
+          </AssociationSet>
+          <EntitySet Name="tblPunchlistDetails" EntityType="earthcoModel.tblPunchlistDetail" />
+          <EntitySet Name="tblPunchlistItems" EntityType="earthcoModel.tblPunchlistItem" />
+          <AssociationSet Name="FK_tblPunchlistDetail_tblPunchlist" Association="earthcoModel.FK_tblPunchlistDetail_tblPunchlist">
+            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
+            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPunchl__Punch__5AEE82B9" Association="earthcoModel.FK__tblPunchl__Punch__5AEE82B9">
+            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetails" />
+            <End Role="tblPunchlistItem" EntitySet="tblPunchlistItems" />
+          </AssociationSet>
+          <EntitySet Name="tblEstimateItems" EntityType="earthcoModel.tblEstimateItem" />
+          <EntitySet Name="tblEstimates" EntityType="earthcoModel.tblEstimate" />
+          <AssociationSet Name="FK__tblEstima__Custo__398D8EEE" Association="earthcoModel.FK__tblEstima__Custo__398D8EEE">
+            <End Role="tblCustomer" EntitySet="tblCustomers" />
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblEstima__Estim__3A81B327" Association="earthcoModel.FK__tblEstima__Estim__3A81B327">
+            <End Role="tblEstimateStatu" EntitySet="tblEstimateStatus" />
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblEstima__Estim__3D5E1FD2" Association="earthcoModel.FK__tblEstima__Estim__3D5E1FD2">
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+            <End Role="tblEstimateItem" EntitySet="tblEstimateItems" />
+          </AssociationSet>
+          <EntitySet Name="tblWeeklyReports" EntityType="earthcoModel.tblWeeklyReport" />
+          <EntitySet Name="tblWeeklyReportFiles" EntityType="earthcoModel.tblWeeklyReportFile" />
+          <AssociationSet Name="FK_tblWeeklyReportFile_tblWeeklyReport" Association="earthcoModel.FK_tblWeeklyReportFile_tblWeeklyReport">
+            <End Role="tblWeeklyReport" EntitySet="tblWeeklyReports" />
+            <End Role="tblWeeklyReportFile" EntitySet="tblWeeklyReportFiles" />
+          </AssociationSet>
+          <EntitySet Name="tblEstimateFiles" EntityType="earthcoModel.tblEstimateFile" />
+          <AssociationSet Name="FK_tblEstimateFile_tblEstimate" Association="earthcoModel.FK_tblEstimateFile_tblEstimate">
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+            <End Role="tblEstimateFile" EntitySet="tblEstimateFiles" />
+          </AssociationSet>
+          <EntitySet Name="tblMonthlyLandsacpes" EntityType="earthcoModel.tblMonthlyLandsacpe" />
         </EntityContainer>
         <EntityType Name="tblSetting">
           <Key>
@@ -1293,6 +1336,293 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="tblContact">
+          <Key>
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Name="ContactId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="isPrimary" Type="Boolean" />
+          <NavigationProperty Name="tblCustomer" Relationship="earthcoModel.FK_tblContact_tblCustomer" FromRole="tblContact" ToRole="tblCustomer" />
+        </EntityType>
+        <Association Name="FK_tblContact_tblCustomer">
+          <End Type="earthcoModel.tblCustomer" Role="tblCustomer" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="tblContact">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblPunchlistDetail">
+          <Key>
+            <PropertyRef Name="PunchlistDetailId" />
+          </Key>
+          <Property Name="PunchlistDetailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="isAfterPhoto" Type="Boolean" />
+          <Property Name="AfterPhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="isComplete" Type="Boolean" />
+          <Property Name="PunchlistId" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <NavigationProperty Name="tblPunchlist" Relationship="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" FromRole="tblPunchlistDetail" ToRole="tblPunchlist" />
+          <NavigationProperty Name="tblPunchlistItems" Relationship="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" FromRole="tblPunchlistDetail" ToRole="tblPunchlistItem" />
+        </EntityType>
+        <EntityType Name="tblPunchlistItem">
+          <Key>
+            <PropertyRef Name="PunchlistItemId" />
+          </Key>
+          <Property Name="PunchlistItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Rate" Type="Double" />
+          <Property Name="Tax" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="PunchlistDetailId" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <NavigationProperty Name="tblPunchlistDetail" Relationship="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" FromRole="tblPunchlistItem" ToRole="tblPunchlistDetail" />
+        </EntityType>
+        <Association Name="FK_tblPunchlistDetail_tblPunchlist">
+          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblPunchlistDetail" Role="tblPunchlistDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPunchlist">
+              <PropertyRef Name="PunchlistId" />
+            </Principal>
+            <Dependent Role="tblPunchlistDetail">
+              <PropertyRef Name="PunchlistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPunchl__Punch__5AEE82B9">
+          <End Type="earthcoModel.tblPunchlistDetail" Role="tblPunchlistDetail" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblPunchlistItem" Role="tblPunchlistItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPunchlistDetail">
+              <PropertyRef Name="PunchlistDetailId" />
+            </Principal>
+            <Dependent Role="tblPunchlistItem">
+              <PropertyRef Name="PunchlistDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblEstimateItem">
+          <Key>
+            <PropertyRef Name="EstimateItemId" />
+          </Key>
+          <Property Name="EstimateItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="Rate" Type="Double" />
+          <Property Name="Amount" Type="Double" />
+          <Property Name="EstimateId" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <NavigationProperty Name="tblEstimate" Relationship="earthcoModel.FK__tblEstima__Estim__3D5E1FD2" FromRole="tblEstimateItem" ToRole="tblEstimate" />
+        </EntityType>
+        <EntityType Name="tblEstimate">
+          <Key>
+            <PropertyRef Name="EstimateId" />
+          </Key>
+          <Property Name="EstimateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EstimateNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ServiceLocation" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IssueDate" Type="DateTime" Precision="3" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="EstimateStatusId" Type="Int32" />
+          <Property Name="QBStatus" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EstimateNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ServiceLocationNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="PrivateNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <NavigationProperty Name="tblCustomer" Relationship="earthcoModel.FK__tblEstima__Custo__398D8EEE" FromRole="tblEstimate" ToRole="tblCustomer" />
+          <NavigationProperty Name="tblEstimateStatu" Relationship="earthcoModel.FK__tblEstima__Estim__3A81B327" FromRole="tblEstimate" ToRole="tblEstimateStatu" />
+          <NavigationProperty Name="tblEstimateItems" Relationship="earthcoModel.FK__tblEstima__Estim__3D5E1FD2" FromRole="tblEstimate" ToRole="tblEstimateItem" />
+          <NavigationProperty Name="tblEstimateFiles" Relationship="earthcoModel.FK_tblEstimateFile_tblEstimate" FromRole="tblEstimate" ToRole="tblEstimateFile" />
+        </EntityType>
+        <Association Name="FK__tblEstima__Custo__398D8EEE">
+          <End Type="earthcoModel.tblCustomer" Role="tblCustomer" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="tblEstimate">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblEstima__Estim__3A81B327">
+          <End Type="earthcoModel.tblEstimateStatu" Role="tblEstimateStatu" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEstimateStatu">
+              <PropertyRef Name="EstimateStatusId" />
+            </Principal>
+            <Dependent Role="tblEstimate">
+              <PropertyRef Name="EstimateStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblEstima__Estim__3D5E1FD2">
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblEstimateItem" Role="tblEstimateItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEstimate">
+              <PropertyRef Name="EstimateId" />
+            </Principal>
+            <Dependent Role="tblEstimateItem">
+              <PropertyRef Name="EstimateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblWeeklyReport">
+          <Key>
+            <PropertyRef Name="WeeklyReportId" />
+          </Key>
+          <Property Name="WeeklyReportId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="ServiceRequestId" Type="Int32" />
+          <Property Name="ContactId" Type="Int32" />
+          <Property Name="JobName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="AssignTo" Type="Int32" />
+          <Property Name="ReportForWeekOf" Type="DateTime" Precision="3" />
+          <Property Name="Thisweekrotation" Type="Int32" />
+          <Property Name="Nextweekrotation" Type="Int32" />
+          <Property Name="ProposalsCompleted" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ProposalsSubmitted" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ProposalsNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <NavigationProperty Name="tblWeeklyReportFiles" Relationship="earthcoModel.FK_tblWeeklyReportFile_tblWeeklyReport" FromRole="tblWeeklyReport" ToRole="tblWeeklyReportFile" />
+        </EntityType>
+        <EntityType Name="tblWeeklyReportFile">
+          <Key>
+            <PropertyRef Name="WeeklyReportFileId" />
+          </Key>
+          <Property Name="WeeklyReportFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Caption" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Share" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="WeeklyReportId" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <NavigationProperty Name="tblWeeklyReport" Relationship="earthcoModel.FK_tblWeeklyReportFile_tblWeeklyReport" FromRole="tblWeeklyReportFile" ToRole="tblWeeklyReport" />
+          <Property Name="FilePath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_tblWeeklyReportFile_tblWeeklyReport">
+          <End Type="earthcoModel.tblWeeklyReport" Role="tblWeeklyReport" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblWeeklyReportFile" Role="tblWeeklyReportFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblWeeklyReport">
+              <PropertyRef Name="WeeklyReportId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportFile">
+              <PropertyRef Name="WeeklyReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblEstimateFile">
+          <Key>
+            <PropertyRef Name="EstimateFileId" />
+          </Key>
+          <Property Name="EstimateFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Caption" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FilePath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Share" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EstimateId" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <NavigationProperty Name="tblEstimate" Relationship="earthcoModel.FK_tblEstimateFile_tblEstimate" FromRole="tblEstimateFile" ToRole="tblEstimate" />
+        </EntityType>
+        <Association Name="FK_tblEstimateFile_tblEstimate">
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblEstimateFile" Role="tblEstimateFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEstimate">
+              <PropertyRef Name="EstimateId" />
+            </Principal>
+            <Dependent Role="tblEstimateFile">
+              <PropertyRef Name="EstimateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblMonthlyLandsacpe">
+          <Key>
+            <PropertyRef Name="MonthlyLandsacpeId" />
+          </Key>
+          <Property Name="MonthlyLandsacpeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="ContactId" Type="Int32" />
+          <Property Name="SupervisorVisitedthejobweekly" Type="Boolean" />
+          <Property Name="CompletedLitterpickupofgroundareas" Type="Boolean" />
+          <Property Name="Completedsweepingorblowingofwalkways" Type="Boolean" />
+          <Property Name="HighpriorityareaswereVisitedweekly" Type="Boolean" />
+          <Property Name="VDitcheswerecleanedandinspected" Type="Boolean" />
+          <Property Name="WeepscreeninspectedandcleanedinrotationsectionId" Type="Int32" />
+          <Property Name="Fertilizationoftrufoccoured" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Trufwasmovedandedgedweekly" Type="Boolean" />
+          <Property Name="Shrubstrimmedaccordingtorotationschedule" Type="Boolean" />
+          <Property Name="FertilizationofShrubsoccoured" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="WateringofflowerbedsCompletedandchecked" Type="Boolean" />
+          <Property Name="Headswereadjustedformaximumcoverage" Type="Boolean" />
+          <Property Name="Repairsweremadetomaintainaneffectivesystem" Type="Boolean" />
+          <Property Name="Controllerswereinspectedandadjusted" Type="Boolean" />
+          <Property Name="Mainlinewasrepaired" Type="Boolean" />
+          <Property Name="Valvewasrepaired" Type="Boolean" />
+          <Property Name="Thismonthexpectedrotationschedule" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1308,26 +1638,6 @@
                 <ScalarProperty Name="CreateAccess" ColumnName="CreateAccess" />
                 <ScalarProperty Name="MenuId" ColumnName="MenuId" />
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblContants">
-            <EntityTypeMapping TypeName="earthcoModel.tblContant">
-              <MappingFragment StoreEntitySet="tblContant">
-                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
-                <ScalarProperty Name="ContantId" ColumnName="ContantId" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
-                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="EditBy" ColumnName="EditBy" />
@@ -1398,41 +1708,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblEstimates">
-            <EntityTypeMapping TypeName="earthcoModel.tblEstimate">
-              <MappingFragment StoreEntitySet="tblEstimate">
-                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
-                <ScalarProperty Name="EstimateNumber" ColumnName="EstimateNumber" />
-                <ScalarProperty Name="ServiceLocation" ColumnName="ServiceLocation" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="EstimateStatusId" ColumnName="EstimateStatusId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblEstimateItems">
-            <EntityTypeMapping TypeName="earthcoModel.tblEstimateItem">
-              <MappingFragment StoreEntitySet="tblEstimateItem">
-                <ScalarProperty Name="EstimateItemId" ColumnName="EstimateItemId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Qty" ColumnName="Qty" />
-                <ScalarProperty Name="Rate" ColumnName="Rate" />
-                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblEstimateStatus">
             <EntityTypeMapping TypeName="earthcoModel.tblEstimateStatu">
               <MappingFragment StoreEntitySet="tblEstimateStatus">
@@ -1482,25 +1757,6 @@
                 <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
                 <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblPunchlistItems">
-            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistItem">
-              <MappingFragment StoreEntitySet="tblPunchlistItem">
-                <ScalarProperty Name="AfterPhotoPath" ColumnName="AfterPhotoPath" />
-                <ScalarProperty Name="PunchlistItemId" ColumnName="PunchlistItemId" />
-                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="isAfterPhoto" ColumnName="isAfterPhoto" />
-                <ScalarProperty Name="isComplete" ColumnName="isComplete" />
-                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="EditBy" ColumnName="EditBy" />
@@ -1647,6 +1903,194 @@
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
                 <ScalarProperty Name="IrrigationNumber" ColumnName="IrrigationNumber" />
                 <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblContacts">
+            <EntityTypeMapping TypeName="earthcoModel.tblContact">
+              <MappingFragment StoreEntitySet="tblContact">
+                <ScalarProperty Name="isPrimary" ColumnName="isPrimary" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPunchlistDetails">
+            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistDetail">
+              <MappingFragment StoreEntitySet="tblPunchlistDetail">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
+                <ScalarProperty Name="isComplete" ColumnName="isComplete" />
+                <ScalarProperty Name="AfterPhotoPath" ColumnName="AfterPhotoPath" />
+                <ScalarProperty Name="isAfterPhoto" ColumnName="isAfterPhoto" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
+                <ScalarProperty Name="PunchlistDetailId" ColumnName="PunchlistDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPunchlistItems">
+            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistItem">
+              <MappingFragment StoreEntitySet="tblPunchlistItem">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="PunchlistDetailId" ColumnName="PunchlistDetailId" />
+                <ScalarProperty Name="Tax" ColumnName="Tax" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PunchlistItemId" ColumnName="PunchlistItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblEstimateItems">
+            <EntityTypeMapping TypeName="earthcoModel.tblEstimateItem">
+              <MappingFragment StoreEntitySet="tblEstimateItem">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="EstimateItemId" ColumnName="EstimateItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblEstimates">
+            <EntityTypeMapping TypeName="earthcoModel.tblEstimate">
+              <MappingFragment StoreEntitySet="tblEstimate">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="PrivateNotes" ColumnName="PrivateNotes" />
+                <ScalarProperty Name="ServiceLocationNotes" ColumnName="ServiceLocationNotes" />
+                <ScalarProperty Name="EstimateNotes" ColumnName="EstimateNotes" />
+                <ScalarProperty Name="QBStatus" ColumnName="QBStatus" />
+                <ScalarProperty Name="EstimateStatusId" ColumnName="EstimateStatusId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ServiceLocation" ColumnName="ServiceLocation" />
+                <ScalarProperty Name="EstimateNumber" ColumnName="EstimateNumber" />
+                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblWeeklyReports">
+            <EntityTypeMapping TypeName="earthcoModel.tblWeeklyReport">
+              <MappingFragment StoreEntitySet="tblWeeklyReport">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ProposalsNotes" ColumnName="ProposalsNotes" />
+                <ScalarProperty Name="ProposalsSubmitted" ColumnName="ProposalsSubmitted" />
+                <ScalarProperty Name="ProposalsCompleted" ColumnName="ProposalsCompleted" />
+                <ScalarProperty Name="Nextweekrotation" ColumnName="Nextweekrotation" />
+                <ScalarProperty Name="Thisweekrotation" ColumnName="Thisweekrotation" />
+                <ScalarProperty Name="ReportForWeekOf" ColumnName="ReportForWeekOf" />
+                <ScalarProperty Name="AssignTo" ColumnName="AssignTo" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="JobName" ColumnName="JobName" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="WeeklyReportId" ColumnName="WeeklyReportId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblWeeklyReportFiles">
+            <EntityTypeMapping TypeName="earthcoModel.tblWeeklyReportFile">
+              <MappingFragment StoreEntitySet="tblWeeklyReportFile">
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="WeeklyReportId" ColumnName="WeeklyReportId" />
+                <ScalarProperty Name="Share" ColumnName="Share" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="WeeklyReportFileId" ColumnName="WeeklyReportFileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblEstimateFiles">
+            <EntityTypeMapping TypeName="earthcoModel.tblEstimateFile">
+              <MappingFragment StoreEntitySet="tblEstimateFile">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
+                <ScalarProperty Name="Share" ColumnName="Share" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="EstimateFileId" ColumnName="EstimateFileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblMonthlyLandsacpes">
+            <EntityTypeMapping TypeName="earthcoModel.tblMonthlyLandsacpe">
+              <MappingFragment StoreEntitySet="tblMonthlyLandsacpe">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Thismonthexpectedrotationschedule" ColumnName="Thismonthexpectedrotationschedule" />
+                <ScalarProperty Name="Valvewasrepaired" ColumnName="Valvewasrepaired" />
+                <ScalarProperty Name="Mainlinewasrepaired" ColumnName="Mainlinewasrepaired" />
+                <ScalarProperty Name="Controllerswereinspectedandadjusted" ColumnName="Controllerswereinspectedandadjusted" />
+                <ScalarProperty Name="Repairsweremadetomaintainaneffectivesystem" ColumnName="Repairsweremadetomaintainaneffectivesystem" />
+                <ScalarProperty Name="Headswereadjustedformaximumcoverage" ColumnName="Headswereadjustedformaximumcoverage" />
+                <ScalarProperty Name="WateringofflowerbedsCompletedandchecked" ColumnName="WateringofflowerbedsCompletedandchecked" />
+                <ScalarProperty Name="FertilizationofShrubsoccoured" ColumnName="FertilizationofShrubsoccoured" />
+                <ScalarProperty Name="Shrubstrimmedaccordingtorotationschedule" ColumnName="Shrubstrimmedaccordingtorotationschedule" />
+                <ScalarProperty Name="Trufwasmovedandedgedweekly" ColumnName="Trufwasmovedandedgedweekly" />
+                <ScalarProperty Name="Fertilizationoftrufoccoured" ColumnName="Fertilizationoftrufoccoured" />
+                <ScalarProperty Name="WeepscreeninspectedandcleanedinrotationsectionId" ColumnName="WeepscreeninspectedandcleanedinrotationsectionId" />
+                <ScalarProperty Name="VDitcheswerecleanedandinspected" ColumnName="VDitcheswerecleanedandinspected" />
+                <ScalarProperty Name="HighpriorityareaswereVisitedweekly" ColumnName="HighpriorityareaswereVisitedweekly" />
+                <ScalarProperty Name="Completedsweepingorblowingofwalkways" ColumnName="Completedsweepingorblowingofwalkways" />
+                <ScalarProperty Name="CompletedLitterpickupofgroundareas" ColumnName="CompletedLitterpickupofgroundareas" />
+                <ScalarProperty Name="SupervisorVisitedthejobweekly" ColumnName="SupervisorVisitedthejobweekly" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="MonthlyLandsacpeId" ColumnName="MonthlyLandsacpeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

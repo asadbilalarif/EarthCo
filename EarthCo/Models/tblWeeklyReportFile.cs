@@ -12,23 +12,20 @@ namespace EarthCo.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tblContant
+    public partial class tblWeeklyReportFile
     {
-        public int ContantId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string CompanyName { get; set; }
-        public string Address { get; set; }
-        public Nullable<int> CustomerId { get; set; }
+        public int WeeklyReportFileId { get; set; }
+        public string FileName { get; set; }
+        public string Caption { get; set; }
+        public string Share { get; set; }
+        public Nullable<int> WeeklyReportId { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
-        public string CustomerName { get; set; }
+        public string FilePath { get; set; }
     
-        public virtual tblCustomer tblCustomer { get; set; }
+        public virtual tblWeeklyReport tblWeeklyReport { get; set; }
     }
 }

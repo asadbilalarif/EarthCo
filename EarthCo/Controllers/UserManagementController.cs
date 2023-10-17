@@ -19,23 +19,49 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public List<tblUser> Users()
+        public IHttpActionResult Users()
         {
-            List<tblUser> Users = new List<tblUser>();
-            Users = DB.tblUsers.ToList();
-            return Users;
+            try
+            {
+                List<tblUser> Users = new List<tblUser>();
+                Users = DB.tblUsers.ToList();
+                if (Users == null || Users.Count==0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(Users);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+            
         }
 
         [HttpGet]
-        public tblUser GetUser(int id)
+        public IHttpActionResult GetUser(int id)
         {
-            tblUser User = new tblUser();
-            User = DB.tblUsers.Where(x=>x.UserId== id).FirstOrDefault();
-            return User;
+            try
+            {
+                tblUser User = new tblUser();
+                User = DB.tblUsers.Where(x => x.UserId == id).FirstOrDefault();
+                if (User == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(User);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+           
         }
 
         [HttpPost]
-        public String AddUser([FromBody] tblUser User)
+        public IHttpActionResult AddUser([FromBody] tblUser User)
         {
             tblUser Data = new tblUser();
             try
@@ -88,12 +114,14 @@ namespace EarthCo.Controllers
                         LogData.CreatedDate = DateTime.Now;
                         DB.tblLogs.Add(LogData);
                         DB.SaveChanges();
-                        return "User has been added successfully.";
+                        return Ok("User has been added successfully.");
                         
                     }
                     else
                     {
-                        return "User Already Exsist!!!";
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("User Already Exsist!!!");
+                        return ResponseMessage(responseMessage);
                     }
                 }
                 else
@@ -103,6 +131,10 @@ namespace EarthCo.Controllers
                     {
                         Data = DB.tblUsers.Select(r => r).Where(x => x.UserId == User.UserId).FirstOrDefault();
 
+                        if(Data==null)
+                        {
+                            return NotFound();
+                        }
 
                         //string folder = Server.MapPath(string.Format("~/{0}/", "Uploading"));
                         //if (!Directory.Exists(folder))
@@ -154,11 +186,13 @@ namespace EarthCo.Controllers
                         DB.tblLogs.Add(LogData);
                         DB.SaveChanges();
 
-                        return "User has been Update successfully.";
+                        return Ok("User has been Update successfully.");
                     }
                     else
                     {
-                        return "User already exsist!!!";
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("User Already Exsist!!!");
+                        return ResponseMessage(responseMessage);
                     }
 
                 }
@@ -168,13 +202,13 @@ namespace EarthCo.Controllers
             catch (Exception ex)
             {
 
-                return ex.Message;
+                return InternalServerError(ex);
             }
 
         }
 
         [HttpGet]
-        public string DeleteUser(int id)
+        public IHttpActionResult DeleteUser(int id)
         {
             tblUser Data = new tblUser();
             //HttpCookie cookieObj = Request.Cookies["User"];
@@ -184,6 +218,11 @@ namespace EarthCo.Controllers
             try
             {
                 Data = DB.tblUsers.Select(r => r).Where(x => x.UserId == id).FirstOrDefault();
+                if(Data==null)
+                {
+                    return NotFound();
+                }
+
                 RoleID = Data.RoleId;
                 DB.Entry(Data).State = EntityState.Deleted;
                 DB.SaveChanges();
@@ -194,29 +233,55 @@ namespace EarthCo.Controllers
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
-                return "User has been deleted successfully.";
+                return Ok("User has been deleted successfully.");
             }
             catch (Exception ex)
             {
 
-                return ex.Message;
+                return InternalServerError(ex);
             }
         }
 
         [HttpGet]
-        public List<tblRole> Roles()
+        public IHttpActionResult Roles()
         {
-            List<tblRole> Roles = new List<tblRole>();
-            Roles = DB.tblRoles.ToList();
-            return Roles;
+            try
+            {
+                List<tblRole> Roles = new List<tblRole>();
+                Roles = DB.tblRoles.ToList();
+                if (Roles == null || Roles.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(Roles);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+            
         }
         
         [HttpGet]
-        public tblRole GetRole(int id)
+        public IHttpActionResult GetRole(int id)
         {
-            tblRole Role = new tblRole();
-            Role = DB.tblRoles.Where(x => x.RoleId == id).FirstOrDefault();
-            return Role;
+            try
+            {
+                tblRole Role = new tblRole();
+                Role = DB.tblRoles.Where(x => x.RoleId == id).FirstOrDefault();
+                if (Role == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(Role);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+            
         }
         
         //[HttpPost]
@@ -303,7 +368,7 @@ namespace EarthCo.Controllers
         //}
 
         [HttpGet]
-        public string DeleteRole(int id)
+        public IHttpActionResult DeleteRole(int id)
         {
             tblRole Data = new tblRole();
             //HttpCookie cookieObj = Request.Cookies["User"];
@@ -313,6 +378,11 @@ namespace EarthCo.Controllers
             try
             {
                 Data = DB.tblRoles.Select(r => r).Where(x => x.RoleId == id).FirstOrDefault();
+                if(Data==null)
+                {
+                    return NotFound();
+                }
+
                 RoleID = Data.RoleId;
                 DB.Entry(Data).State = EntityState.Deleted;
                 DB.SaveChanges();
@@ -323,11 +393,11 @@ namespace EarthCo.Controllers
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
-                return "Role has been deleted successfully.";
+                return Ok("Role has been deleted successfully.");
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return InternalServerError(ex);
             }
         }
 
@@ -382,7 +452,7 @@ namespace EarthCo.Controllers
         //}
 
         [HttpPost]
-        public string CreateAccessLevel(CreateAccessLevelClass PataData)
+        public IHttpActionResult CreateAccessLevel(CreateAccessLevelClass PataData)
         {
             tblRole Data = new tblRole();
             try
@@ -398,6 +468,11 @@ namespace EarthCo.Controllers
                     if (check == null || check.RoleId == PataData.RoleId)
                     {
                         Data = DB.tblRoles.Select(r => r).Where(x => x.RoleId == PataData.RoleId).FirstOrDefault();
+                        if(Data==null)
+                        {
+                            return NotFound();
+                        }
+
 
                         Data.Role = PataData.Role;
                         Data.isActive = true;
@@ -435,11 +510,13 @@ namespace EarthCo.Controllers
                         DB.tblLogs.Add(LogData);
                         DB.SaveChanges();
 
-                        return "Role has been Update successfully.";
+                        return Ok("Role has been Update successfully.");
                     }
                     else
                     {
-                        return "Role already exsist.";
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Role already exsist.");
+                        return ResponseMessage(responseMessage);
                     }
 
                 }
@@ -486,26 +563,27 @@ namespace EarthCo.Controllers
                         DB.tblLogs.Add(LogData);
                         DB.SaveChanges();
 
-                        return "Role has been added successfully.";
+                        return Ok("Role has been added successfully.");
                     }
                     else
                     {
-                        return "Role already exsist.";
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Role already exsist.");
+                        return ResponseMessage(responseMessage);
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                return "Request failed.";
-                Console.WriteLine("Error" + ex.Message);
+                return InternalServerError(ex);
             }
 
-            return "Role has been added successfully.";
+            return Ok("Role has been added successfully.");
         }
 
         [HttpGet]
-        public List<MenuAccess> GetAccessLevel(int RoleId = 0)
+        public IHttpActionResult GetAccessLevel(int RoleId = 0)
         {
             List<MenuAccess> MenuAccess = new List<MenuAccess>();
             List<tblMenu> Menu = new List<tblMenu>();
@@ -531,10 +609,10 @@ namespace EarthCo.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error" + ex.Message);
+                return InternalServerError(ex);
             }
 
-            return MenuAccess;
+            return Ok(MenuAccess);
         }
 
     }

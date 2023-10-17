@@ -12,32 +12,30 @@ namespace EarthCo.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tblCustomer
+    public partial class tblPunchlistDetail
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tblCustomer()
+        public tblPunchlistDetail()
         {
-            this.tblPunchlists = new HashSet<tblPunchlist>();
-            this.tblServiceRequests = new HashSet<tblServiceRequest>();
-            this.tblContacts = new HashSet<tblContact>();
-            this.tblEstimates = new HashSet<tblEstimate>();
+            this.tblPunchlistItems = new HashSet<tblPunchlistItem>();
         }
     
-        public int CustomerId { get; set; }
-        public string CustomerName { get; set; }
+        public int PunchlistDetailId { get; set; }
+        public string PhotoPath { get; set; }
+        public string Notes { get; set; }
+        public string Address { get; set; }
+        public Nullable<bool> isAfterPhoto { get; set; }
+        public string AfterPhotoPath { get; set; }
+        public Nullable<bool> isComplete { get; set; }
+        public Nullable<int> PunchlistId { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
     
+        public virtual tblPunchlist tblPunchlist { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblServiceRequest> tblServiceRequests { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblContact> tblContacts { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblEstimate> tblEstimates { get; set; }
+        public virtual ICollection<tblPunchlistItem> tblPunchlistItems { get; set; }
     }
 }

@@ -8,6 +8,6 @@ namespace EarthCo.Models
     public class CustomerContacts
     {
         public tblCustomer CustomerData { get; set; }
-        public List<tblContant> ContactData { get; set; }
+        public List<tblContact> ContactData { get; set; }
     }
 }

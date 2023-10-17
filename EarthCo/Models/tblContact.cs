@@ -12,21 +12,24 @@ namespace EarthCo.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tblPunchlistItem
+    public partial class tblContact
     {
-        public int PunchlistItemId { get; set; }
-        public string Name { get; set; }
-        public Nullable<int> Qty { get; set; }
-        public string Description { get; set; }
-        public Nullable<double> Rate { get; set; }
-        public string Tax { get; set; }
-        public Nullable<int> PunchlistDetailId { get; set; }
+        public int ContactId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string CompanyName { get; set; }
+        public string Address { get; set; }
+        public Nullable<int> CustomerId { get; set; }
+        public string CustomerName { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
+        public Nullable<bool> isPrimary { get; set; }
     
-        public virtual tblPunchlistDetail tblPunchlistDetail { get; set; }
+        public virtual tblCustomer tblCustomer { get; set; }
     }
 }

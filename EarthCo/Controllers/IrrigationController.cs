@@ -16,24 +16,50 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public List<tblIrrigation> GetIrrigationList()
+        public IHttpActionResult GetIrrigationList()
         {
-            List<tblIrrigation> Data = new List<tblIrrigation>();
-            Data = DB.tblIrrigations.ToList();
-            return Data;
+            try
+            {
+                List<tblIrrigation> Data = new List<tblIrrigation>();
+                Data = DB.tblIrrigations.ToList();;
+                if (Data == null || Data.Count==0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(Data);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+            
         }
 
         [HttpGet]
-        public tblIrrigation GetIrrigation(int id)
+        public IHttpActionResult GetIrrigation(int id)
         {
-            //DB.Configuration.ProxyCreationEnabled = false;
-            tblIrrigation Data = new tblIrrigation();
-            Data = DB.tblIrrigations.Where(x => x.IrrigationId == id).FirstOrDefault();
-            return Data;
+            try
+            {
+                //DB.Configuration.ProxyCreationEnabled = false;
+                tblIrrigation Data = new tblIrrigation();
+                Data = DB.tblIrrigations.Where(x => x.IrrigationId == id).FirstOrDefault();
+                if (Data == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(Data);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+            
         }
 
         [HttpPost]
-        public String AddIrrigation([FromBody] IrrigationControllerClass ParaData)
+        public IHttpActionResult AddIrrigation([FromBody] IrrigationControllerClass ParaData)
         {
             tblIrrigation Data = new tblIrrigation();
             try
@@ -114,11 +140,16 @@ namespace EarthCo.Controllers
                     LogData.CreatedDate = DateTime.Now;
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
-                    return "Irrigation has been added successfully.";
+                    return Ok("Irrigation has been added successfully.");
                 }
                 else
                 {
                     Data = DB.tblIrrigations.Select(r => r).Where(x => x.IrrigationId == ParaData.Irrigation.IrrigationId).FirstOrDefault();
+                    if (Data == null)
+                    {
+                        return NotFound(); // Customer not found.
+                    }
+
 
                     Data.IrrigationNumber = ParaData.Irrigation.IrrigationNumber;
                     Data.CustomerId = ParaData.Irrigation.CustomerId;
@@ -197,17 +228,17 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
 
-                    return "Irrigation has been Update successfully.";
+                    return Ok("Irrigation has been Update successfully.");
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return InternalServerError(ex);
             }
         }
 
         [HttpGet]
-        public string DeleteIrrigation(int id)
+        public IHttpActionResult DeleteIrrigation(int id)
         {
             tblIrrigation Data = new tblIrrigation();
             //HttpCookie cookieObj = Request.Cookies["User"];
@@ -215,6 +246,12 @@ namespace EarthCo.Controllers
             int CUserId = 2;
             try
             {
+                Data = DB.tblIrrigations.Select(r => r).Where(x => x.IrrigationId == id).FirstOrDefault();
+
+                if (Data == null)
+                {
+                    return NotFound(); // 404 - Customer not found
+                }
 
                 List<tblController> ConList = DB.tblControllers.Where(x => x.IrrigationId == id).ToList();
                 if (ConList != null && ConList.Count != 0)
@@ -224,7 +261,7 @@ namespace EarthCo.Controllers
                 }
 
 
-                Data = DB.tblIrrigations.Select(r => r).Where(x => x.IrrigationId == id).FirstOrDefault();
+                
                 DB.Entry(Data).State = EntityState.Deleted;
                 DB.SaveChanges();
 
@@ -234,11 +271,11 @@ namespace EarthCo.Controllers
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
-                return "Irrigation has been deleted successfully.";
+                return Ok("Irrigation has been deleted successfully.");
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return InternalServerError(ex);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using EarthCo.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -6,175 +7,485 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Security.Claims;
+using System.Text;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
 namespace EarthCo.Controllers
 {
+    //[Authorize]
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class CustomerController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
 
-        [HttpGet]
-        public List<tblCustomer> GetCustomersList()
-        {
-            List<tblCustomer> Data = new List<tblCustomer>();
-            Data = DB.tblCustomers.ToList();
-            return Data;
-        }
+        //[HttpGet]
+        //public List<GetCustomerContact> GetCustomersList()
+        //{
+        //    List<GetCustomerContact> Data = new List<GetCustomerContact>();
+        //    GetCustomerContact Temp = null;
+        //    List<tblCustomer> CusData = new List<tblCustomer>();
+        //    tblContact ConData = new tblContact();
+        //    CusData = DB.tblCustomers.ToList();
+        //    foreach (var item in CusData)
+        //    {
+        //        Temp = new GetCustomerContact();
+        //        ConData = item.tblContacts.Where(x => x.isPrimary == true).FirstOrDefault();
+                
+        //        Temp.CustomerId = item.CustomerId;
+        //        Temp.CustomerName = item.CustomerName;
+        //        if (ConData != null)
+        //        {
+        //            Temp.ContactId = ConData.ContactId;
+        //            Temp.ContactName = ConData.FirstName + " " + ConData.FirstName;
+        //            Temp.ContactCompany = ConData.CompanyName;
+        //            Temp.ContactEmail = ConData.Email;
+        //        }
+                    
+        //        Data.Add(Temp);
+        //    }
+
+        //    return Data;
+        //}
 
         [HttpGet]
-        public tblCustomer GetCustomer(int id)
+        public IHttpActionResult GetCustomersList()
         {
-            tblCustomer Data = new tblCustomer();
-            Data = DB.tblCustomers.Where(x=>x.CustomerId==id).FirstOrDefault();
-            return Data;
-        }
-
-        [HttpPost]
-        public String AddCustomer([FromBody] CustomerContacts Customer)
-        {
-            tblCustomer Data = new tblCustomer();
             try
             {
-                //HttpCookie cookieObj = Request.Cookies["User"];
-                //int UserId = Int32.Parse(cookieObj["UserId"]);
-                //int RoleId = Int32.Parse(cookieObj["RoleId"]);
-                int UserId = 2;
-                if (Customer.CustomerData.CustomerId== 0)
+                List<GetCustomerContact> Data = new List<GetCustomerContact>();
+                GetCustomerContact Temp = null;
+                List<tblCustomer> CusData = new List<tblCustomer>();
+                tblContact ConData = new tblContact();
+                CusData = DB.tblCustomers.ToList();
+                if (CusData == null || CusData.Count == 0)
                 {
-                    Data.CustomerName = Customer.CustomerData.CustomerName;
-                    Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    Data.CreatedBy = UserId;
-                    Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    Data.EditBy = UserId;
-                    Data.isActive = Customer.CustomerData.isActive;
-                    DB.tblCustomers.Add(Data);
-                    DB.SaveChanges();
+                    return NotFound(); // 404 - No data found
+                }
 
-                    if(Customer.ContactData!=null&& Customer.ContactData.Count != 0)
+                foreach (var item in CusData)
+                {
+                    Temp = new GetCustomerContact();
+                    ConData = item.tblContacts.Where(x => x.isPrimary == true).FirstOrDefault();
+
+                    Temp.CustomerId = item.CustomerId;
+                    Temp.CustomerName = item.CustomerName;
+                    if (ConData != null)
                     {
-                        tblContant ConData = null;
-
-                        foreach (var item in Customer.ContactData)
-                        {
-                            ConData = new tblContant();
-                            ConData = item;
-                            ConData.CustomerName = Data.CustomerName;
-                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.CreatedBy = UserId;
-                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.EditBy = UserId;
-                            ConData.isActive = item.isActive;
-                            ConData.CustomerId = Data.CustomerId;
-                            DB.tblContants.Add(ConData);
-                            DB.SaveChanges();
-                        }
-
+                        Temp.ContactId = ConData.ContactId;
+                        Temp.ContactName = ConData.FirstName + " " + ConData.FirstName;
+                        Temp.ContactCompany = ConData.CompanyName;
+                        Temp.ContactEmail = ConData.Email;
                     }
 
-                    tblLog LogData = new tblLog();
-                    LogData.UserId = UserId;
-                    LogData.Action = "Add Customer";
-                    LogData.CreatedDate = DateTime.Now;
-                    DB.tblLogs.Add(LogData);
-                    DB.SaveChanges();
-                    return "Customer has been added successfully.";
+                    Data.Add(Temp);
                 }
-                else
-                {
-                    Data = DB.tblCustomers.Select(r => r).Where(x => x.CustomerId == Customer.CustomerData.CustomerId).FirstOrDefault();
 
-                    Data.CustomerName = Customer.CustomerData.CustomerName;
-                    Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    Data.EditBy = UserId;
-                    Data.isActive = Customer.CustomerData.isActive;
-                    DB.Entry(Data);
+                return Ok(Data); // 200 - Successful response with data
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                // You may also choose to return a more specific error response (e.g., 500 - Internal Server Error) here.
+                return InternalServerError(ex);
+            }
+        }
+
+        //[HttpGet]
+        //public GetCustomerContact GetCustomer(int id)
+        //{
+        //    GetCustomerContact Data = new GetCustomerContact();
+        //    tblCustomer CusData = new tblCustomer();
+        //    tblContact ConData = new tblContact();
+        //    CusData = DB.tblCustomers.Where(x => x.CustomerId == id).FirstOrDefault();
+        //    if(CusData==null)
+        //    {
+        //        return null;
+        //    }
+        //    ConData = CusData.tblContacts.Where(x => x.isPrimary == true).FirstOrDefault();
+        //    Data.CustomerId = CusData.CustomerId;
+        //    Data.CustomerName = CusData.CustomerName;
+        //    Data.ContactId = ConData.ContactId;
+        //    Data.ContactName = ConData.FirstName + " " + ConData.FirstName;
+        //    Data.ContactCompany = ConData.CompanyName;
+        //    Data.ContactEmail = ConData.Email;
+
+        //    return Data;
+        //}
+
+        [HttpGet]
+        public IHttpActionResult GetCustomer(int id)
+        {
+            try
+            {
+                tblCustomer CusData = new tblCustomer();
+                CusData = DB.tblCustomers.Where(x => x.CustomerId == id).FirstOrDefault();
+                if (CusData == null)
+                {
+                    CustomerContacts Data = new CustomerContacts();
+                    CusData = new tblCustomer();
+                    Data.CustomerData = CusData;
+                    List<tblContact> ConData = new List<tblContact>();
+                    tblContact temp = new tblContact();
+                    ConData.Add(temp);
+                    Data.ContactData= ConData;
+                    string userJson = JsonConvert.SerializeObject(Data);
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
+                    return ResponseMessage(responseMessage);
+                }
+
+                return Ok(CusData); // 200 - Successful response with data
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                // You may also choose to return a more specific error response (e.g., 500 - Internal Server Error) here.
+                return InternalServerError(ex);
+            }
+
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetContact(int id)
+        {
+            try
+            {
+                List<tblContact> ConData = new List<tblContact>();
+                ConData = DB.tblContacts.Where(x => x.CustomerId == id).ToList();
+                if (ConData == null || ConData.Count==0)
+                {
+                    ConData = new List<tblContact>();
+                    string userJson = JsonConvert.SerializeObject(ConData);
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
+                    return ResponseMessage(responseMessage);
+                }
+
+                return Ok(ConData); // 200 - Successful response with data
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                // You may also choose to return a more specific error response (e.g., 500 - Internal Server Error) here.
+                return InternalServerError(ex);
+            }
+
+        }
+
+
+        //[HttpPost]
+        //public String AddCustomer([FromBody] CustomerContacts Customer)
+        //{
+        //    tblCustomer Data = new tblCustomer();
+        //    try
+        //    {
+        //        //HttpCookie cookieObj = Request.Cookies["User"];
+        //        //int UserId = Int32.Parse(cookieObj["UserId"]);
+        //        //int RoleId = Int32.Parse(cookieObj["RoleId"]);
+        //        int UserId = 2;
+        //        if (Customer.CustomerData.CustomerId== 0)
+        //        {
+        //            Data.CustomerName = Customer.CustomerData.CustomerName;
+        //            Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+        //            Data.CreatedBy = UserId;
+        //            Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+        //            Data.EditBy = UserId;
+        //            Data.isActive = Customer.CustomerData.isActive;
+        //            DB.tblCustomers.Add(Data);
+        //            DB.SaveChanges();
+
+        //            if(Customer.ContactData!=null && Customer.ContactData.Count != 0)
+        //            {
+        //                tblContact ConData = null;
+
+        //                foreach (var item in Customer.ContactData)
+        //                {
+        //                    ConData = new tblContact();
+        //                    ConData = item;
+        //                    ConData.CustomerName = Data.CustomerName;
+        //                    ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+        //                    ConData.CreatedBy = UserId;
+        //                    ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+        //                    ConData.EditBy = UserId;
+        //                    ConData.isActive = item.isActive;
+        //                    ConData.isPrimary = item.isPrimary;
+        //                    ConData.CustomerId = Data.CustomerId;
+        //                    DB.tblContacts.Add(ConData);
+        //                    DB.SaveChanges();
+        //                }
+
+        //            }
+
+        //            tblLog LogData = new tblLog();
+        //            LogData.UserId = UserId;
+        //            LogData.Action = "Add Customer";
+        //            LogData.CreatedDate = DateTime.Now;
+        //            DB.tblLogs.Add(LogData);
+        //            DB.SaveChanges();
+        //            return "Customer has been added successfully.";
+        //        }
+        //        else
+        //        {
+        //            Data = DB.tblCustomers.Select(r => r).Where(x => x.CustomerId == Customer.CustomerData.CustomerId).FirstOrDefault();
+
+        //            Data.CustomerName = Customer.CustomerData.CustomerName;
+        //            Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+        //            Data.EditBy = UserId;
+        //            Data.isActive = Customer.CustomerData.isActive;
+        //            DB.Entry(Data);
+        //            DB.SaveChanges();
+
+        //            List<tblContact> ConList = DB.tblContacts.Where(x => x.CustomerId == Customer.CustomerData.CustomerId).ToList();
+        //            if(ConList!=null && ConList.Count!=0)
+        //            {
+        //                DB.tblContacts.RemoveRange(ConList);
+        //                DB.SaveChanges();
+        //            }
+
+        //            if (Customer.ContactData != null && Customer.ContactData.Count != 0)
+        //            {
+        //                tblContact ConData = null;
+
+        //                foreach (var item in Customer.ContactData)
+        //                {
+        //                    ConData = new tblContact();
+        //                    ConData = item;
+        //                    ConData.CustomerName = Data.CustomerName;
+        //                    ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+        //                    ConData.CreatedBy = UserId;
+        //                    ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+        //                    ConData.EditBy = UserId;
+        //                    ConData.isActive = item.isActive;
+        //                    ConData.isPrimary = item.isPrimary;
+        //                    ConData.CustomerId = Data.CustomerId;
+        //                    DB.tblContacts.Add(ConData);
+        //                    DB.SaveChanges();
+        //                }
+
+        //            }
+
+        //            tblLog LogData = new tblLog();
+        //            LogData.UserId = UserId;
+        //            LogData.Action = "Update Customer";
+        //            LogData.CreatedDate = DateTime.Now;
+        //            DB.tblLogs.Add(LogData);
+        //            DB.SaveChanges();
+
+        //            return "Customer has been Update successfully.";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ex.Message;
+        //    }
+        //}
+
+        [HttpPost]
+        public IHttpActionResult AddCustomer([FromBody] CustomerContacts Customer)
+        {
+            try
+            {
+                //var userIdClaim = User.Identity as ClaimsIdentity;
+                //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+
+                if (Customer.CustomerData.CustomerId == 0)
+                {
+                    // Creating a new customer.
+                    var newCustomer = new tblCustomer
+                    {
+                        CustomerName = Customer.CustomerData.CustomerName,
+                        CreatedDate = DateTime.Now,
+                        CreatedBy = userId,
+                        EditDate = DateTime.Now,
+                        EditBy = userId,
+                        isActive = Customer.CustomerData.isActive
+                    };
+
+                    DB.tblCustomers.Add(newCustomer);
                     DB.SaveChanges();
 
-                    List<tblContant> ConList = DB.tblContants.Where(x => x.CustomerId == Customer.CustomerData.CustomerId).ToList();
-                    if(ConList!=null && ConList.Count!=0)
+                    if (Customer.ContactData != null && Customer.ContactData.Count > 0)
                     {
-                        DB.tblContants.RemoveRange(ConList);
+                        foreach (var item in Customer.ContactData)
+                        {
+                            var newContact = new tblContact
+                            {
+                                CustomerName = newCustomer.CustomerName,
+                                CreatedDate = DateTime.Now,
+                                CreatedBy = userId,
+                                EditDate = DateTime.Now,
+                                EditBy = userId,
+                                isActive = item.isActive,
+                                isPrimary = item.isPrimary,
+                                CustomerId = newCustomer.CustomerId
+                            };
+
+                            DB.tblContacts.Add(newContact);
+                        }
+
                         DB.SaveChanges();
                     }
 
-                    if (Customer.ContactData != null && Customer.ContactData.Count != 0)
+                    var logData = new tblLog
                     {
-                        tblContant ConData = null;
+                        UserId = userId,
+                        Action = "Add Customer",
+                        CreatedDate = DateTime.Now
+                    };
 
-                        foreach (var item in Customer.ContactData)
-                        {
-                            ConData = new tblContant();
-                            ConData = item;
-                            ConData.CustomerName = Data.CustomerName;
-                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.CreatedBy = UserId;
-                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.EditBy = UserId;
-                            ConData.isActive = item.isActive;
-                            ConData.CustomerId = Data.CustomerId;
-                            DB.tblContants.Add(ConData);
-                            DB.SaveChanges();
-                        }
+                    DB.tblLogs.Add(logData);
+                    DB.SaveChanges();
 
+                    return Ok("Customer has been added successfully.");
+                }
+                else
+                {
+                    // Updating an existing customer.
+                    var existingCustomer = DB.tblCustomers.SingleOrDefault(c => c.CustomerId == Customer.CustomerData.CustomerId);
+
+                    if (existingCustomer == null)
+                    {
+                        return NotFound(); // Customer not found.
                     }
 
-                    tblLog LogData = new tblLog();
-                    LogData.UserId = UserId;
-                    LogData.Action = "Update Customer";
-                    LogData.CreatedDate = DateTime.Now;
-                    DB.tblLogs.Add(LogData);
+                    existingCustomer.CustomerName = Customer.CustomerData.CustomerName;
+                    existingCustomer.EditDate = DateTime.Now;
+                    existingCustomer.EditBy = userId;
+                    existingCustomer.isActive = Customer.CustomerData.isActive;
+
+                    // Remove existing contacts
+                    var existingContacts = DB.tblContacts.Where(c => c.CustomerId == existingCustomer.CustomerId).ToList();
+                    DB.tblContacts.RemoveRange(existingContacts);
+
+                    // Add new contacts
+                    if (Customer.ContactData != null && Customer.ContactData.Count > 0)
+                    {
+                        foreach (var item in Customer.ContactData)
+                        {
+                            var newContact = new tblContact
+                            {
+                                CustomerName = existingCustomer.CustomerName,
+                                CreatedDate = DateTime.Now,
+                                CreatedBy = userId,
+                                EditDate = DateTime.Now,
+                                EditBy = userId,
+                                isActive = item.isActive,
+                                isPrimary = item.isPrimary,
+                                CustomerId = existingCustomer.CustomerId
+                            };
+
+                            DB.tblContacts.Add(newContact);
+                        }
+                    }
+
+                    var logData = new tblLog
+                    {
+                        UserId = userId,
+                        Action = "Update Customer",
+                        CreatedDate = DateTime.Now
+                    };
+
+                    DB.tblLogs.Add(logData);
                     DB.SaveChanges();
 
-                    return "Customer has been Update successfully.";
+                    return Ok("Customer has been updated successfully.");
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                // Log the exception
+                return InternalServerError(ex); // 500 - Internal Server Error
             }
         }
 
+
+
+        //[HttpGet]
+        //public string DeleteCustomer(int id)
+        //{
+        //    tblCustomer Data = new tblCustomer();
+        //    //HttpCookie cookieObj = Request.Cookies["User"];
+        //    //int CUserId = Int32.Parse(cookieObj["UserId"]);
+        //    int CUserId = 2;
+        //    try
+        //    {
+
+        //        List<tblContact> ConList = DB.tblContacts.Where(x => x.CustomerId == id).ToList();
+        //        if (ConList != null && ConList.Count != 0)
+        //        {
+        //            DB.tblContacts.RemoveRange(ConList);
+        //            DB.SaveChanges();
+        //        }
+
+        //        Data = DB.tblCustomers.Select(r => r).Where(x => x.CustomerId== id).FirstOrDefault();
+        //        DB.Entry(Data).State = EntityState.Deleted;
+        //        DB.SaveChanges();
+
+        //        tblLog LogData = new tblLog();
+        //        LogData.UserId = CUserId;
+        //        LogData.Action = "Delete Customer";
+        //        LogData.CreatedDate = DateTime.Now;
+        //        DB.tblLogs.Add(LogData);
+        //        DB.SaveChanges();
+        //        return "Customer has been deleted successfully.";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ex.Message;
+        //    }
+        //}
+
+
+
         [HttpGet]
-        public string DeleteCustomer(int id)
+        public IHttpActionResult DeleteCustomer(int id)
         {
-            tblCustomer Data = new tblCustomer();
-            //HttpCookie cookieObj = Request.Cookies["User"];
-            //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int CUserId = 2;
             try
             {
+                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
 
-                List<tblContant> ConList = DB.tblContants.Where(x => x.CustomerId == id).ToList();
-                if (ConList != null && ConList.Count != 0)
+                // Check if the customer with the specified ID exists
+                var customerToDelete = DB.tblCustomers.FirstOrDefault(c => c.CustomerId == id);
+
+                if (customerToDelete == null)
                 {
-                    DB.tblContants.RemoveRange(ConList);
-                    DB.SaveChanges();
+                    return NotFound(); // 404 - Customer not found
                 }
 
-                Data = DB.tblCustomers.Select(r => r).Where(x => x.CustomerId== id).FirstOrDefault();
-                DB.Entry(Data).State = EntityState.Deleted;
+                // Remove associated contacts
+                var contactsToDelete = DB.tblContacts.Where(c => c.CustomerId == id).ToList();
+                DB.tblContacts.RemoveRange(contactsToDelete);
+
+                // Remove the customer
+                DB.Entry(customerToDelete).State = EntityState.Deleted;
                 DB.SaveChanges();
 
-                tblLog LogData = new tblLog();
-                LogData.UserId = CUserId;
-                LogData.Action = "Delete Customer";
-                LogData.CreatedDate = DateTime.Now;
-                DB.tblLogs.Add(LogData);
+                // Log the action
+                var logData = new tblLog
+                {
+                    UserId = userId,
+                    Action = "Delete Customer",
+                    CreatedDate = DateTime.Now
+                };
+
+                DB.tblLogs.Add(logData);
                 DB.SaveChanges();
-                return "Customer has been deleted successfully.";
+
+                return Ok("Customer has been deleted successfully.");
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                // Log the exception
+                return InternalServerError(ex); // 500 - Internal Server Error
             }
         }
 
         [HttpGet]
-        public string SentInvite(InviteEmployee ParaData)
+        public IHttpActionResult SentInvite(InviteEmployee ParaData)
         {
             tblCustomer Data = new tblCustomer();
             //HttpCookie cookieObj = Request.Cookies["User"];
@@ -236,11 +547,11 @@ namespace EarthCo.Controllers
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
-                return "Invite has been sent successfully.";
+                return Ok("Invite has been sent successfully.");
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return InternalServerError(ex);
             }
         }
     }

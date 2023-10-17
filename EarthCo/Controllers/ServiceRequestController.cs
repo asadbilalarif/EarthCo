@@ -16,24 +16,47 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public List<tblServiceRequest> GetServiceRequestList()
+        public IHttpActionResult GetServiceRequestList()
         {
-            List<tblServiceRequest> Data = new List<tblServiceRequest>();
-            Data = DB.tblServiceRequests.ToList();
-            return Data;
+            try
+            {
+                List<tblServiceRequest> Data = new List<tblServiceRequest>();
+                Data = DB.tblServiceRequests.ToList();
+                if (Data == null || Data.Count==0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(Data);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public tblServiceRequest GetServiceRequest(int id)
+        public IHttpActionResult GetServiceRequest(int id)
         {
-            //DB.Configuration.ProxyCreationEnabled = false;
-            tblServiceRequest Data = new tblServiceRequest();
-            Data = DB.tblServiceRequests.Where(x => x.ServiceRequestId == id).FirstOrDefault();
-            return Data;
+            try
+            {
+                tblServiceRequest Data = new tblServiceRequest();
+                Data = DB.tblServiceRequests.Where(x => x.ServiceRequestId == id).FirstOrDefault();
+                if (Data == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(Data);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public String AddServiceRequest([FromBody] tblServiceRequest ServiceRequest, HttpPostedFile[] Files)
+        public IHttpActionResult AddServiceRequest([FromBody] tblServiceRequest ServiceRequest, HttpPostedFile[] Files)
         {
             tblServiceRequest Data = new tblServiceRequest();
             try
@@ -90,6 +113,7 @@ namespace EarthCo.Controllers
                             FileData.FileName = Path.GetFileName(item.FileName);
                             FileData.Caption = "";
                             FileData.FilePath = path;
+                            FileData.SRId = Data.ServiceRequestId;
                             DB.tblSRFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -102,12 +126,15 @@ namespace EarthCo.Controllers
                     LogData.CreatedDate = DateTime.Now;
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
-                    return "Service Request has been added successfully.";
+                    return Ok("Service Request has been added successfully.");
                 }
                 else
                 {
                     Data = DB.tblServiceRequests.Select(r => r).Where(x => x.ServiceRequestId == ServiceRequest.ServiceRequestId).FirstOrDefault();
-
+                    if (Data == null)
+                    {
+                        return NotFound(); // Customer not found.
+                    }
 
                     Data.ServiceRequestNumber = ServiceRequest.ServiceRequestNumber;
                     Data.ServiceLocation = ServiceRequest.ServiceLocation;
@@ -192,17 +219,17 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
 
-                    return "Estimate has been Update successfully.";
+                    return Ok("Estimate has been Update successfully.");
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return InternalServerError(ex);
             }
         }
 
         [HttpGet]
-        public string DeleteServiceRequest(int id)
+        public IHttpActionResult DeleteServiceRequest(int id)
         {
             tblServiceRequest Data = new tblServiceRequest();
             //HttpCookie cookieObj = Request.Cookies["User"];
@@ -210,6 +237,12 @@ namespace EarthCo.Controllers
             int CUserId = 2;
             try
             {
+                Data = DB.tblServiceRequests.Select(r => r).Where(x => x.ServiceRequestId == id).FirstOrDefault();
+
+                if (Data == null)
+                {
+                    return NotFound(); // 404 - Customer not found
+                }
 
                 List<tblSRItem> ConList = DB.tblSRItems.Where(x => x.SRId == id).ToList();
                 if (ConList != null && ConList.Count != 0)
@@ -225,7 +258,7 @@ namespace EarthCo.Controllers
                     DB.SaveChanges();
                 }
 
-                Data = DB.tblServiceRequests.Select(r => r).Where(x => x.ServiceRequestId == id).FirstOrDefault();
+                
                 DB.Entry(Data).State = EntityState.Deleted;
                 DB.SaveChanges();
 
@@ -235,17 +268,17 @@ namespace EarthCo.Controllers
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
-                return "Service Request has been deleted successfully.";
+                return Ok("Service Request has been deleted successfully.");
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return InternalServerError(ex);
             }
         }
 
 
         [HttpPost]
-        public string UpdateAllSelectedServiceRequestStatus(UpdateStatus ParaData)
+        public IHttpActionResult UpdateAllSelectedServiceRequestStatus(UpdateStatus ParaData)
         {
             tblServiceRequest Data = new tblServiceRequest();
             //HttpCookie cookieObj = Request.Cookies["User"];
@@ -268,16 +301,16 @@ namespace EarthCo.Controllers
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
-                return "All selected Service Request status has been updated successfully.";
+                return Ok("All selected Service Request status has been updated successfully.");
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return InternalServerError(ex);
             }
         }
 
         [HttpPost]
-        public string DeleteAllSelectedServiceRequest(DeleteSelected ParaData)
+        public IHttpActionResult DeleteAllSelectedServiceRequest(DeleteSelected ParaData)
         {
             tblServiceRequest Data = new tblServiceRequest();
             //HttpCookie cookieObj = Request.Cookies["User"];
@@ -310,11 +343,11 @@ namespace EarthCo.Controllers
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
-                return "All selected Service Request has been deleted successfully.";
+                return Ok("All selected Service Request has been deleted successfully.");
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return InternalServerError(ex);
             }
         }
     }

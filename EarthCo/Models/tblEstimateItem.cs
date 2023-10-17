@@ -19,6 +19,7 @@ namespace EarthCo.Models
         public string Description { get; set; }
         public Nullable<int> Qty { get; set; }
         public Nullable<double> Rate { get; set; }
+        public Nullable<double> Amount { get; set; }
         public Nullable<int> EstimateId { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }

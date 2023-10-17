@@ -17,7 +17,7 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tblPunchlist()
         {
-            this.tblPunchlistItems = new HashSet<tblPunchlistItem>();
+            this.tblPunchlistDetails = new HashSet<tblPunchlistDetail>();
         }
     
         public int PunchlistId { get; set; }
@@ -35,8 +35,8 @@ namespace EarthCo.Models
         public Nullable<bool> isActive { get; set; }
     
         public virtual tblCustomer tblCustomer { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPunchlistItem> tblPunchlistItems { get; set; }
         public virtual tblServiceRequest tblServiceRequest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPunchlistDetail> tblPunchlistDetails { get; set; }
     }
 }

@@ -26,17 +26,13 @@ namespace EarthCo.Models
         }
     
         public virtual DbSet<tblAccessLevel> tblAccessLevels { get; set; }
-        public virtual DbSet<tblContant> tblContants { get; set; }
         public virtual DbSet<tblController> tblControllers { get; set; }
         public virtual DbSet<tblCustomer> tblCustomers { get; set; }
         public virtual DbSet<tblEmployee> tblEmployees { get; set; }
-        public virtual DbSet<tblEstimate> tblEstimates { get; set; }
-        public virtual DbSet<tblEstimateItem> tblEstimateItems { get; set; }
         public virtual DbSet<tblEstimateStatu> tblEstimateStatus { get; set; }
         public virtual DbSet<tblLog> tblLogs { get; set; }
         public virtual DbSet<tblMenu> tblMenus { get; set; }
         public virtual DbSet<tblPunchlist> tblPunchlists { get; set; }
-        public virtual DbSet<tblPunchlistItem> tblPunchlistItems { get; set; }
         public virtual DbSet<tblRole> tblRoles { get; set; }
         public virtual DbSet<tblServiceRequest> tblServiceRequests { get; set; }
         public virtual DbSet<tblSRFile> tblSRFiles { get; set; }
@@ -46,5 +42,14 @@ namespace EarthCo.Models
         public virtual DbSet<tblUser> tblUsers { get; set; }
         public virtual DbSet<tblSetting> tblSettings { get; set; }
         public virtual DbSet<tblIrrigation> tblIrrigations { get; set; }
+        public virtual DbSet<tblContact> tblContacts { get; set; }
+        public virtual DbSet<tblPunchlistDetail> tblPunchlistDetails { get; set; }
+        public virtual DbSet<tblPunchlistItem> tblPunchlistItems { get; set; }
+        public virtual DbSet<tblEstimateItem> tblEstimateItems { get; set; }
+        public virtual DbSet<tblEstimate> tblEstimates { get; set; }
+        public virtual DbSet<tblWeeklyReport> tblWeeklyReports { get; set; }
+        public virtual DbSet<tblWeeklyReportFile> tblWeeklyReportFiles { get; set; }
+        public virtual DbSet<tblEstimateFile> tblEstimateFiles { get; set; }
+        public virtual DbSet<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
     }
 }
