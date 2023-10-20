@@ -6,11 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace EarthCo.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class EstimateController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
@@ -82,8 +85,20 @@ namespace EarthCo.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult AddEstimate([FromBody] tblEstimate Estimate, List<HttpPostedFileBase> Files)
+        public IHttpActionResult AddEstimate()
         {
+            var Data1 = HttpContext.Current.Request.Params.Get("EstimateData");
+            HttpPostedFile file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+
+            EstimateFiles Estimate = new EstimateFiles();
+            Estimate.Files = new List<HttpPostedFile>();
+            for (int i = 0; i < HttpContext.Current.Request.Files.Count; i++)
+            {
+                Estimate.Files.Add(HttpContext.Current.Request.Files[i]); ;
+            }
+
+            Estimate.EstimateData = JsonSerializer.Deserialize<tblEstimate>(Data1);
+
             tblEstimate Data = new tblEstimate();
             try
             {
@@ -91,34 +106,34 @@ namespace EarthCo.Controllers
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
                 int UserId = 2;
-                if (Estimate.EstimateId == 0)
+                if (Estimate.EstimateData.EstimateId == 0)
                 {
 
-                    if (Estimate.tblEstimateItems != null && Estimate.tblEstimateItems.Count != 0)
+                    if (Estimate.EstimateData.tblEstimateItems != null && Estimate.EstimateData.tblEstimateItems.Count != 0)
                     {
-                        foreach (var item in Estimate.tblEstimateItems)
+                        foreach (var item in Estimate.EstimateData.tblEstimateItems)
                         {
                             item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            item.Amount = item.Qty*item.Rate;
+                            item.Amount = item.Qty * item.Rate;
                             item.EstimateId = Data.EstimateId;
                         }
                     }
 
-                    Data = Estimate;
+                    Data = Estimate.EstimateData;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.CreatedBy = UserId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = Estimate.isActive;
+                    Data.isActive = Estimate.EstimateData.isActive;
                     DB.tblEstimates.Add(Data);
                     DB.SaveChanges();
 
-                    //if (Estimate.tblEstimateItems!= null && Estimate.tblEstimateItems.Count != 0)
+                    //if (Estimate.EstimateData.tblEstimateItems!= null && Estimate.EstimateData.tblEstimateItems.Count != 0)
                     //{
                     //    tblEstimateItem ConData = null;
 
-                    //    foreach (var item in Estimate.tblEstimateItems)
+                    //    foreach (var item in Estimate.EstimateData.tblEstimateItems)
                     //    {
                     //        ConData = new tblEstimateItem();
                     //        ConData = item;
@@ -133,7 +148,7 @@ namespace EarthCo.Controllers
                     //    }
                     //}
 
-                    if (Files != null && Files.Count != 0)
+                    if (Estimate.Files != null && Estimate.Files.Count != 0)
                     {
                         tblEstimateFile FileData = null;
                         string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
@@ -142,7 +157,7 @@ namespace EarthCo.Controllers
                             Directory.CreateDirectory(folder);
                         }
                         int NameCount = 1;
-                        foreach (var item in Files)
+                        foreach (var item in Estimate.Files)
                         {
                             FileData = new tblEstimateFile();
                             string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
@@ -168,24 +183,24 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
-                    Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == Estimate.EstimateId).FirstOrDefault();
+                    Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == Estimate.EstimateData.EstimateId).FirstOrDefault();
                     if (Data == null)
                     {
                         return NotFound(); // Customer not found.
                     }
 
-                    List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == Estimate.EstimateId).ToList();
+                    List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == Estimate.EstimateData.EstimateId).ToList();
                     if (ConList != null && ConList.Count != 0)
                     {
                         DB.tblEstimateItems.RemoveRange(ConList);
                         DB.SaveChanges();
                     }
 
-                    
 
-                    if (Estimate.tblEstimateItems != null && Estimate.tblEstimateItems.Count != 0)
+
+                    if (Estimate.EstimateData.tblEstimateItems != null && Estimate.EstimateData.tblEstimateItems.Count != 0)
                     {
-                        foreach (var item in Estimate.tblEstimateItems)
+                        foreach (var item in Estimate.EstimateData.tblEstimateItems)
                         {
                             item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
@@ -195,29 +210,27 @@ namespace EarthCo.Controllers
                     }
 
 
-                    Data.EstimateNumber = Estimate.EstimateNumber;
-                    Data.ServiceLocation = Estimate.ServiceLocation;
-                    Data.Email = Estimate.Email;
-                    Data.QBStatus = Estimate.QBStatus;
-                    Data.EstimateNotes = Estimate.EstimateNotes;
-                    Data.ServiceLocationNotes = Estimate.ServiceLocationNotes;
-                    Data.PrivateNotes = Estimate.PrivateNotes;
+                    Data.EstimateNumber = Estimate.EstimateData.EstimateNumber;
+                    Data.ServiceLocation = Estimate.EstimateData.ServiceLocation;
+                    Data.Email = Estimate.EstimateData.Email;
+                    Data.QBStatus = Estimate.EstimateData.QBStatus;
+                    Data.EstimateNotes = Estimate.EstimateData.EstimateNotes;
+                    Data.ServiceLocationNotes = Estimate.EstimateData.ServiceLocationNotes;
+                    Data.PrivateNotes = Estimate.EstimateData.PrivateNotes;
                     Data.IssueDate = DateTime.Now;
-                    Data.EstimateStatusId = Estimate.EstimateStatusId;
-                    Data.CustomerId = Estimate.CustomerId;
+                    Data.EstimateStatusId = Estimate.EstimateData.EstimateStatusId;
+                    Data.CustomerId = Estimate.EstimateData.CustomerId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = Estimate.isActive;
+                    Data.isActive = Estimate.EstimateData.isActive;
                     DB.Entry(Data);
                     DB.SaveChanges();
 
-
-
-                    //if (Estimate.tblEstimateItems != null && Estimate.tblEstimateItems.Count != 0)
+                    //if (Estimate.EstimateData.tblEstimateItems != null && Estimate.EstimateData.tblEstimateItems.Count != 0)
                     //{
                     //    tblEstimateItem ConData = null;
 
-                    //    foreach (var item in Estimate.tblEstimateItems)
+                    //    foreach (var item in Estimate.EstimateData.tblEstimateItems)
                     //    {
                     //        ConData = new tblEstimateItem();
                     //        ConData = item;
@@ -232,14 +245,14 @@ namespace EarthCo.Controllers
                     //    }
                     //}
 
-                    List<tblEstimateFile> ConFList = DB.tblEstimateFiles.Where(x => x.EstimateId== Estimate.EstimateId).ToList();
+                    List<tblEstimateFile> ConFList = DB.tblEstimateFiles.Where(x => x.EstimateId == Estimate.EstimateData.EstimateId).ToList();
                     if (ConFList != null && ConFList.Count != 0)
                     {
                         DB.tblEstimateFiles.RemoveRange(ConFList);
                         DB.SaveChanges();
                     }
 
-                    if (Files != null && Files.Count != 0)
+                    if (Estimate.Files != null && Estimate.Files.Count != 0)
                     {
                         tblEstimateFile FileData = null;
                         string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
@@ -248,7 +261,7 @@ namespace EarthCo.Controllers
                             Directory.CreateDirectory(folder);
                         }
                         int NameCount = 1;
-                        foreach (var item in Files)
+                        foreach (var item in Estimate.Files)
                         {
                             FileData = new tblEstimateFile();
                             string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
@@ -279,6 +292,7 @@ namespace EarthCo.Controllers
             {
                 return InternalServerError(ex);
             }
+            return NotFound();
         }
 
         [HttpGet]

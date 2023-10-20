@@ -308,26 +308,26 @@ namespace EarthCo.Controllers
                     DB.tblCustomers.Add(newCustomer);
                     DB.SaveChanges();
 
-                    if (Customer.ContactData != null && Customer.ContactData.Count > 0)
+                    if (Customer.ContactData != null && Customer.ContactData.Count != 0)
                     {
+                        tblContact ConData = null;
+
                         foreach (var item in Customer.ContactData)
                         {
-                            var newContact = new tblContact
-                            {
-                                CustomerName = newCustomer.CustomerName,
-                                CreatedDate = DateTime.Now,
-                                CreatedBy = userId,
-                                EditDate = DateTime.Now,
-                                EditBy = userId,
-                                isActive = item.isActive,
-                                isPrimary = item.isPrimary,
-                                CustomerId = newCustomer.CustomerId
-                            };
-
-                            DB.tblContacts.Add(newContact);
+                            ConData = new tblContact();
+                            ConData = item;
+                            ConData.CustomerName = newCustomer.CustomerName;
+                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.CreatedBy = userId;
+                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.EditBy = userId;
+                            ConData.isActive = item.isActive;
+                            ConData.isPrimary = item.isPrimary;
+                            ConData.CustomerId = newCustomer.CustomerId;
+                            DB.tblContacts.Add(ConData);
+                            DB.SaveChanges();
                         }
 
-                        DB.SaveChanges();
                     }
 
                     var logData = new tblLog
@@ -362,24 +362,26 @@ namespace EarthCo.Controllers
                     DB.tblContacts.RemoveRange(existingContacts);
 
                     // Add new contacts
-                    if (Customer.ContactData != null && Customer.ContactData.Count > 0)
+                    if (Customer.ContactData != null && Customer.ContactData.Count != 0)
                     {
+                        tblContact ConData = null;
+
                         foreach (var item in Customer.ContactData)
                         {
-                            var newContact = new tblContact
-                            {
-                                CustomerName = existingCustomer.CustomerName,
-                                CreatedDate = DateTime.Now,
-                                CreatedBy = userId,
-                                EditDate = DateTime.Now,
-                                EditBy = userId,
-                                isActive = item.isActive,
-                                isPrimary = item.isPrimary,
-                                CustomerId = existingCustomer.CustomerId
-                            };
-
-                            DB.tblContacts.Add(newContact);
+                            ConData = new tblContact();
+                            ConData = item;
+                            ConData.CustomerName = existingCustomer.CustomerName;
+                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.CreatedBy = userId;
+                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.EditBy = userId;
+                            ConData.isActive = item.isActive;
+                            ConData.isPrimary = item.isPrimary;
+                            ConData.CustomerId = existingCustomer.CustomerId;
+                            DB.tblContacts.Add(ConData);
+                            DB.SaveChanges();
                         }
+
                     }
 
                     var logData = new tblLog

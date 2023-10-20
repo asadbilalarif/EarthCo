@@ -252,6 +252,7 @@
     <Compile Include="Models\CreateAccessLevelClass.cs" />
     <Compile Include="Models\CustomerContacts.cs" />
     <Compile Include="Models\DeleteSelected.cs" />
+    <Compile Include="Models\EstimateFiles.cs" />
     <Compile Include="Models\GetCustomerContact.cs" />
     <Compile Include="Models\GetEstimateItem.cs" />
     <Compile Include="Models\InviteEmployee.cs" />
