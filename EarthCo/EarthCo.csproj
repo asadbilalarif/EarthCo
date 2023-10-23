@@ -274,6 +274,7 @@
       <DependentUpon>Model.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\PunchlistDetailItems.cs" />
+    <Compile Include="Models\ServiceRequestFile.cs" />
     <Compile Include="Models\tblAccessLevel.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

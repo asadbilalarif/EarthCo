@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Web;
 using System.Web.Http;
 
@@ -56,8 +57,23 @@ namespace EarthCo.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult AddServiceRequest([FromBody] tblServiceRequest ServiceRequest, HttpPostedFile[] Files)
+        public IHttpActionResult AddServiceRequest()
         {
+
+
+            var Data1 = HttpContext.Current.Request.Params.Get("ServiceRequestData");
+            HttpPostedFile file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+
+            ServiceRequestFile ServiceRequest = new ServiceRequestFile();
+            ServiceRequest.Files = new List<HttpPostedFile>();
+            for (int i = 0; i < HttpContext.Current.Request.Files.Count; i++)
+            {
+                ServiceRequest.Files.Add(HttpContext.Current.Request.Files[i]); ;
+            }
+
+            ServiceRequest.ServiceRequestData = JsonSerializer.Deserialize<tblServiceRequest>(Data1);
+
+
             tblServiceRequest Data = new tblServiceRequest();
             try
             {
@@ -65,22 +81,22 @@ namespace EarthCo.Controllers
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
                 int UserId = 2;
-                if (ServiceRequest.ServiceRequestId == 0)
+                if (ServiceRequest.ServiceRequestData.ServiceRequestId == 0)
                 {
-                    Data = ServiceRequest;
+                    Data = ServiceRequest.ServiceRequestData;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.CreatedBy = UserId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = ServiceRequest.isActive;
+                    Data.isActive = ServiceRequest.ServiceRequestData.isActive;
                     DB.tblServiceRequests.Add(Data);
                     DB.SaveChanges();
 
-                    if (ServiceRequest.tblSRItems != null && ServiceRequest.tblSRItems.Count != 0)
+                    if (ServiceRequest.ServiceRequestData.tblSRItems != null && ServiceRequest.ServiceRequestData.tblSRItems.Count != 0)
                     {
                         tblSRItem ConData = null;
 
-                        foreach (var item in ServiceRequest.tblSRItems)
+                        foreach (var item in ServiceRequest.ServiceRequestData.tblSRItems)
                         {
                             ConData = new tblSRItem();
                             ConData = item;
@@ -95,7 +111,7 @@ namespace EarthCo.Controllers
                         }
                     }
 
-                    if(Files != null && Files.Length!=0)
+                    if(ServiceRequest.Files != null && ServiceRequest.Files.Count!=0)
                     {
                         tblSRFile FileData = null;
                         string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
@@ -104,7 +120,7 @@ namespace EarthCo.Controllers
                             Directory.CreateDirectory(folder);
                         }
                         int NameCount = 1;
-                        foreach (var item in Files)
+                        foreach (var item in ServiceRequest.Files)
                         {
                             FileData = new tblSRFile();
                             string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.ServiceRequestId.ToString()+ NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
@@ -130,42 +146,42 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
-                    Data = DB.tblServiceRequests.Select(r => r).Where(x => x.ServiceRequestId == ServiceRequest.ServiceRequestId).FirstOrDefault();
+                    Data = DB.tblServiceRequests.Select(r => r).Where(x => x.ServiceRequestId == ServiceRequest.ServiceRequestData.ServiceRequestId).FirstOrDefault();
                     if (Data == null)
                     {
                         return NotFound(); // Customer not found.
                     }
 
-                    Data.ServiceRequestNumber = ServiceRequest.ServiceRequestNumber;
-                    Data.ServiceLocation = ServiceRequest.ServiceLocation;
-                    Data.Contact = ServiceRequest.Contact;
-                    Data.JobName = ServiceRequest.JobName;
-                    Data.Assign = ServiceRequest.Assign;
-                    Data.WorkRequest = ServiceRequest.WorkRequest;
-                    Data.ActionTaken = ServiceRequest.ActionTaken;
-                    Data.CompletedDate = ServiceRequest.CompletedDate;
-                    Data.DueDate = ServiceRequest.DueDate;
-                    Data.CustomerId = ServiceRequest.CustomerId;
-                    Data.SRTypeId = ServiceRequest.SRTypeId;
-                    Data.SRStatusId = ServiceRequest.SRStatusId;
+                    Data.ServiceRequestNumber = ServiceRequest.ServiceRequestData.ServiceRequestNumber;
+                    Data.ServiceLocation = ServiceRequest.ServiceRequestData.ServiceLocation;
+                    Data.Contact = ServiceRequest.ServiceRequestData.Contact;
+                    Data.JobName = ServiceRequest.ServiceRequestData.JobName;
+                    Data.Assign = ServiceRequest.ServiceRequestData.Assign;
+                    Data.WorkRequest = ServiceRequest.ServiceRequestData.WorkRequest;
+                    Data.ActionTaken = ServiceRequest.ServiceRequestData.ActionTaken;
+                    Data.CompletedDate = ServiceRequest.ServiceRequestData.CompletedDate;
+                    Data.DueDate = ServiceRequest.ServiceRequestData.DueDate;
+                    Data.CustomerId = ServiceRequest.ServiceRequestData.CustomerId;
+                    Data.SRTypeId = ServiceRequest.ServiceRequestData.SRTypeId;
+                    Data.SRStatusId = ServiceRequest.ServiceRequestData.SRStatusId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = ServiceRequest.isActive;
+                    Data.isActive = ServiceRequest.ServiceRequestData.isActive;
                     DB.Entry(Data);
                     DB.SaveChanges();
 
-                    List<tblSRItem> ConList = DB.tblSRItems.Where(x => x.SRId == ServiceRequest.ServiceRequestId).ToList();
+                    List<tblSRItem> ConList = DB.tblSRItems.Where(x => x.SRId == ServiceRequest.ServiceRequestData.ServiceRequestId).ToList();
                     if (ConList != null && ConList.Count != 0)
                     {
                         DB.tblSRItems.RemoveRange(ConList);
                         DB.SaveChanges();
                     }
 
-                    if (ServiceRequest.tblSRItems != null && ServiceRequest.tblSRItems.Count != 0)
+                    if (ServiceRequest.ServiceRequestData.tblSRItems != null && ServiceRequest.ServiceRequestData.tblSRItems.Count != 0)
                     {
                         tblSRItem ConData = null;
 
-                        foreach (var item in ServiceRequest.tblSRItems)
+                        foreach (var item in ServiceRequest.ServiceRequestData.tblSRItems)
                         {
                             ConData = new tblSRItem();
                             ConData = item;
@@ -180,14 +196,14 @@ namespace EarthCo.Controllers
                         }
                     }
 
-                    List<tblSRFile> ConFList = DB.tblSRFiles.Where(x => x.SRId == ServiceRequest.ServiceRequestId).ToList();
+                    List<tblSRFile> ConFList = DB.tblSRFiles.Where(x => x.SRId == ServiceRequest.ServiceRequestData.ServiceRequestId).ToList();
                     if (ConFList != null && ConFList.Count != 0)
                     {
                         DB.tblSRFiles.RemoveRange(ConFList);
                         DB.SaveChanges();
                     }
 
-                    if (Files != null && Files.Length != 0)
+                    if (ServiceRequest.Files != null && ServiceRequest.Files.Count != 0)
                     {
                         tblSRFile FileData = null;
                         string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
@@ -196,7 +212,7 @@ namespace EarthCo.Controllers
                             Directory.CreateDirectory(folder);
                         }
                         int NameCount = 1;
-                        foreach (var item in Files)
+                        foreach (var item in ServiceRequest.Files)
                         {
                             FileData = new tblSRFile();
                             string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
@@ -219,7 +235,7 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
 
-                    return Ok("Estimate has been Update successfully.");
+                    return Ok("Service Request has been Update successfully.");
                 }
             }
             catch (Exception ex)
