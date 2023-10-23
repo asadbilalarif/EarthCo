@@ -451,6 +451,18 @@ namespace EarthCo.Controllers
                 int userId = 2; // Replace with your authentication mechanism to get the user's ID.
 
                 // Check if the customer with the specified ID exists
+
+                tblEstimate CheckEstimate = DB.tblEstimates.Where(x => x.CustomerId == id).FirstOrDefault();
+                tblServiceRequest CheckServices = DB.tblServiceRequests.Where(x => x.CustomerId == id).FirstOrDefault();
+                tblPunchlist CheckPunchlist = DB.tblPunchlists.Where(x => x.CustomerId == id).FirstOrDefault();
+
+                if (CheckEstimate!=null || CheckServices!=null || CheckPunchlist!=null)
+                {
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                    responseMessage.Content = new StringContent("Cannot delete the record due to related data.");
+                    return ResponseMessage(responseMessage);
+                }
+
                 var customerToDelete = DB.tblCustomers.FirstOrDefault(c => c.CustomerId == id);
 
                 if (customerToDelete == null)

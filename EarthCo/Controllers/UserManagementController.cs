@@ -79,7 +79,6 @@ namespace EarthCo.Controllers
                         EncDataBtye = System.Text.Encoding.UTF8.GetBytes(User.Password);
                         Data.Password = Convert.ToBase64String(EncDataBtye);
 
-
                         //string folder = Server.MapPath(string.Format("~/{0}/", "Uploading"));
                         //if (!Directory.Exists(folder))
                         //{
