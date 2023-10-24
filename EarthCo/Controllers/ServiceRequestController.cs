@@ -9,9 +9,11 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace EarthCo.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ServiceRequestController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();

@@ -311,6 +311,13 @@ namespace EarthCo.Controllers
                 }
 
 
+                List<tblEstimateFile> ConFile = DB.tblEstimateFiles.Where(x => x.EstimateId == id).ToList();
+                if (ConFile != null && ConFile.Count != 0)
+                {
+                    DB.tblEstimateFiles.RemoveRange(ConFile);
+                    DB.SaveChanges();
+                }
+
                 List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == id).ToList();
                 if (ConList != null && ConList.Count != 0)
                 {
