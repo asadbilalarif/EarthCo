@@ -10,7 +10,7 @@ namespace EarthCo.Models
         public int ControllerId { get; set; }
         public string MakeAndModel { get; set; }
         public string ControllerPhotoPath { get; set; }
-        public HttpPostedFileBase ControllerPhoto { get; set; }
+        public HttpPostedFile ControllerPhoto { get; set; }
         public string SerialNumber { get; set; }
         public string LoacationClosestAddress { get; set; }
         public Nullable<bool> isSatelliteBased { get; set; }
@@ -28,7 +28,7 @@ namespace EarthCo.Models
         public string RepairsMade { get; set; }
         public string UpgradesMade { get; set; }
         public string PhotoPath { get; set; }
-        public HttpPostedFileBase Photo { get; set; }
+        public HttpPostedFile Photo { get; set; }
         public Nullable<int> IrrigationId { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }

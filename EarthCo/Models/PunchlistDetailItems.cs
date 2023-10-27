@@ -8,8 +8,8 @@ namespace EarthCo.Models
     public class PunchlistDetailItems
     {
         public tblPunchlistDetail PunchlistDetailData { get; set; }
-        public HttpPostedFileBase Files { get; set; }
-        public HttpPostedFileBase AfterFiles { get; set; }
+        public HttpPostedFile Files { get; set; }
+        public HttpPostedFile AfterFiles { get; set; }
         public List<tblPunchlistItem> PunchlistItemsData { get; set; }
     }
 }

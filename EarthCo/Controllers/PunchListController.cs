@@ -6,11 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace EarthCo.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PunchListController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
@@ -126,17 +129,43 @@ namespace EarthCo.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult AddPunchlistDetail([FromBody] PunchlistDetailItems Punchlist)
+        public IHttpActionResult AddPunchlistDetail()
         {
             tblPunchlistDetail Data = new tblPunchlistDetail();
             try
             {
+
+                var Data1 = HttpContext.Current.Request.Params.Get("PunchlistDetailData");
+                HttpPostedFile file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+
+                PunchlistDetailItems Punchlist = new PunchlistDetailItems();
+                //Punchlist.Files = new HttpPostedFile();
+                Punchlist.Files = HttpContext.Current.Request.Files[0];
+                Punchlist.AfterFiles = HttpContext.Current.Request.Files[1];
+
+                Punchlist.PunchlistDetailData = JsonSerializer.Deserialize<tblPunchlistDetail>(Data1);
+
                 //HttpCookie cookieObj = Request.Cookies["User"];
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
                 int UserId = 2;
                 if (Punchlist.PunchlistDetailData.PunchlistDetailId== 0)
                 {
+
+                    if (Punchlist.PunchlistDetailData.tblPunchlistItems != null && Punchlist.PunchlistDetailData.tblPunchlistItems.Count != 0)
+                    {
+                        foreach (var item in Punchlist.PunchlistDetailData.tblPunchlistItems)
+                        {
+                            item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.CreatedBy = UserId;
+                            item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
+                            item.isActive = item.isActive;
+                            item.PunchlistDetailId = Data.PunchlistDetailId;
+                        }
+                    }
+
+
                     Data = Punchlist.PunchlistDetailData;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.CreatedBy = UserId;
@@ -168,24 +197,24 @@ namespace EarthCo.Controllers
                     DB.tblPunchlistDetails.Add(Data);
                     DB.SaveChanges();
 
-                    if (Punchlist.PunchlistItemsData != null && Punchlist.PunchlistItemsData.Count != 0)
-                    {
-                        tblPunchlistItem ConData = null;
+                    //if (Punchlist.PunchlistDetailData.tblPunchlistItems != null && Punchlist.PunchlistDetailData.tblPunchlistItems.Count != 0)
+                    //{
+                    //    tblPunchlistItem ConData = null;
 
-                        foreach (var item in Punchlist.PunchlistItemsData)
-                        {
-                            ConData = new tblPunchlistItem();
-                            ConData = item;
-                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.CreatedBy = UserId;
-                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.EditBy = UserId;
-                            ConData.isActive = item.isActive;
-                            ConData.PunchlistDetailId = Data.PunchlistDetailId;
-                            DB.tblPunchlistItems.Add(ConData);
-                            DB.SaveChanges();
-                        }
-                    }
+                    //    foreach (var item in Punchlist.PunchlistDetailData.tblPunchlistItems)
+                    //    {
+                    //        ConData = new tblPunchlistItem();
+                    //        ConData = item;
+                    //        ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    //        ConData.CreatedBy = UserId;
+                    //        ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    //        ConData.EditBy = UserId;
+                    //        ConData.isActive = item.isActive;
+                    //        ConData.PunchlistDetailId = Data.PunchlistDetailId;
+                    //        DB.tblPunchlistItems.Add(ConData);
+                    //        DB.SaveChanges();
+                    //    }
+                    //}
 
 
                     tblLog LogData = new tblLog();
@@ -204,6 +233,27 @@ namespace EarthCo.Controllers
                     {
                         return NotFound();
                     }
+
+                    List<tblPunchlistItem> ConList = DB.tblPunchlistItems.Where(x => x.PunchlistDetailId == Punchlist.PunchlistDetailData.PunchlistDetailId).ToList();
+                    if (ConList != null && ConList.Count != 0)
+                    {
+                        DB.tblPunchlistItems.RemoveRange(ConList);
+                        DB.SaveChanges();
+                    }
+
+                    if (Punchlist.PunchlistDetailData.tblPunchlistItems != null && Punchlist.PunchlistDetailData.tblPunchlistItems.Count != 0)
+                    {
+                        foreach (var item in Punchlist.PunchlistDetailData.tblPunchlistItems)
+                        {
+                            item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.CreatedBy = UserId;
+                            item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
+                            item.isActive = item.isActive;
+                            item.PunchlistDetailId = Data.PunchlistDetailId;
+                        }
+                    }
+
                     //Data = Punchlist.PunchlistDetailData;
                     Data.Notes = Punchlist.PunchlistDetailData.Notes;
                     Data.Address = Punchlist.PunchlistDetailData.Address;
@@ -248,32 +298,32 @@ namespace EarthCo.Controllers
                     DB.SaveChanges();
 
 
-                    List<tblPunchlistItem> ConList = DB.tblPunchlistItems.Where(x => x.PunchlistDetailId == Punchlist.PunchlistDetailData.PunchlistDetailId).ToList();
-                    if (ConList != null && ConList.Count != 0)
-                    {
-                        DB.tblPunchlistItems.RemoveRange(ConList);
-                        DB.SaveChanges();
-                    }
+                    //List<tblPunchlistItem> ConList = DB.tblPunchlistItems.Where(x => x.PunchlistDetailId == Punchlist.PunchlistDetailData.PunchlistDetailId).ToList();
+                    //if (ConList != null && ConList.Count != 0)
+                    //{
+                    //    DB.tblPunchlistItems.RemoveRange(ConList);
+                    //    DB.SaveChanges();
+                    //}
 
-                    if (Punchlist.PunchlistItemsData != null && Punchlist.PunchlistItemsData.Count != 0)
-                    {
-                        tblPunchlistItem ConData = null;
+                    //if (Punchlist.PunchlistDetailData.tblPunchlistItems != null && Punchlist.PunchlistDetailData.tblPunchlistItems.Count != 0)
+                    //{
+                    //    tblPunchlistItem ConData = null;
 
-                        foreach (var item in Punchlist.PunchlistItemsData)
-                        {
-                            ConData = new tblPunchlistItem();
-                            ConData = item;
-                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.CreatedBy = UserId;
-                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.EditBy = UserId;
-                            ConData.isActive = item.isActive;
-                            ConData.PunchlistDetailId = Data.PunchlistDetailId;
-                            DB.tblPunchlistItems.Add(ConData);
-                            DB.SaveChanges();
-                        }
+                    //    foreach (var item in Punchlist.PunchlistDetailData.tblPunchlistItems)
+                    //    {
+                    //        ConData = new tblPunchlistItem();
+                    //        ConData = item;
+                    //        ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    //        ConData.CreatedBy = UserId;
+                    //        ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    //        ConData.EditBy = UserId;
+                    //        ConData.isActive = item.isActive;
+                    //        ConData.PunchlistDetailId = Data.PunchlistDetailId;
+                    //        DB.tblPunchlistItems.Add(ConData);
+                    //        DB.SaveChanges();
+                    //    }
 
-                    }
+                    //}
 
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
