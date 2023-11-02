@@ -374,6 +374,10 @@ namespace EarthCo.Controllers
                         EncDataBtye = System.Text.Encoding.UTF8.GetBytes(Customer.Password);
                         Data.Password = Convert.ToBase64String(EncDataBtye);
                     }
+                    else
+                    {
+                        Data.Password = "";
+                    }
 
                     DB.tblUsers.Add(Data);
                     DB.SaveChanges();
@@ -426,9 +430,10 @@ namespace EarthCo.Controllers
                     Data.Email = Customer.Email;
                     Data.RoleId = 2;
                     Data.UserTypeId = 2;
+                    Data.isLoginAllow = Customer.isLoginAllow;
                     if (Customer.isLoginAllow == true)
                     {
-                        Data.isLoginAllow = Customer.isLoginAllow;
+                        
                         if(Customer.Password!=null && Customer.Password != "")
                         {
                             byte[] EncDataBtye = new byte[Customer.Password.Length];
