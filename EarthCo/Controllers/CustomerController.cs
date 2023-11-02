@@ -55,32 +55,11 @@ namespace EarthCo.Controllers
         {
             try
             {
-                List<GetCustomerContact> Data = new List<GetCustomerContact>();
-                GetCustomerContact Temp = null;
-                List<tblCustomer> CusData = new List<tblCustomer>();
-                tblContact ConData = new tblContact();
-                CusData = DB.tblCustomers.ToList();
-                if (CusData == null || CusData.Count == 0)
+                List<tblUser> Data = new List<tblUser>();
+                Data = DB.tblUsers.Where(x=>x.RoleId==2 && x.isDelete!=true).ToList();
+                if (Data == null || Data.Count == 0)
                 {
                     return NotFound(); // 404 - No data found
-                }
-
-                foreach (var item in CusData)
-                {
-                    Temp = new GetCustomerContact();
-                    ConData = item.tblContacts.Where(x => x.isPrimary == true).FirstOrDefault();
-
-                    Temp.CustomerId = item.CustomerId;
-                    Temp.CustomerName = item.CustomerName;
-                    if (ConData != null)
-                    {
-                        Temp.ContactId = ConData.ContactId;
-                        Temp.ContactName = ConData.FirstName + " " + ConData.FirstName;
-                        Temp.ContactCompany = ConData.CompanyName;
-                        Temp.ContactEmail = ConData.Email;
-                    }
-
-                    Data.Add(Temp);
                 }
 
                 return Ok(Data); // 200 - Successful response with data
@@ -120,24 +99,20 @@ namespace EarthCo.Controllers
         {
             try
             {
-                tblCustomer CusData = new tblCustomer();
-                CusData = DB.tblCustomers.Where(x => x.CustomerId == id).FirstOrDefault();
-                if (CusData == null)
+                tblUser Data = new tblUser();
+                Data = DB.tblUsers.Where(x => x.UserId == id && x.isDelete != true).FirstOrDefault();
+                if (Data == null)
                 {
-                    CustomerContacts Data = new CustomerContacts();
-                    CusData = new tblCustomer();
-                    Data.CustomerData = CusData;
-                    List<tblContact> ConData = new List<tblContact>();
-                    tblContact temp = new tblContact();
-                    ConData.Add(temp);
-                    Data.ContactData= ConData;
+                    Data = new tblUser();
+                    Data.tblContact = null;
+                    Data.tblServiceLocation = null;
                     string userJson = JsonConvert.SerializeObject(Data);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);
                 }
 
-                return Ok(CusData); // 200 - Successful response with data
+                return Ok(Data); // 200 - Successful response with data
             }
             catch (Exception ex)
             {
@@ -149,22 +124,50 @@ namespace EarthCo.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult GetContact(int id)
+        public IHttpActionResult GetCustomerContact(int id)
         {
             try
             {
-                List<tblContact> ConData = new List<tblContact>();
-                ConData = DB.tblContacts.Where(x => x.CustomerId == id).ToList();
-                if (ConData == null || ConData.Count==0)
+                List<tblContact> Data = new List<tblContact>();
+                Data = DB.tblContacts.Where(x => x.CustomerId == id && x.isDelete != true).ToList();
+                if (Data == null || Data.Count==0)
                 {
-                    ConData = new List<tblContact>();
-                    string userJson = JsonConvert.SerializeObject(ConData);
+                    Data = new List<tblContact>();
+                    string userJson = JsonConvert.SerializeObject(Data);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);
                 }
 
-                return Ok(ConData); // 200 - Successful response with data
+                return Ok(Data); // 200 - Successful response with data
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                // You may also choose to return a more specific error response (e.g., 500 - Internal Server Error) here.
+                return InternalServerError(ex);
+            }
+
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult GetCustomerServiceLocation(int id)
+        {
+            try
+            {
+                List<tblServiceLocation> Data = new List<tblServiceLocation>();
+                Data = DB.tblServiceLocations.Where(x => x.CustomerId == id && x.isDelete != true).ToList();
+                if (Data == null || Data.Count == 0)
+                {
+                    Data = new List<tblServiceLocation>();
+                    string userJson = JsonConvert.SerializeObject(Data);
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
+                    return ResponseMessage(responseMessage);
+                }
+
+                return Ok(Data); // 200 - Successful response with data
             }
             catch (Exception ex)
             {
@@ -284,7 +287,7 @@ namespace EarthCo.Controllers
         //}
 
         [HttpPost]
-        public IHttpActionResult AddCustomer([FromBody] CustomerContacts Customer)
+        public IHttpActionResult AddCustomer([FromBody] tblUser Customer)
         {
             try
             {
@@ -292,43 +295,35 @@ namespace EarthCo.Controllers
                 //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
                 int userId = 2; // Replace with your authentication mechanism to get the user's ID.
 
-                if (Customer.CustomerData.CustomerId == 0)
+                tblUser Data = new tblUser();
+
+                if (Customer.UserId == 0)
                 {
                     // Creating a new customer.
-                    var newCustomer = new tblCustomer
+                    if (DB.tblUsers.Select(r => r).Where(x => x.Email == Customer.Email && Customer.isDelete != true).FirstOrDefault() != null)
                     {
-                        CustomerName = Customer.CustomerData.CustomerName,
-                        CreatedDate = DateTime.Now,
-                        CreatedBy = userId,
-                        EditDate = DateTime.Now,
-                        EditBy = userId,
-                        isActive = Customer.CustomerData.isActive
-                    };
-
-                    DB.tblCustomers.Add(newCustomer);
-                    DB.SaveChanges();
-
-                    if (Customer.ContactData != null && Customer.ContactData.Count != 0)
-                    {
-                        tblContact ConData = null;
-
-                        foreach (var item in Customer.ContactData)
-                        {
-                            ConData = new tblContact();
-                            ConData = item;
-                            ConData.CustomerName = newCustomer.CustomerName;
-                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.CreatedBy = userId;
-                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.EditBy = userId;
-                            ConData.isActive = item.isActive;
-                            ConData.isPrimary = item.isPrimary;
-                            ConData.CustomerId = newCustomer.CustomerId;
-                            DB.tblContacts.Add(ConData);
-                            DB.SaveChanges();
-                        }
-
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Customer with same Email already exsist!!!");
+                        return ResponseMessage(responseMessage);
                     }
+
+                        Data = Customer;
+                    Data.RoleId = 2;
+                    Data.CreatedDate = DateTime.Now;
+                    Data.CreatedBy = userId;
+                    Data.EditDate = DateTime.Now;
+                    Data.EditBy = userId;
+                    Data.isActive = Customer.isActive;
+
+                    if(Customer.isLoginAllow==true)
+                    {
+                        byte[] EncDataBtye = new byte[Customer.Password.Length];
+                        EncDataBtye = System.Text.Encoding.UTF8.GetBytes(Customer.Password);
+                        Data.Password = Convert.ToBase64String(EncDataBtye);
+                    }
+
+                    DB.tblUsers.Add(Data);
+                    DB.SaveChanges();
 
                     var logData = new tblLog
                     {
@@ -340,49 +335,53 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(logData);
                     DB.SaveChanges();
 
-                    return Ok("Customer has been added successfully.");
+                    return Ok(new { Id = Data.UserId, Message = "Customer has been added successfully." });
                 }
                 else
                 {
                     // Updating an existing customer.
-                    var existingCustomer = DB.tblCustomers.SingleOrDefault(c => c.CustomerId == Customer.CustomerData.CustomerId);
+                    Data = DB.tblUsers.SingleOrDefault(c => c.UserId == Customer.UserId);
 
-                    if (existingCustomer == null)
+                    if (Data == null)
                     {
                         return NotFound(); // Customer not found.
                     }
-
-                    existingCustomer.CustomerName = Customer.CustomerData.CustomerName;
-                    existingCustomer.EditDate = DateTime.Now;
-                    existingCustomer.EditBy = userId;
-                    existingCustomer.isActive = Customer.CustomerData.isActive;
-
-                    // Remove existing contacts
-                    var existingContacts = DB.tblContacts.Where(c => c.CustomerId == existingCustomer.CustomerId).ToList();
-                    DB.tblContacts.RemoveRange(existingContacts);
-
-                    // Add new contacts
-                    if (Customer.ContactData != null && Customer.ContactData.Count != 0)
+                    if (DB.tblUsers.Select(r => r).Where(x => x.Email == Customer.Email && Customer.isDelete!=true).FirstOrDefault() != null)
                     {
-                        tblContact ConData = null;
-
-                        foreach (var item in Customer.ContactData)
-                        {
-                            ConData = new tblContact();
-                            ConData = item;
-                            ConData.CustomerName = existingCustomer.CustomerName;
-                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.CreatedBy = userId;
-                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.EditBy = userId;
-                            ConData.isActive = item.isActive;
-                            ConData.isPrimary = item.isPrimary;
-                            ConData.CustomerId = existingCustomer.CustomerId;
-                            DB.tblContacts.Add(ConData);
-                            DB.SaveChanges();
-                        }
-
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Customer with same Email already exsist!!!");
+                        return ResponseMessage(responseMessage);
                     }
+                    Data.CompanyName = Customer.CompanyName;
+                    Data.FirstName = Customer.FirstName;
+                    Data.LastName = Customer.LastName;
+                    Data.Address = Customer.Address;
+                    Data.Phone = Customer.Phone;
+                    Data.AltPhone = Customer.AltPhone;
+                    Data.Fax = Customer.Fax;
+                    Data.Notes = Customer.Notes;
+                    Data.CustomerTypeId = Customer.CustomerTypeId;
+                    Data.username = Customer.username;
+                    Data.Email = Customer.Email;
+                    if (Customer.isLoginAllow == true)
+                    {
+                        Data.isLoginAllow = Customer.isLoginAllow;
+                        if(Customer.Password!=null && Customer.Password != "")
+                        {
+                            byte[] EncDataBtye = new byte[Customer.Password.Length];
+                            EncDataBtye = System.Text.Encoding.UTF8.GetBytes(Customer.Password);
+                            Data.Password = Convert.ToBase64String(EncDataBtye);
+                        } 
+                    }
+
+
+                    Data.EditDate = DateTime.Now;
+                    Data.EditBy = userId;
+                    Data.isActive = Customer.isActive;
+
+                    DB.Entry(Data);
+                    DB.SaveChanges();
+
 
                     var logData = new tblLog
                     {
@@ -394,7 +393,9 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(logData);
                     DB.SaveChanges();
 
-                    return Ok("Customer has been updated successfully.");
+
+                    return Ok(new { Id = Data.UserId, Message = "Customer has been updated successfully." });
+                    //return Ok("Customer has been updated successfully.");
                 }
             }
             catch (Exception ex)
@@ -405,6 +406,193 @@ namespace EarthCo.Controllers
         }
 
 
+        [HttpPost]
+        public IHttpActionResult AddContact([FromBody] tblContact Contact)
+        {
+            try
+            {
+                //var userIdClaim = User.Identity as ClaimsIdentity;
+                //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+
+                tblContact Data = new tblContact();
+
+                if (Contact.ContactId == 0)
+                {
+                    // Creating a new customer.
+
+                    Data = Contact;
+                    Data.CreatedDate = DateTime.Now;
+                    Data.CreatedBy = userId;
+                    Data.EditDate = DateTime.Now;
+                    Data.EditBy = userId;
+                    Data.isActive = Contact.isActive;
+
+                    //if (Contact.isLoginAllow == true)
+                    //{
+                    //    byte[] EncDataBtye = new byte[Contact.Password.Length];
+                    //    EncDataBtye = System.Text.Encoding.UTF8.GetBytes(Contact.Password);
+                    //    Data.Password = Convert.ToBase64String(EncDataBtye);
+                    //}
+
+                    DB.tblContacts.Add(Data);
+                    DB.SaveChanges();
+
+                    var logData = new tblLog
+                    {
+                        UserId = userId,
+                        Action = "Add Contact",
+                        CreatedDate = DateTime.Now
+                    };
+
+                    DB.tblLogs.Add(logData);
+                    DB.SaveChanges();
+
+                    return Ok(new { Id = Data.ContactId, Message = "Contact has been added successfully." });
+                }
+                else
+                {
+                    // Updating an existing customer.
+                    Data = DB.tblContacts.SingleOrDefault(c => c.ContactId == Contact.ContactId);
+
+                    if (Data == null)
+                    {
+                        return NotFound(); // Customer not found.
+                    }
+
+                    Data.CompanyName = Contact.CompanyName;
+                    Data.FirstName = Contact.FirstName;
+                    Data.LastName = Contact.LastName;
+                    Data.Phone = Contact.Phone;
+                    Data.AltPhone = Contact.AltPhone;
+                    Data.Email = Contact.Email;
+                    Data.Address = Contact.Address;
+                    Data.CustomerId = Contact.CustomerId;
+                    Data.Comments = Contact.Comments;
+                    Data.UserName = Contact.UserName;
+                    Data.CustomerName = Contact.CustomerName;
+                   
+                    //if (Contact.isLoginAllow == true)
+                    //{
+                    //    Data.isLoginAllow = Contact.isLoginAllow;
+                    //    if (Contact.Password != null && Contact.Password != "")
+                    //    {
+                    //        byte[] EncDataBtye = new byte[Contact.Password.Length];
+                    //        EncDataBtye = System.Text.Encoding.UTF8.GetBytes(Contact.Password);
+                    //        Data.Password = Convert.ToBase64String(EncDataBtye);
+                    //    }
+                    //}
+
+                    Data.EditDate = DateTime.Now;
+                    Data.EditBy = userId;
+                    Data.isActive = Contact.isActive;
+
+                    DB.Entry(Data);
+                    DB.SaveChanges();
+
+
+                    var logData = new tblLog
+                    {
+                        UserId = userId,
+                        Action = "Update Customer",
+                        CreatedDate = DateTime.Now
+                    };
+
+                    DB.tblLogs.Add(logData);
+                    DB.SaveChanges();
+
+                    return Ok(new { Id = Data.ContactId, Message = "Customer has been updated successfully." });
+                    //return Ok("Customer has been updated successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return InternalServerError(ex); // 500 - Internal Server Error
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult AddServiceLocation([FromBody] tblServiceLocation ServiceLocation)
+        {
+            try
+            {
+                //var userIdClaim = User.Identity as ClaimsIdentity;
+                //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+
+                tblServiceLocation Data = new tblServiceLocation();
+
+                if (ServiceLocation.ServiceLocationId == 0)
+                {
+                    // Creating a new customer.
+
+                    Data = ServiceLocation;
+                    Data.CreatedDate = DateTime.Now;
+                    Data.CreatedBy = userId;
+                    Data.EditDate = DateTime.Now;
+                    Data.EditBy = userId;
+                    Data.isActive = ServiceLocation.isActive;
+                    DB.tblServiceLocations.Add(Data);
+                    DB.SaveChanges();
+
+                    var logData = new tblLog
+                    {
+                        UserId = userId,
+                        Action = "Add Service Location",
+                        CreatedDate = DateTime.Now
+                    };
+
+                    DB.tblLogs.Add(logData);
+                    DB.SaveChanges();
+
+                    return Ok(new { Id = Data.ServiceLocationId, Message = "ServiceLocation has been added successfully." });
+                }
+                else
+                {
+                    // Updating an existing customer.
+                    Data = DB.tblServiceLocations.SingleOrDefault(c => c.ServiceLocationId == ServiceLocation.ServiceLocationId);
+
+                    if (Data == null)
+                    {
+                        return NotFound(); // Customer not found.
+                    }
+
+                    Data.Name = ServiceLocation.Name;
+                    Data.isBilltoCustomer = ServiceLocation.isBilltoCustomer;
+                    Data.CustomerId = ServiceLocation.CustomerId;
+                    Data.Phone = ServiceLocation.Phone;
+                    Data.AltPhone = ServiceLocation.AltPhone;
+                    Data.Address = ServiceLocation.Address;
+                    Data.CustomerId = ServiceLocation.CustomerId;
+                    Data.EditDate = DateTime.Now;
+                    Data.EditBy = userId;
+                    Data.isActive = ServiceLocation.isActive;
+
+                    DB.Entry(Data);
+                    DB.SaveChanges();
+
+
+                    var logData = new tblLog
+                    {
+                        UserId = userId,
+                        Action = "Update Customer",
+                        CreatedDate = DateTime.Now
+                    };
+
+                    DB.tblLogs.Add(logData);
+                    DB.SaveChanges();
+
+                    return Ok(new { Id = Data.ServiceLocationId, Message = "ServiceLocation has been updated successfully." });
+                    //return Ok("Customer has been updated successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return InternalServerError(ex); // 500 - Internal Server Error
+            }
+        }
 
         //[HttpGet]
         //public string DeleteCustomer(int id)
@@ -452,30 +640,31 @@ namespace EarthCo.Controllers
 
                 // Check if the customer with the specified ID exists
 
-                tblEstimate CheckEstimate = DB.tblEstimates.Where(x => x.CustomerId == id).FirstOrDefault();
-                tblServiceRequest CheckServices = DB.tblServiceRequests.Where(x => x.CustomerId == id).FirstOrDefault();
-                tblPunchlist CheckPunchlist = DB.tblPunchlists.Where(x => x.CustomerId == id).FirstOrDefault();
+                //tblEstimate CheckEstimate = DB.tblEstimates.Where(x => x.CustomerId == id).FirstOrDefault();
+                //tblServiceRequest CheckServices = DB.tblServiceRequests.Where(x => x.CustomerId == id).FirstOrDefault();
+                //tblPunchlist CheckPunchlist = DB.tblPunchlists.Where(x => x.CustomerId == id).FirstOrDefault();
 
-                if (CheckEstimate!=null || CheckServices!=null || CheckPunchlist!=null)
-                {
-                    var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
-                    responseMessage.Content = new StringContent("Cannot delete the record due to related data.");
-                    return ResponseMessage(responseMessage);
-                }
+                //if (CheckEstimate!=null || CheckServices!=null || CheckPunchlist!=null)
+                //{
+                //    var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                //    responseMessage.Content = new StringContent("Cannot delete the record due to related data.");
+                //    return ResponseMessage(responseMessage);
+                //}
 
-                var customerToDelete = DB.tblCustomers.FirstOrDefault(c => c.CustomerId == id);
+                tblUser Data = DB.tblUsers.FirstOrDefault(c => c.UserId == id);
 
-                if (customerToDelete == null)
+                if (Data == null)
                 {
                     return NotFound(); // 404 - Customer not found
                 }
 
-                // Remove associated contacts
-                var contactsToDelete = DB.tblContacts.Where(c => c.CustomerId == id).ToList();
-                DB.tblContacts.RemoveRange(contactsToDelete);
+                //// Remove associated contacts
+                //var contactsToDelete = DB.tblContacts.Where(c => c.CustomerId == id).ToList();
+                //DB.tblContacts.RemoveRange(contactsToDelete);
 
                 // Remove the customer
-                DB.Entry(customerToDelete).State = EntityState.Deleted;
+                Data.isDelete = true;
+                DB.Entry(Data);
                 DB.SaveChanges();
 
                 // Log the action
@@ -497,6 +686,119 @@ namespace EarthCo.Controllers
                 return InternalServerError(ex); // 500 - Internal Server Error
             }
         }
+
+        [HttpGet]
+        public IHttpActionResult DeleteContact(int id)
+        {
+            try
+            {
+                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+
+                // Check if the customer with the specified ID exists
+
+                //tblEstimate CheckEstimate = DB.tblEstimates.Where(x => x.CustomerId == id).FirstOrDefault();
+                //tblServiceRequest CheckServices = DB.tblServiceRequests.Where(x => x.CustomerId == id).FirstOrDefault();
+                //tblPunchlist CheckPunchlist = DB.tblPunchlists.Where(x => x.CustomerId == id).FirstOrDefault();
+
+                //if (CheckEstimate!=null || CheckServices!=null || CheckPunchlist!=null)
+                //{
+                //    var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                //    responseMessage.Content = new StringContent("Cannot delete the record due to related data.");
+                //    return ResponseMessage(responseMessage);
+                //}
+
+                tblContact Data = DB.tblContacts.FirstOrDefault(c => c.ContactId == id);
+
+                if (Data == null)
+                {
+                    return NotFound(); // 404 - Customer not found
+                }
+
+                //// Remove associated contacts
+                //var contactsToDelete = DB.tblContacts.Where(c => c.CustomerId == id).ToList();
+                //DB.tblContacts.RemoveRange(contactsToDelete);
+
+                // Remove the customer
+                Data.isDelete = true;
+                DB.Entry(Data);
+                DB.SaveChanges();
+
+                // Log the action
+                var logData = new tblLog
+                {
+                    UserId = userId,
+                    Action = "Delete Contact",
+                    CreatedDate = DateTime.Now
+                };
+
+                DB.tblLogs.Add(logData);
+                DB.SaveChanges();
+
+                return Ok("Contact has been deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return InternalServerError(ex); // 500 - Internal Server Error
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult DeleteServiceLocation(int id)
+        {
+            try
+            {
+                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+
+                // Check if the customer with the specified ID exists
+
+                //tblEstimate CheckEstimate = DB.tblEstimates.Where(x => x.CustomerId == id).FirstOrDefault();
+                //tblServiceRequest CheckServices = DB.tblServiceRequests.Where(x => x.CustomerId == id).FirstOrDefault();
+                //tblPunchlist CheckPunchlist = DB.tblPunchlists.Where(x => x.CustomerId == id).FirstOrDefault();
+
+                //if (CheckEstimate!=null || CheckServices!=null || CheckPunchlist!=null)
+                //{
+                //    var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                //    responseMessage.Content = new StringContent("Cannot delete the record due to related data.");
+                //    return ResponseMessage(responseMessage);
+                //}
+
+                tblServiceLocation Data = DB.tblServiceLocations.FirstOrDefault(c => c.ServiceLocationId == id);
+
+                if (Data == null)
+                {
+                    return NotFound(); // 404 - Customer not found
+                }
+
+                //// Remove associated contacts
+                //var contactsToDelete = DB.tblContacts.Where(c => c.CustomerId == id).ToList();
+                //DB.tblContacts.RemoveRange(contactsToDelete);
+
+                // Remove the customer
+                Data.isDelete = true;
+                DB.Entry(Data);
+                DB.SaveChanges();
+
+                // Log the action
+                var logData = new tblLog
+                {
+                    UserId = userId,
+                    Action = "Delete Contact",
+                    CreatedDate = DateTime.Now
+                };
+
+                DB.tblLogs.Add(logData);
+                DB.SaveChanges();
+
+                return Ok("Contact has been deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return InternalServerError(ex); // 500 - Internal Server Error
+            }
+        }
+
 
         [HttpGet]
         public IHttpActionResult SentInvite(InviteEmployee ParaData)

@@ -21,6 +21,8 @@ namespace EarthCo.Models
             this.tblServiceRequests = new HashSet<tblServiceRequest>();
             this.tblContacts = new HashSet<tblContact>();
             this.tblEstimates = new HashSet<tblEstimate>();
+            this.tblMonthlyLandsacpes = new HashSet<tblMonthlyLandsacpe>();
+            this.tblServiceLocations = new HashSet<tblServiceLocation>();
         }
     
         public int CustomerId { get; set; }
@@ -30,6 +32,18 @@ namespace EarthCo.Models
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
+        public string ContactFirstName { get; set; }
+        public string ContactLastName { get; set; }
+        public string Email { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string ContactAddress { get; set; }
+        public string ContactPhone { get; set; }
+        public string ContactAltPhone { get; set; }
+        public string ContactFax { get; set; }
+        public string ContactNotes { get; set; }
+        public Nullable<int> CustomerTypeId { get; set; }
+        public Nullable<bool> isLoginAllow { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
@@ -39,5 +53,10 @@ namespace EarthCo.Models
         public virtual ICollection<tblContact> tblContacts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimate> tblEstimates { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
+        public virtual tblCustomerType tblCustomerType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblServiceLocation> tblServiceLocations { get; set; }
     }
 }

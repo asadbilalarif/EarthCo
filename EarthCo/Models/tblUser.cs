@@ -24,20 +24,32 @@ namespace EarthCo.Models
         public string username { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
+        public string CompanyName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
+        public string AltPhone { get; set; }
         public string ImagePath { get; set; }
+        public string Fax { get; set; }
+        public string Notes { get; set; }
         public Nullable<int> RoleId { get; set; }
+        public Nullable<int> CustomerTypeId { get; set; }
         public Nullable<System.DateTime> LastLogin { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
+        public Nullable<bool> isLoginAllow { get; set; }
         public Nullable<bool> isActive { get; set; }
+        public Nullable<bool> isDelete { get; set; }
+        public Nullable<int> ContactId { get; set; }
+        public Nullable<int> ServiceLocationtId { get; set; }
     
+        public virtual tblContact tblContact { get; set; }
+        public virtual tblCustomerType tblCustomerType { get; set; }
         public virtual tblRole tblRole { get; set; }
+        public virtual tblServiceLocation tblServiceLocation { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSetting> tblSettings { get; set; }
     }

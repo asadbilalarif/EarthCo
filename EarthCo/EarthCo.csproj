@@ -255,6 +255,7 @@
     <Compile Include="Models\EstimateFiles.cs" />
     <Compile Include="Models\GetCustomerContact.cs" />
     <Compile Include="Models\GetEstimateItem.cs" />
+    <Compile Include="Models\GetServiceRequest.cs" />
     <Compile Include="Models\InviteEmployee.cs" />
     <Compile Include="Models\IrrigationControllerClass.cs" />
     <Compile Include="Models\MenuAccess.cs" />
@@ -285,6 +286,9 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblCustomer.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblCustomerType.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblEmployee.cs">
@@ -324,6 +328,9 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblRole.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblServiceLocation.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblServiceRequest.cs">

@@ -23,11 +23,28 @@ namespace EarthCo.Controllers
         {
             try
             {
-                List<tblServiceRequest> Data = new List<tblServiceRequest>();
-                Data = DB.tblServiceRequests.ToList();
-                if (Data == null || Data.Count==0)
+                List<GetServiceRequest> Data = new List<GetServiceRequest>();
+                GetServiceRequest Temp = null;
+                List<tblServiceRequest> SRData = new List<tblServiceRequest>();
+                SRData = DB.tblServiceRequests.ToList();
+                if (SRData == null || SRData.Count==0)
                 {
                     return NotFound();
+                }
+
+                foreach (var item in SRData)
+                {
+                    Temp = new GetServiceRequest();
+
+                    Temp.ServiceRequestId = item.ServiceRequestId;
+                    Temp.CustomerName = item.tblCustomer.CustomerName;
+                    Temp.Assign = item.Assign;
+                    Temp.ServiceRequestNumber = item.ServiceRequestNumber;
+                    Temp.Status = item.tblSRStatu.Status;
+                    Temp.WorkRequest = item.WorkRequest;
+                    Temp.CreatedDate =(DateTime) item.CreatedDate;
+
+                    Data.Add(Temp);
                 }
 
                 return Ok(Data);

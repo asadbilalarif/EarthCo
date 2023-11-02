@@ -12,34 +12,26 @@ namespace EarthCo.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tblContact
+    public partial class tblServiceLocation
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tblContact()
+        public tblServiceLocation()
         {
             this.tblUsers = new HashSet<tblUser>();
         }
     
-        public int ContactId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string CompanyName { get; set; }
+        public int ServiceLocationId { get; set; }
+        public string Name { get; set; }
         public string Address { get; set; }
+        public string Phone { get; set; }
+        public string AltPhone { get; set; }
+        public Nullable<bool> isBilltoCustomer { get; set; }
         public Nullable<int> CustomerId { get; set; }
-        public string CustomerName { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
-        public Nullable<bool> isPrimary { get; set; }
-        public string AltPhone { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string Comments { get; set; }
-        public Nullable<bool> isLoginAllow { get; set; }
         public Nullable<bool> isDelete { get; set; }
     
         public virtual tblCustomer tblCustomer { get; set; }

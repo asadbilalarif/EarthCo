@@ -9,5 +9,6 @@ namespace EarthCo.Models
     {
         public tblCustomer CustomerData { get; set; }
         public List<tblContact> ContactData { get; set; }
+        public List<tblContact> ServiceLocationData { get; set; }
     }
 }
