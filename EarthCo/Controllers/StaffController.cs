@@ -144,6 +144,7 @@ namespace EarthCo.Controllers
                     Data.username = Customer.username;
                     Data.Email = Customer.Email;
                     Data.RoleId = Customer.RoleId;
+                    Data.isLoginAllow = true;
                     if (Customer.Password != null && Customer.Password != "")
                     {
                         byte[] EncDataBtye = new byte[Customer.Password.Length];

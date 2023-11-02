@@ -73,7 +73,7 @@ namespace EarthCo.Controllers
                     EncDataBtye = System.Text.Encoding.UTF8.GetBytes(UserData.Password);
                     pass = Convert.ToBase64String(EncDataBtye);
                 }
-                var User = DB.tblUsers.Select(r => r).Where(x => x.Email == UserData.Email && x.Password == pass && x.isActive == true).FirstOrDefault();
+                var User = DB.tblUsers.Select(r => r).Where(x => x.Email == UserData.Email && x.Password == pass && x.isActive == true && x.isLoginAllow==true).FirstOrDefault();
                 if (User != null)
                 {
                     //Session["Access"] = DB.tblAccessLevels.Select(r => r).Where(x => x.RoleId == User.RoleId && x.isActive == true).OrderBy(x => x.tblMenu.EditBy).ToList();
