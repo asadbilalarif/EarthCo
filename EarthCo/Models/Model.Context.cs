@@ -41,7 +41,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblSRType> tblSRTypes { get; set; }
         public virtual DbSet<tblSetting> tblSettings { get; set; }
         public virtual DbSet<tblIrrigation> tblIrrigations { get; set; }
-        public virtual DbSet<tblContact> tblContacts { get; set; }
         public virtual DbSet<tblPunchlistDetail> tblPunchlistDetails { get; set; }
         public virtual DbSet<tblPunchlistItem> tblPunchlistItems { get; set; }
         public virtual DbSet<tblEstimateItem> tblEstimateItems { get; set; }
@@ -51,7 +50,10 @@ namespace EarthCo.Models
         public virtual DbSet<tblEstimateFile> tblEstimateFiles { get; set; }
         public virtual DbSet<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
         public virtual DbSet<tblCustomerType> tblCustomerTypes { get; set; }
+        public virtual DbSet<tblItem> tblItems { get; set; }
+        public virtual DbSet<tblContact> tblContacts { get; set; }
         public virtual DbSet<tblServiceLocation> tblServiceLocations { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
+        public virtual DbSet<tblUserType> tblUserTypes { get; set; }
     }
 }

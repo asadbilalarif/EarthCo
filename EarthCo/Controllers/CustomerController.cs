@@ -33,7 +33,7 @@ namespace EarthCo.Controllers
         //    {
         //        Temp = new GetCustomerContact();
         //        ConData = item.tblContacts.Where(x => x.isPrimary == true).FirstOrDefault();
-                
+
         //        Temp.CustomerId = item.CustomerId;
         //        Temp.CustomerName = item.CustomerName;
         //        if (ConData != null)
@@ -43,7 +43,7 @@ namespace EarthCo.Controllers
         //            Temp.ContactCompany = ConData.CompanyName;
         //            Temp.ContactEmail = ConData.Email;
         //        }
-                    
+
         //        Data.Add(Temp);
         //    }
 
@@ -51,12 +51,39 @@ namespace EarthCo.Controllers
         //}
 
         [HttpGet]
+        public IHttpActionResult GetSearchCustomersList(string Search)
+        {
+            try
+            {
+                DB.Configuration.ProxyCreationEnabled = false;
+                List<tblUser> Data = new List<tblUser>();
+                Data = DB.tblUsers.Where(x => x.UserTypeId==2 && x.CompanyName.ToLower().Contains(Search.ToLower())).ToList();
+                //Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).ToList();
+
+                if (Data == null || Data.Count == 0)
+                {
+                    return NotFound(); // 404 - No data found
+                }
+
+                return Ok(Data); // 200 - Successful response with data
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                // You may also choose to return a more specific error response (e.g., 500 - Internal Server Error) here.
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
         public IHttpActionResult GetCustomersList()
         {
             try
             {
+                DB.Configuration.ProxyCreationEnabled = false;
                 List<tblUser> Data = new List<tblUser>();
-                Data = DB.tblUsers.Where(x=>x.RoleId==2 && x.isDelete!=true).ToList();
+                Data = DB.tblUsers.Where(x=>x.UserTypeId==2 && x.isDelete!=true).ToList();
+                
                 if (Data == null || Data.Count == 0)
                 {
                     return NotFound(); // 404 - No data found
@@ -104,8 +131,8 @@ namespace EarthCo.Controllers
                 if (Data == null)
                 {
                     Data = new tblUser();
-                    Data.tblContact = null;
-                    Data.tblServiceLocation = null;
+                    Data.tblContacts = null;
+                    Data.tblServiceLocations = null;
                     string userJson = JsonConvert.SerializeObject(Data);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
@@ -136,6 +163,31 @@ namespace EarthCo.Controllers
                     string userJson = JsonConvert.SerializeObject(Data);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
+                    return ResponseMessage(responseMessage);
+                }
+
+                return Ok(Data); // 200 - Successful response with data
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                // You may also choose to return a more specific error response (e.g., 500 - Internal Server Error) here.
+                return InternalServerError(ex);
+            }
+
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetCustomerTypes()
+        {
+            try
+            {
+                DB.Configuration.ProxyCreationEnabled = false;
+                List<tblCustomerType> Data = new List<tblCustomerType>();
+                Data = DB.tblCustomerTypes.ToList();
+                if (Data == null || Data.Count == 0)
+                {
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     return ResponseMessage(responseMessage);
                 }
 
@@ -307,8 +359,9 @@ namespace EarthCo.Controllers
                         return ResponseMessage(responseMessage);
                     }
 
-                        Data = Customer;
+                    Data = Customer;
                     Data.RoleId = 2;
+                    Data.UserTypeId = 2;
                     Data.CreatedDate = DateTime.Now;
                     Data.CreatedBy = userId;
                     Data.EditDate = DateTime.Now;
@@ -346,7 +399,10 @@ namespace EarthCo.Controllers
                     {
                         return NotFound(); // Customer not found.
                     }
-                    if (DB.tblUsers.Select(r => r).Where(x => x.Email == Customer.Email && Customer.isDelete!=true).FirstOrDefault() != null)
+
+                    tblUser CheckUser = DB.tblUsers.Select(r => r).Where(x => x.Email == Customer.Email && Customer.isDelete != true).FirstOrDefault();
+
+                    if (CheckUser != null && CheckUser.UserId!=Customer.UserId)
                     {
                         var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
                         responseMessage.Content = new StringContent("Customer with same Email already exsist!!!");
@@ -356,6 +412,11 @@ namespace EarthCo.Controllers
                     Data.FirstName = Customer.FirstName;
                     Data.LastName = Customer.LastName;
                     Data.Address = Customer.Address;
+                    Data.City = Customer.City;
+                    Data.State = Customer.State;
+                    Data.Country = Customer.Country;
+                    Data.Code = Customer.Code;
+                    Data.UserTypeId = 2;
                     Data.Phone = Customer.Phone;
                     Data.AltPhone = Customer.AltPhone;
                     Data.Fax = Customer.Fax;
@@ -363,6 +424,8 @@ namespace EarthCo.Controllers
                     Data.CustomerTypeId = Customer.CustomerTypeId;
                     Data.username = Customer.username;
                     Data.Email = Customer.Email;
+                    Data.RoleId = 2;
+                    Data.UserTypeId = 2;
                     if (Customer.isLoginAllow == true)
                     {
                         Data.isLoginAllow = Customer.isLoginAllow;
@@ -371,7 +434,11 @@ namespace EarthCo.Controllers
                             byte[] EncDataBtye = new byte[Customer.Password.Length];
                             EncDataBtye = System.Text.Encoding.UTF8.GetBytes(Customer.Password);
                             Data.Password = Convert.ToBase64String(EncDataBtye);
-                        } 
+                        }
+                        else
+                        {
+                            Data.Password = Data.Password;
+                        }
                     }
 
 

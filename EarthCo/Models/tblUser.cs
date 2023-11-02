@@ -17,6 +17,8 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tblUser()
         {
+            this.tblContacts = new HashSet<tblContact>();
+            this.tblServiceLocations = new HashSet<tblServiceLocation>();
             this.tblSettings = new HashSet<tblSetting>();
         }
     
@@ -27,14 +29,20 @@ namespace EarthCo.Models
         public string CompanyName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string Address { get; set; }
         public string Phone { get; set; }
         public string AltPhone { get; set; }
         public string ImagePath { get; set; }
         public string Fax { get; set; }
         public string Notes { get; set; }
+        public string Address { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Code { get; set; }
+        public string Country { get; set; }
+        public string AccountNumber { get; set; }
         public Nullable<int> RoleId { get; set; }
         public Nullable<int> CustomerTypeId { get; set; }
+        public Nullable<int> UserTypeId { get; set; }
         public Nullable<System.DateTime> LastLogin { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
@@ -43,14 +51,15 @@ namespace EarthCo.Models
         public Nullable<bool> isLoginAllow { get; set; }
         public Nullable<bool> isActive { get; set; }
         public Nullable<bool> isDelete { get; set; }
-        public Nullable<int> ContactId { get; set; }
-        public Nullable<int> ServiceLocationtId { get; set; }
     
-        public virtual tblContact tblContact { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblContact> tblContacts { get; set; }
         public virtual tblCustomerType tblCustomerType { get; set; }
         public virtual tblRole tblRole { get; set; }
-        public virtual tblServiceLocation tblServiceLocation { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblServiceLocation> tblServiceLocations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSetting> tblSettings { get; set; }
+        public virtual tblUserType tblUserType { get; set; }
     }
 }

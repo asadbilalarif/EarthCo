@@ -94,8 +94,6 @@ namespace EarthCo.Controllers
                         //    Data.ImagePath = path;
                         //}
 
-                        Data.Address = User.Address;
-                        Data.Phone = User.Phone;
                         Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
                         Data.CreatedBy = UserId;
                         Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
@@ -158,6 +156,7 @@ namespace EarthCo.Controllers
                         Data.Email = User.Email;
                         Data.Address = User.Address;
                         Data.Phone = User.Phone;
+                        Data.AltPhone = User.AltPhone;
                         Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
                         Data.EditBy = UserId;
                         Data.isActive = User.isActive;

@@ -237,10 +237,13 @@
     <Compile Include="Controllers\EstimateController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IrrigationController.cs" />
+    <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\MonthlyLandsacpeController.cs" />
     <Compile Include="Controllers\PunchListController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ServiceRequestController.cs" />
+    <Compile Include="Controllers\StaffController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\UserManagementController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Controllers\WeeklyReportController.cs" />
@@ -309,6 +312,9 @@
     <Compile Include="Models\tblIrrigation.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblItem.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tblLog.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -352,6 +358,9 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblUser.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblUserType.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblWeeklyReport.cs">
@@ -435,6 +444,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Report\" />
+    <Folder Include="Views\Staff\" />
     <Folder Include="Views\UserManagement\" />
   </ItemGroup>
   <ItemGroup>

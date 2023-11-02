@@ -199,6 +199,22 @@
           <Property Name="EditDate" Type="datetime" />
           <Property Name="isActive" Type="bit" />
         </EntityType>
+        <EntityType Name="tblItem">
+          <Key>
+            <PropertyRef Name="ItemId" />
+          </Key>
+          <Property Name="ItemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="500" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Type" Type="nvarchar" MaxLength="500" />
+          <Property Name="Price" Type="float" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" />
+          <Property Name="isDelete" Type="bit" />
+        </EntityType>
         <EntityType Name="tblLog">
           <Key>
             <PropertyRef Name="LogId" />
@@ -438,14 +454,20 @@
           <Property Name="CompanyName" Type="nvarchar" MaxLength="500" />
           <Property Name="Email" Type="nvarchar(max)" />
           <Property Name="Password" Type="nvarchar(max)" />
-          <Property Name="Address" Type="nvarchar(max)" />
           <Property Name="Phone" Type="nvarchar(max)" />
           <Property Name="AltPhone" Type="nvarchar" MaxLength="500" />
           <Property Name="ImagePath" Type="nvarchar(max)" />
           <Property Name="Fax" Type="nvarchar" MaxLength="500" />
           <Property Name="Notes" Type="nvarchar" MaxLength="500" />
+          <Property Name="Address" Type="nvarchar(max)" />
+          <Property Name="City" Type="nvarchar" MaxLength="50" />
+          <Property Name="State" Type="nvarchar" MaxLength="50" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="RoleId" Type="int" />
           <Property Name="CustomerTypeId" Type="int" />
+          <Property Name="UserTypeId" Type="int" />
           <Property Name="LastLogin" Type="datetime" />
           <Property Name="CreatedBy" Type="int" />
           <Property Name="CreatedDate" Type="datetime" />
@@ -454,8 +476,13 @@
           <Property Name="isLoginAllow" Type="bit" />
           <Property Name="isActive" Type="bit" />
           <Property Name="isDelete" Type="bit" />
-          <Property Name="ContactId" Type="int" />
-          <Property Name="ServiceLocationtId" Type="int" />
+        </EntityType>
+        <EntityType Name="tblUserType">
+          <Key>
+            <PropertyRef Name="UserTypeId" />
+          </Key>
+          <Property Name="UserTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserType" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="tblWeeklyReport">
           <Key>
@@ -676,12 +703,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_tblContact_tblCustomer">
-          <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
+        <Association Name="FK_tblContact_tblUser">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
           <End Role="tblContact" Type="Self.tblContact" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
             </Principal>
             <Dependent Role="tblContact">
               <PropertyRef Name="CustomerId" />
@@ -725,11 +752,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_tblServiceLocation_tblCustomer">
-          <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
           <End Role="tblServiceLocation" Type="Self.tblServiceLocation" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
             </Principal>
             <Dependent Role="tblServiceLocation">
               <PropertyRef Name="CustomerId" />
@@ -745,18 +772,6 @@
             </Principal>
             <Dependent Role="tblSetting">
               <PropertyRef Name="Editby" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblUser_tblContact">
-          <End Role="tblContact" Type="Self.tblContact" Multiplicity="0..1" />
-          <End Role="tblUser" Type="Self.tblUser" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblContact">
-              <PropertyRef Name="ContactId" />
-            </Principal>
-            <Dependent Role="tblUser">
-              <PropertyRef Name="ContactId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -784,15 +799,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_tblUser_tblServiceLocation">
-          <End Role="tblServiceLocation" Type="Self.tblServiceLocation" Multiplicity="0..1" />
+        <Association Name="FK_tblUser_tblUserType">
+          <End Role="tblUserType" Type="Self.tblUserType" Multiplicity="0..1" />
           <End Role="tblUser" Type="Self.tblUser" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="tblServiceLocation">
-              <PropertyRef Name="ServiceLocationId" />
+            <Principal Role="tblUserType">
+              <PropertyRef Name="UserTypeId" />
             </Principal>
             <Dependent Role="tblUser">
-              <PropertyRef Name="ServiceLocationtId" />
+              <PropertyRef Name="UserTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -820,6 +835,7 @@
           <EntitySet Name="tblEstimateItem" EntityType="Self.tblEstimateItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblEstimateStatus" EntityType="Self.tblEstimateStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblIrrigation" EntityType="Self.tblIrrigation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblItem" EntityType="Self.tblItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblLog" EntityType="Self.tblLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblMenu" EntityType="Self.tblMenu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblMonthlyLandsacpe" EntityType="Self.tblMonthlyLandsacpe" Schema="dbo" store:Type="Tables" />
@@ -835,6 +851,7 @@
           <EntitySet Name="tblSRStatus" EntityType="Self.tblSRStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblSRType" EntityType="Self.tblSRType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblUser" EntityType="Self.tblUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblUserType" EntityType="Self.tblUserType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblWeeklyReport" EntityType="Self.tblWeeklyReport" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblWeeklyReportFile" EntityType="Self.tblWeeklyReportFile" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__tblContro__Irrig__5441852A" Association="Self.FK__tblContro__Irrig__5441852A">
@@ -897,8 +914,8 @@
             <End Role="tblRole" EntitySet="tblRole" />
             <End Role="tblAccessLevel" EntitySet="tblAccessLevel" />
           </AssociationSet>
-          <AssociationSet Name="FK_tblContact_tblCustomer" Association="Self.FK_tblContact_tblCustomer">
-            <End Role="tblCustomer" EntitySet="tblCustomer" />
+          <AssociationSet Name="FK_tblContact_tblUser" Association="Self.FK_tblContact_tblUser">
+            <End Role="tblUser" EntitySet="tblUser" />
             <End Role="tblContact" EntitySet="tblContact" />
           </AssociationSet>
           <AssociationSet Name="FK_tblEstimateFile_tblEstimate" Association="Self.FK_tblEstimateFile_tblEstimate">
@@ -914,16 +931,12 @@
             <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_tblServiceLocation_tblCustomer" Association="Self.FK_tblServiceLocation_tblCustomer">
-            <End Role="tblCustomer" EntitySet="tblCustomer" />
+            <End Role="tblUser" EntitySet="tblUser" />
             <End Role="tblServiceLocation" EntitySet="tblServiceLocation" />
           </AssociationSet>
           <AssociationSet Name="FK_tblSetting_tblUser" Association="Self.FK_tblSetting_tblUser">
             <End Role="tblUser" EntitySet="tblUser" />
             <End Role="tblSetting" EntitySet="tblSetting" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblUser_tblContact" Association="Self.FK_tblUser_tblContact">
-            <End Role="tblContact" EntitySet="tblContact" />
-            <End Role="tblUser" EntitySet="tblUser" />
           </AssociationSet>
           <AssociationSet Name="FK_tblUser_tblCustomerType" Association="Self.FK_tblUser_tblCustomerType">
             <End Role="tblCustomerType" EntitySet="tblCustomerType" />
@@ -933,8 +946,8 @@
             <End Role="tblRole" EntitySet="tblRole" />
             <End Role="tblUser" EntitySet="tblUser" />
           </AssociationSet>
-          <AssociationSet Name="FK_tblUser_tblServiceLocation" Association="Self.FK_tblUser_tblServiceLocation">
-            <End Role="tblServiceLocation" EntitySet="tblServiceLocation" />
+          <AssociationSet Name="FK_tblUser_tblUserType" Association="Self.FK_tblUser_tblUserType">
+            <End Role="tblUserType" EntitySet="tblUserType" />
             <End Role="tblUser" EntitySet="tblUser" />
           </AssociationSet>
           <AssociationSet Name="FK_tblWeeklyReportFile_tblWeeklyReport" Association="Self.FK_tblWeeklyReportFile_tblWeeklyReport">
@@ -1009,7 +1022,6 @@
           <Property Name="isActive" Type="Boolean" />
           <NavigationProperty Name="tblPunchlists" Relationship="Self.FK__tblPunchl__Custo__571DF1D5" FromRole="tblCustomer" ToRole="tblPunchlist" />
           <NavigationProperty Name="tblServiceRequests" Relationship="Self.FK__tblServic__Custo__440B1D61" FromRole="tblCustomer" ToRole="tblServiceRequest" />
-          <NavigationProperty Name="tblContacts" Relationship="earthcoModel.FK_tblContact_tblCustomer" FromRole="tblCustomer" ToRole="tblContact" />
           <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK__tblEstima__Custo__398D8EEE" FromRole="tblCustomer" ToRole="tblEstimate" />
           <NavigationProperty Name="tblMonthlyLandsacpes" Relationship="earthcoModel.FK_tblMonthlyLandsacpe_tblCustomer" FromRole="tblCustomer" ToRole="tblMonthlyLandsacpe" />
           <Property Name="ContactFirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
@@ -1025,7 +1037,6 @@
           <Property Name="CustomerTypeId" Type="Int32" />
           <Property Name="isLoginAllow" Type="Boolean" />
           <NavigationProperty Name="tblCustomerType" Relationship="earthcoModel.FK__tblCustom__Custo__17036CC0" FromRole="tblCustomer" ToRole="tblCustomerType" />
-          <NavigationProperty Name="tblServiceLocations" Relationship="earthcoModel.FK_tblServiceLocation_tblCustomer" FromRole="tblCustomer" ToRole="tblServiceLocation" />
         </EntityType>
         <EntityType Name="tblEmployee">
           <Key>
@@ -1359,11 +1370,6 @@
             <End Role="tblIrrigation" EntitySet="tblIrrigations" />
             <End Role="tblController" EntitySet="tblControllers" />
           </AssociationSet>
-          <EntitySet Name="tblContacts" EntityType="earthcoModel.tblContact" />
-          <AssociationSet Name="FK_tblContact_tblCustomer" Association="earthcoModel.FK_tblContact_tblCustomer">
-            <End Role="tblCustomer" EntitySet="tblCustomers" />
-            <End Role="tblContact" EntitySet="tblContacts" />
-          </AssociationSet>
           <EntitySet Name="tblPunchlistDetails" EntityType="earthcoModel.tblPunchlistDetail" />
           <EntitySet Name="tblPunchlistItems" EntityType="earthcoModel.tblPunchlistItem" />
           <AssociationSet Name="FK_tblPunchlistDetail_tblPunchlist" Association="earthcoModel.FK_tblPunchlistDetail_tblPunchlist">
@@ -1405,19 +1411,18 @@
             <End Role="tblMonthlyLandsacpe" EntitySet="tblMonthlyLandsacpes" />
           </AssociationSet>
           <EntitySet Name="tblCustomerTypes" EntityType="earthcoModel.tblCustomerType" />
-          <EntitySet Name="tblServiceLocations" EntityType="earthcoModel.tblServiceLocation" />
           <AssociationSet Name="FK__tblCustom__Custo__17036CC0" Association="earthcoModel.FK__tblCustom__Custo__17036CC0">
             <End Role="tblCustomerType" EntitySet="tblCustomerTypes" />
             <End Role="tblCustomer" EntitySet="tblCustomers" />
           </AssociationSet>
-          <AssociationSet Name="FK_tblServiceLocation_tblCustomer" Association="earthcoModel.FK_tblServiceLocation_tblCustomer">
-            <End Role="tblCustomer" EntitySet="tblCustomers" />
-            <End Role="tblServiceLocation" EntitySet="tblServiceLocations" />
-          </AssociationSet>
+          <EntitySet Name="tblItems" EntityType="earthcoModel.tblItem" />
+          <EntitySet Name="tblContacts" EntityType="earthcoModel.tblContact" />
+          <EntitySet Name="tblServiceLocations" EntityType="earthcoModel.tblServiceLocation" />
           <EntitySet Name="tblUsers" EntityType="earthcoModel.tblUser" />
-          <AssociationSet Name="FK_tblUser_tblContact" Association="earthcoModel.FK_tblUser_tblContact">
-            <End Role="tblContact" EntitySet="tblContacts" />
+          <EntitySet Name="tblUserTypes" EntityType="earthcoModel.tblUserType" />
+          <AssociationSet Name="FK_tblContact_tblUser" Association="earthcoModel.FK_tblContact_tblUser">
             <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblContact" EntitySet="tblContacts" />
           </AssociationSet>
           <AssociationSet Name="FK_tblUser_tblCustomerType" Association="earthcoModel.FK_tblUser_tblCustomerType">
             <End Role="tblCustomerType" EntitySet="tblCustomerTypes" />
@@ -1427,15 +1432,19 @@
             <End Role="tblRole" EntitySet="tblRoles" />
             <End Role="tblUser" EntitySet="tblUsers" />
           </AssociationSet>
-          <AssociationSet Name="FK_tblUser_tblServiceLocation" Association="earthcoModel.FK_tblUser_tblServiceLocation">
-            <End Role="tblServiceLocation" EntitySet="tblServiceLocations" />
+          <AssociationSet Name="FK_tblServiceLocation_tblCustomer" Association="earthcoModel.FK_tblServiceLocation_tblCustomer">
             <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblServiceLocation" EntitySet="tblServiceLocations" />
           </AssociationSet>
           <AssociationSet Name="FK_tblSetting_tblUser" Association="earthcoModel.FK_tblSetting_tblUser">
             <End Role="tblUser" EntitySet="tblUsers" />
             <End Role="tblSetting" EntitySet="tblSettings" />
           </AssociationSet>
-        </EntityContainer>
+          <AssociationSet Name="FK_tblUser_tblUserType" Association="earthcoModel.FK_tblUser_tblUserType">
+            <End Role="tblUserType" EntitySet="tblUserTypes" />
+            <End Role="tblUser" EntitySet="tblUsers" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="tblSetting">
           <Key>
             <PropertyRef Name="SettingId" />
@@ -1477,46 +1486,6 @@
             </Principal>
             <Dependent Role="tblController">
               <PropertyRef Name="IrrigationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="tblContact">
-          <Key>
-            <PropertyRef Name="ContactId" />
-          </Key>
-          <Property Name="ContactId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="LastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Phone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CustomerId" Type="Int32" />
-          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <Property Name="isPrimary" Type="Boolean" />
-          <NavigationProperty Name="tblCustomer" Relationship="earthcoModel.FK_tblContact_tblCustomer" FromRole="tblContact" ToRole="tblCustomer" />
-          <Property Name="AltPhone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="UserName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Comments" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="isLoginAllow" Type="Boolean" />
-          <NavigationProperty Name="tblUsers" Relationship="earthcoModel.FK_tblUser_tblContact" FromRole="tblContact" ToRole="tblUser" />
-          <Property Name="isDelete" Type="Boolean" />
-        </EntityType>
-        <Association Name="FK_tblContact_tblCustomer">
-          <End Type="earthcoModel.tblCustomer" Role="tblCustomer" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="tblContact">
-              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1796,6 +1765,61 @@
           <NavigationProperty Name="tblCustomers" Relationship="earthcoModel.FK__tblCustom__Custo__17036CC0" FromRole="tblCustomerType" ToRole="tblCustomer" />
           <NavigationProperty Name="tblUsers" Relationship="earthcoModel.FK_tblUser_tblCustomerType" FromRole="tblCustomerType" ToRole="tblUser" />
         </EntityType>
+        <Association Name="FK__tblCustom__Custo__17036CC0">
+          <End Type="earthcoModel.tblCustomerType" Role="tblCustomerType" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblCustomer" Role="tblCustomer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblCustomerType">
+              <PropertyRef Name="CustomerTypeId" />
+            </Principal>
+            <Dependent Role="tblCustomer">
+              <PropertyRef Name="CustomerTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblItem">
+          <Key>
+            <PropertyRef Name="ItemId" />
+          </Key>
+          <Property Name="ItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Double" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="isDelete" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="tblContact">
+          <Key>
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Name="ContactId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="AltPhone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="UserName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Comments" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="isLoginAllow" Type="Boolean" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="isPrimary" Type="Boolean" />
+          <Property Name="isDelete" Type="Boolean" />
+          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblContact_tblUser" FromRole="tblContact" ToRole="tblUser" />
+        </EntityType>
         <EntityType Name="tblServiceLocation">
           <Key>
             <PropertyRef Name="ServiceLocationId" />
@@ -1812,34 +1836,9 @@
           <Property Name="EditBy" Type="Int32" />
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblCustomer" Relationship="earthcoModel.FK_tblServiceLocation_tblCustomer" FromRole="tblServiceLocation" ToRole="tblCustomer" />
-          <NavigationProperty Name="tblUsers" Relationship="earthcoModel.FK_tblUser_tblServiceLocation" FromRole="tblServiceLocation" ToRole="tblUser" />
           <Property Name="isDelete" Type="Boolean" />
+          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblServiceLocation_tblCustomer" FromRole="tblServiceLocation" ToRole="tblUser" />
         </EntityType>
-        <Association Name="FK__tblCustom__Custo__17036CC0">
-          <End Type="earthcoModel.tblCustomerType" Role="tblCustomerType" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblCustomer" Role="tblCustomer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblCustomerType">
-              <PropertyRef Name="CustomerTypeId" />
-            </Principal>
-            <Dependent Role="tblCustomer">
-              <PropertyRef Name="CustomerTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblServiceLocation_tblCustomer">
-          <End Type="earthcoModel.tblCustomer" Role="tblCustomer" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblServiceLocation" Role="tblServiceLocation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="tblServiceLocation">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="tblUser">
           <Key>
             <PropertyRef Name="UserId" />
@@ -1851,14 +1850,20 @@
           <Property Name="CompanyName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="AltPhone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="ImagePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Fax" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AccountNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="RoleId" Type="Int32" />
           <Property Name="CustomerTypeId" Type="Int32" />
+          <Property Name="UserTypeId" Type="Int32" />
           <Property Name="LastLogin" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
@@ -1867,23 +1872,30 @@
           <Property Name="isLoginAllow" Type="Boolean" />
           <Property Name="isActive" Type="Boolean" />
           <Property Name="isDelete" Type="Boolean" />
-          <Property Name="ContactId" Type="Int32" />
-          <Property Name="ServiceLocationtId" Type="Int32" />
-          <NavigationProperty Name="tblContact" Relationship="earthcoModel.FK_tblUser_tblContact" FromRole="tblUser" ToRole="tblContact" />
+          <NavigationProperty Name="tblContacts" Relationship="earthcoModel.FK_tblContact_tblUser" FromRole="tblUser" ToRole="tblContact" />
           <NavigationProperty Name="tblCustomerType" Relationship="earthcoModel.FK_tblUser_tblCustomerType" FromRole="tblUser" ToRole="tblCustomerType" />
           <NavigationProperty Name="tblRole" Relationship="earthcoModel.FK_tblUser_tblRole" FromRole="tblUser" ToRole="tblRole" />
-          <NavigationProperty Name="tblServiceLocation" Relationship="earthcoModel.FK_tblUser_tblServiceLocation" FromRole="tblUser" ToRole="tblServiceLocation" />
+          <NavigationProperty Name="tblServiceLocations" Relationship="earthcoModel.FK_tblServiceLocation_tblCustomer" FromRole="tblUser" ToRole="tblServiceLocation" />
           <NavigationProperty Name="tblSettings" Relationship="earthcoModel.FK_tblSetting_tblUser" FromRole="tblUser" ToRole="tblSetting" />
+          <NavigationProperty Name="tblUserType" Relationship="earthcoModel.FK_tblUser_tblUserType" FromRole="tblUser" ToRole="tblUserType" />
         </EntityType>
-        <Association Name="FK_tblUser_tblContact">
-          <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="*" />
+        <EntityType Name="tblUserType">
+          <Key>
+            <PropertyRef Name="UserTypeId" />
+          </Key>
+          <Property Name="UserTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserType" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblUsers" Relationship="earthcoModel.FK_tblUser_tblUserType" FromRole="tblUserType" ToRole="tblUser" />
+        </EntityType>
+        <Association Name="FK_tblContact_tblUser">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="tblContact">
-              <PropertyRef Name="ContactId" />
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
             </Principal>
-            <Dependent Role="tblUser">
-              <PropertyRef Name="ContactId" />
+            <Dependent Role="tblContact">
+              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1911,15 +1923,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_tblUser_tblServiceLocation">
-          <End Type="earthcoModel.tblServiceLocation" Role="tblServiceLocation" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="*" />
+        <Association Name="FK_tblServiceLocation_tblCustomer">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblServiceLocation" Role="tblServiceLocation" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="tblServiceLocation">
-              <PropertyRef Name="ServiceLocationId" />
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
             </Principal>
-            <Dependent Role="tblUser">
-              <PropertyRef Name="ServiceLocationtId" />
+            <Dependent Role="tblServiceLocation">
+              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1935,7 +1947,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="FK_tblUser_tblUserType">
+          <End Type="earthcoModel.tblUserType" Role="tblUserType" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUserType">
+              <PropertyRef Name="UserTypeId" />
+            </Principal>
+            <Dependent Role="tblUser">
+              <PropertyRef Name="UserTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -2208,33 +2232,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblContacts">
-            <EntityTypeMapping TypeName="earthcoModel.tblContact">
-              <MappingFragment StoreEntitySet="tblContact">
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="isLoginAllow" ColumnName="isLoginAllow" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="AltPhone" ColumnName="AltPhone" />
-                <ScalarProperty Name="isPrimary" ColumnName="isPrimary" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblPunchlistDetails">
             <EntityTypeMapping TypeName="earthcoModel.tblPunchlistDetail">
               <MappingFragment StoreEntitySet="tblPunchlistDetail">
@@ -2410,6 +2407,50 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="tblItems">
+            <EntityTypeMapping TypeName="earthcoModel.tblItem">
+              <MappingFragment StoreEntitySet="tblItem">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblContacts">
+            <EntityTypeMapping TypeName="earthcoModel.tblContact">
+              <MappingFragment StoreEntitySet="tblContact">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isPrimary" ColumnName="isPrimary" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="isLoginAllow" ColumnName="isLoginAllow" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="AltPhone" ColumnName="AltPhone" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="tblServiceLocations">
             <EntityTypeMapping TypeName="earthcoModel.tblServiceLocation">
               <MappingFragment StoreEntitySet="tblServiceLocation">
@@ -2432,8 +2473,6 @@
           <EntitySetMapping Name="tblUsers">
             <EntityTypeMapping TypeName="earthcoModel.tblUser">
               <MappingFragment StoreEntitySet="tblUser">
-                <ScalarProperty Name="ServiceLocationtId" ColumnName="ServiceLocationtId" />
-                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
                 <ScalarProperty Name="isDelete" ColumnName="isDelete" />
                 <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="isLoginAllow" ColumnName="isLoginAllow" />
@@ -2442,14 +2481,20 @@
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
+                <ScalarProperty Name="UserTypeId" ColumnName="UserTypeId" />
                 <ScalarProperty Name="CustomerTypeId" ColumnName="CustomerTypeId" />
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="Fax" ColumnName="Fax" />
                 <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
                 <ScalarProperty Name="AltPhone" ColumnName="AltPhone" />
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
@@ -2457,6 +2502,14 @@
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblUserTypes">
+            <EntityTypeMapping TypeName="earthcoModel.tblUserType">
+              <MappingFragment StoreEntitySet="tblUserType">
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="UserTypeId" ColumnName="UserTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

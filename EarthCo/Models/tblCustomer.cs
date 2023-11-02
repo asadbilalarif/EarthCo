@@ -19,10 +19,8 @@ namespace EarthCo.Models
         {
             this.tblPunchlists = new HashSet<tblPunchlist>();
             this.tblServiceRequests = new HashSet<tblServiceRequest>();
-            this.tblContacts = new HashSet<tblContact>();
             this.tblEstimates = new HashSet<tblEstimate>();
             this.tblMonthlyLandsacpes = new HashSet<tblMonthlyLandsacpe>();
-            this.tblServiceLocations = new HashSet<tblServiceLocation>();
         }
     
         public int CustomerId { get; set; }
@@ -50,13 +48,9 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblServiceRequest> tblServiceRequests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblContact> tblContacts { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimate> tblEstimates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
         public virtual tblCustomerType tblCustomerType { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblServiceLocation> tblServiceLocations { get; set; }
     }
 }
