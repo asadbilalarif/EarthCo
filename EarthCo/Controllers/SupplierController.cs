@@ -92,7 +92,7 @@ namespace EarthCo.Controllers
                     Data.CreatedBy = userId;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = Customer.isActive;
+                    Data.isActive = true;
 
                     DB.tblUsers.Add(Data);
                     DB.SaveChanges();
@@ -141,7 +141,7 @@ namespace EarthCo.Controllers
                     Data.RoleId = Customer.RoleId;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = Customer.isActive;
+                    Data.isActive = true;
 
                     DB.Entry(Data);
                     DB.SaveChanges();

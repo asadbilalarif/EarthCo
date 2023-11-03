@@ -98,7 +98,7 @@ namespace EarthCo.Controllers
                         Data.CreatedBy = UserId;
                         Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
                         Data.EditBy = UserId;
-                        Data.isActive = User.isActive;
+                        Data.isActive = true;
                         DB.tblUsers.Add(Data);
                         DB.SaveChanges();
 
@@ -159,7 +159,7 @@ namespace EarthCo.Controllers
                         Data.AltPhone = User.AltPhone;
                         Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
                         Data.EditBy = UserId;
-                        Data.isActive = User.isActive;
+                        Data.isActive = true;
 
                         Data.RoleId = User.RoleId;
                         if (User.Password != null)

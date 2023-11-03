@@ -128,6 +128,8 @@ namespace EarthCo.Controllers
             {
                 tblUser Data = new tblUser();
                 Data = DB.tblUsers.Where(x => x.UserId == id && x.isDelete != true).FirstOrDefault();
+                Data.tblContacts = Data.tblContacts.Where(x => x.isDelete != true).ToList();
+                Data.tblServiceLocations = Data.tblServiceLocations.Where(x => x.isDelete != true).ToList();
                 if (Data == null)
                 {
                     Data = new tblUser();
@@ -366,7 +368,7 @@ namespace EarthCo.Controllers
                     Data.CreatedBy = userId;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = Customer.isActive;
+                    Data.isActive = true;
 
                     if(Customer.isLoginAllow==true)
                     {
@@ -449,7 +451,7 @@ namespace EarthCo.Controllers
 
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = Customer.isActive;
+                    Data.isActive = true;
 
                     DB.Entry(Data);
                     DB.SaveChanges();

@@ -366,7 +366,7 @@
           <Property Name="ServiceLocation" Type="nvarchar" MaxLength="500" />
           <Property Name="Contact" Type="nvarchar" MaxLength="500" />
           <Property Name="JobName" Type="nvarchar" MaxLength="500" />
-          <Property Name="Assign" Type="nvarchar" MaxLength="500" />
+          <Property Name="Assign" Type="int" />
           <Property Name="WorkRequest" Type="nvarchar" MaxLength="500" />
           <Property Name="ActionTaken" Type="nvarchar" MaxLength="500" />
           <Property Name="CompletedDate" Type="datetime" />
@@ -620,11 +620,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__tblServic__Custo__440B1D61">
-          <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
           <End Role="tblServiceRequest" Type="Self.tblServiceRequest" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
             </Principal>
             <Dependent Role="tblServiceRequest">
               <PropertyRef Name="CustomerId" />
@@ -763,6 +763,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_tblServiceRequest_tblUser">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblServiceRequest" Type="Self.tblServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblServiceRequest">
+              <PropertyRef Name="Assign" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_tblSetting_tblUser">
           <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
           <End Role="tblSetting" Type="Self.tblSetting" Multiplicity="*" />
@@ -887,7 +899,7 @@
             <End Role="tblPunchlist" EntitySet="tblPunchlist" />
           </AssociationSet>
           <AssociationSet Name="FK__tblServic__Custo__440B1D61" Association="Self.FK__tblServic__Custo__440B1D61">
-            <End Role="tblCustomer" EntitySet="tblCustomer" />
+            <End Role="tblUser" EntitySet="tblUser" />
             <End Role="tblServiceRequest" EntitySet="tblServiceRequest" />
           </AssociationSet>
           <AssociationSet Name="FK__tblServic__SRSta__45F365D3" Association="Self.FK__tblServic__SRSta__45F365D3">
@@ -933,6 +945,10 @@
           <AssociationSet Name="FK_tblServiceLocation_tblCustomer" Association="Self.FK_tblServiceLocation_tblCustomer">
             <End Role="tblUser" EntitySet="tblUser" />
             <End Role="tblServiceLocation" EntitySet="tblServiceLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblServiceRequest_tblUser" Association="Self.FK_tblServiceRequest_tblUser">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequest" />
           </AssociationSet>
           <AssociationSet Name="FK_tblSetting_tblUser" Association="Self.FK_tblSetting_tblUser">
             <End Role="tblUser" EntitySet="tblUser" />
@@ -1021,7 +1037,6 @@
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
           <NavigationProperty Name="tblPunchlists" Relationship="Self.FK__tblPunchl__Custo__571DF1D5" FromRole="tblCustomer" ToRole="tblPunchlist" />
-          <NavigationProperty Name="tblServiceRequests" Relationship="Self.FK__tblServic__Custo__440B1D61" FromRole="tblCustomer" ToRole="tblServiceRequest" />
           <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK__tblEstima__Custo__398D8EEE" FromRole="tblCustomer" ToRole="tblEstimate" />
           <NavigationProperty Name="tblMonthlyLandsacpes" Relationship="earthcoModel.FK_tblMonthlyLandsacpe_tblCustomer" FromRole="tblCustomer" ToRole="tblMonthlyLandsacpe" />
           <Property Name="ContactFirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
@@ -1109,8 +1124,8 @@
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
           <NavigationProperty Name="tblCustomer" Relationship="Self.FK__tblPunchl__Custo__571DF1D5" FromRole="tblPunchlist" ToRole="tblCustomer" />
-          <NavigationProperty Name="tblServiceRequest" Relationship="Self.FK__tblPunchl__Servi__5812160E" FromRole="tblPunchlist" ToRole="tblServiceRequest" />
           <NavigationProperty Name="tblPunchlistDetails" Relationship="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" FromRole="tblPunchlist" ToRole="tblPunchlistDetail" />
+          <NavigationProperty Name="tblServiceRequest" Relationship="earthcoModel.FK__tblPunchl__Servi__5812160E" FromRole="tblPunchlist" ToRole="tblServiceRequest" />
         </EntityType>
         <EntityType Name="tblRole">
           <Key>
@@ -1126,35 +1141,6 @@
           <NavigationProperty Name="tblAccessLevels" Relationship="Self.FK_AccessRole" FromRole="tblRole" ToRole="tblAccessLevel" />
           <NavigationProperty Name="tblUsers" Relationship="earthcoModel.FK_tblUser_tblRole" FromRole="tblRole" ToRole="tblUser" />
         </EntityType>
-        <EntityType Name="tblServiceRequest">
-          <Key>
-            <PropertyRef Name="ServiceRequestId" />
-          </Key>
-          <Property Name="ServiceRequestId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ServiceRequestNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ServiceLocation" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Contact" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="JobName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Assign" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="WorkRequest" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ActionTaken" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CompletedDate" Type="DateTime" Precision="3" />
-          <Property Name="DueDate" Type="DateTime" Precision="3" />
-          <Property Name="CustomerId" Type="Int32" />
-          <Property Name="SRTypeId" Type="Int32" />
-          <Property Name="SRStatusId" Type="Int32" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblCustomer" Relationship="Self.FK__tblServic__Custo__440B1D61" FromRole="tblServiceRequest" ToRole="tblCustomer" />
-          <NavigationProperty Name="tblPunchlists" Relationship="Self.FK__tblPunchl__Servi__5812160E" FromRole="tblServiceRequest" ToRole="tblPunchlist" />
-          <NavigationProperty Name="tblSRStatu" Relationship="Self.FK__tblServic__SRSta__45F365D3" FromRole="tblServiceRequest" ToRole="tblSRStatus" />
-          <NavigationProperty Name="tblSRType" Relationship="Self.FK__tblServic__SRTyp__44FF419A" FromRole="tblServiceRequest" ToRole="tblSRType" />
-          <NavigationProperty Name="tblSRFiles" Relationship="Self.FK__tblSRFile__SRId__4E88ABD4" FromRole="tblServiceRequest" ToRole="tblSRFile" />
-          <NavigationProperty Name="tblSRItems" Relationship="Self.FK__tblSRItem__SRId__4BAC3F29" FromRole="tblServiceRequest" ToRole="tblSRItem" />
-        </EntityType>
         <EntityType Name="tblSRFile">
           <Key>
             <PropertyRef Name="SRFileId" />
@@ -1168,8 +1154,8 @@
           <Property Name="EditBy" Type="Int32" />
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblServiceRequest" Relationship="Self.FK__tblSRFile__SRId__4E88ABD4" FromRole="tblSRFile" ToRole="tblServiceRequest" />
           <Property Name="FilePath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblServiceRequest" Relationship="earthcoModel.FK__tblSRFile__SRId__4E88ABD4" FromRole="tblSRFile" ToRole="tblServiceRequest" />
         </EntityType>
         <EntityType Name="tblSRItem">
           <Key>
@@ -1187,7 +1173,7 @@
           <Property Name="EditBy" Type="Int32" />
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblServiceRequest" Relationship="Self.FK__tblSRItem__SRId__4BAC3F29" FromRole="tblSRItem" ToRole="tblServiceRequest" />
+          <NavigationProperty Name="tblServiceRequest" Relationship="earthcoModel.FK__tblSRItem__SRId__4BAC3F29" FromRole="tblSRItem" ToRole="tblServiceRequest" />
         </EntityType>
         <EntityType Name="tblSRStatu">
           <Key>
@@ -1195,7 +1181,7 @@
           </Key>
           <Property Name="SRStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Status" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="tblServiceRequests" Relationship="Self.FK__tblServic__SRSta__45F365D3" FromRole="tblSRStatus" ToRole="tblServiceRequest" />
+          <NavigationProperty Name="tblServiceRequests" Relationship="earthcoModel.FK__tblServic__SRSta__45F365D3" FromRole="tblSRStatu" ToRole="tblServiceRequest" />
         </EntityType>
         <EntityType Name="tblSRType">
           <Key>
@@ -1203,7 +1189,7 @@
           </Key>
           <Property Name="SRTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Type" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="tblServiceRequests" Relationship="Self.FK__tblServic__SRTyp__44FF419A" FromRole="tblSRType" ToRole="tblServiceRequest" />
+          <NavigationProperty Name="tblServiceRequests" Relationship="earthcoModel.FK__tblServic__SRTyp__44FF419A" FromRole="tblSRType" ToRole="tblServiceRequest" />
         </EntityType>
         <Association Name="FK_AccessManu">
           <End Role="tblMenu" Type="Self.tblMenu" Multiplicity="0..1" />
@@ -1241,78 +1227,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__tblServic__Custo__440B1D61">
-          <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
-          <End Role="tblServiceRequest" Type="Self.tblServiceRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="tblServiceRequest">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblPunchl__Servi__5812160E">
-          <End Role="tblServiceRequest" Type="Self.tblServiceRequest" Multiplicity="0..1" />
-          <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblServiceRequest">
-              <PropertyRef Name="ServiceRequestId" />
-            </Principal>
-            <Dependent Role="tblPunchlist">
-              <PropertyRef Name="ServiceRequestId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblServic__SRSta__45F365D3">
-          <End Role="tblSRStatus" Type="Self.tblSRStatu" Multiplicity="0..1" />
-          <End Role="tblServiceRequest" Type="Self.tblServiceRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblSRStatus">
-              <PropertyRef Name="SRStatusId" />
-            </Principal>
-            <Dependent Role="tblServiceRequest">
-              <PropertyRef Name="SRStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblServic__SRTyp__44FF419A">
-          <End Role="tblSRType" Type="Self.tblSRType" Multiplicity="0..1" />
-          <End Role="tblServiceRequest" Type="Self.tblServiceRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblSRType">
-              <PropertyRef Name="SRTypeId" />
-            </Principal>
-            <Dependent Role="tblServiceRequest">
-              <PropertyRef Name="SRTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblSRFile__SRId__4E88ABD4">
-          <End Role="tblServiceRequest" Type="Self.tblServiceRequest" Multiplicity="0..1" />
-          <End Role="tblSRFile" Type="Self.tblSRFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblServiceRequest">
-              <PropertyRef Name="ServiceRequestId" />
-            </Principal>
-            <Dependent Role="tblSRFile">
-              <PropertyRef Name="SRId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblSRItem__SRId__4BAC3F29">
-          <End Role="tblServiceRequest" Type="Self.tblServiceRequest" Multiplicity="0..1" />
-          <End Role="tblSRItem" Type="Self.tblSRItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblServiceRequest">
-              <PropertyRef Name="ServiceRequestId" />
-            </Principal>
-            <Dependent Role="tblSRItem">
-              <PropertyRef Name="SRId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="earthcoEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="tblAccessLevels" EntityType="Self.tblAccessLevel" />
           <EntitySet Name="tblControllers" EntityType="Self.tblController" />
@@ -1323,7 +1237,6 @@
           <EntitySet Name="tblMenus" EntityType="Self.tblMenu" />
           <EntitySet Name="tblPunchlists" EntityType="Self.tblPunchlist" />
           <EntitySet Name="tblRoles" EntityType="Self.tblRole" />
-          <EntitySet Name="tblServiceRequests" EntityType="Self.tblServiceRequest" />
           <EntitySet Name="tblSRFiles" EntityType="Self.tblSRFile" />
           <EntitySet Name="tblSRItems" EntityType="Self.tblSRItem" />
           <EntitySet Name="tblSRStatus" EntityType="Self.tblSRStatu" />
@@ -1339,30 +1252,6 @@
           <AssociationSet Name="FK__tblPunchl__Custo__571DF1D5" Association="Self.FK__tblPunchl__Custo__571DF1D5">
             <End Role="tblCustomer" EntitySet="tblCustomers" />
             <End Role="tblPunchlist" EntitySet="tblPunchlists" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblServic__Custo__440B1D61" Association="Self.FK__tblServic__Custo__440B1D61">
-            <End Role="tblCustomer" EntitySet="tblCustomers" />
-            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblPunchl__Servi__5812160E" Association="Self.FK__tblPunchl__Servi__5812160E">
-            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
-            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblServic__SRSta__45F365D3" Association="Self.FK__tblServic__SRSta__45F365D3">
-            <End Role="tblSRStatus" EntitySet="tblSRStatus" />
-            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblServic__SRTyp__44FF419A" Association="Self.FK__tblServic__SRTyp__44FF419A">
-            <End Role="tblSRType" EntitySet="tblSRTypes" />
-            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblSRFile__SRId__4E88ABD4" Association="Self.FK__tblSRFile__SRId__4E88ABD4">
-            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
-            <End Role="tblSRFile" EntitySet="tblSRFiles" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblSRItem__SRId__4BAC3F29" Association="Self.FK__tblSRItem__SRId__4BAC3F29">
-            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
-            <End Role="tblSRItem" EntitySet="tblSRItems" />
           </AssociationSet>
           <EntitySet Name="tblSettings" EntityType="earthcoModel.tblSetting" />
           <EntitySet Name="tblIrrigations" EntityType="earthcoModel.tblIrrigation" />
@@ -1443,6 +1332,35 @@
           <AssociationSet Name="FK_tblUser_tblUserType" Association="earthcoModel.FK_tblUser_tblUserType">
             <End Role="tblUserType" EntitySet="tblUserTypes" />
             <End Role="tblUser" EntitySet="tblUsers" />
+          </AssociationSet>
+          <EntitySet Name="tblServiceRequests" EntityType="earthcoModel.tblServiceRequest" />
+          <AssociationSet Name="FK__tblPunchl__Servi__5812160E" Association="earthcoModel.FK__tblPunchl__Servi__5812160E">
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
+            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblServic__Custo__440B1D61" Association="earthcoModel.FK__tblServic__Custo__440B1D61">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblServic__SRSta__45F365D3" Association="earthcoModel.FK__tblServic__SRSta__45F365D3">
+            <End Role="tblSRStatu" EntitySet="tblSRStatus" />
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblServic__SRTyp__44FF419A" Association="earthcoModel.FK__tblServic__SRTyp__44FF419A">
+            <End Role="tblSRType" EntitySet="tblSRTypes" />
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblSRFile__SRId__4E88ABD4" Association="earthcoModel.FK__tblSRFile__SRId__4E88ABD4">
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
+            <End Role="tblSRFile" EntitySet="tblSRFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblSRItem__SRId__4BAC3F29" Association="earthcoModel.FK__tblSRItem__SRId__4BAC3F29">
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
+            <End Role="tblSRItem" EntitySet="tblSRItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblServiceRequest_tblUser" Association="earthcoModel.FK_tblServiceRequest_tblUser">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="tblSetting">
@@ -1878,6 +1796,8 @@
           <NavigationProperty Name="tblServiceLocations" Relationship="earthcoModel.FK_tblServiceLocation_tblCustomer" FromRole="tblUser" ToRole="tblServiceLocation" />
           <NavigationProperty Name="tblSettings" Relationship="earthcoModel.FK_tblSetting_tblUser" FromRole="tblUser" ToRole="tblSetting" />
           <NavigationProperty Name="tblUserType" Relationship="earthcoModel.FK_tblUser_tblUserType" FromRole="tblUser" ToRole="tblUserType" />
+          <NavigationProperty Name="tblServiceRequests" Relationship="earthcoModel.FK__tblServic__Custo__440B1D61" FromRole="tblUser" ToRole="tblServiceRequest" />
+          <NavigationProperty Name="tblServiceRequests1" Relationship="earthcoModel.FK_tblServiceRequest_tblUser" FromRole="tblUser" ToRole="tblServiceRequest" />
         </EntityType>
         <EntityType Name="tblUserType">
           <Key>
@@ -1956,6 +1876,120 @@
             </Principal>
             <Dependent Role="tblUser">
               <PropertyRef Name="UserTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblServiceRequest">
+          <Key>
+            <PropertyRef Name="ServiceRequestId" />
+          </Key>
+          <Property Name="ServiceRequestId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceRequestNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ServiceLocation" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Contact" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="JobName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Assign" Type="Int32" />
+          <Property Name="WorkRequest" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ActionTaken" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CompletedDate" Type="DateTime" Precision="3" />
+          <Property Name="DueDate" Type="DateTime" Precision="3" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="SRTypeId" Type="Int32" />
+          <Property Name="SRStatusId" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <NavigationProperty Name="tblPunchlists" Relationship="earthcoModel.FK__tblPunchl__Servi__5812160E" FromRole="tblServiceRequest" ToRole="tblPunchlist" />
+          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK__tblServic__Custo__440B1D61" FromRole="tblServiceRequest" ToRole="tblUser" />
+          <NavigationProperty Name="tblSRStatu" Relationship="earthcoModel.FK__tblServic__SRSta__45F365D3" FromRole="tblServiceRequest" ToRole="tblSRStatu" />
+          <NavigationProperty Name="tblSRType" Relationship="earthcoModel.FK__tblServic__SRTyp__44FF419A" FromRole="tblServiceRequest" ToRole="tblSRType" />
+          <NavigationProperty Name="tblSRFiles" Relationship="earthcoModel.FK__tblSRFile__SRId__4E88ABD4" FromRole="tblServiceRequest" ToRole="tblSRFile" />
+          <NavigationProperty Name="tblSRItems" Relationship="earthcoModel.FK__tblSRItem__SRId__4BAC3F29" FromRole="tblServiceRequest" ToRole="tblSRItem" />
+          <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblServiceRequest_tblUser" FromRole="tblServiceRequest" ToRole="tblUser" />
+        </EntityType>
+        <Association Name="FK__tblPunchl__Servi__5812160E">
+          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceRequest">
+              <PropertyRef Name="ServiceRequestId" />
+            </Principal>
+            <Dependent Role="tblPunchlist">
+              <PropertyRef Name="ServiceRequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblServic__Custo__440B1D61">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblServiceRequest">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblServic__SRSta__45F365D3">
+          <End Type="earthcoModel.tblSRStatu" Role="tblSRStatu" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSRStatu">
+              <PropertyRef Name="SRStatusId" />
+            </Principal>
+            <Dependent Role="tblServiceRequest">
+              <PropertyRef Name="SRStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblServic__SRTyp__44FF419A">
+          <End Type="earthcoModel.tblSRType" Role="tblSRType" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSRType">
+              <PropertyRef Name="SRTypeId" />
+            </Principal>
+            <Dependent Role="tblServiceRequest">
+              <PropertyRef Name="SRTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblSRFile__SRId__4E88ABD4">
+          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblSRFile" Role="tblSRFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceRequest">
+              <PropertyRef Name="ServiceRequestId" />
+            </Principal>
+            <Dependent Role="tblSRFile">
+              <PropertyRef Name="SRId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblSRItem__SRId__4BAC3F29">
+          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblSRItem" Role="tblSRItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceRequest">
+              <PropertyRef Name="ServiceRequestId" />
+            </Principal>
+            <Dependent Role="tblSRItem">
+              <PropertyRef Name="SRId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblServiceRequest_tblUser">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblServiceRequest">
+              <PropertyRef Name="Assign" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2118,30 +2152,6 @@
               <MappingFragment StoreEntitySet="tblRole">
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="Role" ColumnName="Role" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblServiceRequests">
-            <EntityTypeMapping TypeName="earthcoModel.tblServiceRequest">
-              <MappingFragment StoreEntitySet="tblServiceRequest">
-                <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
-                <ScalarProperty Name="ServiceRequestNumber" ColumnName="ServiceRequestNumber" />
-                <ScalarProperty Name="ServiceLocation" ColumnName="ServiceLocation" />
-                <ScalarProperty Name="Contact" ColumnName="Contact" />
-                <ScalarProperty Name="JobName" ColumnName="JobName" />
-                <ScalarProperty Name="Assign" ColumnName="Assign" />
-                <ScalarProperty Name="WorkRequest" ColumnName="WorkRequest" />
-                <ScalarProperty Name="ActionTaken" ColumnName="ActionTaken" />
-                <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
-                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="SRTypeId" ColumnName="SRTypeId" />
-                <ScalarProperty Name="SRStatusId" ColumnName="SRStatusId" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="EditBy" ColumnName="EditBy" />
@@ -2510,6 +2520,30 @@
               <MappingFragment StoreEntitySet="tblUserType">
                 <ScalarProperty Name="UserType" ColumnName="UserType" />
                 <ScalarProperty Name="UserTypeId" ColumnName="UserTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblServiceRequests">
+            <EntityTypeMapping TypeName="earthcoModel.tblServiceRequest">
+              <MappingFragment StoreEntitySet="tblServiceRequest">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="SRStatusId" ColumnName="SRStatusId" />
+                <ScalarProperty Name="SRTypeId" ColumnName="SRTypeId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
+                <ScalarProperty Name="ActionTaken" ColumnName="ActionTaken" />
+                <ScalarProperty Name="WorkRequest" ColumnName="WorkRequest" />
+                <ScalarProperty Name="Assign" ColumnName="Assign" />
+                <ScalarProperty Name="JobName" ColumnName="JobName" />
+                <ScalarProperty Name="Contact" ColumnName="Contact" />
+                <ScalarProperty Name="ServiceLocation" ColumnName="ServiceLocation" />
+                <ScalarProperty Name="ServiceRequestNumber" ColumnName="ServiceRequestNumber" />
+                <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

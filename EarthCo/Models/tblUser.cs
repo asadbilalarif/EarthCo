@@ -20,6 +20,8 @@ namespace EarthCo.Models
             this.tblContacts = new HashSet<tblContact>();
             this.tblServiceLocations = new HashSet<tblServiceLocation>();
             this.tblSettings = new HashSet<tblSetting>();
+            this.tblServiceRequests = new HashSet<tblServiceRequest>();
+            this.tblServiceRequests1 = new HashSet<tblServiceRequest>();
         }
     
         public int UserId { get; set; }
@@ -61,5 +63,9 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSetting> tblSettings { get; set; }
         public virtual tblUserType tblUserType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblServiceRequest> tblServiceRequests { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblServiceRequest> tblServiceRequests1 { get; set; }
     }
 }

@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Web;
 using System.Web.Http;
@@ -14,6 +16,7 @@ using System.Web.Http.Cors;
 namespace EarthCo.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [Authorize]
     public class ServiceRequestController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
@@ -23,11 +26,24 @@ namespace EarthCo.Controllers
         {
             try
             {
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
                 List<GetServiceRequest> Data = new List<GetServiceRequest>();
                 GetServiceRequest Temp = null;
                 List<tblServiceRequest> SRData = new List<tblServiceRequest>();
-                SRData = DB.tblServiceRequests.ToList();
-                if (SRData == null || SRData.Count==0)
+
+                int RoleId =(int) DB.tblUsers.Where(x => x.UserId == UserId).Select(s => s.RoleId).FirstOrDefault();
+                if(RoleId==1)
+                {
+                    SRData = DB.tblServiceRequests.ToList();
+                }
+                else
+                {
+                    SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId).ToList();
+                }
+                
+                if (SRData == null || SRData.Count == 0)
                 {
                     return NotFound();
                 }
@@ -37,12 +53,12 @@ namespace EarthCo.Controllers
                     Temp = new GetServiceRequest();
 
                     Temp.ServiceRequestId = item.ServiceRequestId;
-                    Temp.CustomerName = item.tblCustomer.CustomerName;
+                    Temp.CustomerName = item.tblUser.CompanyName;
                     Temp.Assign = item.Assign;
                     Temp.ServiceRequestNumber = item.ServiceRequestNumber;
                     Temp.Status = item.tblSRStatu.Status;
                     Temp.WorkRequest = item.WorkRequest;
-                    Temp.CreatedDate =(DateTime) item.CreatedDate;
+                    Temp.CreatedDate = (DateTime)item.CreatedDate;
 
                     Data.Add(Temp);
                 }
@@ -92,6 +108,8 @@ namespace EarthCo.Controllers
 
             ServiceRequest.ServiceRequestData = JsonSerializer.Deserialize<tblServiceRequest>(Data1);
 
+            
+
 
             tblServiceRequest Data = new tblServiceRequest();
             try
@@ -99,7 +117,10 @@ namespace EarthCo.Controllers
                 //HttpCookie cookieObj = Request.Cookies["User"];
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
-                int UserId = 2;
+
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
                 if (ServiceRequest.ServiceRequestData.ServiceRequestId == 0)
                 {
 
@@ -145,7 +166,7 @@ namespace EarthCo.Controllers
                     //    }
                     //}
 
-                    if(ServiceRequest.Files != null && ServiceRequest.Files.Count!=0)
+                    if (ServiceRequest.Files != null && ServiceRequest.Files.Count != 0)
                     {
                         tblSRFile FileData = null;
                         string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
@@ -157,7 +178,7 @@ namespace EarthCo.Controllers
                         foreach (var item in ServiceRequest.Files)
                         {
                             FileData = new tblSRFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.ServiceRequestId.ToString()+ NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
                             path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             FileData.FileName = Path.GetFileName(item.FileName);
@@ -328,7 +349,7 @@ namespace EarthCo.Controllers
                     DB.SaveChanges();
                 }
 
-                
+
                 DB.Entry(Data).State = EntityState.Deleted;
                 DB.SaveChanges();
 
@@ -419,6 +440,24 @@ namespace EarthCo.Controllers
             {
                 return InternalServerError(ex);
             }
+        }
+
+        public string GetUserIdFromToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+
+            if (securityToken != null)
+            {
+                var userIdClaim = securityToken.Claims.FirstOrDefault(claim => claim.Type == "userid");
+
+                if (userIdClaim != null)
+                {
+                    return userIdClaim.Value;
+                }
+            }
+
+            return null; // User ID not found in the token
         }
     }
 }

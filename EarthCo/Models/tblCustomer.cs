@@ -18,7 +18,6 @@ namespace EarthCo.Models
         public tblCustomer()
         {
             this.tblPunchlists = new HashSet<tblPunchlist>();
-            this.tblServiceRequests = new HashSet<tblServiceRequest>();
             this.tblEstimates = new HashSet<tblEstimate>();
             this.tblMonthlyLandsacpes = new HashSet<tblMonthlyLandsacpe>();
         }
@@ -45,8 +44,6 @@ namespace EarthCo.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblServiceRequest> tblServiceRequests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimate> tblEstimates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

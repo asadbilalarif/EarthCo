@@ -10,7 +10,7 @@ namespace EarthCo.Models
         public int ServiceRequestId { get; set; }
         public string ServiceRequestNumber { get; set; }
         public string CustomerName { get; set; }
-        public string Assign { get; set; }
+        public int? Assign { get; set; }
 
         public string Status { get; set; }
         public string WorkRequest { get; set; }

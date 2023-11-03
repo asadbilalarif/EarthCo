@@ -20,7 +20,7 @@ namespace EarthCo.Controllers
         {
             try
             {
-                DB.Configuration.ProxyCreationEnabled = false;
+                //DB.Configuration.ProxyCreationEnabled = false;
                 List<tblUser> Data = new List<tblUser>();
                 Data = DB.tblUsers.Where(x => x.UserTypeId == 1 && x.isDelete != true).ToList();
                 if (Data == null || Data.Count == 0)
@@ -93,7 +93,8 @@ namespace EarthCo.Controllers
                     Data.CreatedBy = userId;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = Customer.isActive;
+                    Data.isActive = true;
+                    Data.isLoginAllow = true;
 
                     byte[] EncDataBtye = new byte[Customer.Password.Length];
                     EncDataBtye = System.Text.Encoding.UTF8.GetBytes(Customer.Password);
@@ -159,7 +160,7 @@ namespace EarthCo.Controllers
 
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = Customer.isActive;
+                    Data.isActive = true;
 
                     DB.Entry(Data);
                     DB.SaveChanges();

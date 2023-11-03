@@ -99,7 +99,7 @@ namespace EarthCo.Controllers
 
                     var token = GetToken(User.UserId.ToString());
 
-                    return Ok(new { status = "success",token= token });
+                    return Ok(new { status = "success",token= token,Data= User });
                 }
                 else
                 {

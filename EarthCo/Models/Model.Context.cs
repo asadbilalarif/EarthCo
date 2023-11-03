@@ -34,7 +34,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblMenu> tblMenus { get; set; }
         public virtual DbSet<tblPunchlist> tblPunchlists { get; set; }
         public virtual DbSet<tblRole> tblRoles { get; set; }
-        public virtual DbSet<tblServiceRequest> tblServiceRequests { get; set; }
         public virtual DbSet<tblSRFile> tblSRFiles { get; set; }
         public virtual DbSet<tblSRItem> tblSRItems { get; set; }
         public virtual DbSet<tblSRStatu> tblSRStatus { get; set; }
@@ -55,5 +54,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblServiceLocation> tblServiceLocations { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
         public virtual DbSet<tblUserType> tblUserTypes { get; set; }
+        public virtual DbSet<tblServiceRequest> tblServiceRequests { get; set; }
     }
 }

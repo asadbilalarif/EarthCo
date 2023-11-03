@@ -35,8 +35,8 @@ namespace EarthCo.Models
         public Nullable<bool> isActive { get; set; }
     
         public virtual tblCustomer tblCustomer { get; set; }
-        public virtual tblServiceRequest tblServiceRequest { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPunchlistDetail> tblPunchlistDetails { get; set; }
+        public virtual tblServiceRequest tblServiceRequest { get; set; }
     }
 }
