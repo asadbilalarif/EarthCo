@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -12,6 +13,7 @@ using System.Web.Http.Cors;
 namespace EarthCo.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [Authorize]
     public class ItemController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
@@ -20,6 +22,7 @@ namespace EarthCo.Controllers
         {
             try
             {
+                DB.Configuration.ProxyCreationEnabled = false;
                 List<tblItem> Data = new List<tblItem>();
                 Data = DB.tblItems.Where(x => x.isDelete != true).ToList();
                 if (Data == null || Data.Count == 0)
@@ -34,6 +37,31 @@ namespace EarthCo.Controllers
                 return InternalServerError(ex);
             }
         }
+
+        [HttpGet]
+        public IHttpActionResult GetSearchItemList(string Search)
+        {
+            try
+            {
+                DB.Configuration.ProxyCreationEnabled = false;
+                List<tblItem> Data = new List<tblItem>();
+                Data = DB.tblItems.Where(x =>x.isDelete!=true && x.ItemName.ToLower().Contains(Search.ToLower())).ToList();
+                //Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).ToList();
+                if (Data == null || Data.Count == 0)
+                {
+                    return NotFound(); // 404 - No data found
+                }
+
+                return Ok(Data); // 200 - Successful response with data
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                // You may also choose to return a more specific error response (e.g., 500 - Internal Server Error) here.
+                return InternalServerError(ex);
+            }
+        }
+
 
         [HttpGet]
         public IHttpActionResult GetItem(int id)
@@ -69,7 +97,10 @@ namespace EarthCo.Controllers
             {
                 //var userIdClaim = User.Identity as ClaimsIdentity;
                 //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
-                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                //int userId = 2; // Replace with your authentication mechanism to get the user's ID.
 
                 tblItem Data = new tblItem();
 
@@ -81,7 +112,7 @@ namespace EarthCo.Controllers
                     Data.CreatedBy = userId;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = Item.isActive;
+                    Data.isActive = true;
 
 
                     DB.tblItems.Add(Data);
@@ -110,12 +141,22 @@ namespace EarthCo.Controllers
                     }
 
                     Data.ItemName = Item.ItemName;
-                    Data.Description = Item.Description;
+                    Data.SKU = Item.SKU;
+                    Data.isSale = Item.isSale;
+                    Data.isPurchase = Item.isPurchase;
+                    Data.SKU = Item.SKU;
+                    Data.SaleDescription = Item.SaleDescription;
+                    Data.PurchaseDescription = Item.PurchaseDescription;
+                    Data.SalePrice = Item.SalePrice;
+                    Data.PurchasePrice = Item.PurchasePrice;
+                    Data.SaleTaxCode = Item.SaleTaxCode;
+                    Data.PurchareTaxCode = Item.PurchareTaxCode;
+                    Data.IncomeAccount = Item.IncomeAccount;
+                    Data.ExpenseAccount = Item.ExpenseAccount;
                     Data.Type = Item.Type;
-                    Data.Price = Item.Price;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = Item.isActive;
+                    Data.isActive = true;
 
                     DB.Entry(Data);
                     DB.SaveChanges();
@@ -148,7 +189,8 @@ namespace EarthCo.Controllers
         {
             try
             {
-                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
 
 
                 tblItem Data = DB.tblItems.FirstOrDefault(c => c.ItemId == id);
@@ -161,6 +203,8 @@ namespace EarthCo.Controllers
 
                 // Remove the customer
                 Data.isDelete = true;
+                Data.EditBy = userId;
+                Data.EditDate = DateTime.Now;
                 DB.Entry(Data);
                 DB.SaveChanges();
 

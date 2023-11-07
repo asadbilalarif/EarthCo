@@ -22,13 +22,25 @@ namespace EarthCo.Controllers
             {
                 //DB.Configuration.ProxyCreationEnabled = false;
                 List<tblUser> Data = new List<tblUser>();
+                List<StaffList> StaffData = new List<StaffList>();
                 Data = DB.tblUsers.Where(x => x.UserTypeId == 1 && x.isDelete != true).ToList();
                 if (Data == null || Data.Count == 0)
                 {
                     return NotFound(); // 404 - No data found
                 }
+                foreach (var item in Data)
+                {
+                    StaffList New = new StaffList();
+                    New.UserId = item.UserId;
+                    New.FirstName = item.FirstName;
+                    New.LastName = item.LastName;
+                    New.Email = item.Email;
+                    New.Role = item.tblRole.Role;
+                    StaffData.Add(New);
+                }
 
-                return Ok(Data); // 200 - Successful response with data
+
+                return Ok(StaffData); // 200 - Successful response with data
             }
             catch (Exception ex)
             {

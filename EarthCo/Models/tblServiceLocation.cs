@@ -14,6 +14,12 @@ namespace EarthCo.Models
     
     public partial class tblServiceLocation
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tblServiceLocation()
+        {
+            this.tblInvoices = new HashSet<tblInvoice>();
+        }
+    
         public int ServiceLocationId { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
@@ -29,5 +35,7 @@ namespace EarthCo.Models
         public Nullable<bool> isDelete { get; set; }
     
         public virtual tblUser tblUser { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
     }
 }

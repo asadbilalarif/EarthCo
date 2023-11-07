@@ -14,6 +14,12 @@ namespace EarthCo.Models
     
     public partial class tblContact
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tblContact()
+        {
+            this.tblInvoices = new HashSet<tblInvoice>();
+        }
+    
         public int ContactId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -37,5 +43,7 @@ namespace EarthCo.Models
         public Nullable<bool> isDelete { get; set; }
     
         public virtual tblUser tblUser { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
     }
 }

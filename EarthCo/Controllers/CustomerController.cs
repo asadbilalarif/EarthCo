@@ -57,7 +57,7 @@ namespace EarthCo.Controllers
             {
                 DB.Configuration.ProxyCreationEnabled = false;
                 List<tblUser> Data = new List<tblUser>();
-                Data = DB.tblUsers.Where(x => x.UserTypeId==2 && x.CompanyName.ToLower().Contains(Search.ToLower())).ToList();
+                Data = DB.tblUsers.Where(x => x.UserTypeId==2 && x.isDelete !=true && x.CompanyName.ToLower().Contains(Search.ToLower())).ToList();
                 //Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).ToList();
 
                 if (Data == null || Data.Count == 0)
@@ -127,9 +127,12 @@ namespace EarthCo.Controllers
             try
             {
                 tblUser Data = new tblUser();
+                CustomerContacts CustomerData = new CustomerContacts();
                 Data = DB.tblUsers.Where(x => x.UserId == id && x.isDelete != true).FirstOrDefault();
                 Data.tblContacts = Data.tblContacts.Where(x => x.isDelete != true).ToList();
                 Data.tblServiceLocations = Data.tblServiceLocations.Where(x => x.isDelete != true).ToList();
+
+                
                 if (Data == null)
                 {
                     Data = new tblUser();
@@ -157,6 +160,7 @@ namespace EarthCo.Controllers
         {
             try
             {
+                DB.Configuration.ProxyCreationEnabled = false;
                 List<tblContact> Data = new List<tblContact>();
                 Data = DB.tblContacts.Where(x => x.CustomerId == id && x.isDelete != true).ToList();
                 if (Data == null || Data.Count==0)
@@ -210,6 +214,7 @@ namespace EarthCo.Controllers
         {
             try
             {
+                DB.Configuration.ProxyCreationEnabled = false;
                 List<tblServiceLocation> Data = new List<tblServiceLocation>();
                 Data = DB.tblServiceLocations.Where(x => x.CustomerId == id && x.isDelete != true).ToList();
                 if (Data == null || Data.Count == 0)
@@ -375,10 +380,6 @@ namespace EarthCo.Controllers
                         byte[] EncDataBtye = new byte[Customer.Password.Length];
                         EncDataBtye = System.Text.Encoding.UTF8.GetBytes(Customer.Password);
                         Data.Password = Convert.ToBase64String(EncDataBtye);
-                    }
-                    else
-                    {
-                        Data.Password = "";
                     }
 
                     DB.tblUsers.Add(Data);

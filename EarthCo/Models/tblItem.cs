@@ -16,14 +16,26 @@ namespace EarthCo.Models
     {
         public int ItemId { get; set; }
         public string ItemName { get; set; }
-        public string Description { get; set; }
+        public string SKU { get; set; }
+        public Nullable<bool> isSale { get; set; }
+        public Nullable<bool> isPurchase { get; set; }
+        public string SaleDescription { get; set; }
+        public string PurchaseDescription { get; set; }
+        public Nullable<double> SalePrice { get; set; }
+        public Nullable<double> PurchasePrice { get; set; }
+        public string SaleTaxCode { get; set; }
+        public string PurchareTaxCode { get; set; }
+        public Nullable<int> IncomeAccount { get; set; }
+        public Nullable<int> ExpenseAccount { get; set; }
         public string Type { get; set; }
-        public Nullable<double> Price { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
         public Nullable<bool> isDelete { get; set; }
+    
+        public virtual tblAccount tblAccount { get; set; }
+        public virtual tblAccount tblAccount1 { get; set; }
     }
 }

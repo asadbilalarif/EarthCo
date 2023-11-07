@@ -125,7 +125,7 @@ namespace EarthCo.Controllers
                     Data.CreatedBy = UserId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = Estimate.EstimateData.isActive;
+                    Data.isActive = true;
                     DB.tblEstimates.Add(Data);
                     DB.SaveChanges();
 
@@ -222,7 +222,7 @@ namespace EarthCo.Controllers
                     Data.CustomerId = Estimate.EstimateData.CustomerId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = Estimate.EstimateData.isActive;
+                    Data.isActive = true;
                     DB.Entry(Data);
                     DB.SaveChanges();
 

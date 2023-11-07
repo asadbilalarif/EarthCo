@@ -54,7 +54,7 @@ namespace EarthCo.Controllers
 
                     Temp.ServiceRequestId = item.ServiceRequestId;
                     Temp.CustomerName = item.tblUser.CompanyName;
-                    Temp.Assign = item.Assign;
+                    Temp.Assign = item.tblUser1.FirstName+" "+ item.tblUser1.LastName;
                     Temp.ServiceRequestNumber = item.ServiceRequestNumber;
                     Temp.Status = item.tblSRStatu.Status;
                     Temp.WorkRequest = item.WorkRequest;
@@ -78,6 +78,28 @@ namespace EarthCo.Controllers
             {
                 tblServiceRequest Data = new tblServiceRequest();
                 Data = DB.tblServiceRequests.Where(x => x.ServiceRequestId == id).FirstOrDefault();
+                if (Data == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(Data);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult GetServiceRequestTypes()
+        {
+            try
+            {
+                DB.Configuration.ProxyCreationEnabled = false;
+                List<tblSRType> Data = new List<tblSRType>();
+                Data = DB.tblSRTypes.ToList();
                 if (Data == null)
                 {
                     return NotFound();
@@ -197,7 +219,8 @@ namespace EarthCo.Controllers
                     LogData.CreatedDate = DateTime.Now;
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
-                    return Ok("Service Request has been added successfully.");
+                    //return Ok("Service Request has been added successfully.");
+                    return Ok(new { Id = Data.ServiceRequestId, Message = "Service Request has been added successfully." });
                 }
                 else
                 {
@@ -239,6 +262,8 @@ namespace EarthCo.Controllers
                     Data.CustomerId = ServiceRequest.ServiceRequestData.CustomerId;
                     Data.SRTypeId = ServiceRequest.ServiceRequestData.SRTypeId;
                     Data.SRStatusId = ServiceRequest.ServiceRequestData.SRStatusId;
+                    Data.ServiceLocationId = ServiceRequest.ServiceRequestData.ServiceLocationId;
+                    Data.ContactId = ServiceRequest.ServiceRequestData.ContactId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = ServiceRequest.ServiceRequestData.isActive;
@@ -310,7 +335,8 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
 
-                    return Ok("Service Request has been Update successfully.");
+                    //return Ok("Service Request has been Update successfully.");
+                    return Ok(new { Id = Data.ServiceRequestId, Message = "Service Request has been Update successfully." });
                 }
             }
             catch (Exception ex)

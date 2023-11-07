@@ -233,13 +233,16 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BillController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\EstimateController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\IrrigationController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\MonthlyLandsacpeController.cs" />
     <Compile Include="Controllers\PunchListController.cs" />
+    <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ServiceRequestController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
@@ -250,6 +253,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BillFile.cs" />
+    <Compile Include="Models\BillList.cs" />
     <Compile Include="Models\ChangePassword.cs" />
     <Compile Include="Models\ControllerClass.cs" />
     <Compile Include="Models\CreateAccessLevelClass.cs" />
@@ -260,6 +265,8 @@
     <Compile Include="Models\GetEstimateItem.cs" />
     <Compile Include="Models\GetServiceRequest.cs" />
     <Compile Include="Models\InviteEmployee.cs" />
+    <Compile Include="Models\InvoiceFile.cs" />
+    <Compile Include="Models\InvoiceList.cs" />
     <Compile Include="Models\IrrigationControllerClass.cs" />
     <Compile Include="Models\MenuAccess.cs" />
     <Compile Include="Models\Model.Context.cs">
@@ -278,8 +285,23 @@
       <DependentUpon>Model.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\PunchlistDetailItems.cs" />
+    <Compile Include="Models\PurchaseOrderFile.cs" />
+    <Compile Include="Models\PurchaseOrderList.cs" />
     <Compile Include="Models\ServiceRequestFile.cs" />
+    <Compile Include="Models\StaffList.cs" />
     <Compile Include="Models\tblAccessLevel.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblAccount.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblBill.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblBillFile.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblBillItem.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblContact.cs">
@@ -309,6 +331,15 @@
     <Compile Include="Models\tblEstimateStatu.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblInvoice.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblInvoiceFile.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblInvoiceItem.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tblIrrigation.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -331,6 +362,18 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblPunchlistItem.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblPurchaseOrder.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblPurchaseOrderFile.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblPurchaseOrderItem.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblPurchaseOrderStatu.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblRole.cs">

@@ -49,11 +49,22 @@ namespace EarthCo.Models
         public virtual DbSet<tblEstimateFile> tblEstimateFiles { get; set; }
         public virtual DbSet<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
         public virtual DbSet<tblCustomerType> tblCustomerTypes { get; set; }
-        public virtual DbSet<tblItem> tblItems { get; set; }
         public virtual DbSet<tblContact> tblContacts { get; set; }
         public virtual DbSet<tblServiceLocation> tblServiceLocations { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
         public virtual DbSet<tblUserType> tblUserTypes { get; set; }
         public virtual DbSet<tblServiceRequest> tblServiceRequests { get; set; }
+        public virtual DbSet<tblPurchaseOrderFile> tblPurchaseOrderFiles { get; set; }
+        public virtual DbSet<tblPurchaseOrderItem> tblPurchaseOrderItems { get; set; }
+        public virtual DbSet<tblPurchaseOrderStatu> tblPurchaseOrderStatus { get; set; }
+        public virtual DbSet<tblBill> tblBills { get; set; }
+        public virtual DbSet<tblBillFile> tblBillFiles { get; set; }
+        public virtual DbSet<tblBillItem> tblBillItems { get; set; }
+        public virtual DbSet<tblInvoice> tblInvoices { get; set; }
+        public virtual DbSet<tblInvoiceFile> tblInvoiceFiles { get; set; }
+        public virtual DbSet<tblInvoiceItem> tblInvoiceItems { get; set; }
+        public virtual DbSet<tblPurchaseOrder> tblPurchaseOrders { get; set; }
+        public virtual DbSet<tblAccount> tblAccounts { get; set; }
+        public virtual DbSet<tblItem> tblItems { get; set; }
     }
 }

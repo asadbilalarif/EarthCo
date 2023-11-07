@@ -19,6 +19,7 @@ namespace EarthCo.Models
         {
             this.tblEstimateItems = new HashSet<tblEstimateItem>();
             this.tblEstimateFiles = new HashSet<tblEstimateFile>();
+            this.tblPurchaseOrders = new HashSet<tblPurchaseOrder>();
         }
     
         public int EstimateId { get; set; }
@@ -44,5 +45,7 @@ namespace EarthCo.Models
         public virtual ICollection<tblEstimateItem> tblEstimateItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimateFile> tblEstimateFiles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders { get; set; }
     }
 }

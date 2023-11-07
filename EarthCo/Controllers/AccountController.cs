@@ -63,6 +63,7 @@ namespace EarthCo.Controllers
         [HttpPost]
         public IHttpActionResult Login([FromBody] tblUser UserData)
         {
+            DB.Configuration.ProxyCreationEnabled = false;
             string pass = null;
             tblLog LogData = new tblLog();
             try
