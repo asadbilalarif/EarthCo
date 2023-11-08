@@ -24,34 +24,33 @@ namespace EarthCo.Models
     
         public int ServiceRequestId { get; set; }
         public string ServiceRequestNumber { get; set; }
-        public string ServiceLocation { get; set; }
-        public string Contact { get; set; }
+        public int ServiceLocationId { get; set; }
+        public int ContactId { get; set; }
         public string JobName { get; set; }
         public Nullable<int> Assign { get; set; }
         public string WorkRequest { get; set; }
         public string ActionTaken { get; set; }
         public Nullable<System.DateTime> CompletedDate { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
-        public Nullable<int> CustomerId { get; set; }
-        public Nullable<int> SRTypeId { get; set; }
-        public Nullable<int> SRStatusId { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public int CustomerId { get; set; }
+        public int SRTypeId { get; set; }
+        public int SRStatusId { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
-        public Nullable<bool> isActive { get; set; }
-        public Nullable<int> ServiceLocationId { get; set; }
-        public Nullable<int> ContactId { get; set; }
+        public bool isActive { get; set; }
+        public bool isDelete { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
-        public virtual tblUser tblUser { get; set; }
         public virtual tblSRStatu tblSRStatu { get; set; }
         public virtual tblSRType tblSRType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSRFile> tblSRFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSRItem> tblSRItems { get; set; }
+        public virtual tblUser tblUser { get; set; }
         public virtual tblUser tblUser1 { get; set; }
     }
 }

@@ -17,13 +17,14 @@ namespace EarthCo.Models
         public int SRFileId { get; set; }
         public string FileName { get; set; }
         public string Caption { get; set; }
-        public Nullable<int> SRId { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public string FilePath { get; set; }
+        public int SRId { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
-        public Nullable<bool> isActive { get; set; }
-        public string FilePath { get; set; }
+        public bool isActive { get; set; }
+        public bool isDelete { get; set; }
     
         public virtual tblServiceRequest tblServiceRequest { get; set; }
     }

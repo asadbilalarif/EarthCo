@@ -10,9 +10,8 @@
 namespace EarthCo.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class tblBillItem
+    public partial class SPGetBillItemData_Result
     {
         public int BillItemId { get; set; }
         public string Name { get; set; }
@@ -27,7 +26,5 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
-    
-        public virtual tblBill tblBill { get; set; }
     }
 }

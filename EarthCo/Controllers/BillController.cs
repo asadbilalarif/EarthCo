@@ -37,9 +37,10 @@ namespace EarthCo.Controllers
                     {
                         BillList Temp = new BillList();
                         Temp.SupplierName = item.tblUser.FirstName + " " + item.tblUser.LastName;
-                        Temp.Date = (DateTime)item.Date;
+                        Temp.DueDate = (DateTime)item.DueDate;
                         Temp.Amount = item.Amount;
                         Temp.Memo = item.Memo;
+                        Temp.Currency = item.Currency;
                         Temp.Tags = item.Tags;
                         Result.Add(Temp);
                     }
@@ -60,9 +61,14 @@ namespace EarthCo.Controllers
         {
             try
             {
-                tblBill Data = new tblBill();
-                Data = DB.tblBills.Where(x => x.BillId == id && x.isDelete != true).FirstOrDefault();
-               
+                SPGetBillData_Result Data = new SPGetBillData_Result();
+                List<SPGetBillItemData_Result> ItemData = new List<SPGetBillItemData_Result>();
+                List<SPGetBillFileData_Result> FileData = new List<SPGetBillFileData_Result>();
+                Data = DB.SPGetBillData(id).FirstOrDefault();
+                ItemData = DB.SPGetBillItemData(id).ToList();
+                FileData = DB.SPGetBillFileData(id).ToList();
+
+                GetBillData GetData = new GetBillData();
                 if (Data == null)
                 {
                     //DB.Configuration.ProxyCreationEnabled = false;
@@ -80,10 +86,12 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
-                    Data.tblBillItems = Data.tblBillItems.Where(x => x.isDelete != true).ToList();
+                    GetData.Data = Data;
+                    GetData.ItemData = ItemData;
+                    GetData.FileData = FileData;
                 }
 
-                return Ok(Data); // 200 - Successful response with data
+                return Ok(GetData); // 200 - Successful response with data
             }
             catch (Exception ex)
             {
@@ -126,10 +134,14 @@ namespace EarthCo.Controllers
                     {
                         foreach (var item in Bill.BillData.tblBillItems)
                         {
+                            item.CreatedBy = UserId;
                             item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.Amount = item.Qty * item.Rate;
                             item.BillId = Data.BillId;
+                            item.isActive = true;
+                            item.isDelete = false;
                         }
                     }
 
@@ -139,6 +151,7 @@ namespace EarthCo.Controllers
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;
+                    Data.isDelete = false;
                     DB.tblBills.Add(Data);
                     DB.SaveChanges();
 
@@ -180,6 +193,12 @@ namespace EarthCo.Controllers
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.BillId = Data.BillId;
+                            FileData.CreatedBy = UserId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = UserId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.isActive = true;
+                            FileData.isDelete = false;
                             DB.tblBillFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -216,10 +235,13 @@ namespace EarthCo.Controllers
                     {
                         foreach (var item in Bill.BillData.tblBillItems)
                         {
+                            item.CreatedBy = UserId;
                             item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.Amount = item.Qty * item.Rate;
                             item.BillId = Data.BillId;
+                            item.isDelete = false;
                         }
                     }
 
@@ -227,37 +249,39 @@ namespace EarthCo.Controllers
                     Data.SupplierId = Bill.BillData.SupplierId;
                     Data.BillNumber = Bill.BillData.BillNumber;
                     Data.Tags = Bill.BillData.Tags;
-                    Data.Date = Bill.BillData.Date;
+                    Data.BillDate = Bill.BillData.BillDate;
                     Data.DueDate = Bill.BillData.DueDate;
-                    Data.PurchaseOrdeId = Bill.BillData.PurchaseOrdeId;
-                    Data.PurchaseOrdeNumber = Bill.BillData.PurchaseOrdeNumber;
-                    Data.Terms = Bill.BillData.Terms;
+                    Data.PurchaseOrderId = Bill.BillData.PurchaseOrderId;
+                    Data.PurchaseOrderNumber = Bill.BillData.PurchaseOrderNumber;
+                    Data.TermId = Bill.BillData.TermId;
                     Data.Memo = Bill.BillData.Memo;
                     Data.Amount = Bill.BillData.Amount;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;
+                    Data.isDelete = false;
                     DB.Entry(Data);
                     DB.SaveChanges();
 
-                    //if (Estimate.EstimateData.tblEstimateItems != null && Estimate.EstimateData.tblEstimateItems.Count != 0)
-                    //{
-                    //    tblEstimateItem ConData = null;
+                    if (Bill.BillData.tblBillItems != null && Bill.BillData.tblBillItems.Count != 0)
+                    {
+                        tblBillItem ConData = null;
 
-                    //    foreach (var item in Estimate.EstimateData.tblEstimateItems)
-                    //    {
-                    //        ConData = new tblEstimateItem();
-                    //        ConData = item;
-                    //        ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    //        ConData.CreatedBy = UserId;
-                    //        ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    //        ConData.EditBy = UserId;
-                    //        ConData.isActive = item.isActive;
-                    //        ConData.EstimateId = Data.EstimateId;
-                    //        DB.tblEstimateItems.Add(ConData);
-                    //        DB.SaveChanges();
-                    //    }
-                    //}
+                        foreach (var item in Bill.BillData.tblBillItems)
+                        {
+                            ConData = new tblBillItem();
+                            ConData = item;
+                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.CreatedBy = UserId;
+                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.EditBy = UserId;
+                            ConData.isActive = true;
+                            ConData.isDelete = false;
+                            ConData.BillId = Data.BillId;
+                            DB.tblBillItems.Add(ConData);
+                            DB.SaveChanges();
+                        }
+                    }
 
                     List<tblBillFile> ConFList = DB.tblBillFiles.Where(x => x.BillId == Bill.BillData.BillId).ToList();
                     if (ConFList != null && ConFList.Count != 0)
@@ -285,6 +309,12 @@ namespace EarthCo.Controllers
                             FileData.Caption = "";
                             FileData.FilePath = path;
                             FileData.BillId = Data.BillId;
+                            FileData.CreatedBy = UserId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = UserId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.isActive = true;
+                            FileData.isDelete = false;
                             DB.tblBillFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;

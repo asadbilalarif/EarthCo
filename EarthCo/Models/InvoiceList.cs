@@ -12,5 +12,6 @@ namespace EarthCo.Models
         public string CustomerName { get; set; }
         public Double? BalanceAmount { get; set; }
         public Double? TotalAmount { get; set; }
+        public Double? ProfitPercentage { get; set; }
     }
 }

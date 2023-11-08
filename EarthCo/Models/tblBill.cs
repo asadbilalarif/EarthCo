@@ -22,28 +22,30 @@ namespace EarthCo.Models
         }
     
         public int BillId { get; set; }
-        public Nullable<int> SupplierId { get; set; }
+        public int SupplierId { get; set; }
         public string BillNumber { get; set; }
         public string Tags { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        public System.DateTime BillDate { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
-        public Nullable<int> PurchaseOrdeId { get; set; }
-        public string PurchaseOrdeNumber { get; set; }
-        public string Terms { get; set; }
+        public int PurchaseOrderId { get; set; }
+        public string PurchaseOrderNumber { get; set; }
+        public Nullable<int> TermId { get; set; }
         public string Memo { get; set; }
-        public Nullable<double> Amount { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public double Amount { get; set; }
+        public string Currency { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
-        public Nullable<bool> isActive { get; set; }
-        public Nullable<bool> isDelete { get; set; }
+        public bool isActive { get; set; }
+        public bool isDelete { get; set; }
     
-        public virtual tblUser tblUser { get; set; }
+        public virtual tblPurchaseOrder tblPurchaseOrder { get; set; }
+        public virtual tblTerm tblTerm { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBillFile> tblBillFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBillItem> tblBillItems { get; set; }
-        public virtual tblPurchaseOrder tblPurchaseOrder { get; set; }
+        public virtual tblUser tblUser { get; set; }
     }
 }

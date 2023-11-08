@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -12,6 +13,7 @@ using System.Web.Http.Cors;
 namespace EarthCo.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [Authorize]
     public class StaffController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
@@ -53,20 +55,29 @@ namespace EarthCo.Controllers
         {
             try
             {
-                tblUser Data = new tblUser();
-                Data = DB.tblUsers.Where(x => x.UserId == id && x.isDelete != true).FirstOrDefault();
+                //tblUser Data = new tblUser();
+                //Data = DB.tblUsers.Where(x => x.UserId == id && x.isDelete != true).FirstOrDefault();
+
+
+                SPGetStaffData_Result Data = new SPGetStaffData_Result();
+                Data = DB.SPGetStaffData(id).FirstOrDefault();
+
+
+                GetStaffData GetData = new GetStaffData();
                 if (Data == null)
                 {
-                    Data = new tblUser();
-                    Data.tblContacts = null;
-                    Data.tblServiceLocations = null;
-                    string userJson = JsonConvert.SerializeObject(Data);
+                    GetStaffData newData = new GetStaffData();
+                    string userJson = JsonConvert.SerializeObject(newData);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);
                 }
+                else
+                {
+                    GetData.Data = Data;
+                }
 
-                return Ok(Data); // 200 - Successful response with data
+                return Ok(GetData); // 200 - Successful response with data
             }
             catch (Exception ex)
             {
@@ -84,7 +95,8 @@ namespace EarthCo.Controllers
             {
                 //var userIdClaim = User.Identity as ClaimsIdentity;
                 //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
-                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
 
                 tblUser Data = new tblUser();
 
@@ -106,6 +118,7 @@ namespace EarthCo.Controllers
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
                     Data.isActive = true;
+                    Data.isDelete = false;
                     Data.isLoginAllow = true;
 
                     byte[] EncDataBtye = new byte[Customer.Password.Length];
@@ -158,6 +171,8 @@ namespace EarthCo.Controllers
                     Data.Email = Customer.Email;
                     Data.RoleId = Customer.RoleId;
                     Data.isLoginAllow = true;
+                    Data.isActive = true;
+                    Data.isDelete = false;
                     if (Customer.Password != null && Customer.Password != "")
                     {
                         byte[] EncDataBtye = new byte[Customer.Password.Length];
@@ -172,7 +187,6 @@ namespace EarthCo.Controllers
 
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = true;
 
                     DB.Entry(Data);
                     DB.SaveChanges();
@@ -205,7 +219,8 @@ namespace EarthCo.Controllers
         {
             try
             {
-                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
 
 
                 tblUser Data = DB.tblUsers.FirstOrDefault(c => c.UserId == id);
@@ -218,6 +233,8 @@ namespace EarthCo.Controllers
 
                 // Remove the customer
                 Data.isDelete = true;
+                Data.EditBy = userId;
+                Data.EditDate = DateTime.Now;
                 DB.Entry(Data);
                 DB.SaveChanges();
 

@@ -10,24 +10,21 @@
 namespace EarthCo.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class tblBillItem
+    public partial class SPGetServiceRequestItemData_Result
     {
-        public int BillItemId { get; set; }
+        public int SRItemId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
         public int Qty { get; set; }
+        public string Description { get; set; }
         public double Rate { get; set; }
-        public double Amount { get; set; }
-        public int BillId { get; set; }
+        public Nullable<double> Tax { get; set; }
+        public int SRId { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
-    
-        public virtual tblBill tblBill { get; set; }
     }
 }

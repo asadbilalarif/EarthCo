@@ -76,14 +76,27 @@ namespace EarthCo.Controllers
         {
             try
             {
-                tblServiceRequest Data = new tblServiceRequest();
-                Data = DB.tblServiceRequests.Where(x => x.ServiceRequestId == id).FirstOrDefault();
+                SPGetServiceRequestData_Result Data = new SPGetServiceRequestData_Result();
+                List<SPGetServiceRequestItemData_Result> ItemData = new List<SPGetServiceRequestItemData_Result>();
+                List<SPGetServiceRequestFileData_Result> FileData = new List<SPGetServiceRequestFileData_Result>();
+                Data = DB.SPGetServiceRequestData(id).FirstOrDefault();
+                ItemData = DB.SPGetServiceRequestItemData(id).ToList();
+                FileData = DB.SPGetServiceRequestFileData(id).ToList();
+
+                GetServiceRequestData GetData = new GetServiceRequestData();
                 if (Data == null)
                 {
                     return NotFound();
                 }
+                else
+                {
+                    GetData.Data = Data;
+                    GetData.ItemData = ItemData;
+                    GetData.FileData = FileData;
 
-                return Ok(Data);
+                }
+
+                return Ok(GetData);
             }
             catch (Exception ex)
             {
@@ -141,7 +154,6 @@ namespace EarthCo.Controllers
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
 
                 var userIdClaim = User.Identity as ClaimsIdentity;
-                //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
                 int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
                 if (ServiceRequest.ServiceRequestData.ServiceRequestId == 0)
                 {
@@ -154,7 +166,8 @@ namespace EarthCo.Controllers
                             item.CreatedBy = UserId;
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.EditBy = UserId;
-                            item.isActive = item.isActive;
+                            item.isActive = true;
+                            item.isDelete = false;
                             item.SRId = Data.ServiceRequestId;
                         }
                     }
@@ -165,7 +178,8 @@ namespace EarthCo.Controllers
                     Data.CreatedBy = UserId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = ServiceRequest.ServiceRequestData.isActive;
+                    Data.isActive = true;
+                    Data.isDelete = false;
                     DB.tblServiceRequests.Add(Data);
                     DB.SaveChanges();
 
@@ -207,6 +221,12 @@ namespace EarthCo.Controllers
                             FileData.Caption = "";
                             FileData.FilePath = path;
                             FileData.SRId = Data.ServiceRequestId;
+                            FileData.CreatedBy = UserId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = UserId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.isActive = true;
+                            FileData.isDelete = false;
                             DB.tblSRFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -245,14 +265,15 @@ namespace EarthCo.Controllers
                             item.CreatedBy = UserId;
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.EditBy = UserId;
-                            item.isActive = item.isActive;
+                            item.isActive = true;
+                            item.isDelete = false;
                             item.SRId = Data.ServiceRequestId;
                         }
                     }
 
                     Data.ServiceRequestNumber = ServiceRequest.ServiceRequestData.ServiceRequestNumber;
-                    Data.ServiceLocation = ServiceRequest.ServiceRequestData.ServiceLocation;
-                    Data.Contact = ServiceRequest.ServiceRequestData.Contact;
+                    Data.ServiceLocationId = ServiceRequest.ServiceRequestData.ServiceLocationId;
+                    Data.ContactId = ServiceRequest.ServiceRequestData.ContactId;
                     Data.JobName = ServiceRequest.ServiceRequestData.JobName;
                     Data.Assign = ServiceRequest.ServiceRequestData.Assign;
                     Data.WorkRequest = ServiceRequest.ServiceRequestData.WorkRequest;
@@ -266,7 +287,8 @@ namespace EarthCo.Controllers
                     Data.ContactId = ServiceRequest.ServiceRequestData.ContactId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = ServiceRequest.ServiceRequestData.isActive;
+                    Data.isActive = true;
+                    Data.isDelete = false;
                     DB.Entry(Data);
                     DB.SaveChanges();
 
@@ -277,24 +299,25 @@ namespace EarthCo.Controllers
                     //    DB.SaveChanges();
                     //}
 
-                    //if (ServiceRequest.ServiceRequestData.tblSRItems != null && ServiceRequest.ServiceRequestData.tblSRItems.Count != 0)
-                    //{
-                    //    tblSRItem ConData = null;
+                    if (ServiceRequest.ServiceRequestData.tblSRItems != null && ServiceRequest.ServiceRequestData.tblSRItems.Count != 0)
+                    {
+                        tblSRItem ConData = null;
 
-                    //    foreach (var item in ServiceRequest.ServiceRequestData.tblSRItems)
-                    //    {
-                    //        ConData = new tblSRItem();
-                    //        ConData = item;
-                    //        ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    //        ConData.CreatedBy = UserId;
-                    //        ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    //        ConData.EditBy = UserId;
-                    //        ConData.isActive = item.isActive;
-                    //        ConData.SRId = Data.ServiceRequestId;
-                    //        DB.tblSRItems.Add(ConData);
-                    //        DB.SaveChanges();
-                    //    }
-                    //}
+                        foreach (var item in ServiceRequest.ServiceRequestData.tblSRItems)
+                        {
+                            ConData = new tblSRItem();
+                            ConData = item;
+                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.CreatedBy = UserId;
+                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.EditBy = UserId;
+                            ConData.isActive = true;
+                            ConData.isDelete = false;
+                            ConData.SRId = Data.ServiceRequestId;
+                            DB.tblSRItems.Add(ConData);
+                            DB.SaveChanges();
+                        }
+                    }
 
                     List<tblSRFile> ConFList = DB.tblSRFiles.Where(x => x.SRId == ServiceRequest.ServiceRequestData.ServiceRequestId).ToList();
                     if (ConFList != null && ConFList.Count != 0)
@@ -321,6 +344,13 @@ namespace EarthCo.Controllers
                             FileData.FileName = Path.GetFileName(item.FileName);
                             FileData.Caption = "";
                             FileData.FilePath = path;
+                            FileData.SRId = Data.ServiceRequestId;
+                            FileData.CreatedBy = UserId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = UserId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.isActive = true;
+                            FileData.isDelete = false;
                             DB.tblSRFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -349,9 +379,8 @@ namespace EarthCo.Controllers
         public IHttpActionResult DeleteServiceRequest(int id)
         {
             tblServiceRequest Data = new tblServiceRequest();
-            //HttpCookie cookieObj = Request.Cookies["User"];
-            //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int CUserId = 2;
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
             try
             {
                 Data = DB.tblServiceRequests.Select(r => r).Where(x => x.ServiceRequestId == id).FirstOrDefault();
@@ -361,26 +390,28 @@ namespace EarthCo.Controllers
                     return NotFound(); // 404 - Customer not found
                 }
 
-                List<tblSRItem> ConList = DB.tblSRItems.Where(x => x.SRId == id).ToList();
-                if (ConList != null && ConList.Count != 0)
-                {
-                    DB.tblSRItems.RemoveRange(ConList);
-                    DB.SaveChanges();
-                }
+                //List<tblSRItem> ConList = DB.tblSRItems.Where(x => x.SRId == id).ToList();
+                //if (ConList != null && ConList.Count != 0)
+                //{
+                //    DB.tblSRItems.RemoveRange(ConList);
+                //    DB.SaveChanges();
+                //}
 
-                List<tblSRFile> ConFList = DB.tblSRFiles.Where(x => x.SRId == id).ToList();
-                if (ConFList != null && ConFList.Count != 0)
-                {
-                    DB.tblSRFiles.RemoveRange(ConFList);
-                    DB.SaveChanges();
-                }
+                //List<tblSRFile> ConFList = DB.tblSRFiles.Where(x => x.SRId == id).ToList();
+                //if (ConFList != null && ConFList.Count != 0)
+                //{
+                //    DB.tblSRFiles.RemoveRange(ConFList);
+                //    DB.SaveChanges();
+                //}
 
-
-                DB.Entry(Data).State = EntityState.Deleted;
+                Data.isDelete = true;
+                Data.EditBy = UserId;
+                Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                DB.Entry(Data);
                 DB.SaveChanges();
 
                 tblLog LogData = new tblLog();
-                LogData.UserId = CUserId;
+                LogData.UserId = UserId;
                 LogData.Action = "Delete Service Request";
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
@@ -398,9 +429,8 @@ namespace EarthCo.Controllers
         public IHttpActionResult UpdateAllSelectedServiceRequestStatus(UpdateStatus ParaData)
         {
             tblServiceRequest Data = new tblServiceRequest();
-            //HttpCookie cookieObj = Request.Cookies["User"];
-            //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int CUserId = 2;
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
             try
             {
                 foreach (var item in ParaData.id)
@@ -408,12 +438,14 @@ namespace EarthCo.Controllers
 
                     Data = DB.tblServiceRequests.Select(r => r).Where(x => x.ServiceRequestId == item).FirstOrDefault();
                     Data.SRStatusId = ParaData.StatusId;
+                    Data.EditBy = UserId;
+                    Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm")); ;
                     DB.Entry(Data);
                     DB.SaveChanges();
                 }
 
                 tblLog LogData = new tblLog();
-                LogData.UserId = CUserId;
+                LogData.UserId = UserId;
                 LogData.Action = "Update All Selected Service Request status";
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
@@ -430,32 +462,34 @@ namespace EarthCo.Controllers
         public IHttpActionResult DeleteAllSelectedServiceRequest(DeleteSelected ParaData)
         {
             tblServiceRequest Data = new tblServiceRequest();
-            //HttpCookie cookieObj = Request.Cookies["User"];
-            //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int CUserId = 2;
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
             try
             {
                 foreach (var item in ParaData.id)
                 {
-                    List<tblSRItem> ConList = DB.tblSRItems.Where(x => x.SRId == item).ToList();
-                    if (ConList != null && ConList.Count != 0)
-                    {
-                        DB.tblSRItems.RemoveRange(ConList);
-                        DB.SaveChanges();
-                    }
-                    List<tblSRFile> ConFList = DB.tblSRFiles.Where(x => x.SRId == item).ToList();
-                    if (ConFList != null && ConFList.Count != 0)
-                    {
-                        DB.tblSRFiles.RemoveRange(ConFList);
-                        DB.SaveChanges();
-                    }
+                    //List<tblSRItem> ConList = DB.tblSRItems.Where(x => x.SRId == item).ToList();
+                    //if (ConList != null && ConList.Count != 0)
+                    //{
+                    //    DB.tblSRItems.RemoveRange(ConList);
+                    //    DB.SaveChanges();
+                    //}
+                    //List<tblSRFile> ConFList = DB.tblSRFiles.Where(x => x.SRId == item).ToList();
+                    //if (ConFList != null && ConFList.Count != 0)
+                    //{
+                    //    DB.tblSRFiles.RemoveRange(ConFList);
+                    //    DB.SaveChanges();
+                    //}
                     Data = DB.tblServiceRequests.Select(r => r).Where(x => x.ServiceRequestId == item).FirstOrDefault();
-                    DB.Entry(Data).State = EntityState.Deleted;
+                    Data.isDelete = true;
+                    Data.EditBy = UserId;
+                    Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    DB.Entry(Data);
                     DB.SaveChanges();
                 }
 
                 tblLog LogData = new tblLog();
-                LogData.UserId = CUserId;
+                LogData.UserId = UserId;
                 LogData.Action = "Delete All Selected Service Request";
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);

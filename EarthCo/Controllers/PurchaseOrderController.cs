@@ -165,10 +165,14 @@ namespace EarthCo.Controllers
                     {
                         foreach (var item in PurchaseOrder.PurchaseOrderData.tblPurchaseOrderItems)
                         {
+                            item.CreatedBy = UserId;
                             item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.Amount = item.Qty * item.Rate;
                             item.PurchaseOrderId = Data.PurchaseOrderId;
+                            item.isActive = true;
+                            item.isDelete = false;
                         }
                     }
 
@@ -220,6 +224,11 @@ namespace EarthCo.Controllers
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.PurchaseOrderId = Data.PurchaseOrderId;
+                            FileData.CreatedBy = UserId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = UserId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.isActive = true;
                             DB.tblPurchaseOrderFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -256,10 +265,14 @@ namespace EarthCo.Controllers
                     {
                         foreach (var item in PurchaseOrder.PurchaseOrderData.tblPurchaseOrderItems)
                         {
+                            item.CreatedBy = UserId;
                             item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.Amount = item.Qty * item.Rate;
                             item.PurchaseOrderId = Data.PurchaseOrderId;
+                            item.isActive = true;
+                            item.isDelete = false;
                         }
                     }
 
@@ -303,6 +316,7 @@ namespace EarthCo.Controllers
                             ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             ConData.EditBy = UserId;
                             ConData.isActive = true;
+                            ConData.isDelete = false;
                             ConData.PurchaseOrderId = Data.PurchaseOrderId;
                             DB.tblPurchaseOrderItems.Add(ConData);
                             DB.SaveChanges();
@@ -335,6 +349,11 @@ namespace EarthCo.Controllers
                             FileData.Caption = "";
                             FileData.FilePath = path;
                             FileData.PurchaseOrderId = Data.PurchaseOrderId;
+                            FileData.CreatedBy = UserId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = UserId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.isActive = true;
                             DB.tblPurchaseOrderFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;

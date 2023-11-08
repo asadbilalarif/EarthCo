@@ -10,16 +10,9 @@
 namespace EarthCo.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class tblContact
+    public partial class SPGetCustomerContactData_Result
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tblContact()
-        {
-            this.tblInvoices = new HashSet<tblInvoice>();
-        }
-    
         public int ContactId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -41,9 +34,5 @@ namespace EarthCo.Models
         public Nullable<bool> isActive { get; set; }
         public Nullable<bool> isPrimary { get; set; }
         public Nullable<bool> isDelete { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
-        public virtual tblUser tblUser { get; set; }
     }
 }

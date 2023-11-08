@@ -17,16 +17,18 @@ namespace EarthCo.Models
         public int InvoiceItemId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public Nullable<int> Qty { get; set; }
-        public Nullable<double> Rate { get; set; }
-        public Nullable<double> Amount { get; set; }
-        public Nullable<int> InvoiceId { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public int Qty { get; set; }
+        public double Rate { get; set; }
+        public Nullable<double> Tax { get; set; }
+        public double Amount { get; set; }
+        public int InvoiceId { get; set; }
+        public bool isCost { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
-        public Nullable<bool> isActive { get; set; }
-        public Nullable<bool> isDelete { get; set; }
+        public bool isActive { get; set; }
+        public bool isDelete { get; set; }
     
         public virtual tblInvoice tblInvoice { get; set; }
     }

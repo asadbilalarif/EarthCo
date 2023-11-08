@@ -10,16 +10,14 @@
 namespace EarthCo.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class tblBillItem
+    public partial class SPGetBillFileData_Result
     {
-        public int BillItemId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int Qty { get; set; }
-        public double Rate { get; set; }
-        public double Amount { get; set; }
+        public int BillFileId { get; set; }
+        public string FileName { get; set; }
+        public string Caption { get; set; }
+        public string FilePath { get; set; }
+        public string Share { get; set; }
         public int BillId { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
@@ -27,7 +25,5 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
-    
-        public virtual tblBill tblBill { get; set; }
     }
 }

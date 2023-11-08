@@ -81,9 +81,6 @@ namespace EarthCo.Controllers
                 List<SPGetEstimateItemData_Result> ItemData = new List<SPGetEstimateItemData_Result>();
                 List<SPGetEstimateItemData_Result> CostItemData = new List<SPGetEstimateItemData_Result>();
                 List<SPGetEstimateFileData_Result> FileData = new List<SPGetEstimateFileData_Result>();
-                //DB.Configuration.ProxyCreationEnabled = false;
-                //DB.Configuration.LazyLoadingEnabled = false;
-                //Data = DB.tblEstimates.Where(x => x.EstimateId == id).FirstOrDefault();
                 Data = DB.SPGetEstimateData(id).FirstOrDefault();
                 ItemData = DB.SPGetEstimateItemData(id).Where(x=>x.isCost==false).ToList();
                 CostItemData = DB.SPGetEstimateItemData(id).Where(x=>x.isCost==true).ToList();
@@ -143,10 +140,14 @@ namespace EarthCo.Controllers
                     {
                         foreach (var item in Estimate.EstimateData.tblEstimateItems)
                         {
+                            item.CreatedBy = UserId;
                             item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.Amount = item.Qty * item.Rate;
                             item.EstimateId = Data.EstimateId;
+                            item.isActive = true;
+                            item.isDelete = false;
                         }
                     }
 
@@ -239,10 +240,14 @@ namespace EarthCo.Controllers
                     {
                         foreach (var item in Estimate.EstimateData.tblEstimateItems)
                         {
+                            item.CreatedBy = UserId;
                             item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.Amount = item.Qty * item.Rate;
                             item.EstimateId = Data.EstimateId;
+                            item.isActive = true;
+                            item.isDelete = false;
                         }
                     }
 

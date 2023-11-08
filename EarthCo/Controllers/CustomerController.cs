@@ -17,6 +17,7 @@ namespace EarthCo.Controllers
 {
     //[Authorize]
     [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [Authorize]
     public class CustomerController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
@@ -82,14 +83,28 @@ namespace EarthCo.Controllers
             {
                 DB.Configuration.ProxyCreationEnabled = false;
                 List<tblUser> Data = new List<tblUser>();
-                Data = DB.tblUsers.Where(x=>x.UserTypeId==2 && x.isDelete!=true).ToList();
-                
+                List<GetCustomerList> Result = new List<GetCustomerList>();
+                Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).ToList();
+
                 if (Data == null || Data.Count == 0)
                 {
                     return NotFound(); // 404 - No data found
                 }
+                else
+                {
+                    foreach (tblUser item in Data)
+                    {
+                        GetCustomerList Temp = new GetCustomerList();
+                        Temp.CustomerId = item.UserId;
+                        Temp.CompanyName = item.CompanyName;
+                        Temp.CustomerName = item.FirstName+" "+item.LastName;
+                        Temp.Address = item.Address;
+                        Temp.Email = item.Email;
+                        Result.Add(Temp);
+                    }
+                }
 
-                return Ok(Data); // 200 - Successful response with data
+                return Ok(Result); // 200 - Successful response with data
             }
             catch (Exception ex)
             {
@@ -126,27 +141,35 @@ namespace EarthCo.Controllers
         {
             try
             {
-                tblUser Data = new tblUser();
-                CustomerContacts CustomerData = new CustomerContacts();
-                Data = DB.tblUsers.Where(x => x.UserId == id && x.isDelete != true).FirstOrDefault();
-                               
+                //tblUser Data = new tblUser();
+                //CustomerContacts CustomerData = new CustomerContacts();
+                //Data = DB.tblUsers.Where(x => x.UserId == id && x.isDelete != true).FirstOrDefault();
+
+                SPGetCustomerData_Result Data = new SPGetCustomerData_Result();
+                List<SPGetCustomerContactData_Result> ContactData = new List<SPGetCustomerContactData_Result>();
+                List<SPGetCustomerServiceLocationData_Result> ServiceLocationData = new List<SPGetCustomerServiceLocationData_Result>();
+                Data = DB.SPGetCustomerData(id).FirstOrDefault();
+                ContactData = DB.SPGetCustomerContactData(id).ToList();
+                ServiceLocationData = DB.SPGetCustomerServiceLocationData(id).ToList();
+
+
+                GetCustomerData GetData = new GetCustomerData();
                 if (Data == null)
                 {
-                    Data = new tblUser();
-                    Data.tblContacts = null;
-                    Data.tblServiceLocations = null;
-                    string userJson = JsonConvert.SerializeObject(Data);
+                    GetCustomerData NewData = new GetCustomerData();
+                    string userJson = JsonConvert.SerializeObject(NewData);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);
                 }
                 else
                 {
-                    Data.tblContacts = Data.tblContacts.Where(x => x.isDelete != true).ToList();
-                    Data.tblServiceLocations = Data.tblServiceLocations.Where(x => x.isDelete != true).ToList();
+                    GetData.Data = Data;
+                    GetData.ContactData = ContactData;
+                    GetData.ServiceLocationData = ServiceLocationData;
                 }
 
-                return Ok(Data); // 200 - Successful response with data
+                return Ok(GetData); // 200 - Successful response with data
             }
             catch (Exception ex)
             {
@@ -354,7 +377,8 @@ namespace EarthCo.Controllers
             {
                 //var userIdClaim = User.Identity as ClaimsIdentity;
                 //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
-                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
 
                 tblUser Data = new tblUser();
 
@@ -376,6 +400,7 @@ namespace EarthCo.Controllers
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
                     Data.isActive = true;
+                    Data.isDelete = false;
 
                     if(Customer.isLoginAllow==true)
                     {
@@ -455,6 +480,7 @@ namespace EarthCo.Controllers
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
                     Data.isActive = true;
+                    Data.isDelete = false;
 
                     DB.Entry(Data);
                     DB.SaveChanges();
@@ -490,7 +516,8 @@ namespace EarthCo.Controllers
             {
                 //var userIdClaim = User.Identity as ClaimsIdentity;
                 //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
-                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
 
                 tblContact Data = new tblContact();
 
@@ -503,7 +530,8 @@ namespace EarthCo.Controllers
                     Data.CreatedBy = userId;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = Contact.isActive;
+                    Data.isActive = true;
+                    Data.isDelete = false;
 
                     //if (Contact.isLoginAllow == true)
                     //{
@@ -562,7 +590,8 @@ namespace EarthCo.Controllers
 
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = Contact.isActive;
+                    Data.isActive = true;
+                    Data.isDelete = false;
 
                     DB.Entry(Data);
                     DB.SaveChanges();
@@ -596,7 +625,8 @@ namespace EarthCo.Controllers
             {
                 //var userIdClaim = User.Identity as ClaimsIdentity;
                 //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
-                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
 
                 tblServiceLocation Data = new tblServiceLocation();
 
@@ -609,7 +639,8 @@ namespace EarthCo.Controllers
                     Data.CreatedBy = userId;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = ServiceLocation.isActive;
+                    Data.isActive = true;
+                    Data.isDelete = false;
                     DB.tblServiceLocations.Add(Data);
                     DB.SaveChanges();
 
@@ -644,7 +675,8 @@ namespace EarthCo.Controllers
                     Data.CustomerId = ServiceLocation.CustomerId;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = ServiceLocation.isActive;
+                    Data.isActive = true;
+                    Data.isDelete = false;
 
                     DB.Entry(Data);
                     DB.SaveChanges();
@@ -706,14 +738,13 @@ namespace EarthCo.Controllers
         //    }
         //}
 
-
-
         [HttpGet]
         public IHttpActionResult DeleteCustomer(int id)
         {
             try
             {
-                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
 
                 // Check if the customer with the specified ID exists
 
@@ -741,6 +772,10 @@ namespace EarthCo.Controllers
 
                 // Remove the customer
                 Data.isDelete = true;
+                Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                Data.CreatedBy = userId;
+                Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                Data.EditBy = userId;
                 DB.Entry(Data);
                 DB.SaveChanges();
 
@@ -769,7 +804,8 @@ namespace EarthCo.Controllers
         {
             try
             {
-                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
 
                 // Check if the customer with the specified ID exists
 
@@ -797,6 +833,10 @@ namespace EarthCo.Controllers
 
                 // Remove the customer
                 Data.isDelete = true;
+                Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                Data.CreatedBy = userId;
+                Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                Data.EditBy = userId;
                 DB.Entry(Data);
                 DB.SaveChanges();
 
@@ -825,7 +865,8 @@ namespace EarthCo.Controllers
         {
             try
             {
-                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
 
                 // Check if the customer with the specified ID exists
 
@@ -853,6 +894,10 @@ namespace EarthCo.Controllers
 
                 // Remove the customer
                 Data.isDelete = true;
+                Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                Data.CreatedBy = userId;
+                Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                Data.EditBy = userId;
                 DB.Entry(Data);
                 DB.SaveChanges();
 
@@ -876,14 +921,14 @@ namespace EarthCo.Controllers
             }
         }
 
-
         [HttpGet]
         public IHttpActionResult SentInvite(InviteEmployee ParaData)
         {
             tblCustomer Data = new tblCustomer();
             //HttpCookie cookieObj = Request.Cookies["User"];
             //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int CUserId = 2;
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
             try
             {
 
@@ -935,7 +980,7 @@ namespace EarthCo.Controllers
 
 
                 tblLog LogData = new tblLog();
-                LogData.UserId = CUserId;
+                LogData.UserId = userId;
                 LogData.Action = "Sent invite";
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);

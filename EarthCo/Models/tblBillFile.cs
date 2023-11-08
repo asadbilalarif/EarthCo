@@ -19,13 +19,13 @@ namespace EarthCo.Models
         public string Caption { get; set; }
         public string FilePath { get; set; }
         public string Share { get; set; }
-        public Nullable<int> BillId { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public int BillId { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
-        public Nullable<bool> isActive { get; set; }
-        public Nullable<bool> isDelete { get; set; }
+        public bool isActive { get; set; }
+        public bool isDelete { get; set; }
     
         public virtual tblBill tblBill { get; set; }
     }

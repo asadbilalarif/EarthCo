@@ -41,6 +41,7 @@ namespace EarthCo.Controllers
                         Temp.IssueDate = (DateTime)item.IssueDate;
                         Temp.TotalAmount = item.TotalAmount;
                         Temp.BalanceAmount = item.BalanceAmount;
+                        Temp.ProfitPercentage = item.ProfitPercentage;
                         Result.Add(Temp);
                     }
                 }
@@ -60,9 +61,17 @@ namespace EarthCo.Controllers
         {
             try
             {
-                tblInvoice Data = new tblInvoice();
-                Data = DB.tblInvoices.Where(x => x.InvoiceId == id && x.isDelete != true).FirstOrDefault();
-                
+                SPGetInvoiceData_Result Data = new SPGetInvoiceData_Result();
+                List<SPGetInvoiceItemData_Result> ItemData = new List<SPGetInvoiceItemData_Result>();
+                List<SPGetInvoiceItemData_Result> CostItemData = new List<SPGetInvoiceItemData_Result>();
+                List<SPGetInvoiceFileData_Result> FileData = new List<SPGetInvoiceFileData_Result>();
+                Data = DB.SPGetInvoiceData(id).FirstOrDefault();
+                ItemData = DB.SPGetInvoiceItemData(id).Where(x => x.isCost == false).ToList();
+                CostItemData = DB.SPGetInvoiceItemData(id).Where(x => x.isCost == true).ToList();
+                FileData = DB.SPGetInvoiceFileData(id).ToList();
+
+                GetInvoiceData GetData = new GetInvoiceData();
+
                 if (Data == null)
                 {
                     //DB.Configuration.ProxyCreationEnabled = false;
@@ -80,10 +89,13 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
-                    Data.tblInvoiceItems = Data.tblInvoiceItems.Where(x => x.isDelete != true).ToList();
+                    GetData.Data = Data;
+                    GetData.ItemData = ItemData;
+                    GetData.CostItemData = CostItemData;
+                    GetData.FileData = FileData;
                 }
 
-                return Ok(Data); // 200 - Successful response with data
+                return Ok(GetData); // 200 - Successful response with data
             }
             catch (Exception ex)
             {
@@ -126,10 +138,14 @@ namespace EarthCo.Controllers
                     {
                         foreach (var item in Invoice.InvoiceData.tblInvoiceItems)
                         {
+                            item.CreatedBy = UserId;
                             item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.Amount = item.Qty * item.Rate;
                             item.InvoiceId = Data.InvoiceId;
+                            item.isActive = true;
+                            item.isDelete = false;
                         }
                     }
 
@@ -139,6 +155,7 @@ namespace EarthCo.Controllers
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;
+                    Data.isDelete = false;
                     DB.tblInvoices.Add(Data);
                     DB.SaveChanges();
 
@@ -180,6 +197,12 @@ namespace EarthCo.Controllers
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.InvoiceId = Data.InvoiceId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.CreatedBy = UserId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = UserId;
+                            FileData.isActive = true;
+                            FileData.isDelete = false;
                             DB.tblInvoiceFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -216,10 +239,14 @@ namespace EarthCo.Controllers
                     {
                         foreach (var item in Invoice.InvoiceData.tblInvoiceItems)
                         {
+                            item.CreatedBy = UserId;
                             item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
                             item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             item.Amount = item.Qty * item.Rate;
                             item.InvoiceId = Data.InvoiceId;
+                            item.isActive = true;
+                            item.isDelete = false;
                         }
                     }
 
@@ -242,24 +269,26 @@ namespace EarthCo.Controllers
                     DB.Entry(Data);
                     DB.SaveChanges();
 
-                    //if (Estimate.EstimateData.tblEstimateItems != null && Estimate.EstimateData.tblEstimateItems.Count != 0)
-                    //{
-                    //    tblEstimateItem ConData = null;
+                    if (Invoice.InvoiceData.tblInvoiceItems != null && Invoice.InvoiceData.tblInvoiceItems.Count != 0)
+                    {
+                        tblInvoiceItem ConData = null;
 
-                    //    foreach (var item in Estimate.EstimateData.tblEstimateItems)
-                    //    {
-                    //        ConData = new tblEstimateItem();
-                    //        ConData = item;
-                    //        ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    //        ConData.CreatedBy = UserId;
-                    //        ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    //        ConData.EditBy = UserId;
-                    //        ConData.isActive = item.isActive;
-                    //        ConData.EstimateId = Data.EstimateId;
-                    //        DB.tblEstimateItems.Add(ConData);
-                    //        DB.SaveChanges();
-                    //    }
-                    //}
+                        foreach (var item in Invoice.InvoiceData.tblInvoiceItems)
+                        {
+                            ConData = new tblInvoiceItem();
+                            ConData = item;
+                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.CreatedBy = UserId;
+                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.EditBy = UserId;
+                            ConData.isActive = true;
+                            ConData.isDelete = false;
+                            ConData.isCost = item.isCost;
+                            ConData.InvoiceId = Data.InvoiceId;
+                            DB.tblInvoiceItems.Add(ConData);
+                            DB.SaveChanges();
+                        }
+                    }
 
                     List<tblInvoiceFile> ConFList = DB.tblInvoiceFiles.Where(x => x.InvoiceId == Invoice.InvoiceData.InvoiceId).ToList();
                     if (ConFList != null && ConFList.Count != 0)
@@ -287,6 +316,12 @@ namespace EarthCo.Controllers
                             FileData.Caption = "";
                             FileData.FilePath = path;
                             FileData.InvoiceId = Data.InvoiceId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.CreatedBy = UserId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = UserId;
+                            FileData.isActive = true;
+                            FileData.isDelete = false;
                             DB.tblInvoiceFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;

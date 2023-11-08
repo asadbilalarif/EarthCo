@@ -10,17 +10,9 @@
 namespace EarthCo.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class tblInvoice
+    public partial class SPGetInvoiceData_Result
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tblInvoice()
-        {
-            this.tblInvoiceFiles = new HashSet<tblInvoiceFile>();
-            this.tblInvoiceItems = new HashSet<tblInvoiceItem>();
-        }
-    
         public int InvoiceId { get; set; }
         public int CustomerId { get; set; }
         public Nullable<int> ServiceLocationId { get; set; }
@@ -44,16 +36,5 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
-    
-        public virtual tblContact tblContact { get; set; }
-        public virtual tblEstimate tblEstimate { get; set; }
-        public virtual tblServiceLocation tblServiceLocation { get; set; }
-        public virtual tblTerm tblTerm { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblInvoiceFile> tblInvoiceFiles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblInvoiceItem> tblInvoiceItems { get; set; }
-        public virtual tblUser tblUser { get; set; }
-        public virtual tblUser tblUser1 { get; set; }
     }
 }
