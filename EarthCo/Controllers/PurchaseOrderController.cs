@@ -65,9 +65,15 @@ namespace EarthCo.Controllers
         {
             try
             {
-                tblPurchaseOrder Data = new tblPurchaseOrder();
-                Data = DB.tblPurchaseOrders.Where(x => x.PurchaseOrderId == id && x.isDelete != true).FirstOrDefault();
-                Data.tblPurchaseOrderItems= Data.tblPurchaseOrderItems.Where(x => x.isDelete != true).ToList();
+                SPGetPurchaseOrderData_Result Data = new SPGetPurchaseOrderData_Result();
+                List<SPGetPurchaseOrderItemData_Result> ItemData = new List<SPGetPurchaseOrderItemData_Result>();
+                List<SPGetPurchaseOrderFileData_Result> FileData = new List<SPGetPurchaseOrderFileData_Result>();
+                Data = DB.SPGetPurchaseOrderData(id).FirstOrDefault();
+                ItemData = DB.SPGetPurchaseOrderItemData(id).ToList();
+                FileData = DB.SPGetPurchaseOrderFileData(id).ToList();
+
+
+                GetPurchaseOrderData GetData = new GetPurchaseOrderData();
                 if (Data == null)
                 {
                     //DB.Configuration.ProxyCreationEnabled = false;
@@ -83,8 +89,15 @@ namespace EarthCo.Controllers
                     //responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);
                 }
+                else
+                {
+                    GetData.Data = Data;
+                    GetData.ItemData = ItemData;
+                    GetData.FileData = FileData;
 
-                return Ok(Data); // 200 - Successful response with data
+                }
+
+                return Ok(GetData); // 200 - Successful response with data
             }
             catch (Exception ex)
             {
@@ -165,6 +178,7 @@ namespace EarthCo.Controllers
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;
+                    Data.isDelete = false;
                     DB.tblPurchaseOrders.Add(Data);
                     DB.SaveChanges();
 
@@ -256,7 +270,7 @@ namespace EarthCo.Controllers
                     Data.Date = PurchaseOrder.PurchaseOrderData.Date;
                     Data.DueDate = PurchaseOrder.PurchaseOrderData.DueDate;
                     Data.RegionalManager = PurchaseOrder.PurchaseOrderData.RegionalManager;
-                    Data.Terms = PurchaseOrder.PurchaseOrderData.Terms;
+                    Data.TermId = PurchaseOrder.PurchaseOrderData.TermId;
                     Data.Requestedby = PurchaseOrder.PurchaseOrderData.Requestedby;
                     Data.StatusId = PurchaseOrder.PurchaseOrderData.StatusId;
                     Data.InvoiceNumber = PurchaseOrder.PurchaseOrderData.InvoiceNumber;
@@ -272,27 +286,28 @@ namespace EarthCo.Controllers
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;
+                    Data.isDelete = false;
                     DB.Entry(Data);
                     DB.SaveChanges();
 
-                    //if (Estimate.EstimateData.tblEstimateItems != null && Estimate.EstimateData.tblEstimateItems.Count != 0)
-                    //{
-                    //    tblEstimateItem ConData = null;
+                    if (PurchaseOrder.PurchaseOrderData.tblPurchaseOrderItems != null && PurchaseOrder.PurchaseOrderData.tblPurchaseOrderItems.Count != 0)
+                    {
+                        tblPurchaseOrderItem ConData = null;
 
-                    //    foreach (var item in Estimate.EstimateData.tblEstimateItems)
-                    //    {
-                    //        ConData = new tblEstimateItem();
-                    //        ConData = item;
-                    //        ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    //        ConData.CreatedBy = UserId;
-                    //        ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    //        ConData.EditBy = UserId;
-                    //        ConData.isActive = item.isActive;
-                    //        ConData.EstimateId = Data.EstimateId;
-                    //        DB.tblEstimateItems.Add(ConData);
-                    //        DB.SaveChanges();
-                    //    }
-                    //}
+                        foreach (var item in PurchaseOrder.PurchaseOrderData.tblPurchaseOrderItems)
+                        {
+                            ConData = new tblPurchaseOrderItem();
+                            ConData = item;
+                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.CreatedBy = UserId;
+                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.EditBy = UserId;
+                            ConData.isActive = true;
+                            ConData.PurchaseOrderId = Data.PurchaseOrderId;
+                            DB.tblPurchaseOrderItems.Add(ConData);
+                            DB.SaveChanges();
+                        }
+                    }
 
                     List<tblPurchaseOrderFile> ConFList = DB.tblPurchaseOrderFiles.Where(x => x.PurchaseOrderId == PurchaseOrder.PurchaseOrderData.PurchaseOrderId).ToList();
                     if (ConFList != null && ConFList.Count != 0)

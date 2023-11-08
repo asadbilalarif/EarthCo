@@ -62,7 +62,7 @@ namespace EarthCo.Controllers
             {
                 tblBill Data = new tblBill();
                 Data = DB.tblBills.Where(x => x.BillId == id && x.isDelete != true).FirstOrDefault();
-                Data.tblBillItems = Data.tblBillItems.Where(x => x.isDelete != true).ToList();
+               
                 if (Data == null)
                 {
                     //DB.Configuration.ProxyCreationEnabled = false;
@@ -77,6 +77,10 @@ namespace EarthCo.Controllers
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     //responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);
+                }
+                else
+                {
+                    Data.tblBillItems = Data.tblBillItems.Where(x => x.isDelete != true).ToList();
                 }
 
                 return Ok(Data); // 200 - Successful response with data

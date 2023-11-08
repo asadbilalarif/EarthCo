@@ -26,8 +26,8 @@ namespace EarthCo.Models
         public Nullable<int> ServiceLocationId { get; set; }
         public Nullable<int> ContactId { get; set; }
         public string InvoiceNumber { get; set; }
-        public Nullable<int> PurchaseOrderId { get; set; }
-        public string PurchaseOrderNumber { get; set; }
+        public Nullable<int> EstimateId { get; set; }
+        public string EstimateNumber { get; set; }
         public Nullable<System.DateTime> IssueDate { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
         public string CustomerMessage { get; set; }
@@ -40,6 +40,7 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
         public Nullable<bool> isDelete { get; set; }
+        public Nullable<double> ProfitPercentage { get; set; }
     
         public virtual tblContact tblContact { get; set; }
         public virtual tblServiceLocation tblServiceLocation { get; set; }
@@ -48,6 +49,6 @@ namespace EarthCo.Models
         public virtual ICollection<tblInvoiceFile> tblInvoiceFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoiceItem> tblInvoiceItems { get; set; }
-        public virtual tblPurchaseOrder tblPurchaseOrder { get; set; }
+        public virtual tblEstimate tblEstimate { get; set; }
     }
 }

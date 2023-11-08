@@ -18,6 +18,7 @@ namespace EarthCo.Models
         public tblServiceLocation()
         {
             this.tblInvoices = new HashSet<tblInvoice>();
+            this.tblEstimates = new HashSet<tblEstimate>();
         }
     
         public int ServiceLocationId { get; set; }
@@ -37,5 +38,7 @@ namespace EarthCo.Models
         public virtual tblUser tblUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoice> tblInvoices { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEstimate> tblEstimates { get; set; }
     }
 }

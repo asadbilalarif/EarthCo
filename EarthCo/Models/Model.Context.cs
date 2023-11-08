@@ -12,6 +12,8 @@ namespace EarthCo.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class earthcoEntities : DbContext
     {
@@ -29,7 +31,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblController> tblControllers { get; set; }
         public virtual DbSet<tblCustomer> tblCustomers { get; set; }
         public virtual DbSet<tblEmployee> tblEmployees { get; set; }
-        public virtual DbSet<tblEstimateStatu> tblEstimateStatus { get; set; }
         public virtual DbSet<tblLog> tblLogs { get; set; }
         public virtual DbSet<tblMenu> tblMenus { get; set; }
         public virtual DbSet<tblPunchlist> tblPunchlists { get; set; }
@@ -42,11 +43,8 @@ namespace EarthCo.Models
         public virtual DbSet<tblIrrigation> tblIrrigations { get; set; }
         public virtual DbSet<tblPunchlistDetail> tblPunchlistDetails { get; set; }
         public virtual DbSet<tblPunchlistItem> tblPunchlistItems { get; set; }
-        public virtual DbSet<tblEstimateItem> tblEstimateItems { get; set; }
-        public virtual DbSet<tblEstimate> tblEstimates { get; set; }
         public virtual DbSet<tblWeeklyReport> tblWeeklyReports { get; set; }
         public virtual DbSet<tblWeeklyReportFile> tblWeeklyReportFiles { get; set; }
-        public virtual DbSet<tblEstimateFile> tblEstimateFiles { get; set; }
         public virtual DbSet<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
         public virtual DbSet<tblCustomerType> tblCustomerTypes { get; set; }
         public virtual DbSet<tblContact> tblContacts { get; set; }
@@ -60,11 +58,71 @@ namespace EarthCo.Models
         public virtual DbSet<tblBill> tblBills { get; set; }
         public virtual DbSet<tblBillFile> tblBillFiles { get; set; }
         public virtual DbSet<tblBillItem> tblBillItems { get; set; }
-        public virtual DbSet<tblInvoice> tblInvoices { get; set; }
         public virtual DbSet<tblInvoiceFile> tblInvoiceFiles { get; set; }
         public virtual DbSet<tblInvoiceItem> tblInvoiceItems { get; set; }
-        public virtual DbSet<tblPurchaseOrder> tblPurchaseOrders { get; set; }
         public virtual DbSet<tblAccount> tblAccounts { get; set; }
         public virtual DbSet<tblItem> tblItems { get; set; }
+        public virtual DbSet<tblEstimateFile> tblEstimateFiles { get; set; }
+        public virtual DbSet<tblEstimateItem> tblEstimateItems { get; set; }
+        public virtual DbSet<tblEstimateStatu> tblEstimateStatus { get; set; }
+        public virtual DbSet<tblTag> tblTags { get; set; }
+        public virtual DbSet<tblInvoice> tblInvoices { get; set; }
+        public virtual DbSet<tblEstimate> tblEstimates { get; set; }
+        public virtual DbSet<tblPurchaseOrder> tblPurchaseOrders { get; set; }
+        public virtual DbSet<tblTerm> tblTerms { get; set; }
+    
+        public virtual ObjectResult<SPGetEstimateData_Result> SPGetEstimateData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateData_Result>("SPGetEstimateData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateFileData_Result>("SPGetEstimateFileData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetEstimateItemData_Result> SPGetEstimateItemData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateItemData_Result>("SPGetEstimateItemData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetPurchaseOrderData_Result> SPGetPurchaseOrderData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPurchaseOrderData_Result>("SPGetPurchaseOrderData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetPurchaseOrderFileData_Result> SPGetPurchaseOrderFileData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPurchaseOrderFileData_Result>("SPGetPurchaseOrderFileData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetPurchaseOrderItemData_Result> SPGetPurchaseOrderItemData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPurchaseOrderItemData_Result>("SPGetPurchaseOrderItemData", iDParameter);
+        }
     }
 }

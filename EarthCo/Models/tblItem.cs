@@ -14,6 +14,12 @@ namespace EarthCo.Models
     
     public partial class tblItem
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tblItem()
+        {
+            this.tblEstimateItems = new HashSet<tblEstimateItem>();
+        }
+    
         public int ItemId { get; set; }
         public string ItemName { get; set; }
         public string SKU { get; set; }
@@ -37,5 +43,7 @@ namespace EarthCo.Models
     
         public virtual tblAccount tblAccount { get; set; }
         public virtual tblAccount tblAccount1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEstimateItem> tblEstimateItems { get; set; }
     }
 }

@@ -18,21 +18,20 @@ namespace EarthCo.Models
         public tblPurchaseOrder()
         {
             this.tblBills = new HashSet<tblBill>();
-            this.tblInvoices = new HashSet<tblInvoice>();
             this.tblPurchaseOrderFiles = new HashSet<tblPurchaseOrderFile>();
             this.tblPurchaseOrderItems = new HashSet<tblPurchaseOrderItem>();
         }
     
         public int PurchaseOrderId { get; set; }
-        public Nullable<int> SupplierId { get; set; }
+        public int SupplierId { get; set; }
         public string PurchaseOrderNumber { get; set; }
         public string Tags { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        public System.DateTime Date { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
-        public Nullable<int> RegionalManager { get; set; }
-        public string Terms { get; set; }
-        public Nullable<int> Requestedby { get; set; }
-        public Nullable<int> StatusId { get; set; }
+        public int RegionalManager { get; set; }
+        public Nullable<int> TermId { get; set; }
+        public int Requestedby { get; set; }
+        public int StatusId { get; set; }
         public string InvoiceNumber { get; set; }
         public Nullable<int> InvoiceId { get; set; }
         public string BillNumber { get; set; }
@@ -42,20 +41,19 @@ namespace EarthCo.Models
         public string MemoInternal { get; set; }
         public string Message { get; set; }
         public string ShipTo { get; set; }
-        public Nullable<double> Amount { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public double Amount { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
-        public Nullable<bool> isActive { get; set; }
-        public Nullable<bool> isDelete { get; set; }
+        public bool isActive { get; set; }
+        public bool isDelete { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBill> tblBills { get; set; }
         public virtual tblEstimate tblEstimate { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
         public virtual tblPurchaseOrderStatu tblPurchaseOrderStatu { get; set; }
+        public virtual tblTerm tblTerm { get; set; }
         public virtual tblUser tblUser { get; set; }
         public virtual tblUser tblUser1 { get; set; }
         public virtual tblUser tblUser2 { get; set; }

@@ -129,10 +129,7 @@ namespace EarthCo.Controllers
                 tblUser Data = new tblUser();
                 CustomerContacts CustomerData = new CustomerContacts();
                 Data = DB.tblUsers.Where(x => x.UserId == id && x.isDelete != true).FirstOrDefault();
-                Data.tblContacts = Data.tblContacts.Where(x => x.isDelete != true).ToList();
-                Data.tblServiceLocations = Data.tblServiceLocations.Where(x => x.isDelete != true).ToList();
-
-                
+                               
                 if (Data == null)
                 {
                     Data = new tblUser();
@@ -142,6 +139,11 @@ namespace EarthCo.Controllers
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);
+                }
+                else
+                {
+                    Data.tblContacts = Data.tblContacts.Where(x => x.isDelete != true).ToList();
+                    Data.tblServiceLocations = Data.tblServiceLocations.Where(x => x.isDelete != true).ToList();
                 }
 
                 return Ok(Data); // 200 - Successful response with data

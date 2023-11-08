@@ -22,6 +22,7 @@ namespace EarthCo.Models
     
         public int EstimateStatusId { get; set; }
         public string Status { get; set; }
+        public bool isActive { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimate> tblEstimates { get; set; }

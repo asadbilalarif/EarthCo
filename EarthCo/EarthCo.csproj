@@ -262,7 +262,9 @@
     <Compile Include="Models\DeleteSelected.cs" />
     <Compile Include="Models\EstimateFiles.cs" />
     <Compile Include="Models\GetCustomerContact.cs" />
+    <Compile Include="Models\GetEstimateData.cs" />
     <Compile Include="Models\GetEstimateItem.cs" />
+    <Compile Include="Models\GetPurchaseOrderData.cs" />
     <Compile Include="Models\GetServiceRequest.cs" />
     <Compile Include="Models\InviteEmployee.cs" />
     <Compile Include="Models\InvoiceFile.cs" />
@@ -288,6 +290,24 @@
     <Compile Include="Models\PurchaseOrderFile.cs" />
     <Compile Include="Models\PurchaseOrderList.cs" />
     <Compile Include="Models\ServiceRequestFile.cs" />
+    <Compile Include="Models\SPGetEstimateData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetEstimateFileData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetEstimateItemData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetPurchaseOrderData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetPurchaseOrderFileData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetPurchaseOrderItemData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\StaffList.cs" />
     <Compile Include="Models\tblAccessLevel.cs">
       <DependentUpon>Model.tt</DependentUpon>
@@ -398,6 +418,12 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblSRType.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblTag.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblTerm.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblUser.cs">

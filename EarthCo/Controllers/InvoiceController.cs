@@ -62,7 +62,7 @@ namespace EarthCo.Controllers
             {
                 tblInvoice Data = new tblInvoice();
                 Data = DB.tblInvoices.Where(x => x.InvoiceId == id && x.isDelete != true).FirstOrDefault();
-                Data.tblInvoiceItems = Data.tblInvoiceItems.Where(x => x.isDelete != true).ToList();
+                
                 if (Data == null)
                 {
                     //DB.Configuration.ProxyCreationEnabled = false;
@@ -77,6 +77,10 @@ namespace EarthCo.Controllers
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     //responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);
+                }
+                else
+                {
+                    Data.tblInvoiceItems = Data.tblInvoiceItems.Where(x => x.isDelete != true).ToList();
                 }
 
                 return Ok(Data); // 200 - Successful response with data
@@ -226,8 +230,8 @@ namespace EarthCo.Controllers
                     Data.InvoiceNumber = Invoice.InvoiceData.InvoiceNumber;
                     Data.IssueDate = Invoice.InvoiceData.IssueDate;
                     Data.DueDate = Invoice.InvoiceData.DueDate;
-                    Data.PurchaseOrderId = Invoice.InvoiceData.PurchaseOrderId;
-                    Data.PurchaseOrderNumber = Invoice.InvoiceData.PurchaseOrderNumber;
+                    Data.EstimateId = Invoice.InvoiceData.EstimateId;
+                    Data.EstimateNumber = Invoice.InvoiceData.EstimateNumber;
                     Data.CustomerMessage = Invoice.InvoiceData.CustomerMessage;
                     Data.PrivateNotes = Invoice.InvoiceData.PrivateNotes;
                     Data.TotalAmount = Invoice.InvoiceData.TotalAmount;

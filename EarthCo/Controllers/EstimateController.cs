@@ -32,27 +32,39 @@ namespace EarthCo.Controllers
                     return NotFound(); // 404 - No data found
                 }
 
-                foreach (var item in Data)
+                foreach (tblEstimate item in Data)
                 {
                     GetEstimateItem Temp = new GetEstimateItem();
                     Temp.EstimateId = (int) item.EstimateId;
                     Temp.CustomerId =(int) item.CustomerId;
-                    Temp.CustomerName = item.tblCustomer.CustomerName;
-                    Temp.EstimateAmount =(double) item.tblEstimateItems.Sum(s=>s.Amount);
-                    Temp.DescriptionofWork = item.EstimateNotes;
-                    Temp.DateCreated =(DateTime)item.CreatedDate;
+                    Temp.CustomerName = item.tblUser.FirstName+" "+ item.tblUser.LastName;
+                    Temp.RegionalManager = item.tblUser1.FirstName+" "+ item.tblUser1.LastName;
+                    Temp.Date = item.CreatedDate;
                     Temp.Status =item.tblEstimateStatu.Status;
-                    Temp.QBStatus =item.QBStatus;
+                    Temp.EstimateNumber = item.EstimateNumber;
+                    Temp.DescriptionofWork = item.EstimateNotes;
+                    if(item.tblPurchaseOrders!=null && item.tblPurchaseOrders.Count != 0)
+                    {
+                        Temp.PurchaseOrderNumber = item.tblPurchaseOrders.FirstOrDefault().PurchaseOrderNumber;
+                    }
+                    if(item.tblPurchaseOrders != null && item.tblPurchaseOrders.Count != 0)
+                    {
+                        Temp.BillNumber = item.tblPurchaseOrders.FirstOrDefault().tblBills.FirstOrDefault().BillNumber;
+                    }
+                    if(item.tblInvoices != null && item.tblInvoices.Count != 0)
+                    {
+                        Temp.InvoiceNumber = item.tblInvoices.FirstOrDefault().InvoiceNumber;
+                    }
+                    
+                    Temp.ProfitPercentage = item.ProfitPercentage;
+                    Temp.EstimateAmount =(double) item.tblEstimateItems.Sum(s=>s.Amount);
                     EstData.Add(Temp);
                 }
-
 
                 return Ok(EstData); // 200 - Successful response with data
             }
             catch (Exception ex)
             {
-                // Log the exception
-                // You may also choose to return a more specific error response (e.g., 500 - Internal Server Error) here.
                 return InternalServerError(ex);
             }
 
@@ -65,15 +77,33 @@ namespace EarthCo.Controllers
         {
             try
             {
+                SPGetEstimateData_Result Data = new SPGetEstimateData_Result();
+                List<SPGetEstimateItemData_Result> ItemData = new List<SPGetEstimateItemData_Result>();
+                List<SPGetEstimateItemData_Result> CostItemData = new List<SPGetEstimateItemData_Result>();
+                List<SPGetEstimateFileData_Result> FileData = new List<SPGetEstimateFileData_Result>();
                 //DB.Configuration.ProxyCreationEnabled = false;
-                tblEstimate Data = new tblEstimate();
-                Data = DB.tblEstimates.Where(x => x.EstimateId == id).FirstOrDefault();
+                //DB.Configuration.LazyLoadingEnabled = false;
+                //Data = DB.tblEstimates.Where(x => x.EstimateId == id).FirstOrDefault();
+                Data = DB.SPGetEstimateData(id).FirstOrDefault();
+                ItemData = DB.SPGetEstimateItemData(id).Where(x=>x.isCost==false).ToList();
+                CostItemData = DB.SPGetEstimateItemData(id).Where(x=>x.isCost==true).ToList();
+                FileData = DB.SPGetEstimateFileData(id).ToList();
+                
+                GetEstimateData GetData = new GetEstimateData();
                 if (Data == null)
                 {
                     return NotFound(); // 404 - No data found
                 }
+                else
+                {
+                    GetData.EstimateData = Data;
+                    GetData.EstimateItemData = ItemData;
+                    GetData.EstimateCostItemData = CostItemData;
+                    GetData.EstimateFileData = FileData;
 
-                return Ok(Data); // 200 - Successful response with data
+                }
+
+                return Ok(GetData); // 200 - Successful response with data
             }
             catch (Exception ex)
             {
@@ -167,6 +197,12 @@ namespace EarthCo.Controllers
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.EstimateId = Data.EstimateId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.CreatedBy = UserId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = UserId;
+                            FileData.isActive = true;
+                            FileData.isDelete = false;
                             DB.tblEstimateFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -179,7 +215,8 @@ namespace EarthCo.Controllers
                     LogData.CreatedDate = DateTime.Now;
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
-                    return Ok("Estimate has been added successfully.");
+                    //return Ok("Estimate has been added successfully.");
+                    return Ok(new { Id = Data.EstimateId, Message = "Estimate has been added successfully." });
                 }
                 else
                 {
@@ -211,39 +248,46 @@ namespace EarthCo.Controllers
 
 
                     Data.EstimateNumber = Estimate.EstimateData.EstimateNumber;
-                    Data.ServiceLocation = Estimate.EstimateData.ServiceLocation;
+                    Data.ServiceLocationId = Estimate.EstimateData.ServiceLocationId;
                     Data.Email = Estimate.EstimateData.Email;
+                    Data.IssueDate = DateTime.Now;
+                    Data.CustomerId = Estimate.EstimateData.CustomerId;
+                    Data.RegionalManagerId = Estimate.EstimateData.RegionalManagerId;
+                    Data.AssignTo = Estimate.EstimateData.AssignTo;
+                    Data.RequestedBy = Estimate.EstimateData.RequestedBy;
+                    Data.EstimateStatusId = Estimate.EstimateData.EstimateStatusId;
                     Data.QBStatus = Estimate.EstimateData.QBStatus;
                     Data.EstimateNotes = Estimate.EstimateData.EstimateNotes;
                     Data.ServiceLocationNotes = Estimate.EstimateData.ServiceLocationNotes;
                     Data.PrivateNotes = Estimate.EstimateData.PrivateNotes;
-                    Data.IssueDate = DateTime.Now;
-                    Data.EstimateStatusId = Estimate.EstimateData.EstimateStatusId;
-                    Data.CustomerId = Estimate.EstimateData.CustomerId;
+                    Data.ProfitPercentage = Estimate.EstimateData.ProfitPercentage;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;
+                    Data.isActive = false;
                     DB.Entry(Data);
                     DB.SaveChanges();
 
-                    //if (Estimate.EstimateData.tblEstimateItems != null && Estimate.EstimateData.tblEstimateItems.Count != 0)
-                    //{
-                    //    tblEstimateItem ConData = null;
+                    if (Estimate.EstimateData.tblEstimateItems != null && Estimate.EstimateData.tblEstimateItems.Count != 0)
+                    {
+                        tblEstimateItem ConData = null;
 
-                    //    foreach (var item in Estimate.EstimateData.tblEstimateItems)
-                    //    {
-                    //        ConData = new tblEstimateItem();
-                    //        ConData = item;
-                    //        ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    //        ConData.CreatedBy = UserId;
-                    //        ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                    //        ConData.EditBy = UserId;
-                    //        ConData.isActive = item.isActive;
-                    //        ConData.EstimateId = Data.EstimateId;
-                    //        DB.tblEstimateItems.Add(ConData);
-                    //        DB.SaveChanges();
-                    //    }
-                    //}
+                        foreach (var item in Estimate.EstimateData.tblEstimateItems)
+                        {
+                            ConData = new tblEstimateItem();
+                            ConData = item;
+                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.CreatedBy = UserId;
+                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.EditBy = UserId;
+                            ConData.isActive = true;
+                            ConData.isDelete = false;
+                            ConData.isCost = item.isCost;
+                            ConData.EstimateId = Data.EstimateId;
+                            DB.tblEstimateItems.Add(ConData);
+                            DB.SaveChanges();
+                        }
+                    }
 
                     List<tblEstimateFile> ConFList = DB.tblEstimateFiles.Where(x => x.EstimateId == Estimate.EstimateData.EstimateId).ToList();
                     if (ConFList != null && ConFList.Count != 0)
@@ -268,9 +312,15 @@ namespace EarthCo.Controllers
                             item.SaveAs(path);
                             path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             FileData.FileName = Path.GetFileName(item.FileName);
-                            FileData.Caption = "";
+                            FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.EstimateId = Data.EstimateId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.CreatedBy = UserId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = UserId;
+                            FileData.isActive = true;
+                            FileData.isDelete = false;
                             DB.tblEstimateFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -285,7 +335,8 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
 
-                    return Ok("Estimate has been Update successfully.");
+                    //return Ok("Estimate has been Update successfully.");
+                    return Ok(new { Id = Data.EstimateId, Message = "Estimate has been Update successfully." });
                 }
             }
             catch (Exception ex)
@@ -301,7 +352,7 @@ namespace EarthCo.Controllers
             tblEstimate Data = new tblEstimate();
             //HttpCookie cookieObj = Request.Cookies["User"];
             //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int CUserId = 2;
+            int UserId = 2;
             try
             {
                 Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == id).FirstOrDefault();
@@ -311,26 +362,27 @@ namespace EarthCo.Controllers
                 }
 
 
-                List<tblEstimateFile> ConFile = DB.tblEstimateFiles.Where(x => x.EstimateId == id).ToList();
-                if (ConFile != null && ConFile.Count != 0)
-                {
-                    DB.tblEstimateFiles.RemoveRange(ConFile);
-                    DB.SaveChanges();
-                }
+                //List<tblEstimateFile> ConFile = DB.tblEstimateFiles.Where(x => x.EstimateId == id).ToList();
+                //if (ConFile != null && ConFile.Count != 0)
+                //{
+                //    DB.tblEstimateFiles.RemoveRange(ConFile);
+                //    DB.SaveChanges();
+                //}
 
-                List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == id).ToList();
-                if (ConList != null && ConList.Count != 0)
-                {
-                    DB.tblEstimateItems.RemoveRange(ConList);
-                    DB.SaveChanges();
-                }
+                //List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == id).ToList();
+                //if (ConList != null && ConList.Count != 0)
+                //{
+                //    DB.tblEstimateItems.RemoveRange(ConList);
+                //    DB.SaveChanges();
+                //}
 
-                
-                DB.Entry(Data).State = EntityState.Deleted;
+                Data.isDelete = true;
+                Data.EditBy = UserId;
+                DB.Entry(Data);
                 DB.SaveChanges();
 
                 tblLog LogData = new tblLog();
-                LogData.UserId = CUserId;
+                LogData.UserId = UserId;
                 LogData.Action = "Delete Estimate";
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
