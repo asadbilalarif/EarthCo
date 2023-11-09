@@ -437,53 +437,63 @@
             <PropertyRef Name="PunchlistId" />
           </Key>
           <Property Name="PunchlistId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" MaxLength="500" />
-          <Property Name="ContactName" Type="nvarchar" MaxLength="500" />
-          <Property Name="ContactCompany" Type="nvarchar" MaxLength="500" />
-          <Property Name="ContactEmail" Type="nvarchar" MaxLength="500" />
-          <Property Name="AssignedTo" Type="nvarchar" MaxLength="500" />
-          <Property Name="CustomerId" Type="int" />
-          <Property Name="ServiceRequestId" Type="int" />
-          <Property Name="CreatedBy" Type="int" />
-          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="Title" Type="nvarchar" MaxLength="50" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="ServiceLocationId" Type="int" Nullable="false" />
+          <Property Name="ContactId" Type="int" Nullable="false" />
+          <Property Name="AssignedTo" Type="int" Nullable="false" />
+          <Property Name="ServiceRequestId" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="EditBy" Type="int" />
           <Property Name="EditDate" Type="datetime" />
-          <Property Name="isActive" Type="bit" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="isDelete" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="tblPunchlistDetail">
           <Key>
             <PropertyRef Name="PunchlistDetailId" />
           </Key>
           <Property Name="PunchlistDetailId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="PhotoPath" Type="nvarchar" MaxLength="500" />
+          <Property Name="PhotoPath" Type="nvarchar" MaxLength="50" />
           <Property Name="Notes" Type="nvarchar" MaxLength="500" />
-          <Property Name="Address" Type="nvarchar" MaxLength="500" />
           <Property Name="isAfterPhoto" Type="bit" />
-          <Property Name="AfterPhotoPath" Type="nvarchar" MaxLength="500" />
+          <Property Name="AfterPhotoPath" Type="nvarchar" MaxLength="50" />
           <Property Name="isComplete" Type="bit" />
-          <Property Name="PunchlistId" Type="int" />
-          <Property Name="CreatedBy" Type="int" />
-          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="PunchlistId" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="EditBy" Type="int" />
           <Property Name="EditDate" Type="datetime" />
-          <Property Name="isActive" Type="bit" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="isDelete" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="tblPunchlistItem">
           <Key>
             <PropertyRef Name="PunchlistItemId" />
           </Key>
           <Property Name="PunchlistItemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="500" />
-          <Property Name="Qty" Type="int" />
-          <Property Name="Description" Type="nvarchar" MaxLength="500" />
-          <Property Name="Rate" Type="float" />
-          <Property Name="Tax" Type="nvarchar" MaxLength="500" />
-          <Property Name="PunchlistDetailId" Type="int" />
-          <Property Name="CreatedBy" Type="int" />
-          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="Name" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Qty" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Rate" Type="float" Nullable="false" />
+          <Property Name="Amount" Type="float" Nullable="false" />
+          <Property Name="Tax" Type="float" />
+          <Property Name="PunchlistDetailId" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="EditBy" Type="int" />
           <Property Name="EditDate" Type="datetime" />
-          <Property Name="isActive" Type="bit" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="isDelete" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblPunchlistStatus">
+          <Key>
+            <PropertyRef Name="PunchlistStatusId" />
+          </Key>
+          <Property Name="PunchlistStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="tblPurchaseOrder">
           <Key>
@@ -822,11 +832,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__tblPunchl__Custo__571DF1D5">
-          <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
           <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
             </Principal>
             <Dependent Role="tblPunchlist">
               <PropertyRef Name="CustomerId" />
@@ -834,7 +844,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__tblPunchl__Punch__5AEE82B9">
-          <End Role="tblPunchlistDetail" Type="Self.tblPunchlistDetail" Multiplicity="0..1" />
+          <End Role="tblPunchlistDetail" Type="Self.tblPunchlistDetail" Multiplicity="1" />
           <End Role="tblPunchlistItem" Type="Self.tblPunchlistItem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="tblPunchlistDetail">
@@ -846,7 +856,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__tblPunchl__Servi__5812160E">
-          <End Role="tblServiceRequest" Type="Self.tblServiceRequest" Multiplicity="0..1" />
+          <End Role="tblServiceRequest" Type="Self.tblServiceRequest" Multiplicity="1" />
           <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="tblServiceRequest">
@@ -1217,8 +1227,56 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_tblPunchlist_tblContact">
+          <End Role="tblContact" Type="Self.tblContact" Multiplicity="1" />
+          <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblContact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="tblPunchlist">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlist_tblPunchlistStatus">
+          <End Role="tblPunchlistStatus" Type="Self.tblPunchlistStatus" Multiplicity="1" />
+          <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPunchlistStatus">
+              <PropertyRef Name="PunchlistStatusId" />
+            </Principal>
+            <Dependent Role="tblPunchlist">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlist_tblServiceLocation">
+          <End Role="tblServiceLocation" Type="Self.tblServiceLocation" Multiplicity="1" />
+          <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceLocation">
+              <PropertyRef Name="ServiceLocationId" />
+            </Principal>
+            <Dependent Role="tblPunchlist">
+              <PropertyRef Name="ServiceLocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlist_tblUser">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
+          <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblPunchlist">
+              <PropertyRef Name="AssignedTo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_tblPunchlistDetail_tblPunchlist">
-          <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="0..1" />
+          <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="1" />
           <End Role="tblPunchlistDetail" Type="Self.tblPunchlistDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="tblPunchlist">
@@ -1445,6 +1503,15 @@
         <Function Name="SPGetInvoiceItemData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
         </Function>
+        <Function Name="SPGetPunchlistData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SPGetPunchlistDetailData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SPGetPunchlistItemData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
         <Function Name="SPGetPurchaseOrderData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
         </Function>
@@ -1492,6 +1559,7 @@
           <EntitySet Name="tblPunchlist" EntityType="Self.tblPunchlist" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPunchlistDetail" EntityType="Self.tblPunchlistDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPunchlistItem" EntityType="Self.tblPunchlistItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPunchlistStatus" EntityType="Self.tblPunchlistStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPurchaseOrder" EntityType="Self.tblPurchaseOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPurchaseOrderFile" EntityType="Self.tblPurchaseOrderFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPurchaseOrderItem" EntityType="Self.tblPurchaseOrderItem" Schema="dbo" store:Type="Tables" />
@@ -1527,7 +1595,7 @@
             <End Role="tblEstimateItem" EntitySet="tblEstimateItem" />
           </AssociationSet>
           <AssociationSet Name="FK__tblPunchl__Custo__571DF1D5" Association="Self.FK__tblPunchl__Custo__571DF1D5">
-            <End Role="tblCustomer" EntitySet="tblCustomer" />
+            <End Role="tblUser" EntitySet="tblUser" />
             <End Role="tblPunchlist" EntitySet="tblPunchlist" />
           </AssociationSet>
           <AssociationSet Name="FK__tblPunchl__Punch__5AEE82B9" Association="Self.FK__tblPunchl__Punch__5AEE82B9">
@@ -1657,6 +1725,22 @@
           <AssociationSet Name="FK_tblMonthlyLandsacpe_tblCustomer" Association="Self.FK_tblMonthlyLandsacpe_tblCustomer">
             <End Role="tblCustomer" EntitySet="tblCustomer" />
             <End Role="tblMonthlyLandsacpe" EntitySet="tblMonthlyLandsacpe" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlist_tblContact" Association="Self.FK_tblPunchlist_tblContact">
+            <End Role="tblContact" EntitySet="tblContact" />
+            <End Role="tblPunchlist" EntitySet="tblPunchlist" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlist_tblPunchlistStatus" Association="Self.FK_tblPunchlist_tblPunchlistStatus">
+            <End Role="tblPunchlistStatus" EntitySet="tblPunchlistStatus" />
+            <End Role="tblPunchlist" EntitySet="tblPunchlist" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlist_tblServiceLocation" Association="Self.FK_tblPunchlist_tblServiceLocation">
+            <End Role="tblServiceLocation" EntitySet="tblServiceLocation" />
+            <End Role="tblPunchlist" EntitySet="tblPunchlist" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlist_tblUser" Association="Self.FK_tblPunchlist_tblUser">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblPunchlist" EntitySet="tblPunchlist" />
           </AssociationSet>
           <AssociationSet Name="FK_tblPunchlistDetail_tblPunchlist" Association="Self.FK_tblPunchlistDetail_tblPunchlist">
             <End Role="tblPunchlist" EntitySet="tblPunchlist" />
@@ -1788,7 +1872,6 @@
           <Property Name="EditBy" Type="Int32" />
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblPunchlists" Relationship="Self.FK__tblPunchl__Custo__571DF1D5" FromRole="tblCustomer" ToRole="tblPunchlist" />
           <NavigationProperty Name="tblMonthlyLandsacpes" Relationship="earthcoModel.FK_tblMonthlyLandsacpe_tblCustomer" FromRole="tblCustomer" ToRole="tblMonthlyLandsacpe" />
           <Property Name="ContactFirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="ContactLastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
@@ -1849,27 +1932,6 @@
           <Property Name="OrderBy" Type="Int32" />
           <NavigationProperty Name="tblAccessLevels" Relationship="Self.FK_AccessManu" FromRole="tblMenu" ToRole="tblAccessLevel" />
         </EntityType>
-        <EntityType Name="tblPunchlist">
-          <Key>
-            <PropertyRef Name="PunchlistId" />
-          </Key>
-          <Property Name="PunchlistId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ContactName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ContactCompany" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ContactEmail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="AssignedTo" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CustomerId" Type="Int32" />
-          <Property Name="ServiceRequestId" Type="Int32" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblCustomer" Relationship="Self.FK__tblPunchl__Custo__571DF1D5" FromRole="tblPunchlist" ToRole="tblCustomer" />
-          <NavigationProperty Name="tblPunchlistDetails" Relationship="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" FromRole="tblPunchlist" ToRole="tblPunchlistDetail" />
-          <NavigationProperty Name="tblServiceRequest" Relationship="earthcoModel.FK__tblPunchl__Servi__5812160E" FromRole="tblPunchlist" ToRole="tblServiceRequest" />
-        </EntityType>
         <EntityType Name="tblRole">
           <Key>
             <PropertyRef Name="RoleId" />
@@ -1924,18 +1986,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__tblPunchl__Custo__571DF1D5">
-          <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
-          <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="tblPunchlist">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="earthcoEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="tblAccessLevels" EntityType="Self.tblAccessLevel" />
           <EntitySet Name="tblControllers" EntityType="Self.tblController" />
@@ -1943,7 +1993,6 @@
           <EntitySet Name="tblEmployees" EntityType="Self.tblEmployee" />
           <EntitySet Name="tblLogs" EntityType="Self.tblLog" />
           <EntitySet Name="tblMenus" EntityType="Self.tblMenu" />
-          <EntitySet Name="tblPunchlists" EntityType="Self.tblPunchlist" />
           <EntitySet Name="tblRoles" EntityType="Self.tblRole" />
           <EntitySet Name="tblSRStatus" EntityType="Self.tblSRStatu" />
           <EntitySet Name="tblSRTypes" EntityType="Self.tblSRType" />
@@ -1955,25 +2004,11 @@
             <End Role="tblRole" EntitySet="tblRoles" />
             <End Role="tblAccessLevel" EntitySet="tblAccessLevels" />
           </AssociationSet>
-          <AssociationSet Name="FK__tblPunchl__Custo__571DF1D5" Association="Self.FK__tblPunchl__Custo__571DF1D5">
-            <End Role="tblCustomer" EntitySet="tblCustomers" />
-            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
-          </AssociationSet>
           <EntitySet Name="tblSettings" EntityType="earthcoModel.tblSetting" />
           <EntitySet Name="tblIrrigations" EntityType="earthcoModel.tblIrrigation" />
           <AssociationSet Name="FK__tblContro__Irrig__5441852A" Association="earthcoModel.FK__tblContro__Irrig__5441852A">
             <End Role="tblIrrigation" EntitySet="tblIrrigations" />
             <End Role="tblController" EntitySet="tblControllers" />
-          </AssociationSet>
-          <EntitySet Name="tblPunchlistDetails" EntityType="earthcoModel.tblPunchlistDetail" />
-          <EntitySet Name="tblPunchlistItems" EntityType="earthcoModel.tblPunchlistItem" />
-          <AssociationSet Name="FK_tblPunchlistDetail_tblPunchlist" Association="earthcoModel.FK_tblPunchlistDetail_tblPunchlist">
-            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
-            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblPunchl__Punch__5AEE82B9" Association="earthcoModel.FK__tblPunchl__Punch__5AEE82B9">
-            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetails" />
-            <End Role="tblPunchlistItem" EntitySet="tblPunchlistItems" />
           </AssociationSet>
           <EntitySet Name="tblWeeklyReports" EntityType="earthcoModel.tblWeeklyReport" />
           <EntitySet Name="tblWeeklyReportFiles" EntityType="earthcoModel.tblWeeklyReportFile" />
@@ -2139,10 +2174,6 @@
           <EntitySet Name="tblServiceRequests" EntityType="earthcoModel.tblServiceRequest" />
           <EntitySet Name="tblSRFiles" EntityType="earthcoModel.tblSRFile" />
           <EntitySet Name="tblSRItems" EntityType="earthcoModel.tblSRItem" />
-          <AssociationSet Name="FK__tblPunchl__Servi__5812160E" Association="earthcoModel.FK__tblPunchl__Servi__5812160E">
-            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
-            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
-          </AssociationSet>
           <AssociationSet Name="FK__tblServic__SRSta__45F365D3" Association="earthcoModel.FK__tblServic__SRSta__45F365D3">
             <End Role="tblSRStatu" EntitySet="tblSRStatus" />
             <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
@@ -2247,8 +2278,53 @@
             <End Role="tblUser" EntitySet="tblUsers" />
           </AssociationSet>
           <FunctionImport Name="SPGetStaffData" ReturnType="Collection(earthcoModel.SPGetStaffData_Result)">
-            <Parameter Name="ID" Mode="In" Type="Int32" />
+          <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="tblPunchlistDetails" EntityType="earthcoModel.tblPunchlistDetail" />
+          <EntitySet Name="tblPunchlistItems" EntityType="earthcoModel.tblPunchlistItem" />
+          <AssociationSet Name="FK__tblPunchl__Punch__5AEE82B9" Association="earthcoModel.FK__tblPunchl__Punch__5AEE82B9">
+            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetails" />
+            <End Role="tblPunchlistItem" EntitySet="tblPunchlistItems" />
+          </AssociationSet>
+          <EntitySet Name="tblPunchlistStatus" EntityType="earthcoModel.tblPunchlistStatu" />
+          <FunctionImport Name="SPGetPunchlistData" ReturnType="Collection(earthcoModel.SPGetPunchlistData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetPunchlistDetailData" ReturnType="Collection(earthcoModel.SPGetPunchlistDetailData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetPunchlistItemData" ReturnType="Collection(earthcoModel.SPGetPunchlistItemData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="tblPunchlists" EntityType="earthcoModel.tblPunchlist" />
+          <AssociationSet Name="FK_tblPunchlist_tblContact" Association="earthcoModel.FK_tblPunchlist_tblContact">
+            <End Role="tblContact" EntitySet="tblContacts" />
+            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPunchl__Custo__571DF1D5" Association="earthcoModel.FK__tblPunchl__Custo__571DF1D5">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPunchl__Servi__5812160E" Association="earthcoModel.FK__tblPunchl__Servi__5812160E">
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
+            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlist_tblPunchlistStatus" Association="earthcoModel.FK_tblPunchlist_tblPunchlistStatus">
+            <End Role="tblPunchlistStatu" EntitySet="tblPunchlistStatus" />
+            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlist_tblServiceLocation" Association="earthcoModel.FK_tblPunchlist_tblServiceLocation">
+            <End Role="tblServiceLocation" EntitySet="tblServiceLocations" />
+            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlist_tblUser" Association="earthcoModel.FK_tblPunchlist_tblUser">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlistDetail_tblPunchlist" Association="earthcoModel.FK_tblPunchlistDetail_tblPunchlist">
+            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
+            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetails" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="tblSetting">
           <Key>
@@ -2291,68 +2367,6 @@
             </Principal>
             <Dependent Role="tblController">
               <PropertyRef Name="IrrigationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="tblPunchlistDetail">
-          <Key>
-            <PropertyRef Name="PunchlistDetailId" />
-          </Key>
-          <Property Name="PunchlistDetailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="isAfterPhoto" Type="Boolean" />
-          <Property Name="AfterPhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="isComplete" Type="Boolean" />
-          <Property Name="PunchlistId" Type="Int32" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblPunchlist" Relationship="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" FromRole="tblPunchlistDetail" ToRole="tblPunchlist" />
-          <NavigationProperty Name="tblPunchlistItems" Relationship="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" FromRole="tblPunchlistDetail" ToRole="tblPunchlistItem" />
-        </EntityType>
-        <EntityType Name="tblPunchlistItem">
-          <Key>
-            <PropertyRef Name="PunchlistItemId" />
-          </Key>
-          <Property Name="PunchlistItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Qty" Type="Int32" />
-          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Rate" Type="Double" />
-          <Property Name="Tax" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="PunchlistDetailId" Type="Int32" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblPunchlistDetail" Relationship="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" FromRole="tblPunchlistItem" ToRole="tblPunchlistDetail" />
-        </EntityType>
-        <Association Name="FK_tblPunchlistDetail_tblPunchlist">
-          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblPunchlistDetail" Role="tblPunchlistDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblPunchlist">
-              <PropertyRef Name="PunchlistId" />
-            </Principal>
-            <Dependent Role="tblPunchlistDetail">
-              <PropertyRef Name="PunchlistId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblPunchl__Punch__5AEE82B9">
-          <End Type="earthcoModel.tblPunchlistDetail" Role="tblPunchlistDetail" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblPunchlistItem" Role="tblPunchlistItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblPunchlistDetail">
-              <PropertyRef Name="PunchlistDetailId" />
-            </Principal>
-            <Dependent Role="tblPunchlistItem">
-              <PropertyRef Name="PunchlistDetailId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2501,6 +2515,7 @@
           <Property Name="isDelete" Type="Boolean" />
           <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblContact" FromRole="tblContact" ToRole="tblInvoice" />
           <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblContact_tblUser" FromRole="tblContact" ToRole="tblUser" />
+          <NavigationProperty Name="tblPunchlists" Relationship="earthcoModel.FK_tblPunchlist_tblContact" FromRole="tblContact" ToRole="tblPunchlist" />
         </EntityType>
         <EntityType Name="tblServiceLocation">
           <Key>
@@ -2522,6 +2537,7 @@
           <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK_tblEstimate_tblServiceLocation" FromRole="tblServiceLocation" ToRole="tblEstimate" />
           <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblServiceLocation" FromRole="tblServiceLocation" ToRole="tblInvoice" />
           <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblServiceLocation_tblCustomer" FromRole="tblServiceLocation" ToRole="tblUser" />
+          <NavigationProperty Name="tblPunchlists" Relationship="earthcoModel.FK_tblPunchlist_tblServiceLocation" FromRole="tblServiceLocation" ToRole="tblPunchlist" />
         </EntityType>
         <EntityType Name="tblUserType">
           <Key>
@@ -3409,13 +3425,13 @@
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" Nullable="false" />
           <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblPunchlists" Relationship="earthcoModel.FK__tblPunchl__Servi__5812160E" FromRole="tblServiceRequest" ToRole="tblPunchlist" />
           <NavigationProperty Name="tblSRStatu" Relationship="earthcoModel.FK__tblServic__SRSta__45F365D3" FromRole="tblServiceRequest" ToRole="tblSRStatu" />
           <NavigationProperty Name="tblSRType" Relationship="earthcoModel.FK__tblServic__SRTyp__44FF419A" FromRole="tblServiceRequest" ToRole="tblSRType" />
           <NavigationProperty Name="tblSRFiles" Relationship="earthcoModel.FK__tblSRFile__SRId__4E88ABD4" FromRole="tblServiceRequest" ToRole="tblSRFile" />
           <NavigationProperty Name="tblSRItems" Relationship="earthcoModel.FK__tblSRItem__SRId__4BAC3F29" FromRole="tblServiceRequest" ToRole="tblSRItem" />
           <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK__tblServic__Custo__440B1D61" FromRole="tblServiceRequest" ToRole="tblUser" />
           <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblServiceRequest_tblUser" FromRole="tblServiceRequest" ToRole="tblUser" />
+          <NavigationProperty Name="tblPunchlists" Relationship="earthcoModel.FK__tblPunchl__Servi__5812160E" FromRole="tblServiceRequest" ToRole="tblPunchlist" />
         </EntityType>
         <EntityType Name="tblSRFile">
           <Key>
@@ -3453,18 +3469,6 @@
           <Property Name="isDelete" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="tblServiceRequest" Relationship="earthcoModel.FK__tblSRItem__SRId__4BAC3F29" FromRole="tblSRItem" ToRole="tblServiceRequest" />
         </EntityType>
-        <Association Name="FK__tblPunchl__Servi__5812160E">
-          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblServiceRequest">
-              <PropertyRef Name="ServiceRequestId" />
-            </Principal>
-            <Dependent Role="tblPunchlist">
-              <PropertyRef Name="ServiceRequestId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__tblServic__SRSta__45F365D3">
           <End Type="earthcoModel.tblSRStatu" Role="tblSRStatu" Multiplicity="1" />
           <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="*" />
@@ -3681,7 +3685,9 @@
           <NavigationProperty Name="tblServiceRequests1" Relationship="earthcoModel.FK_tblServiceRequest_tblUser" FromRole="tblUser" ToRole="tblServiceRequest" />
           <NavigationProperty Name="tblSettings" Relationship="earthcoModel.FK_tblSetting_tblUser" FromRole="tblUser" ToRole="tblSetting" />
           <NavigationProperty Name="tblUserType" Relationship="earthcoModel.FK_tblUser_tblUserType" FromRole="tblUser" ToRole="tblUserType" />
-        </EntityType>
+          <NavigationProperty Name="tblPunchlists" Relationship="earthcoModel.FK__tblPunchl__Custo__571DF1D5" FromRole="tblUser" ToRole="tblPunchlist" />
+          <NavigationProperty Name="tblPunchlists1" Relationship="earthcoModel.FK_tblPunchlist_tblUser" FromRole="tblUser" ToRole="tblPunchlist" />
+          </EntityType>
         <Association Name="FK_tblBill_tblUser">
           <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
           <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="*" />
@@ -3917,6 +3923,223 @@
           <Property Type="Boolean" Name="isActive" Nullable="false" />
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
         </ComplexType>
+        <EntityType Name="tblPunchlistDetail">
+          <Key>
+            <PropertyRef Name="PunchlistDetailId" />
+          </Key>
+          <Property Name="PunchlistDetailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PhotoPath" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="isAfterPhoto" Type="Boolean" />
+          <Property Name="AfterPhotoPath" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="isComplete" Type="Boolean" />
+          <Property Name="PunchlistId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblPunchlistItems" Relationship="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" FromRole="tblPunchlistDetail" ToRole="tblPunchlistItem" />
+          <NavigationProperty Name="tblPunchlist" Relationship="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" FromRole="tblPunchlistDetail" ToRole="tblPunchlist" />
+        </EntityType>
+        <EntityType Name="tblPunchlistItem">
+          <Key>
+            <PropertyRef Name="PunchlistItemId" />
+          </Key>
+          <Property Name="PunchlistItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Qty" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Rate" Type="Double" Nullable="false" />
+          <Property Name="Amount" Type="Double" Nullable="false" />
+          <Property Name="Tax" Type="Double" />
+          <Property Name="PunchlistDetailId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblPunchlistDetail" Relationship="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" FromRole="tblPunchlistItem" ToRole="tblPunchlistDetail" />
+        </EntityType>
+        <Association Name="FK__tblPunchl__Punch__5AEE82B9">
+          <End Type="earthcoModel.tblPunchlistDetail" Role="tblPunchlistDetail" Multiplicity="1" />
+          <End Type="earthcoModel.tblPunchlistItem" Role="tblPunchlistItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPunchlistDetail">
+              <PropertyRef Name="PunchlistDetailId" />
+            </Principal>
+            <Dependent Role="tblPunchlistItem">
+              <PropertyRef Name="PunchlistDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblPunchlistStatu">
+          <Key>
+            <PropertyRef Name="PunchlistStatusId" />
+          </Key>
+          <Property Name="PunchlistStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblPunchlists" Relationship="earthcoModel.FK_tblPunchlist_tblPunchlistStatus" FromRole="tblPunchlistStatu" ToRole="tblPunchlist" />
+        </EntityType>
+        <ComplexType Name="SPGetPunchlistData_Result">
+          <Property Type="Int32" Name="PunchlistId" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="StatusId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="Int32" Name="ServiceLocationId" Nullable="false" />
+          <Property Type="Int32" Name="ContactId" Nullable="false" />
+          <Property Type="Int32" Name="AssignedTo" Nullable="false" />
+          <Property Type="Int32" Name="ServiceRequestId" Nullable="false" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SPGetPunchlistDetailData_Result">
+          <Property Type="Int32" Name="PunchlistDetailId" Nullable="false" />
+          <Property Type="String" Name="PhotoPath" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Notes" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="isAfterPhoto" Nullable="true" />
+          <Property Type="String" Name="AfterPhotoPath" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="isComplete" Nullable="true" />
+          <Property Type="Int32" Name="PunchlistId" Nullable="false" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SPGetPunchlistItemData_Result">
+          <Property Type="Int32" Name="PunchlistItemId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="Qty" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="50" />
+          <Property Type="Double" Name="Rate" Nullable="false" />
+          <Property Type="Double" Name="Amount" Nullable="false" />
+          <Property Type="Double" Name="Tax" Nullable="true" />
+          <Property Type="Int32" Name="PunchlistDetailId" Nullable="false" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="tblPunchlist">
+          <Key>
+            <PropertyRef Name="PunchlistId" />
+          </Key>
+          <Property Name="PunchlistId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="ServiceLocationId" Type="Int32" Nullable="false" />
+          <Property Name="ContactId" Type="Int32" Nullable="false" />
+          <Property Name="AssignedTo" Type="Int32" Nullable="false" />
+          <Property Name="ServiceRequestId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblContact" Relationship="earthcoModel.FK_tblPunchlist_tblContact" FromRole="tblPunchlist" ToRole="tblContact" />
+          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK__tblPunchl__Custo__571DF1D5" FromRole="tblPunchlist" ToRole="tblUser" />
+          <NavigationProperty Name="tblServiceRequest" Relationship="earthcoModel.FK__tblPunchl__Servi__5812160E" FromRole="tblPunchlist" ToRole="tblServiceRequest" />
+          <NavigationProperty Name="tblPunchlistStatu" Relationship="earthcoModel.FK_tblPunchlist_tblPunchlistStatus" FromRole="tblPunchlist" ToRole="tblPunchlistStatu" />
+          <NavigationProperty Name="tblServiceLocation" Relationship="earthcoModel.FK_tblPunchlist_tblServiceLocation" FromRole="tblPunchlist" ToRole="tblServiceLocation" />
+          <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblPunchlist_tblUser" FromRole="tblPunchlist" ToRole="tblUser" />
+          <NavigationProperty Name="tblPunchlistDetails" Relationship="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" FromRole="tblPunchlist" ToRole="tblPunchlistDetail" />
+        </EntityType>
+        <Association Name="FK_tblPunchlist_tblContact">
+          <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="1" />
+          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblContact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="tblPunchlist">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPunchl__Custo__571DF1D5">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
+          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblPunchlist">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPunchl__Servi__5812160E">
+          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="1" />
+          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceRequest">
+              <PropertyRef Name="ServiceRequestId" />
+            </Principal>
+            <Dependent Role="tblPunchlist">
+              <PropertyRef Name="ServiceRequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlist_tblPunchlistStatus">
+          <End Type="earthcoModel.tblPunchlistStatu" Role="tblPunchlistStatu" Multiplicity="1" />
+          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPunchlistStatu">
+              <PropertyRef Name="PunchlistStatusId" />
+            </Principal>
+            <Dependent Role="tblPunchlist">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlist_tblServiceLocation">
+          <End Type="earthcoModel.tblServiceLocation" Role="tblServiceLocation" Multiplicity="1" />
+          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceLocation">
+              <PropertyRef Name="ServiceLocationId" />
+            </Principal>
+            <Dependent Role="tblPunchlist">
+              <PropertyRef Name="ServiceLocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlist_tblUser">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
+          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblPunchlist">
+              <PropertyRef Name="AssignedTo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlistDetail_tblPunchlist">
+          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="1" />
+          <End Type="earthcoModel.tblPunchlistDetail" Role="tblPunchlistDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPunchlist">
+              <PropertyRef Name="PunchlistId" />
+            </Principal>
+            <Dependent Role="tblPunchlistDetail">
+              <PropertyRef Name="PunchlistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4044,25 +4267,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblPunchlists">
-            <EntityTypeMapping TypeName="earthcoModel.tblPunchlist">
-              <MappingFragment StoreEntitySet="tblPunchlist">
-                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
-                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
-                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
-                <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblRoles">
             <EntityTypeMapping TypeName="earthcoModel.tblRole">
               <MappingFragment StoreEntitySet="tblRole">
@@ -4121,43 +4325,6 @@
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
                 <ScalarProperty Name="IrrigationNumber" ColumnName="IrrigationNumber" />
                 <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblPunchlistDetails">
-            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistDetail">
-              <MappingFragment StoreEntitySet="tblPunchlistDetail">
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
-                <ScalarProperty Name="isComplete" ColumnName="isComplete" />
-                <ScalarProperty Name="AfterPhotoPath" ColumnName="AfterPhotoPath" />
-                <ScalarProperty Name="isAfterPhoto" ColumnName="isAfterPhoto" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
-                <ScalarProperty Name="PunchlistDetailId" ColumnName="PunchlistDetailId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblPunchlistItems">
-            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistItem">
-              <MappingFragment StoreEntitySet="tblPunchlistItem">
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="PunchlistDetailId" ColumnName="PunchlistDetailId" />
-                <ScalarProperty Name="Tax" ColumnName="Tax" />
-                <ScalarProperty Name="Rate" ColumnName="Rate" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Qty" ColumnName="Qty" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="PunchlistItemId" ColumnName="PunchlistItemId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5176,6 +5343,132 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="tblPunchlistDetails">
+            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistDetail">
+              <MappingFragment StoreEntitySet="tblPunchlistDetail">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
+                <ScalarProperty Name="isComplete" ColumnName="isComplete" />
+                <ScalarProperty Name="AfterPhotoPath" ColumnName="AfterPhotoPath" />
+                <ScalarProperty Name="isAfterPhoto" ColumnName="isAfterPhoto" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
+                <ScalarProperty Name="PunchlistDetailId" ColumnName="PunchlistDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPunchlistItems">
+            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistItem">
+              <MappingFragment StoreEntitySet="tblPunchlistItem">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="PunchlistDetailId" ColumnName="PunchlistDetailId" />
+                <ScalarProperty Name="Tax" ColumnName="Tax" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PunchlistItemId" ColumnName="PunchlistItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPunchlistStatus">
+            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistStatu">
+              <MappingFragment StoreEntitySet="tblPunchlistStatus">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="PunchlistStatusId" ColumnName="PunchlistStatusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SPGetPunchlistData" FunctionName="earthcoModel.Store.SPGetPunchlistData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetPunchlistData_Result">
+                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
+                <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetPunchlistDetailData" FunctionName="earthcoModel.Store.SPGetPunchlistDetailData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetPunchlistDetailData_Result">
+                <ScalarProperty Name="PunchlistDetailId" ColumnName="PunchlistDetailId" />
+                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="isAfterPhoto" ColumnName="isAfterPhoto" />
+                <ScalarProperty Name="AfterPhotoPath" ColumnName="AfterPhotoPath" />
+                <ScalarProperty Name="isComplete" ColumnName="isComplete" />
+                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetPunchlistItemData" FunctionName="earthcoModel.Store.SPGetPunchlistItemData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetPunchlistItemData_Result">
+                <ScalarProperty Name="PunchlistItemId" ColumnName="PunchlistItemId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Tax" ColumnName="Tax" />
+                <ScalarProperty Name="PunchlistDetailId" ColumnName="PunchlistDetailId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tblPunchlists">
+            <EntityTypeMapping TypeName="earthcoModel.tblPunchlist">
+              <MappingFragment StoreEntitySet="tblPunchlist">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
+                <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -16,6 +16,9 @@ namespace EarthCo.Controllers
     [Authorize]
     public class UserManagementController : ApiController
     {
+
+       
+
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
@@ -245,6 +248,7 @@ namespace EarthCo.Controllers
         {
             try
             {
+                DB.Configuration.ProxyCreationEnabled = false;
                 List<tblRole> Roles = new List<tblRole>();
                 Roles = DB.tblRoles.ToList();
                 if (Roles == null || Roles.Count == 0)
@@ -266,6 +270,7 @@ namespace EarthCo.Controllers
         {
             try
             {
+                DB.Configuration.ProxyCreationEnabled = false;
                 tblRole Role = new tblRole();
                 Role = DB.tblRoles.Where(x => x.RoleId == id).FirstOrDefault();
                 if (Role == null)

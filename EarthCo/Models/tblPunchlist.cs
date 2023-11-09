@@ -22,21 +22,26 @@ namespace EarthCo.Models
     
         public int PunchlistId { get; set; }
         public string Title { get; set; }
-        public string ContactName { get; set; }
-        public string ContactCompany { get; set; }
-        public string ContactEmail { get; set; }
-        public string AssignedTo { get; set; }
-        public Nullable<int> CustomerId { get; set; }
-        public Nullable<int> ServiceRequestId { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public int StatusId { get; set; }
+        public int CustomerId { get; set; }
+        public int ServiceLocationId { get; set; }
+        public int ContactId { get; set; }
+        public int AssignedTo { get; set; }
+        public int ServiceRequestId { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
-        public Nullable<bool> isActive { get; set; }
+        public bool isActive { get; set; }
+        public bool isDelete { get; set; }
     
-        public virtual tblCustomer tblCustomer { get; set; }
+        public virtual tblContact tblContact { get; set; }
+        public virtual tblUser tblUser { get; set; }
+        public virtual tblServiceRequest tblServiceRequest { get; set; }
+        public virtual tblPunchlistStatu tblPunchlistStatu { get; set; }
+        public virtual tblServiceLocation tblServiceLocation { get; set; }
+        public virtual tblUser tblUser1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPunchlistDetail> tblPunchlistDetails { get; set; }
-        public virtual tblServiceRequest tblServiceRequest { get; set; }
     }
 }

@@ -11,20 +11,14 @@
         <EntityTypeShape EntityType="earthcoModel.tblEmployee" Width="1.5" PointX="0.75" PointY="2.875" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblLog" Width="1.5" PointX="5.75" PointY="2.875" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblMenu" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="earthcoModel.tblPunchlist" Width="1.5" PointX="3" PointY="7.625" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblRole" Width="1.5" PointX="10.75" PointY="6.375" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblSRStatu" Width="1.5" PointX="0.75" PointY="18.625" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblSRType" Width="1.5" PointX="0.75" PointY="21" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK_AccessManu" ManuallyRouted="false" />
         <AssociationConnector Association="earthcoModel.FK_AccessRole" ManuallyRouted="false" />
-        <AssociationConnector Association="earthcoModel.FK__tblPunchl__Custo__571DF1D5" ManuallyRouted="false" />
         <EntityTypeShape EntityType="earthcoModel.tblSetting" Width="1.5" PointX="15.25" PointY="10.375" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblIrrigation" Width="1.5" PointX="10.75" PointY="17" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK__tblContro__Irrig__5441852A" />
-        <EntityTypeShape EntityType="earthcoModel.tblPunchlistDetail" Width="1.5" PointX="5.25" PointY="7.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="earthcoModel.tblPunchlistItem" Width="1.5" PointX="7.5" PointY="7.875" IsExpanded="false" />
-        <AssociationConnector Association="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" />
-        <AssociationConnector Association="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" />
         <EntityTypeShape EntityType="earthcoModel.tblWeeklyReport" Width="1.5" PointX="15.375" PointY="1" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblWeeklyReportFile" Width="1.5" PointX="17.625" PointY="1.875" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK_tblWeeklyReportFile_tblWeeklyReport" />
@@ -75,15 +69,14 @@
         <AssociationConnector Association="earthcoModel.FK_tblInvoiceFile_tblInvoice" />
         <EntityTypeShape EntityType="earthcoModel.tblInvoiceItem" Width="1.5" PointX="33.375" PointY="10.875" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoiceItem_tblInvoice" />
-        <EntityTypeShape EntityType="earthcoModel.tblServiceRequest" Width="1.5" PointX="20.25" PointY="10.875" />
-        <EntityTypeShape EntityType="earthcoModel.tblSRFile" Width="1.5" PointX="22.5" PointY="10" />
-        <EntityTypeShape EntityType="earthcoModel.tblSRItem" Width="1.5" PointX="22.5" PointY="14.125" />
-        <AssociationConnector Association="earthcoModel.FK__tblPunchl__Servi__5812160E" />
+        <EntityTypeShape EntityType="earthcoModel.tblServiceRequest" Width="1.5" PointX="20.25" PointY="10.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="earthcoModel.tblSRFile" Width="1.5" PointX="22.5" PointY="10" IsExpanded="false" />
+        <EntityTypeShape EntityType="earthcoModel.tblSRItem" Width="1.5" PointX="22.5" PointY="14.125" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK__tblServic__SRSta__45F365D3" />
         <AssociationConnector Association="earthcoModel.FK__tblServic__SRTyp__44FF419A" />
         <AssociationConnector Association="earthcoModel.FK__tblSRFile__SRId__4E88ABD4" />
         <AssociationConnector Association="earthcoModel.FK__tblSRItem__SRId__4BAC3F29" />
-        <EntityTypeShape EntityType="earthcoModel.tblUser" Width="1.5" PointX="18" PointY="3.625" />
+        <EntityTypeShape EntityType="earthcoModel.tblUser" Width="1.5" PointX="18" PointY="3.625" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK_tblBill_tblUser" />
         <AssociationConnector Association="earthcoModel.FK_tblContact_tblUser" />
         <AssociationConnector Association="earthcoModel.FK_tblUser_tblCustomerType" />
@@ -101,6 +94,18 @@
         <AssociationConnector Association="earthcoModel.FK_tblServiceRequest_tblUser" />
         <AssociationConnector Association="earthcoModel.FK_tblSetting_tblUser" />
         <AssociationConnector Association="earthcoModel.FK_tblUser_tblUserType" />
+        <EntityTypeShape EntityType="earthcoModel.tblPunchlistDetail" Width="1.5" PointX="29.75" PointY="12.25" />
+        <EntityTypeShape EntityType="earthcoModel.tblPunchlistItem" Width="1.5" PointX="32" PointY="12.25" />
+        <AssociationConnector Association="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" />
+        <EntityTypeShape EntityType="earthcoModel.tblPunchlistStatu" Width="1.5" PointX="3.375" PointY="4.75" />
+        <EntityTypeShape EntityType="earthcoModel.tblPunchlist" Width="1.5" PointX="27.5" PointY="9.875" />
+        <AssociationConnector Association="earthcoModel.FK_tblPunchlist_tblContact" />
+        <AssociationConnector Association="earthcoModel.FK__tblPunchl__Custo__571DF1D5" />
+        <AssociationConnector Association="earthcoModel.FK__tblPunchl__Servi__5812160E" />
+        <AssociationConnector Association="earthcoModel.FK_tblPunchlist_tblPunchlistStatus" />
+        <AssociationConnector Association="earthcoModel.FK_tblPunchlist_tblServiceLocation" />
+        <AssociationConnector Association="earthcoModel.FK_tblPunchlist_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

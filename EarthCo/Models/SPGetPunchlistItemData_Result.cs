@@ -10,9 +10,8 @@
 namespace EarthCo.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class tblPunchlistItem
+    public partial class SPGetPunchlistItemData_Result
     {
         public int PunchlistItemId { get; set; }
         public string Name { get; set; }
@@ -28,7 +27,5 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
-    
-        public virtual tblPunchlistDetail tblPunchlistDetail { get; set; }
     }
 }

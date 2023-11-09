@@ -1,4 +1,5 @@
 ﻿using EarthCo.Models;
+using Intuit.Ipp.OAuth2PlatformClient;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
@@ -20,6 +21,13 @@ namespace EarthCo.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AccountController : ApiController
     {
+        public static string clientid = ConfigurationManager.AppSettings["clientid"];
+        public static string clientsecret = ConfigurationManager.AppSettings["clientsecret"];
+        public static string redirectUrl = ConfigurationManager.AppSettings["redirectUrl"];
+        public static string environment = ConfigurationManager.AppSettings["appEnvironment"];
+
+        public static OAuth2Client auth2Client = new OAuth2Client(clientid, clientsecret, redirectUrl, environment);
+
         earthcoEntities DB = new earthcoEntities();
 
         [HttpPost]

@@ -17,7 +17,6 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tblCustomer()
         {
-            this.tblPunchlists = new HashSet<tblPunchlist>();
             this.tblMonthlyLandsacpes = new HashSet<tblMonthlyLandsacpe>();
         }
     
@@ -41,8 +40,6 @@ namespace EarthCo.Models
         public Nullable<int> CustomerTypeId { get; set; }
         public Nullable<bool> isLoginAllow { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
         public virtual tblCustomerType tblCustomerType { get; set; }

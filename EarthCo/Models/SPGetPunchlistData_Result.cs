@@ -10,25 +10,22 @@
 namespace EarthCo.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class tblPunchlistItem
+    public partial class SPGetPunchlistData_Result
     {
-        public int PunchlistItemId { get; set; }
-        public string Name { get; set; }
-        public int Qty { get; set; }
-        public string Description { get; set; }
-        public double Rate { get; set; }
-        public double Amount { get; set; }
-        public Nullable<double> Tax { get; set; }
-        public int PunchlistDetailId { get; set; }
+        public int PunchlistId { get; set; }
+        public string Title { get; set; }
+        public int StatusId { get; set; }
+        public int CustomerId { get; set; }
+        public int ServiceLocationId { get; set; }
+        public int ContactId { get; set; }
+        public int AssignedTo { get; set; }
+        public int ServiceRequestId { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
-    
-        public virtual tblPunchlistDetail tblPunchlistDetail { get; set; }
     }
 }
