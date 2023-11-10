@@ -250,7 +250,7 @@ namespace EarthCo.Controllers
             {
                 DB.Configuration.ProxyCreationEnabled = false;
                 List<tblRole> Roles = new List<tblRole>();
-                Roles = DB.tblRoles.ToList();
+                Roles = DB.tblRoles.Where(x=>x.isActive==true).ToList();
                 if (Roles == null || Roles.Count == 0)
                 {
                     return NotFound();

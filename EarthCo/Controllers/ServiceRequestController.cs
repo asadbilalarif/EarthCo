@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -36,11 +37,11 @@ namespace EarthCo.Controllers
                 int RoleId =(int) DB.tblUsers.Where(x => x.UserId == UserId).Select(s => s.RoleId).FirstOrDefault();
                 if(RoleId==1)
                 {
-                    SRData = DB.tblServiceRequests.ToList();
+                    SRData = DB.tblServiceRequests.Where(x=>x.isDelete==false).ToList();
                 }
                 else
                 {
-                    SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId).ToList();
+                    SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete==false).ToList();
                 }
                 
                 if (SRData == null || SRData.Count == 0)
@@ -54,7 +55,11 @@ namespace EarthCo.Controllers
 
                     Temp.ServiceRequestId = item.ServiceRequestId;
                     Temp.CustomerName = item.tblUser.CompanyName;
-                    Temp.Assign = item.tblUser1.FirstName+" "+ item.tblUser1.LastName;
+                    if(item.Assign!=null && item.Assign!=0)
+                    {
+                        Temp.Assign = item.tblUser1.FirstName + " " + item.tblUser1.LastName;
+                    }
+                    
                     Temp.ServiceRequestNumber = item.ServiceRequestNumber;
                     Temp.Status = item.tblSRStatu.Status;
                     Temp.WorkRequest = item.WorkRequest;
@@ -141,7 +146,6 @@ namespace EarthCo.Controllers
                 ServiceRequest.Files.Add(HttpContext.Current.Request.Files[i]); ;
             }
 
-            ServiceRequest.ServiceRequestData = JsonSerializer.Deserialize<tblServiceRequest>(Data1);
 
             
 
@@ -149,6 +153,7 @@ namespace EarthCo.Controllers
             tblServiceRequest Data = new tblServiceRequest();
             try
             {
+            ServiceRequest.ServiceRequestData = JsonSerializer.Deserialize<tblServiceRequest>(Data1);
                 //HttpCookie cookieObj = Request.Cookies["User"];
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
@@ -369,10 +374,52 @@ namespace EarthCo.Controllers
                     return Ok(new { Id = Data.ServiceRequestId, Message = "Service Request has been Update successfully." });
                 }
             }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString) ;
+
+                return ResponseMessage(responseMessage);
+            }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException!=null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
             }
+            //catch (Exception ex) when (ex is DbEntityValidationException)
+            //{
+            //    //foreach (var eve in e.EntityValidationErrors)
+            //    //{
+            //    //    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+            //    //        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+            //    //    foreach (var ve in eve.ValidationErrors)
+            //    //    {
+            //    //        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+            //    //            ve.PropertyName, ve.ErrorMessage);
+            //    //    }
+            //    //}
+            //    string Test = ex.Message;
+            //    string Test1 = ex.EntityValidationErrors;
+            //    return InternalServerError(ex);
+            //}
         }
 
         [HttpGet]

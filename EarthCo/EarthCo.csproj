@@ -415,6 +415,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Bill.cs" />
     <Compile Include="Models\BillFile.cs" />
     <Compile Include="Models\BillList.cs" />
     <Compile Include="Models\ChangePassword.cs" />

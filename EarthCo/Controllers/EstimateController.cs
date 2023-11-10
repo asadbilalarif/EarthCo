@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -43,18 +44,18 @@ namespace EarthCo.Controllers
                     Temp.Status =item.tblEstimateStatu.Status;
                     Temp.EstimateNumber = item.EstimateNumber;
                     Temp.DescriptionofWork = item.EstimateNotes;
-                    if(item.tblPurchaseOrders!=null && item.tblPurchaseOrders.Count != 0)
-                    {
-                        Temp.PurchaseOrderNumber = item.tblPurchaseOrders.FirstOrDefault().PurchaseOrderNumber;
-                    }
-                    if(item.tblPurchaseOrders != null && item.tblPurchaseOrders.Count != 0)
-                    {
-                        Temp.BillNumber = item.tblPurchaseOrders.FirstOrDefault().tblBills.FirstOrDefault().BillNumber;
-                    }
-                    if(item.tblInvoices != null && item.tblInvoices.Count != 0)
-                    {
-                        Temp.InvoiceNumber = item.tblInvoices.FirstOrDefault().InvoiceNumber;
-                    }
+                    //if(item.tblPurchaseOrders!=null && item.tblPurchaseOrders.Count != 0)
+                    //{
+                    //    Temp.PurchaseOrderNumber = item.tblPurchaseOrders.FirstOrDefault().PurchaseOrderNumber;
+                    //}
+                    //if(item.tblPurchaseOrders != null && item.tblPurchaseOrders.Count != 0)
+                    //{
+                    //    Temp.BillNumber = item.tblPurchaseOrders.FirstOrDefault().tblBills.FirstOrDefault().BillNumber;
+                    //}
+                    //if(item.tblInvoices != null && item.tblInvoices.Count != 0)
+                    //{
+                    //    Temp.InvoiceNumber = item.tblInvoices.FirstOrDefault().InvoiceNumber;
+                    //}
                     
                     Temp.ProfitPercentage = item.ProfitPercentage;
                     Temp.EstimateAmount =(double) item.tblEstimateItems.Sum(s=>s.Amount);
@@ -65,7 +66,13 @@ namespace EarthCo.Controllers
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ex.InnerException.InnerException.Message);
+
+                // You can add custom headers if needed
+                //responseMessage.Headers.Add("Custom-Header", "Some-Value");
+
+                return ResponseMessage(responseMessage);
             }
 
 
@@ -344,9 +351,35 @@ namespace EarthCo.Controllers
                     return Ok(new { Id = Data.EstimateId, Message = "Estimate has been Update successfully." });
                 }
             }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
             }
             return NotFound();
         }
