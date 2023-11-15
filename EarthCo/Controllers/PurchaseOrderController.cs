@@ -37,6 +37,7 @@ namespace EarthCo.Controllers
                     foreach (tblPurchaseOrder item in Data)
                     {
                         PurchaseOrderList Temp = new PurchaseOrderList();
+                        Temp.PurchaseOrderId = item.PurchaseOrderId;
                         Temp.SupplierName = item.tblUser.FirstName + " " + item.tblUser.LastName;
                         Temp.Date =(DateTime) item.Date;
                         Temp.Status =item.tblPurchaseOrderStatu.Status;

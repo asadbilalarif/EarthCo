@@ -14,6 +14,7 @@ namespace EarthCo.Models
     public partial class SPGetServiceRequestItemData_Result
     {
         public int SRItemId { get; set; }
+        public int ItemId { get; set; }
         public string Name { get; set; }
         public int Qty { get; set; }
         public string Description { get; set; }

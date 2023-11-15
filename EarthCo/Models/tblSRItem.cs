@@ -15,6 +15,7 @@ namespace EarthCo.Models
     public partial class tblSRItem
     {
         public int SRItemId { get; set; }
+        public int ItemId { get; set; }
         public string Name { get; set; }
         public int Qty { get; set; }
         public string Description { get; set; }
@@ -28,6 +29,7 @@ namespace EarthCo.Models
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
     
+        public virtual tblItem tblItem { get; set; }
         public virtual tblServiceRequest tblServiceRequest { get; set; }
     }
 }

@@ -14,11 +14,13 @@ namespace EarthCo.Models
     public partial class SPGetBillItemData_Result
     {
         public int BillItemId { get; set; }
+        public int ItemId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int Qty { get; set; }
         public double Rate { get; set; }
         public double Amount { get; set; }
+        public Nullable<double> Tax { get; set; }
         public int BillId { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }

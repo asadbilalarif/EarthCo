@@ -19,6 +19,7 @@ namespace EarthCo.Models
         {
             this.tblInvoices = new HashSet<tblInvoice>();
             this.tblPunchlists = new HashSet<tblPunchlist>();
+            this.tblEstimates = new HashSet<tblEstimate>();
         }
     
         public int ContactId { get; set; }
@@ -48,5 +49,7 @@ namespace EarthCo.Models
         public virtual tblUser tblUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEstimate> tblEstimates { get; set; }
     }
 }

@@ -15,6 +15,7 @@ namespace EarthCo.Models
     public partial class tblInvoiceItem
     {
         public int InvoiceItemId { get; set; }
+        public int ItemId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int Qty { get; set; }
@@ -31,5 +32,6 @@ namespace EarthCo.Models
         public bool isDelete { get; set; }
     
         public virtual tblInvoice tblInvoice { get; set; }
+        public virtual tblItem tblItem { get; set; }
     }
 }

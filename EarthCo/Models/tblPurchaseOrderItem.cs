@@ -15,19 +15,21 @@ namespace EarthCo.Models
     public partial class tblPurchaseOrderItem
     {
         public int PurchaseOrderItemId { get; set; }
+        public int ItemId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public Nullable<int> Qty { get; set; }
-        public Nullable<double> Rate { get; set; }
-        public Nullable<double> Amount { get; set; }
-        public Nullable<int> PurchaseOrderId { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public int Qty { get; set; }
+        public double Rate { get; set; }
+        public double Amount { get; set; }
+        public int PurchaseOrderId { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
-        public Nullable<bool> isActive { get; set; }
-        public Nullable<bool> isDelete { get; set; }
+        public bool isActive { get; set; }
+        public bool isDelete { get; set; }
     
+        public virtual tblItem tblItem { get; set; }
         public virtual tblPurchaseOrder tblPurchaseOrder { get; set; }
     }
 }

@@ -18,6 +18,11 @@ namespace EarthCo.Models
         public tblItem()
         {
             this.tblEstimateItems = new HashSet<tblEstimateItem>();
+            this.tblBillItems = new HashSet<tblBillItem>();
+            this.tblInvoiceItems = new HashSet<tblInvoiceItem>();
+            this.tblPunchlistItems = new HashSet<tblPunchlistItem>();
+            this.tblPurchaseOrderItems = new HashSet<tblPurchaseOrderItem>();
+            this.tblSRItems = new HashSet<tblSRItem>();
         }
     
         public int ItemId { get; set; }
@@ -45,5 +50,15 @@ namespace EarthCo.Models
         public virtual tblAccount tblAccount1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimateItem> tblEstimateItems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblBillItem> tblBillItems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblInvoiceItem> tblInvoiceItems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPunchlistItem> tblPunchlistItems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPurchaseOrderItem> tblPurchaseOrderItems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblSRItem> tblSRItems { get; set; }
     }
 }

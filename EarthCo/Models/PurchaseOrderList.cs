@@ -7,6 +7,7 @@ namespace EarthCo.Models
 {
     public class PurchaseOrderList
     {
+        public int? PurchaseOrderId { get; set; }
         public string SupplierName { get; set; }
         public DateTime Date { get; set; }
         public string Status { get; set; }

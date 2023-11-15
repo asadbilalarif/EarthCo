@@ -14,6 +14,7 @@ namespace EarthCo.Models
     public partial class SPGetInvoiceItemData_Result
     {
         public int InvoiceItemId { get; set; }
+        public int ItemId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int Qty { get; set; }
