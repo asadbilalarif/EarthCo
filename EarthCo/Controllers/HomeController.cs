@@ -11,6 +11,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 //using System.Text.Json;
 using System.Web;
 using System.Web.Mvc;
@@ -55,7 +57,7 @@ namespace EarthCo.Controllers
         /// <summary>
         /// QBO API Request
         /// </summary>
-        public ActionResult ApiCallService()
+        public async Task<ActionResult> ApiCallService()
         {
             if (Session["realmId"] != null)
             {
@@ -100,8 +102,34 @@ namespace EarthCo.Controllers
                     {
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oauthValidator.AccessToken);
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        //client.BaseAddress = new Uri("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/purchaseorder/178?minorversion=23");
-                        //HTTP GET
+
+                        Vendor billAddr = new Vendor
+                        {
+                            TaxIdentifier = "99-5688293",
+                            AcctNum = "35372649",
+                            Title = "Ms.",
+                            GivenName = "Dianne12",
+                            FamilyName = "Bradley12",
+                            Suffix = "Sr.",
+                            CompanyName = "Dianne's Auto Shop12",
+                            DisplayName = "Dianne's Auto Shop12",
+                            PrintOnCheckName = "Dianne's Auto Shop12"
+                        };
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oauthValidator.AccessToken);
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        string message;
+                        var json = Newtonsoft.Json.JsonConvert.SerializeObject(billAddr);
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+                        var visibilityresponse = await client.PostAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/vendor?minorversion=23", content);
+                        if (visibilityresponse.IsSuccessStatusCode)
+                        {
+                            var responseContent = await visibilityresponse.Content.ReadAsStringAsync();
+                            message = Convert.ToString(responseContent);
+                        }
+
+
+                        ////client.BaseAddress = new Uri("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/purchaseorder/178?minorversion=23");
+                        ////HTTP GET
                         var responseTask = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/bill/1?minorversion=23");
                         responseTask.Wait();
 
@@ -118,14 +146,14 @@ namespace EarthCo.Controllers
 
 
                         }
-                        else //web api sent error response 
-                        {
-                            //log response status here..
+                        //else //web api sent error response 
+                        //{
+                        //    //log response status here..
 
-                            //purchaseorderInfo = Enumerable.Empty<PurchaseOrder>();
+                        //    //purchaseorderInfo = Enumerable.Empty<PurchaseOrder>();
 
-                            ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-                        }
+                        //    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+                        //}
                     }
 
 

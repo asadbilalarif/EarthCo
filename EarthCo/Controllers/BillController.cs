@@ -36,6 +36,7 @@ namespace EarthCo.Controllers
                     foreach (tblBill item in Data)
                     {
                         BillList Temp = new BillList();
+                        Temp.BillId = item.BillId;
                         Temp.SupplierName = item.tblUser.FirstName + " " + item.tblUser.LastName;
                         Temp.DueDate = (DateTime)item.DueDate;
                         Temp.Amount = item.Amount;

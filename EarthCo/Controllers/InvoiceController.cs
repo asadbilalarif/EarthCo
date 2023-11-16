@@ -1,6 +1,7 @@
 ﻿using EarthCo.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -36,6 +37,7 @@ namespace EarthCo.Controllers
                     foreach (tblInvoice item in Data)
                     {
                         InvoiceList Temp = new InvoiceList();
+                        Temp.InvoiceId = item.InvoiceId;
                         Temp.InvoiceNumber = item.InvoiceNumber;
                         Temp.CustomerName = item.tblUser.FirstName + " " + item.tblUser.LastName;
                         Temp.IssueDate = (DateTime)item.IssueDate;
@@ -313,7 +315,7 @@ namespace EarthCo.Controllers
                             item.SaveAs(path);
                             path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             FileData.FileName = Path.GetFileName(item.FileName);
-                            FileData.Caption = "";
+                            FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.InvoiceId = Data.InvoiceId;
                             FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
@@ -340,9 +342,35 @@ namespace EarthCo.Controllers
                     return Ok(new { Id = Data.InvoiceId, Message = "Invoice has been Update successfully." });
                 }
             }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
             }
             return NotFound();
         }

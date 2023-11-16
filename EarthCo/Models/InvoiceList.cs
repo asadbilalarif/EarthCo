@@ -7,6 +7,7 @@ namespace EarthCo.Models
 {
     public class InvoiceList
     {
+        public int? InvoiceId { get; set; }
         public string InvoiceNumber { get; set; }
         public DateTime IssueDate { get; set; }
         public string CustomerName { get; set; }

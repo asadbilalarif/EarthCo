@@ -27,7 +27,7 @@ namespace EarthCo.Controllers
                 List<GetEstimateItem> EstData = new List<GetEstimateItem>();
                 
                 List<tblEstimate> Data = new List<tblEstimate>();
-                Data = DB.tblEstimates.ToList();
+                Data = DB.tblEstimates.Where(x=>x.isDelete==false).ToList();
                 if (Data == null || Data.Count==0)
                 {
                     return NotFound(); // 404 - No data found
@@ -264,6 +264,7 @@ namespace EarthCo.Controllers
                     Data.Email = Estimate.EstimateData.Email;
                     Data.IssueDate = DateTime.Now;
                     Data.CustomerId = Estimate.EstimateData.CustomerId;
+                    Data.ContactId = Estimate.EstimateData.ContactId;
                     Data.RegionalManagerId = Estimate.EstimateData.RegionalManagerId;
                     Data.AssignTo = Estimate.EstimateData.AssignTo;
                     Data.RequestedBy = Estimate.EstimateData.RequestedBy;
@@ -499,6 +500,28 @@ namespace EarthCo.Controllers
             {
                 return InternalServerError(ex);
             }
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetTagList()
+        {
+            try
+            {
+                DB.Configuration.ProxyCreationEnabled = false;
+                List<tblTag> Tags = new List<tblTag>();
+                Tags = DB.tblTags.Where(x => x.isActive == true).ToList();
+                if (Tags == null || Tags.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(Tags);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
         }
     }
 }

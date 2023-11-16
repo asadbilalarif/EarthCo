@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Security.Claims;
+using System.Data.Entity.Validation;
 
 namespace EarthCo.Controllers
 {
@@ -373,9 +374,35 @@ namespace EarthCo.Controllers
                     return Ok(new { Id = Data.PurchaseOrderId, Message = "Purchase Order has been Update successfully." });
                 }
             }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
             }
             return NotFound();
         }
@@ -431,6 +458,28 @@ namespace EarthCo.Controllers
             {
                 return InternalServerError(ex);
             }
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetTermList()
+        {
+            try
+            {
+                DB.Configuration.ProxyCreationEnabled = false;
+                List<tblTerm> Terms = new List<tblTerm>();
+                Terms = DB.tblTerms.Where(x => x.isActive == true).ToList();
+                if (Terms == null || Terms.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(Terms);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
         }
     }
 }

@@ -437,6 +437,7 @@
     <Compile Include="Models\GetServiceRequest.cs" />
     <Compile Include="Models\GetServiceRequestData.cs" />
     <Compile Include="Models\GetStaffData.cs" />
+    <Compile Include="Models\GetSupplierList.cs" />
     <Compile Include="Models\InviteEmployee.cs" />
     <Compile Include="Models\InvoiceFile.cs" />
     <Compile Include="Models\InvoiceList.cs" />

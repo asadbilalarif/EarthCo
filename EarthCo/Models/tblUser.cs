@@ -19,8 +19,6 @@ namespace EarthCo.Models
         {
             this.tblBills = new HashSet<tblBill>();
             this.tblContacts = new HashSet<tblContact>();
-            this.tblInvoices = new HashSet<tblInvoice>();
-            this.tblInvoices1 = new HashSet<tblInvoice>();
             this.tblPurchaseOrders = new HashSet<tblPurchaseOrder>();
             this.tblPurchaseOrders1 = new HashSet<tblPurchaseOrder>();
             this.tblPurchaseOrders2 = new HashSet<tblPurchaseOrder>();
@@ -33,6 +31,8 @@ namespace EarthCo.Models
             this.tblEstimates = new HashSet<tblEstimate>();
             this.tblEstimates1 = new HashSet<tblEstimate>();
             this.tblEstimates2 = new HashSet<tblEstimate>();
+            this.tblInvoices = new HashSet<tblInvoice>();
+            this.tblInvoices1 = new HashSet<tblInvoice>();
         }
     
         public int UserId { get; set; }
@@ -71,10 +71,6 @@ namespace EarthCo.Models
         public virtual ICollection<tblContact> tblContacts { get; set; }
         public virtual tblCustomerType tblCustomerType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblInvoice> tblInvoices1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders1 { get; set; }
@@ -100,5 +96,9 @@ namespace EarthCo.Models
         public virtual ICollection<tblEstimate> tblEstimates1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimate> tblEstimates2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblInvoice> tblInvoices1 { get; set; }
     }
 }

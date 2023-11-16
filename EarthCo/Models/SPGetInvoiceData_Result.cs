@@ -16,7 +16,7 @@ namespace EarthCo.Models
         public int InvoiceId { get; set; }
         public int CustomerId { get; set; }
         public Nullable<int> ServiceLocationId { get; set; }
-        public int ContactId { get; set; }
+        public Nullable<int> ContactId { get; set; }
         public string InvoiceNumber { get; set; }
         public int EstimateId { get; set; }
         public string EstimateNumber { get; set; }

@@ -56,8 +56,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblTerm> tblTerms { get; set; }
         public virtual DbSet<tblBill> tblBills { get; set; }
         public virtual DbSet<tblBillFile> tblBillFiles { get; set; }
-        public virtual DbSet<tblInvoice> tblInvoices { get; set; }
-        public virtual DbSet<tblInvoiceFile> tblInvoiceFiles { get; set; }
         public virtual DbSet<tblServiceRequest> tblServiceRequests { get; set; }
         public virtual DbSet<tblSRFile> tblSRFiles { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
@@ -71,6 +69,8 @@ namespace EarthCo.Models
         public virtual DbSet<tblSRItem> tblSRItems { get; set; }
         public virtual DbSet<tblEstimate> tblEstimates { get; set; }
         public virtual DbSet<tblEstimateStatu> tblEstimateStatus { get; set; }
+        public virtual DbSet<tblInvoice> tblInvoices { get; set; }
+        public virtual DbSet<tblInvoiceFile> tblInvoiceFiles { get; set; }
     
         public virtual ObjectResult<SPGetEstimateData_Result> SPGetEstimateData(Nullable<int> iD)
         {
@@ -133,15 +133,6 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetBillFileData_Result>("SPGetBillFileData", iDParameter);
-        }
-    
-        public virtual ObjectResult<SPGetInvoiceData_Result> SPGetInvoiceData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetInvoiceData_Result>("SPGetInvoiceData", iDParameter);
         }
     
         public virtual ObjectResult<SPGetInvoiceFileData_Result> SPGetInvoiceFileData(Nullable<int> iD)
@@ -268,6 +259,15 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetServiceRequestItemData_Result>("SPGetServiceRequestItemData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetInvoiceData_Result> SPGetInvoiceData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetInvoiceData_Result>("SPGetInvoiceData", iDParameter);
         }
     }
 }
