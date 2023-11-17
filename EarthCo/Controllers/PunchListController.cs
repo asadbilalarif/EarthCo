@@ -195,7 +195,6 @@ namespace EarthCo.Controllers
                     Data.ContactId = PunchList.ContactId;
                     Data.ServiceLocationId = PunchList.ServiceLocationId;
                     Data.AssignedTo = PunchList.AssignedTo;
-                    Data.ServiceRequestId = PunchList.ServiceRequestId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;
@@ -361,6 +360,7 @@ namespace EarthCo.Controllers
 
                     //Data = Punchlist.PunchlistDetailData;
                     Data.Notes = Punchlist.PunchlistDetailData.Notes;
+                    Data.Address = Punchlist.PunchlistDetailData.Address;
                     Data.isAfterPhoto = Punchlist.PunchlistDetailData.isAfterPhoto;
                     Data.isComplete = Punchlist.PunchlistDetailData.isComplete;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));

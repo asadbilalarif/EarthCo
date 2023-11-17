@@ -262,12 +262,18 @@ namespace EarthCo.Controllers
                     Data.EstimateId = Invoice.InvoiceData.EstimateId;
                     Data.EstimateNumber = Invoice.InvoiceData.EstimateNumber;
                     Data.CustomerMessage = Invoice.InvoiceData.CustomerMessage;
-                    Data.PrivateNotes = Invoice.InvoiceData.PrivateNotes;
+                    Data.MemoInternal = Invoice.InvoiceData.MemoInternal;
                     Data.TotalAmount = Invoice.InvoiceData.TotalAmount;
                     Data.BalanceAmount = Invoice.InvoiceData.BalanceAmount;
+                    Data.Tax = Invoice.InvoiceData.Tax;
+                    Data.Discount = Invoice.InvoiceData.Discount;
+                    Data.Shipping = Invoice.InvoiceData.Shipping;
+                    Data.Profit = Invoice.InvoiceData.Profit;
+                    Data.ProfitPercentage = Invoice.InvoiceData.ProfitPercentage;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;
+                    Data.isDelete = false;
                     DB.Entry(Data);
                     DB.SaveChanges();
 

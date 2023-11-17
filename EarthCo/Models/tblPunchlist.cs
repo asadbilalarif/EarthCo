@@ -24,10 +24,9 @@ namespace EarthCo.Models
         public string Title { get; set; }
         public int StatusId { get; set; }
         public int CustomerId { get; set; }
-        public int ServiceLocationId { get; set; }
+        public Nullable<int> ServiceLocationId { get; set; }
         public int ContactId { get; set; }
         public int AssignedTo { get; set; }
-        public int ServiceRequestId { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
@@ -37,7 +36,6 @@ namespace EarthCo.Models
     
         public virtual tblContact tblContact { get; set; }
         public virtual tblUser tblUser { get; set; }
-        public virtual tblServiceRequest tblServiceRequest { get; set; }
         public virtual tblPunchlistStatu tblPunchlistStatu { get; set; }
         public virtual tblServiceLocation tblServiceLocation { get; set; }
         public virtual tblUser tblUser1 { get; set; }

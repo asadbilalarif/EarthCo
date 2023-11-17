@@ -23,6 +23,7 @@ namespace EarthCo.Models
         public int PunchlistDetailId { get; set; }
         public string PhotoPath { get; set; }
         public string Notes { get; set; }
+        public string Address { get; set; }
         public Nullable<bool> isAfterPhoto { get; set; }
         public string AfterPhotoPath { get; set; }
         public Nullable<bool> isComplete { get; set; }

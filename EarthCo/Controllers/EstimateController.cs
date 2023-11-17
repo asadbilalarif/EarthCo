@@ -164,6 +164,7 @@ namespace EarthCo.Controllers
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;
+                    Data.isDelete = false;
                     DB.tblEstimates.Add(Data);
                     DB.SaveChanges();
 
@@ -273,11 +274,15 @@ namespace EarthCo.Controllers
                     Data.EstimateNotes = Estimate.EstimateData.EstimateNotes;
                     Data.ServiceLocationNotes = Estimate.EstimateData.ServiceLocationNotes;
                     Data.PrivateNotes = Estimate.EstimateData.PrivateNotes;
+                    Data.Tax = Estimate.EstimateData.Tax;
+                    Data.Discount = Estimate.EstimateData.Discount;
+                    Data.Shipping = Estimate.EstimateData.Shipping;
+                    Data.Profit = Estimate.EstimateData.Profit;
                     Data.ProfitPercentage = Estimate.EstimateData.ProfitPercentage;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;
-                    Data.isActive = false;
+                    Data.isDelete = false;
                     DB.Entry(Data);
                     DB.SaveChanges();
 

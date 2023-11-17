@@ -17,10 +17,9 @@ namespace EarthCo.Models
         public string Title { get; set; }
         public int StatusId { get; set; }
         public int CustomerId { get; set; }
-        public int ServiceLocationId { get; set; }
+        public Nullable<int> ServiceLocationId { get; set; }
         public int ContactId { get; set; }
         public int AssignedTo { get; set; }
-        public int ServiceRequestId { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }

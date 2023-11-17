@@ -17,8 +17,8 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tblInvoice()
         {
-            this.tblInvoiceItems = new HashSet<tblInvoiceItem>();
             this.tblInvoiceFiles = new HashSet<tblInvoiceFile>();
+            this.tblInvoiceItems = new HashSet<tblInvoiceItem>();
         }
     
         public int InvoiceId { get; set; }
@@ -34,9 +34,13 @@ namespace EarthCo.Models
         public System.DateTime IssueDate { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
         public string CustomerMessage { get; set; }
-        public string PrivateNotes { get; set; }
+        public string MemoInternal { get; set; }
         public double TotalAmount { get; set; }
         public double BalanceAmount { get; set; }
+        public Nullable<double> Tax { get; set; }
+        public Nullable<double> Discount { get; set; }
+        public Nullable<double> Shipping { get; set; }
+        public Nullable<double> Profit { get; set; }
         public double ProfitPercentage { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
@@ -46,14 +50,14 @@ namespace EarthCo.Models
         public bool isDelete { get; set; }
     
         public virtual tblContact tblContact { get; set; }
-        public virtual tblEstimate tblEstimate { get; set; }
         public virtual tblServiceLocation tblServiceLocation { get; set; }
         public virtual tblTerm tblTerm { get; set; }
         public virtual tblUser tblUser { get; set; }
         public virtual tblUser tblUser1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblInvoiceItem> tblInvoiceItems { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoiceFile> tblInvoiceFiles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblInvoiceItem> tblInvoiceItems { get; set; }
+        public virtual tblEstimate tblEstimate { get; set; }
     }
 }

@@ -26,9 +26,13 @@ namespace EarthCo.Models
         public System.DateTime IssueDate { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
         public string CustomerMessage { get; set; }
-        public string PrivateNotes { get; set; }
+        public string MemoInternal { get; set; }
         public double TotalAmount { get; set; }
         public double BalanceAmount { get; set; }
+        public Nullable<double> Tax { get; set; }
+        public Nullable<double> Discount { get; set; }
+        public Nullable<double> Shipping { get; set; }
+        public Nullable<double> Profit { get; set; }
         public double ProfitPercentage { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }

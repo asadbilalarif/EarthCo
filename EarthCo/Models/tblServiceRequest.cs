@@ -18,7 +18,6 @@ namespace EarthCo.Models
         public tblServiceRequest()
         {
             this.tblSRFiles = new HashSet<tblSRFile>();
-            this.tblPunchlists = new HashSet<tblPunchlist>();
             this.tblSRItems = new HashSet<tblSRItem>();
         }
     
@@ -48,8 +47,6 @@ namespace EarthCo.Models
         public virtual ICollection<tblSRFile> tblSRFiles { get; set; }
         public virtual tblUser tblUser { get; set; }
         public virtual tblUser tblUser1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSRItem> tblSRItems { get; set; }
     }
