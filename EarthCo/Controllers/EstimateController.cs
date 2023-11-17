@@ -275,6 +275,7 @@ namespace EarthCo.Controllers
                     Data.ServiceLocationNotes = Estimate.EstimateData.ServiceLocationNotes;
                     Data.PrivateNotes = Estimate.EstimateData.PrivateNotes;
                     Data.Tax = Estimate.EstimateData.Tax;
+                    Data.Tags = Estimate.EstimateData.Tags;
                     Data.Discount = Estimate.EstimateData.Discount;
                     Data.Shipping = Estimate.EstimateData.Shipping;
                     Data.Profit = Estimate.EstimateData.Profit;
