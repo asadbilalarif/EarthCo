@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -48,11 +49,37 @@ namespace EarthCo.Controllers
                 }
                 return Ok(Result);
             }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
             }
-            
+
         }
 
         [HttpGet]
@@ -91,11 +118,37 @@ namespace EarthCo.Controllers
 
                 return Ok(GetData);
             }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
             }
-            
+
         }
 
         [HttpPost]
@@ -157,9 +210,35 @@ namespace EarthCo.Controllers
                     return Ok(new { Id = Data.IrrigationId, Message = "Irrigation has been Update successfully." });
                 }
             }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
             }
         }
 
@@ -319,9 +398,35 @@ namespace EarthCo.Controllers
                     return Ok(new { Id = ConData.ControllerId, Message = "Controller has been Update successfully." });
                 }
             }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
             }
         }
 
@@ -364,9 +469,35 @@ namespace EarthCo.Controllers
                 DB.SaveChanges();
                 return Ok("Controller has been deleted successfully.");
             }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
             }
         }
 
@@ -409,9 +540,35 @@ namespace EarthCo.Controllers
                 DB.SaveChanges();
                 return Ok("Irrigation has been deleted successfully.");
             }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
             }
         }
     }
