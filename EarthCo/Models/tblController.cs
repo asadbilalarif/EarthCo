@@ -34,12 +34,13 @@ namespace EarthCo.Models
         public string RepairsMade { get; set; }
         public string UpgradesMade { get; set; }
         public string PhotoPath { get; set; }
-        public Nullable<int> IrrigationId { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public int IrrigationId { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
-        public Nullable<bool> isActive { get; set; }
+        public bool isActive { get; set; }
+        public bool isDelete { get; set; }
     
         public virtual tblIrrigation tblIrrigation { get; set; }
     }

@@ -8,6 +8,7 @@ namespace EarthCo.Models
     public class BillList
     {
         public int? BillId { get; set; }
+        public string BillNumber { get; set; }
         public string SupplierName { get; set; }
         public DateTime DueDate { get; set; }
         public Double? Amount { get; set; }

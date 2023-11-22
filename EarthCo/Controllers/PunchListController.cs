@@ -43,6 +43,10 @@ namespace EarthCo.Controllers
                         Temp.DetailDataList = new List<GetPunchlistDetailList>();
                         List<SPGetPunchlistDetailData_Result> DetailTemp = new List<SPGetPunchlistDetailData_Result>();
                         Temp.Data = DB.SPGetPunchlistData(item).FirstOrDefault();
+                        if(Temp.Data==null)
+                        {
+                            continue;
+                        }
                         PunchlistData = DB.tblPunchlists.FirstOrDefault();
                         DetailTemp = DB.SPGetPunchlistDetailData(item).ToList();
                         foreach (SPGetPunchlistDetailData_Result Detailitem in DetailTemp)
@@ -96,13 +100,13 @@ namespace EarthCo.Controllers
             try
             {
                 //DB.Configuration.ProxyCreationEnabled = false;
-                SPGetPunchlistDetailData_Result Data = new SPGetPunchlistDetailData_Result();
+                SPGetPunchlistDetailDataById_Result Data = new SPGetPunchlistDetailDataById_Result();
                 List<SPGetPunchlistItemData_Result> ItemData = new List<SPGetPunchlistItemData_Result>();
-                Data = DB.SPGetPunchlistDetailData(id).FirstOrDefault();
+                Data = DB.SPGetPunchlistDetailDataById(id).FirstOrDefault();
                 ItemData = DB.SPGetPunchlistItemData(Data.PunchlistDetailId).ToList();
 
 
-                GetPunchlistDetailList GetData = new GetPunchlistDetailList();
+                GetPunchlistDetail GetData = new GetPunchlistDetail();
                 if (Data == null)
                 {
                     return NotFound();
@@ -193,6 +197,9 @@ namespace EarthCo.Controllers
                     Data.Title = PunchList.Title;
                     Data.CustomerId = PunchList.CustomerId;
                     Data.ContactId = PunchList.ContactId;
+                    Data.ContactName = PunchList.ContactName;
+                    Data.ContactEmail = PunchList.ContactEmail;
+                    Data.ContactCompany = PunchList.ContactCompany;
                     Data.ServiceLocationId = PunchList.ServiceLocationId;
                     Data.AssignedTo = PunchList.AssignedTo;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));

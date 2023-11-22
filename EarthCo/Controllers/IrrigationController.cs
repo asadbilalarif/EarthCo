@@ -6,11 +6,16 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Text.Json;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace EarthCo.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [Authorize]
     public class IrrigationController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
@@ -20,14 +25,28 @@ namespace EarthCo.Controllers
         {
             try
             {
-                List<tblIrrigation> Data = new List<tblIrrigation>();
-                Data = DB.tblIrrigations.ToList();;
-                if (Data == null || Data.Count==0)
-                {
-                    return NotFound();
-                }
 
-                return Ok(Data);
+                List<tblIrrigation> Data = new List<tblIrrigation>();
+                List<IrrigationList> Result = new List<IrrigationList>();
+                Data = DB.tblIrrigations.Where(x => x.isDelete != true).ToList();
+
+                if (Data == null || Data.Count == 0)
+                {
+                    return NotFound(); // 404 - No data found
+                }
+                else
+                {
+                    foreach (tblIrrigation item in Data)
+                    {
+                        IrrigationList Temp = new IrrigationList();
+                        Temp.IrrigationId = item.IrrigationId;
+                        Temp.CustomerName = item.tblUser.FirstName+" "+item.tblUser.LastName;
+                        Temp.CreatedDate = item.CreatedDate;
+                        Temp.ControllerNumbers = item.tblControllers.Select(s=>s.SerialNumber).ToList();
+                        Result.Add(Temp);
+                    }
+                }
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -41,15 +60,36 @@ namespace EarthCo.Controllers
         {
             try
             {
-                //DB.Configuration.ProxyCreationEnabled = false;
-                tblIrrigation Data = new tblIrrigation();
-                Data = DB.tblIrrigations.Where(x => x.IrrigationId == id).FirstOrDefault();
+
+                SPGetIrrigationData_Result Data = new SPGetIrrigationData_Result();
+                List<SPGetIrrigationControllerData_Result> ControllerData = new List<SPGetIrrigationControllerData_Result>();
+                Data = DB.SPGetIrrigationData(id).FirstOrDefault();
+                ControllerData = DB.SPGetIrrigationControllerData(id).ToList();
+
+                GetIrrigationData GetData = new GetIrrigationData();
+
                 if (Data == null)
                 {
-                    return NotFound();
+                    //DB.Configuration.ProxyCreationEnabled = false;
+                    //Data = new tblInvoice();
+                    //Data.tblInvoiceItems = null;
+                    //Data.tblInvoices = null;
+                    //Data.tblEstimate = null;
+                    //Data.tblInvoices = null;
+                    //Data.tblInvoiceFiles = null;
+                    //Data.tblUser = null;
+                    //string userJson = JsonConvert.SerializeObject(Data);
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    //responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
+                    return ResponseMessage(responseMessage);
+                }
+                else
+                {
+                    GetData.IrrigationData = Data;
+                    GetData.ControllerData = ControllerData;
                 }
 
-                return Ok(Data);
+                return Ok(GetData);
             }
             catch (Exception ex)
             {
@@ -59,7 +99,7 @@ namespace EarthCo.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult AddIrrigation([FromBody] IrrigationControllerClass ParaData)
+        public IHttpActionResult AddIrrigation([FromBody] tblIrrigation ParaData)
         {
             tblIrrigation Data = new tblIrrigation();
             try
@@ -67,72 +107,19 @@ namespace EarthCo.Controllers
                 //HttpCookie cookieObj = Request.Cookies["User"];
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
-                int UserId = 2;
-                if (ParaData.Irrigation.IrrigationId == 0)
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                if (ParaData.IrrigationId == 0)
                 {
-                    Data = ParaData.Irrigation;
+                    Data = ParaData;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.CreatedBy = UserId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = ParaData.Irrigation.isActive;
+                    Data.isActive = true;
+                    Data.isDelete = false;
                     DB.tblIrrigations.Add(Data);
                     DB.SaveChanges();
-
-                    if (ParaData.Controller != null && ParaData.Controller.Count != 0)
-                    {
-                        tblController ConData = null;
-
-                        foreach (var item in ParaData.Controller)
-                        {
-                            ConData = new tblController();
-                            ConData.MakeAndModel = item.MakeAndModel;
-                            ConData.SerialNumber = item.SerialNumber;
-                            ConData.isSatelliteBased = item.isSatelliteBased;
-                            ConData.TypeofWater = item.TypeofWater;
-                            ConData.MeterNumber = item.MeterNumber;
-                            ConData.MeterSize = item.MeterSize;
-                            ConData.NumberofStation = item.NumberofStation;
-                            ConData.NumberofValves = item.NumberofValves;
-                            ConData.NumberofBrokenMainLines = item.NumberofBrokenMainLines;
-                            ConData.TypeofValves = item.TypeofValves;
-                            ConData.LeakingValves = item.LeakingValves;
-                            ConData.MalfunctioningValves = item.MalfunctioningValves;
-                            ConData.NumberofBrokenLateralLines = item.NumberofBrokenLateralLines;
-                            ConData.NumberofBrokenHeads = item.NumberofBrokenHeads;
-                            ConData.RepairsMade = item.RepairsMade;
-                            ConData.UpgradesMade = item.UpgradesMade;
-                            ConData.IrrigationId = item.IrrigationId;
-                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.CreatedBy = UserId;
-                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.EditBy = UserId;
-                            ConData.isActive = item.isActive;
-
-                            string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
-                            if (!Directory.Exists(folder))
-                            {
-                                Directory.CreateDirectory(folder);
-                            }
-                            if (item.ControllerPhoto != null)
-                            {
-                                string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("ControllerPhoto" + item.ControllerId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.ControllerPhoto.FileName)));
-                                item.ControllerPhoto.SaveAs(path);
-                                path = Path.Combine("\\Uploading", Path.GetFileName("ControllerPhoto" + item.ControllerId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.ControllerPhoto.FileName)));
-                                ConData.ControllerPhotoPath = path;
-                            }
-                            if (item.Photo != null)
-                            {
-                                string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("Photo" + item.ControllerId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.Photo.FileName)));
-                                item.Photo.SaveAs(path);
-                                path = Path.Combine("\\Uploading", Path.GetFileName("Photo" + item.Photo.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.Photo.FileName)));
-                                ConData.PhotoPath = path;
-                            }
-
-                            DB.tblControllers.Add(ConData);
-                            DB.SaveChanges();
-                        }
-                    }
 
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
@@ -140,86 +127,25 @@ namespace EarthCo.Controllers
                     LogData.CreatedDate = DateTime.Now;
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
-                    return Ok("Irrigation has been added successfully.");
+                    return Ok(new { Id = Data.IrrigationId, Message = "Irrigation has been added successfully." });
                 }
                 else
                 {
-                    Data = DB.tblIrrigations.Select(r => r).Where(x => x.IrrigationId == ParaData.Irrigation.IrrigationId).FirstOrDefault();
+                    Data = DB.tblIrrigations.Select(r => r).Where(x => x.IrrigationId == ParaData.IrrigationId).FirstOrDefault();
                     if (Data == null)
                     {
                         return NotFound(); // Customer not found.
                     }
 
 
-                    Data.IrrigationNumber = ParaData.Irrigation.IrrigationNumber;
-                    Data.CustomerId = ParaData.Irrigation.CustomerId;
+                    Data.IrrigationNumber = ParaData.IrrigationNumber;
+                    Data.CustomerId = ParaData.CustomerId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
-                    Data.isActive = ParaData.Irrigation.isActive;
+                    Data.isActive = true;
+                    Data.isDelete = false;
                     DB.Entry(Data);
                     DB.SaveChanges();
-
-                    List<tblController> ConList = DB.tblControllers.Where(x => x.IrrigationId == ParaData.Irrigation.IrrigationId).ToList();
-                    if (ConList != null && ConList.Count != 0)
-                    {
-                        DB.tblControllers.RemoveRange(ConList);
-                        DB.SaveChanges();
-                    }
-
-                    if (ParaData.Controller != null && ParaData.Controller.Count != 0)
-                    {
-                        tblController ConData = null;
-
-                        foreach (var item in ParaData.Controller)
-                        {
-                            ConData = new tblController();
-                            ConData.MakeAndModel = item.MakeAndModel;
-                            ConData.SerialNumber = item.SerialNumber;
-                            ConData.isSatelliteBased = item.isSatelliteBased;
-                            ConData.TypeofWater = item.TypeofWater;
-                            ConData.MeterNumber = item.MeterNumber;
-                            ConData.MeterSize = item.MeterSize;
-                            ConData.NumberofStation = item.NumberofStation;
-                            ConData.NumberofValves = item.NumberofValves;
-                            ConData.NumberofBrokenMainLines = item.NumberofBrokenMainLines;
-                            ConData.TypeofValves = item.TypeofValves;
-                            ConData.LeakingValves = item.LeakingValves;
-                            ConData.MalfunctioningValves = item.MalfunctioningValves;
-                            ConData.NumberofBrokenLateralLines = item.NumberofBrokenLateralLines;
-                            ConData.NumberofBrokenHeads = item.NumberofBrokenHeads;
-                            ConData.RepairsMade = item.RepairsMade;
-                            ConData.UpgradesMade = item.UpgradesMade;
-                            ConData.IrrigationId = item.IrrigationId;
-                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.CreatedBy = UserId;
-                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                            ConData.EditBy = UserId;
-                            ConData.isActive = item.isActive;
-
-                            string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
-                            if (!Directory.Exists(folder))
-                            {
-                                Directory.CreateDirectory(folder);
-                            }
-                            if (item.ControllerPhoto != null)
-                            {
-                                string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("ControllerPhoto" + item.ControllerId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.ControllerPhoto.FileName)));
-                                item.ControllerPhoto.SaveAs(path);
-                                path = Path.Combine("\\Uploading", Path.GetFileName("ControllerPhoto" + item.ControllerId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.ControllerPhoto.FileName)));
-                                ConData.ControllerPhotoPath = path;
-                            }
-                            if (item.Photo != null)
-                            {
-                                string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("Photo" + item.ControllerId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.Photo.FileName)));
-                                item.Photo.SaveAs(path);
-                                path = Path.Combine("\\Uploading", Path.GetFileName("Photo" + item.Photo.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.Photo.FileName)));
-                                ConData.PhotoPath = path;
-                            }
-
-                            DB.tblControllers.Add(ConData);
-                            DB.SaveChanges();
-                        }
-                    }
 
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
@@ -228,8 +154,215 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
 
-                    return Ok("Irrigation has been Update successfully.");
+                    return Ok(new { Id = Data.IrrigationId, Message = "Irrigation has been Update successfully." });
                 }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult AddController()
+        {
+            try
+            {
+                var Data1 = HttpContext.Current.Request.Params.Get("IrrigationControllerData");
+                HttpPostedFile file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+
+                ControllerClass ParaData = new ControllerClass();
+                //Punchlist.Files = new HttpPostedFile();
+                ParaData = JsonSerializer.Deserialize<ControllerClass>(Data1);
+                if (HttpContext.Current.Request.Files["Photo"] != null)
+                {
+                    ParaData.Photo = HttpContext.Current.Request.Files["Photo"];
+                }
+                if (HttpContext.Current.Request.Files["ControllerPhoto"] != null)
+                {
+                    ParaData.ControllerPhoto = HttpContext.Current.Request.Files["ControllerPhoto"];
+                }
+
+
+
+
+
+                //HttpCookie cookieObj = Request.Cookies["User"];
+                //int UserId = Int32.Parse(cookieObj["UserId"]);
+                //int RoleId = Int32.Parse(cookieObj["RoleId"]);
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                if (ParaData.ControllerId == 0)
+                {
+                    tblController ConData = null;
+                        ConData = new tblController();
+                        ConData.MakeAndModel = ParaData.MakeAndModel;
+                        ConData.SerialNumber = ParaData.SerialNumber;
+                        ConData.isSatelliteBased = ParaData.isSatelliteBased;
+                        ConData.TypeofWater = ParaData.TypeofWater;
+                        ConData.MeterNumber = ParaData.MeterNumber;
+                        ConData.MeterSize = ParaData.MeterSize;
+                        ConData.NumberofStation = ParaData.NumberofStation;
+                        ConData.NumberofValves = ParaData.NumberofValves;
+                        ConData.NumberofBrokenMainLines = ParaData.NumberofBrokenMainLines;
+                        ConData.TypeofValves = ParaData.TypeofValves;
+                        ConData.LeakingValves = ParaData.LeakingValves;
+                        ConData.MalfunctioningValves = ParaData.MalfunctioningValves;
+                        ConData.NumberofBrokenLateralLines = ParaData.NumberofBrokenLateralLines;
+                        ConData.NumberofBrokenHeads = ParaData.NumberofBrokenHeads;
+                        ConData.RepairsMade = ParaData.RepairsMade;
+                        ConData.UpgradesMade = ParaData.UpgradesMade;
+                        ConData.IrrigationId = (int)ParaData.IrrigationId;
+                        ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                        ConData.CreatedBy = UserId;
+                        ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                        ConData.EditBy = UserId;
+                        ConData.isActive = true;
+                        ConData.isDelete = false;
+
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                        if (!Directory.Exists(folder))
+                        {
+                            Directory.CreateDirectory(folder);
+                        }
+                        if (ParaData.ControllerPhoto != null)
+                        {
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
+                        ParaData.ControllerPhoto.SaveAs(path);
+                            path = Path.Combine("\\Uploading", Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
+                            ConData.ControllerPhotoPath = path;
+                        }
+                        if (ParaData.Photo != null)
+                        {
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.Photo.FileName)));
+                        ParaData.Photo.SaveAs(path);
+                            path = Path.Combine("\\Uploading", Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.Photo.FileName)));
+                            ConData.PhotoPath = path;
+                        }
+
+                        DB.tblControllers.Add(ConData);
+                        DB.SaveChanges();
+
+                        tblLog LogData = new tblLog();
+                    LogData.UserId = UserId;
+                    LogData.Action = "Add Controller";
+                    LogData.CreatedDate = DateTime.Now;
+                    DB.tblLogs.Add(LogData);
+                    DB.SaveChanges();
+                    return Ok(new { Id = ConData.ControllerId, Message = "Controller has been added successfully." });
+                }
+                else
+                {
+                    tblController ConData = new tblController();
+                    ConData = DB.tblControllers.Select(r => r).Where(x => x.ControllerId == ParaData.ControllerId).FirstOrDefault();
+                    if (ConData == null)
+                    {
+                        return NotFound(); // Customer not found.
+                    }
+
+
+                    
+                    ConData.MakeAndModel = ParaData.MakeAndModel;
+                    ConData.SerialNumber = ParaData.SerialNumber;
+                    ConData.isSatelliteBased = ParaData.isSatelliteBased;
+                    ConData.TypeofWater = ParaData.TypeofWater;
+                    ConData.MeterNumber = ParaData.MeterNumber;
+                    ConData.MeterSize = ParaData.MeterSize;
+                    ConData.NumberofStation = ParaData.NumberofStation;
+                    ConData.NumberofValves = ParaData.NumberofValves;
+                    ConData.NumberofBrokenMainLines = ParaData.NumberofBrokenMainLines;
+                    ConData.TypeofValves = ParaData.TypeofValves;
+                    ConData.LeakingValves = ParaData.LeakingValves;
+                    ConData.MalfunctioningValves = ParaData.MalfunctioningValves;
+                    ConData.NumberofBrokenLateralLines = ParaData.NumberofBrokenLateralLines;
+                    ConData.NumberofBrokenHeads = ParaData.NumberofBrokenHeads;
+                    ConData.RepairsMade = ParaData.RepairsMade;
+                    ConData.UpgradesMade = ParaData.UpgradesMade;
+                    ConData.IrrigationId = (int)ParaData.IrrigationId;
+                    ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    ConData.CreatedBy = UserId;
+                    ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    ConData.EditBy = UserId;
+                    ConData.isActive = true;
+                    ConData.isDelete = false;
+
+                    string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                    if (!Directory.Exists(folder))
+                    {
+                        Directory.CreateDirectory(folder);
+                    }
+                    if (ParaData.ControllerPhoto != null)
+                    {
+                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
+                        ParaData.ControllerPhoto.SaveAs(path);
+                        path = Path.Combine("\\Uploading", Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
+                        ConData.ControllerPhotoPath = path;
+                    }
+                    if (ParaData.Photo != null)
+                    {
+                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.Photo.FileName)));
+                        ParaData.Photo.SaveAs(path);
+                        path = Path.Combine("\\Uploading", Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.Photo.FileName)));
+                        ConData.PhotoPath = path;
+                    }
+
+                    DB.Entry(ConData);
+                    DB.SaveChanges();
+
+                    tblLog LogData = new tblLog();
+                    LogData.UserId = UserId;
+                    LogData.Action = "Update Controller";
+                    LogData.CreatedDate = DateTime.Now;
+                    DB.tblLogs.Add(LogData);
+                    DB.SaveChanges();
+
+                    return Ok(new { Id = ConData.ControllerId, Message = "Controller has been Update successfully." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult DeleteController(int id)
+        {
+            tblController Data = new tblController();
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+            //int CUserId = 2;
+            try
+            {
+                Data = DB.tblControllers.Select(r => r).Where(x => x.ControllerId == id).FirstOrDefault();
+
+                if (Data == null)
+                {
+                    return NotFound(); // 404 - Customer not found
+                }
+
+                //List<tblController> ConList = DB.tblControllers.Where(x => x.IrrigationId == id).ToList();
+                //if (ConList != null && ConList.Count != 0)
+                //{
+                //    DB.tblControllers.RemoveRange(ConList);
+                //    DB.SaveChanges();
+                //}
+
+
+
+                Data.isDelete = true;
+                Data.EditBy = UserId;
+                Data.EditDate = DateTime.Now;
+                DB.Entry(Data);
+                DB.SaveChanges();
+
+                tblLog LogData = new tblLog();
+                LogData.UserId = UserId;
+                LogData.Action = "Delete Controller";
+                LogData.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(LogData);
+                DB.SaveChanges();
+                return Ok("Controller has been deleted successfully.");
             }
             catch (Exception ex)
             {
@@ -241,9 +374,9 @@ namespace EarthCo.Controllers
         public IHttpActionResult DeleteIrrigation(int id)
         {
             tblIrrigation Data = new tblIrrigation();
-            //HttpCookie cookieObj = Request.Cookies["User"];
-            //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int CUserId = 2;
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+            //int CUserId = 2;
             try
             {
                 Data = DB.tblIrrigations.Select(r => r).Where(x => x.IrrigationId == id).FirstOrDefault();
@@ -253,20 +386,23 @@ namespace EarthCo.Controllers
                     return NotFound(); // 404 - Customer not found
                 }
 
-                List<tblController> ConList = DB.tblControllers.Where(x => x.IrrigationId == id).ToList();
-                if (ConList != null && ConList.Count != 0)
-                {
-                    DB.tblControllers.RemoveRange(ConList);
-                    DB.SaveChanges();
-                }
+                //List<tblController> ConList = DB.tblControllers.Where(x => x.IrrigationId == id).ToList();
+                //if (ConList != null && ConList.Count != 0)
+                //{
+                //    DB.tblControllers.RemoveRange(ConList);
+                //    DB.SaveChanges();
+                //}
 
 
-                
-                DB.Entry(Data).State = EntityState.Deleted;
+
+                Data.isDelete = true;
+                Data.EditBy = UserId;
+                Data.EditDate = DateTime.Now;
+                DB.Entry(Data);
                 DB.SaveChanges();
 
                 tblLog LogData = new tblLog();
-                LogData.UserId = CUserId;
+                LogData.UserId = UserId;
                 LogData.Action = "Delete Irrigation";
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);

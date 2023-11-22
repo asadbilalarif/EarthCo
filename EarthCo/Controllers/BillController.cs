@@ -37,6 +37,7 @@ namespace EarthCo.Controllers
                     {
                         BillList Temp = new BillList();
                         Temp.BillId = item.BillId;
+                        Temp.BillNumber = item.BillNumber;
                         Temp.SupplierName = item.tblUser.FirstName + " " + item.tblUser.LastName;
                         Temp.DueDate = (DateTime)item.DueDate;
                         Temp.Amount = item.Amount;

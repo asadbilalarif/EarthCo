@@ -33,6 +33,9 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
+        public string ContactName { get; set; }
+        public string ContactCompany { get; set; }
+        public string ContactEmail { get; set; }
     
         public virtual tblContact tblContact { get; set; }
         public virtual tblUser tblUser { get; set; }

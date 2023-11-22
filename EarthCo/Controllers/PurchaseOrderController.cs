@@ -39,6 +39,7 @@ namespace EarthCo.Controllers
                     {
                         PurchaseOrderList Temp = new PurchaseOrderList();
                         Temp.PurchaseOrderId = item.PurchaseOrderId;
+                        Temp.PurchaseOrderNumber = item.PurchaseOrderNumber;
                         Temp.SupplierName = item.tblUser.FirstName + " " + item.tblUser.LastName;
                         Temp.Date =(DateTime) item.Date;
                         Temp.Status =item.tblPurchaseOrderStatu.Status;

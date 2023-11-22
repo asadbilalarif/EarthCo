@@ -28,7 +28,6 @@ namespace EarthCo.Models
         }
     
         public virtual DbSet<tblAccessLevel> tblAccessLevels { get; set; }
-        public virtual DbSet<tblController> tblControllers { get; set; }
         public virtual DbSet<tblCustomer> tblCustomers { get; set; }
         public virtual DbSet<tblEmployee> tblEmployees { get; set; }
         public virtual DbSet<tblLog> tblLogs { get; set; }
@@ -37,7 +36,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblSRStatu> tblSRStatus { get; set; }
         public virtual DbSet<tblSRType> tblSRTypes { get; set; }
         public virtual DbSet<tblSetting> tblSettings { get; set; }
-        public virtual DbSet<tblIrrigation> tblIrrigations { get; set; }
         public virtual DbSet<tblWeeklyReport> tblWeeklyReports { get; set; }
         public virtual DbSet<tblWeeklyReportFile> tblWeeklyReportFiles { get; set; }
         public virtual DbSet<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
@@ -69,8 +67,10 @@ namespace EarthCo.Models
         public virtual DbSet<tblInvoiceFile> tblInvoiceFiles { get; set; }
         public virtual DbSet<tblInvoice> tblInvoices { get; set; }
         public virtual DbSet<tblEstimate> tblEstimates { get; set; }
-        public virtual DbSet<tblPunchlist> tblPunchlists { get; set; }
         public virtual DbSet<tblPunchlistDetail> tblPunchlistDetails { get; set; }
+        public virtual DbSet<tblController> tblControllers { get; set; }
+        public virtual DbSet<tblIrrigation> tblIrrigations { get; set; }
+        public virtual DbSet<tblPunchlist> tblPunchlists { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {
@@ -252,15 +252,6 @@ namespace EarthCo.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateData_Result>("SPGetEstimateData", iDParameter);
         }
     
-        public virtual ObjectResult<SPGetPunchlistData_Result> SPGetPunchlistData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPunchlistData_Result>("SPGetPunchlistData", iDParameter);
-        }
-    
         public virtual ObjectResult<SPGetPunchlistDetailData_Result> SPGetPunchlistDetailData(Nullable<int> iD)
         {
             var iDParameter = iD.HasValue ?
@@ -268,6 +259,42 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPunchlistDetailData_Result>("SPGetPunchlistDetailData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetIrrigationControllerData_Result> SPGetIrrigationControllerData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetIrrigationControllerData_Result>("SPGetIrrigationControllerData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetIrrigationData_Result> SPGetIrrigationData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetIrrigationData_Result>("SPGetIrrigationData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetPunchlistDetailDataById_Result> SPGetPunchlistDetailDataById(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPunchlistDetailDataById_Result>("SPGetPunchlistDetailDataById", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetPunchlistData_Result> SPGetPunchlistData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPunchlistData_Result>("SPGetPunchlistData", iDParameter);
         }
     }
 }

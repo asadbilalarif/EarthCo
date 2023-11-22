@@ -31,6 +31,7 @@ namespace EarthCo.Models
             this.tblEstimates = new HashSet<tblEstimate>();
             this.tblEstimates1 = new HashSet<tblEstimate>();
             this.tblEstimates2 = new HashSet<tblEstimate>();
+            this.tblIrrigations = new HashSet<tblIrrigation>();
             this.tblPunchlists = new HashSet<tblPunchlist>();
             this.tblPunchlists1 = new HashSet<tblPunchlist>();
         }
@@ -96,6 +97,8 @@ namespace EarthCo.Models
         public virtual ICollection<tblEstimate> tblEstimates1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimate> tblEstimates2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblIrrigation> tblIrrigations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

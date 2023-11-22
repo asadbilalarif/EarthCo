@@ -431,6 +431,8 @@
     <Compile Include="Models\GetEstimateData.cs" />
     <Compile Include="Models\GetEstimateItem.cs" />
     <Compile Include="Models\GetInvoiceData.cs" />
+    <Compile Include="Models\GetIrrigationData.cs" />
+    <Compile Include="Models\GetPunchlistDetail.cs" />
     <Compile Include="Models\GetPunchlistDetailList.cs" />
     <Compile Include="Models\GetPunchlistList.cs" />
     <Compile Include="Models\GetPurchaseOrderData.cs" />
@@ -442,6 +444,7 @@
     <Compile Include="Models\InvoiceFile.cs" />
     <Compile Include="Models\InvoiceList.cs" />
     <Compile Include="Models\IrrigationControllerClass.cs" />
+    <Compile Include="Models\IrrigationList.cs" />
     <Compile Include="Models\MenuAccess.cs" />
     <Compile Include="Models\Model.Context.cs">
       <AutoGen>True</AutoGen>
@@ -498,7 +501,16 @@
     <Compile Include="Models\SPGetInvoiceItemData_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SPGetIrrigationControllerData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetIrrigationData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SPGetPunchlistData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetPunchlistDetailDataById_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SPGetPunchlistDetailData_Result.cs">
