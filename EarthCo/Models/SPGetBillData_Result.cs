@@ -19,7 +19,7 @@ namespace EarthCo.Models
         public string Tags { get; set; }
         public System.DateTime BillDate { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
-        public int PurchaseOrderId { get; set; }
+        public Nullable<int> PurchaseOrderId { get; set; }
         public string PurchaseOrderNumber { get; set; }
         public Nullable<int> TermId { get; set; }
         public string Memo { get; set; }

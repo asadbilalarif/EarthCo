@@ -155,6 +155,7 @@ namespace EarthCo.Controllers
         public IHttpActionResult AddIrrigation([FromBody] tblIrrigation ParaData)
         {
             tblIrrigation Data = new tblIrrigation();
+            tblIrrigation CheckData = new tblIrrigation();
             try
             {
                 //HttpCookie cookieObj = Request.Cookies["User"];
@@ -164,6 +165,16 @@ namespace EarthCo.Controllers
                 int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
                 if (ParaData.IrrigationId == 0)
                 {
+
+                    CheckData = DB.tblIrrigations.Where(x => x.IrrigationNumber == ParaData.IrrigationNumber && x.IrrigationNumber != null && x.IrrigationNumber != "").FirstOrDefault();
+
+                    if (CheckData != null)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Irrigation number already exsist.");
+                        return ResponseMessage(responseMessage);
+                    }
+
                     Data = ParaData;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.CreatedBy = UserId;
@@ -190,6 +201,14 @@ namespace EarthCo.Controllers
                         return NotFound(); // Customer not found.
                     }
 
+
+                    CheckData = DB.tblIrrigations.Where(x => x.IrrigationNumber == ParaData.IrrigationNumber && x.IrrigationNumber != null && x.IrrigationNumber != "").FirstOrDefault();
+                    if (CheckData != null && CheckData.IrrigationId != Data.IrrigationId)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Irrigation number already exsist.");
+                        return ResponseMessage(responseMessage);
+                    }
 
                     Data.IrrigationNumber = ParaData.IrrigationNumber;
                     Data.CustomerId = ParaData.CustomerId;
@@ -277,6 +296,7 @@ namespace EarthCo.Controllers
                         ConData = new tblController();
                         ConData.MakeAndModel = ParaData.MakeAndModel;
                         ConData.SerialNumber = ParaData.SerialNumber;
+                        ConData.LoacationClosestAddress = ParaData.LoacationClosestAddress;
                         ConData.isSatelliteBased = ParaData.isSatelliteBased;
                         ConData.TypeofWater = ParaData.TypeofWater;
                         ConData.MeterNumber = ParaData.MeterNumber;

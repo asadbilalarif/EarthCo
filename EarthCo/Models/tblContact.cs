@@ -17,9 +17,9 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tblContact()
         {
-            this.tblInvoices = new HashSet<tblInvoice>();
-            this.tblEstimates = new HashSet<tblEstimate>();
             this.tblPunchlists = new HashSet<tblPunchlist>();
+            this.tblEstimates = new HashSet<tblEstimate>();
+            this.tblInvoices = new HashSet<tblInvoice>();
         }
     
         public int ContactId { get; set; }
@@ -44,12 +44,11 @@ namespace EarthCo.Models
         public Nullable<bool> isPrimary { get; set; }
         public Nullable<bool> isDelete { get; set; }
     
-        public virtual tblUser tblUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
+        public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimate> tblEstimates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
+        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
     }
 }

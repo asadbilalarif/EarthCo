@@ -224,14 +224,11 @@ namespace EarthCo.Controllers
                 ServiceRequest.Files.Add(HttpContext.Current.Request.Files[i]); ;
             }
 
-
-            
-
-
             tblServiceRequest Data = new tblServiceRequest();
+            tblServiceRequest CheckData = new tblServiceRequest();
             try
             {
-            ServiceRequest.ServiceRequestData = JsonSerializer.Deserialize<tblServiceRequest>(Data1);
+                ServiceRequest.ServiceRequestData = JsonSerializer.Deserialize<tblServiceRequest>(Data1);
                 //HttpCookie cookieObj = Request.Cookies["User"];
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
@@ -240,6 +237,15 @@ namespace EarthCo.Controllers
                 int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
                 if (ServiceRequest.ServiceRequestData.ServiceRequestId == 0)
                 {
+
+                    CheckData = DB.tblServiceRequests.Where(x => x.ServiceRequestNumber == ServiceRequest.ServiceRequestData.ServiceRequestNumber && x.ServiceRequestNumber != null && x.ServiceRequestNumber != "").FirstOrDefault();
+
+                    if (CheckData != null)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Service Request number already exsist.");
+                        return ResponseMessage(responseMessage);
+                    }
 
                     if (ServiceRequest.ServiceRequestData.tblSRItems != null && ServiceRequest.ServiceRequestData.tblSRItems.Count != 0)
                     {
@@ -331,6 +337,14 @@ namespace EarthCo.Controllers
                     if (Data == null)
                     {
                         return NotFound(); // Customer not found.
+                    }
+
+                    CheckData = DB.tblServiceRequests.Where(x => x.ServiceRequestNumber == ServiceRequest.ServiceRequestData.ServiceRequestNumber && x.ServiceRequestNumber != null && x.ServiceRequestNumber != "").FirstOrDefault();
+                    if (CheckData != null && CheckData.ServiceRequestId != Data.ServiceRequestId)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("ServiceRequest number already exsist.");
+                        return ResponseMessage(responseMessage);
                     }
 
                     List<tblSRItem> ConList = DB.tblSRItems.Where(x => x.SRId == ServiceRequest.ServiceRequestData.ServiceRequestId).ToList();

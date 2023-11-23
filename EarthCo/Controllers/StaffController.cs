@@ -102,6 +102,7 @@ namespace EarthCo.Controllers
                 else
                 {
                     GetData.Data = Data;
+                    GetData.Data.Password = "";
                 }
 
                 return Ok(GetData); // 200 - Successful response with data

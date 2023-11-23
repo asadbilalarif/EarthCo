@@ -26,8 +26,10 @@ namespace EarthCo.Models
         public Nullable<int> ServiceLocationId { get; set; }
         public Nullable<int> ContactId { get; set; }
         public string InvoiceNumber { get; set; }
-        public int EstimateId { get; set; }
+        public Nullable<int> EstimateId { get; set; }
         public string EstimateNumber { get; set; }
+        public Nullable<int> BillId { get; set; }
+        public string BillNumber { get; set; }
         public string Tags { get; set; }
         public Nullable<int> TermId { get; set; }
         public Nullable<int> AssignTo { get; set; }
@@ -50,14 +52,14 @@ namespace EarthCo.Models
         public bool isDelete { get; set; }
     
         public virtual tblContact tblContact { get; set; }
+        public virtual tblEstimate tblEstimate { get; set; }
         public virtual tblServiceLocation tblServiceLocation { get; set; }
         public virtual tblTerm tblTerm { get; set; }
-        public virtual tblUser tblUser { get; set; }
-        public virtual tblUser tblUser1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoiceFile> tblInvoiceFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoiceItem> tblInvoiceItems { get; set; }
-        public virtual tblEstimate tblEstimate { get; set; }
+        public virtual tblUser tblUser { get; set; }
+        public virtual tblUser tblUser1 { get; set; }
     }
 }

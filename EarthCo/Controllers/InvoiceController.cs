@@ -172,6 +172,7 @@ namespace EarthCo.Controllers
             Invoice.InvoiceData = JsonSerializer.Deserialize<tblInvoice>(Data1);
 
             tblInvoice Data = new tblInvoice();
+            tblInvoice CheckData = new tblInvoice();
             try
             {
                 //HttpCookie cookieObj = Request.Cookies["User"];
@@ -183,6 +184,15 @@ namespace EarthCo.Controllers
 
                 if (Invoice.InvoiceData.InvoiceId == 0)
                 {
+
+                    CheckData = DB.tblInvoices.Where(x => x.InvoiceNumber == Invoice.InvoiceData.InvoiceNumber && x.InvoiceNumber != null && x.InvoiceNumber != "").FirstOrDefault();
+
+                    if (CheckData != null)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Invoice number already exsist.");
+                        return ResponseMessage(responseMessage);
+                    }
 
                     if (Invoice.InvoiceData.tblInvoiceItems != null && Invoice.InvoiceData.tblInvoiceItems.Count != 0)
                     {
@@ -274,6 +284,15 @@ namespace EarthCo.Controllers
                     if (Data == null)
                     {
                         return NotFound(); // Customer not found.
+                    }
+
+
+                    CheckData = DB.tblInvoices.Where(x => x.InvoiceNumber == Invoice.InvoiceData.InvoiceNumber && x.InvoiceNumber != null && x.InvoiceNumber != "").FirstOrDefault();
+                    if (CheckData != null && CheckData.InvoiceId != Data.InvoiceId)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Invoice number already exsist.");
+                        return ResponseMessage(responseMessage);
                     }
 
                     List<tblInvoiceItem> ConList = DB.tblInvoiceItems.Where(x => x.InvoiceId == Invoice.InvoiceData.InvoiceId).ToList();

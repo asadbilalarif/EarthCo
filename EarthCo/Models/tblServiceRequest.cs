@@ -45,9 +45,9 @@ namespace EarthCo.Models
         public virtual tblSRType tblSRType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSRFile> tblSRFiles { get; set; }
-        public virtual tblUser tblUser { get; set; }
-        public virtual tblUser tblUser1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSRItem> tblSRItems { get; set; }
+        public virtual tblUser tblUser { get; set; }
+        public virtual tblUser tblUser1 { get; set; }
     }
 }

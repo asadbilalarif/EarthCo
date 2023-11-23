@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Web;
 using System.Web.Http;
@@ -178,14 +179,25 @@ namespace EarthCo.Controllers
             Estimate.EstimateData = JsonSerializer.Deserialize<tblEstimate>(Data1);
 
             tblEstimate Data = new tblEstimate();
+            tblEstimate CheckData = new tblEstimate();
             try
             {
                 //HttpCookie cookieObj = Request.Cookies["User"];
                 //int UserId = Int32.Parse(cookieObj["UserId"]);
                 //int RoleId = Int32.Parse(cookieObj["RoleId"]);
-                int UserId = 2;
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
                 if (Estimate.EstimateData.EstimateId == 0)
                 {
+
+                    CheckData = DB.tblEstimates.Where(x => x.EstimateNumber == Estimate.EstimateData.EstimateNumber && x.EstimateNumber != null && x.EstimateNumber != "").FirstOrDefault();
+
+                    if (CheckData != null)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Estimate number already exsist.");
+                        return ResponseMessage(responseMessage);
+                    }
 
                     if (Estimate.EstimateData.tblEstimateItems != null && Estimate.EstimateData.tblEstimateItems.Count != 0)
                     {
@@ -273,11 +285,22 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
+
                     Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == Estimate.EstimateData.EstimateId).FirstOrDefault();
                     if (Data == null)
                     {
                         return NotFound(); // Customer not found.
                     }
+
+                    CheckData = DB.tblEstimates.Where(x => x.EstimateNumber == Estimate.EstimateData.EstimateNumber && x.EstimateNumber != null && x.EstimateNumber != "").FirstOrDefault();
+                    if (CheckData != null && CheckData.EstimateId!=Data.EstimateId)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Estimate number already exsist.");
+                        return ResponseMessage(responseMessage);
+                    }
+
+
 
                     List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == Estimate.EstimateData.EstimateId).ToList();
                     if (ConList != null && ConList.Count != 0)
@@ -441,7 +464,8 @@ namespace EarthCo.Controllers
             tblEstimate Data = new tblEstimate();
             //HttpCookie cookieObj = Request.Cookies["User"];
             //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int UserId = 2;
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
             try
             {
                 Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == id).FirstOrDefault();
@@ -467,6 +491,7 @@ namespace EarthCo.Controllers
 
                 Data.isDelete = true;
                 Data.EditBy = UserId;
+                Data.EditDate = DateTime.Now;
                 DB.Entry(Data);
                 DB.SaveChanges();
 
@@ -516,19 +541,22 @@ namespace EarthCo.Controllers
             tblEstimate Data = new tblEstimate();
             //HttpCookie cookieObj = Request.Cookies["User"];
             //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int CUserId = 2;
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
             try
             {
                 foreach (var item in ParaData.id)
                 {
                     Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == item).FirstOrDefault();
                     Data.EstimateStatusId = ParaData.StatusId;
+                    Data.EditBy = UserId;
+                    Data.EditDate = DateTime.Now;
                     DB.Entry(Data);
                     DB.SaveChanges();
                 }
 
                 tblLog LogData = new tblLog();
-                LogData.UserId = CUserId;
+                LogData.UserId = UserId;
                 LogData.Action = "Update All Selected Estimate status";
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
@@ -574,24 +602,28 @@ namespace EarthCo.Controllers
             tblEstimate Data = new tblEstimate();
             //HttpCookie cookieObj = Request.Cookies["User"];
             //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int CUserId = 2;
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
             try
             {
                 foreach (var item in ParaData.id)
                 {
-                    List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == item).ToList();
-                    if (ConList != null && ConList.Count != 0)
-                    {
-                        DB.tblEstimateItems.RemoveRange(ConList);
-                        DB.SaveChanges();
-                    }
+                    //List<tblEstimateItem> ConList = DB.tblEstimateItems.Where(x => x.EstimateId == item).ToList();
+                    //if (ConList != null && ConList.Count != 0)
+                    //{
+                    //    DB.tblEstimateItems.RemoveRange(ConList);
+                    //    DB.SaveChanges();
+                    //}
                     Data = DB.tblEstimates.Select(r => r).Where(x => x.EstimateId == item).FirstOrDefault();
-                    DB.Entry(Data).State = EntityState.Deleted;
+                    Data.isDelete = true;
+                    Data.EditBy = UserId;
+                    Data.EditDate = DateTime.Now;
+                    DB.Entry(Data);
                     DB.SaveChanges();
                 }
 
                 tblLog LogData = new tblLog();
-                LogData.UserId = CUserId;
+                LogData.UserId = UserId;
                 LogData.Action = "Delete All Selected Estimate";
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);

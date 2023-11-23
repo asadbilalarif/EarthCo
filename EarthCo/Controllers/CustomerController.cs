@@ -186,6 +186,62 @@ namespace EarthCo.Controllers
         //}
 
         [HttpGet]
+        public IHttpActionResult GetCustomerNameById(int id)
+        {
+            try
+            {
+                //tblUser Data = new tblUser();
+                //CustomerContacts CustomerData = new CustomerContacts();
+                //Data = DB.tblUsers.Where(x => x.UserId == id && x.isDelete != true).FirstOrDefault();
+
+                string Data = DB.tblUsers.Where(x=>x.isActive==true && x.isDelete==false&& x.UserTypeId==2 && x.UserId== id).Select(s=>s.CompanyName).FirstOrDefault();
+                
+                if (Data == null)
+                {
+                    //GetCustomerData NewData = new GetCustomerData();
+                    //string userJson = JsonConvert.SerializeObject(NewData);
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    //responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
+                    return ResponseMessage(responseMessage);
+                }
+
+                return Ok(Data); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+
+        }
+
+
+        [HttpGet]
         public IHttpActionResult GetCustomer(int id)
         {
             try
@@ -214,6 +270,7 @@ namespace EarthCo.Controllers
                 else
                 {
                     GetData.Data = Data;
+                    GetData.Data.Password = "";
                     GetData.ContactData = ContactData;
                     GetData.ServiceLocationData = ServiceLocationData;
                 }

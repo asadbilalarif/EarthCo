@@ -27,7 +27,7 @@ namespace EarthCo.Models
         public string Tags { get; set; }
         public System.DateTime BillDate { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
-        public int PurchaseOrderId { get; set; }
+        public Nullable<int> PurchaseOrderId { get; set; }
         public string PurchaseOrderNumber { get; set; }
         public Nullable<int> TermId { get; set; }
         public string Memo { get; set; }
@@ -44,8 +44,8 @@ namespace EarthCo.Models
         public virtual tblTerm tblTerm { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBillFile> tblBillFiles { get; set; }
-        public virtual tblUser tblUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBillItem> tblBillItems { get; set; }
+        public virtual tblUser tblUser { get; set; }
     }
 }

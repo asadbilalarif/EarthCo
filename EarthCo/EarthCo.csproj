@@ -397,6 +397,7 @@
     <Compile Include="Controllers\BillController.cs" />
     <Compile Include="Controllers\CallbackController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\EstimateController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
@@ -428,6 +429,7 @@
     <Compile Include="Models\GetCustomerContact.cs" />
     <Compile Include="Models\GetCustomerData.cs" />
     <Compile Include="Models\GetCustomerList.cs" />
+    <Compile Include="Models\GetDashboardData.cs" />
     <Compile Include="Models\GetEstimateData.cs" />
     <Compile Include="Models\GetEstimateItem.cs" />
     <Compile Include="Models\GetInvoiceData.cs" />

@@ -18,8 +18,10 @@ namespace EarthCo.Models
         public Nullable<int> ServiceLocationId { get; set; }
         public Nullable<int> ContactId { get; set; }
         public string InvoiceNumber { get; set; }
-        public int EstimateId { get; set; }
+        public Nullable<int> EstimateId { get; set; }
         public string EstimateNumber { get; set; }
+        public Nullable<int> BillId { get; set; }
+        public string BillNumber { get; set; }
         public string Tags { get; set; }
         public Nullable<int> TermId { get; set; }
         public Nullable<int> AssignTo { get; set; }

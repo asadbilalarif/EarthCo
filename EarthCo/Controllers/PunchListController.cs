@@ -269,6 +269,7 @@ namespace EarthCo.Controllers
                 int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
                 if (PunchList.PunchlistId == 0)
                 {
+                    
                     Data = PunchList;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.CreatedBy = UserId;

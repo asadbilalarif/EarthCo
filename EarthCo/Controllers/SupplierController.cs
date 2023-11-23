@@ -129,10 +129,11 @@ namespace EarthCo.Controllers
             {
                 tblUser Data = new tblUser();
                 Data = DB.tblUsers.Where(x => x.UserId == id && x.isDelete != true).FirstOrDefault();
+                Data.Password = "";
                 if (Data == null)
                 {
                     Data = new tblUser();
-                    Data.tblContacts = null;
+                    //Data.tblContacts = null;
                     Data.tblServiceLocations = null;
                     string userJson = JsonConvert.SerializeObject(Data);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);

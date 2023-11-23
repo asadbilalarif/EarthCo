@@ -224,6 +224,7 @@ namespace EarthCo.Controllers
             PurchaseOrder.PurchaseOrderData = JsonSerializer.Deserialize<tblPurchaseOrder>(Data1);
 
             tblPurchaseOrder Data = new tblPurchaseOrder();
+            tblPurchaseOrder CheckData = new tblPurchaseOrder();
             try
             {
                 //HttpCookie cookieObj = Request.Cookies["User"];
@@ -235,6 +236,15 @@ namespace EarthCo.Controllers
 
                 if (PurchaseOrder.PurchaseOrderData.PurchaseOrderId == 0)
                 {
+
+                    CheckData = DB.tblPurchaseOrders.Where(x => x.PurchaseOrderNumber == PurchaseOrder.PurchaseOrderData.PurchaseOrderNumber && x.PurchaseOrderNumber != null && x.PurchaseOrderNumber != "").FirstOrDefault();
+
+                    if (CheckData != null)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Purchase Order number already exsist.");
+                        return ResponseMessage(responseMessage);
+                    }
 
                     if (PurchaseOrder.PurchaseOrderData.tblPurchaseOrderItems != null && PurchaseOrder.PurchaseOrderData.tblPurchaseOrderItems.Count != 0)
                     {
@@ -325,6 +335,14 @@ namespace EarthCo.Controllers
                     if (Data == null)
                     {
                         return NotFound(); // Customer not found.
+                    }
+
+                    CheckData = DB.tblPurchaseOrders.Where(x => x.PurchaseOrderNumber == PurchaseOrder.PurchaseOrderData.PurchaseOrderNumber && x.PurchaseOrderNumber != null && x.PurchaseOrderNumber != "").FirstOrDefault();
+                    if (CheckData != null && CheckData.PurchaseOrderId != Data.PurchaseOrderId)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Purchase Order number already exsist.");
+                        return ResponseMessage(responseMessage);
                     }
 
                     List<tblPurchaseOrderItem> ConList = DB.tblPurchaseOrderItems.Where(x => x.PurchaseOrderId == PurchaseOrder.PurchaseOrderData.PurchaseOrderId).ToList();

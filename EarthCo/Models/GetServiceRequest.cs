@@ -15,6 +15,7 @@ namespace EarthCo.Models
         public string Status { get; set; }
         public string WorkRequest { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public string Type { get; set; }
 
     }
 }

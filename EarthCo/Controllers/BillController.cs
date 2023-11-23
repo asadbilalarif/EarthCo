@@ -40,11 +40,27 @@ namespace EarthCo.Controllers
                         Temp.BillId = item.BillId;
                         Temp.BillNumber = item.BillNumber;
                         Temp.SupplierName = item.tblUser.FirstName + " " + item.tblUser.LastName;
-                        Temp.DueDate = (DateTime)item.DueDate;
+                        if(item.DueDate!=null)
+                        {
+                            Temp.DueDate = (DateTime)item.DueDate;
+                        }
+                        
                         Temp.Amount = item.Amount;
-                        Temp.Memo = item.Memo;
-                        Temp.Currency = item.Currency;
-                        Temp.Tags = item.Tags;
+                        if (item.Memo != null)
+                        {
+                            Temp.Memo = item.Memo;
+                        }
+                        if (item.Currency != null)
+                        {
+                            Temp.Currency = item.Currency;
+                        }
+                        if (item.Tags != null)
+                        {
+                            Temp.Tags = item.Tags;
+                        }
+                        
+                        
+                        
                         Result.Add(Temp);
                     }
                 }
@@ -169,6 +185,7 @@ namespace EarthCo.Controllers
             Bill.BillData = JsonSerializer.Deserialize<tblBill>(Data1);
 
             tblBill Data = new tblBill();
+            tblBill CheckData = new tblBill();
             try
             {
                 //HttpCookie cookieObj = Request.Cookies["User"];
@@ -180,6 +197,17 @@ namespace EarthCo.Controllers
 
                 if (Bill.BillData.BillId == 0)
                 {
+
+
+                    CheckData = DB.tblBills.Where(x => x.BillNumber == Bill.BillData.BillNumber&& x.BillNumber !=null && x.BillNumber != "").FirstOrDefault();
+
+                    if (CheckData != null)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Bill number already exsist.");
+                        return ResponseMessage(responseMessage);
+                    }
+
 
                     if (Bill.BillData.tblBillItems != null && Bill.BillData.tblBillItems.Count != 0)
                     {
@@ -272,6 +300,16 @@ namespace EarthCo.Controllers
                     {
                         return NotFound(); // Customer not found.
                     }
+
+
+                    CheckData = DB.tblBills.Where(x => x.BillNumber == Bill.BillData.BillNumber && x.BillNumber != null && x.BillNumber != "").FirstOrDefault();
+                    if (CheckData != null && CheckData.BillId != Data.BillId)
+                    {
+                        var responseMessage = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        responseMessage.Content = new StringContent("Bill number already exsist.");
+                        return ResponseMessage(responseMessage);
+                    }
+
 
                     List<tblBillItem> ConList = DB.tblBillItems.Where(x => x.BillId == Bill.BillData.BillId).ToList();
                     if (ConList != null && ConList.Count != 0)
