@@ -44,6 +44,8 @@ namespace EarthCo.Models
         public Nullable<double> Shipping { get; set; }
         public Nullable<double> Profit { get; set; }
         public double ProfitPercentage { get; set; }
+        public Nullable<int> StatusId { get; set; }
+        public string DocNumber { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
@@ -53,13 +55,14 @@ namespace EarthCo.Models
     
         public virtual tblContact tblContact { get; set; }
         public virtual tblEstimate tblEstimate { get; set; }
+        public virtual tblInvoiceStatu tblInvoiceStatu { get; set; }
         public virtual tblServiceLocation tblServiceLocation { get; set; }
         public virtual tblTerm tblTerm { get; set; }
+        public virtual tblUser tblUser { get; set; }
+        public virtual tblUser tblUser1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoiceFile> tblInvoiceFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoiceItem> tblInvoiceItems { get; set; }
-        public virtual tblUser tblUser { get; set; }
-        public virtual tblUser tblUser1 { get; set; }
     }
 }

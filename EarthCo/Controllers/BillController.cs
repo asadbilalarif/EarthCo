@@ -19,6 +19,89 @@ namespace EarthCo.Controllers
     public class BillController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
+
+        [HttpGet]
+        public IHttpActionResult GetBillServerSideList(int DisplayStart = 0, int DisplayLength = 10)
+        {
+            try
+            {
+                List<tblBill> Data = new List<tblBill>();
+                List<BillList> Result = new List<BillList>();
+                var totalRecords = DB.tblBills.Count(x => !x.isDelete);
+                Data = DB.tblBills.Where(x => !x.isDelete).OrderBy(o => o.BillId).Skip(DisplayStart).Take(DisplayLength).ToList();
+
+                if (Data == null || Data.Count == 0)
+                {
+                    return NotFound(); // 404 - No data found
+                }
+                else
+                {
+                    foreach (tblBill item in Data)
+                    {
+                        BillList Temp = new BillList();
+                        Temp.BillId = item.BillId;
+                        Temp.BillNumber = item.BillNumber;
+                        Temp.SupplierName = item.tblUser.FirstName + " " + item.tblUser.LastName;
+                        if (item.DueDate != null)
+                        {
+                            Temp.DueDate = (DateTime)item.DueDate;
+                        }
+
+                        Temp.Amount = item.Amount;
+                        if (item.Memo != null)
+                        {
+                            Temp.Memo = item.Memo;
+                        }
+                        if (item.Currency != null)
+                        {
+                            Temp.Currency = item.Currency;
+                        }
+                        if (item.Tags != null)
+                        {
+                            Temp.Tags = item.Tags;
+                        }
+
+
+
+                        Result.Add(Temp);
+                    }
+                }
+
+                return Ok(new { totalRecords = totalRecords, Data = Result }); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+        }
+
+
         [HttpGet]
         public IHttpActionResult GetBillList()
         {
@@ -231,6 +314,11 @@ namespace EarthCo.Controllers
                     Data.EditBy = UserId;
                     Data.isActive = true;
                     Data.isDelete = false;
+                    Data.DocNumber =Convert.ToString(DB.SPGetNumber("B").FirstOrDefault());
+                    if(Data.BillNumber==null || Data.BillNumber=="")
+                    {
+                        Data.BillNumber = Data.DocNumber;
+                    }
                     DB.tblBills.Add(Data);
                     DB.SaveChanges();
 

@@ -36,6 +36,8 @@ namespace EarthCo.Models
         public Nullable<double> Shipping { get; set; }
         public Nullable<double> Profit { get; set; }
         public double ProfitPercentage { get; set; }
+        public Nullable<int> StatusId { get; set; }
+        public string DocNumber { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }

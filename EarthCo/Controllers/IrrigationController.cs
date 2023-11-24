@@ -22,6 +22,69 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
+        public IHttpActionResult GetIrrigationServerSideList(int DisplayStart = 0, int DisplayLength = 10)
+        {
+            try
+            {
+
+                List<tblIrrigation> Data = new List<tblIrrigation>();
+                List<IrrigationList> Result = new List<IrrigationList>();
+
+                var totalRecords = DB.tblIrrigations.Count(x => !x.isDelete);
+                Data = DB.tblIrrigations.Where(x => !x.isDelete).OrderBy(o => o.IrrigationId).Skip(DisplayStart).Take(DisplayLength).ToList();
+
+                if (Data == null || Data.Count == 0)
+                {
+                    return NotFound(); // 404 - No data found
+                }
+                else
+                {
+                    foreach (tblIrrigation item in Data)
+                    {
+                        IrrigationList Temp = new IrrigationList();
+                        Temp.IrrigationId = item.IrrigationId;
+                        Temp.CustomerName = item.tblUser.FirstName+" "+item.tblUser.LastName;
+                        Temp.CreatedDate = item.CreatedDate;
+                        Temp.ControllerNumbers = item.tblControllers.Select(s=>s.SerialNumber).ToList();
+                        Result.Add(Temp);
+                    }
+                }
+                return Ok(new { totalRecords = totalRecords, Data = Result }); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+
+        }
+
+        [HttpGet]
         public IHttpActionResult GetIrrigationList()
         {
             try
@@ -182,6 +245,11 @@ namespace EarthCo.Controllers
                     Data.EditBy = UserId;
                     Data.isActive = true;
                     Data.isDelete = false;
+                    Data.DocNumber = Convert.ToString(DB.SPGetNumber("IR").FirstOrDefault());
+                    if (Data.IrrigationNumber == null || Data.IrrigationNumber == "")
+                    {
+                        Data.IrrigationNumber = Data.DocNumber;
+                    }
                     DB.tblIrrigations.Add(Data);
                     DB.SaveChanges();
 

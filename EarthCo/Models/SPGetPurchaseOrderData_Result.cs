@@ -33,6 +33,7 @@ namespace EarthCo.Models
         public string Message { get; set; }
         public string ShipTo { get; set; }
         public double Amount { get; set; }
+        public string DocNumber { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }

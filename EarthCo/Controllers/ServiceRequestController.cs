@@ -23,6 +23,103 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
+        public IHttpActionResult GetServiceRequestServerSideList(int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
+        {
+            try
+            {
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                List<GetServiceRequest> Data = new List<GetServiceRequest>();
+                GetServiceRequest Temp = null;
+                List<tblServiceRequest> SRData = new List<tblServiceRequest>();
+                var totalRecords = 0;
+                int RoleId =(int) DB.tblUsers.Where(x => x.UserId == UserId).Select(s => s.RoleId).FirstOrDefault();
+                if(RoleId==1)
+                {
+                    totalRecords = DB.tblServiceRequests.Count(x => !x.isDelete);
+                    if (StatusId != 0)
+                    {
+                        SRData = DB.tblServiceRequests.Where(x => !x.isDelete && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
+                    else
+                    {
+                        SRData = DB.tblServiceRequests.Where(x => !x.isDelete).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
+
+                }
+                else
+                {
+                    totalRecords = DB.tblServiceRequests.Count(x => x.Assign == UserId && x.isDelete == false);
+                    if (StatusId != 0)
+                    {
+                        SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
+                    else
+                    {
+                        SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
+                }
+                
+                if (SRData == null || SRData.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                foreach (var item in SRData)
+                {
+                    Temp = new GetServiceRequest();
+
+                    Temp.ServiceRequestId = item.ServiceRequestId;
+                    Temp.CustomerName = item.tblUser.CompanyName;
+                    if(item.Assign!=null && item.Assign!=0)
+                    {
+                        Temp.Assign = item.tblUser1.FirstName + " " + item.tblUser1.LastName;
+                    }
+                    
+                    Temp.ServiceRequestNumber = item.ServiceRequestNumber;
+                    Temp.Status = item.tblSRStatu.Status;
+                    Temp.WorkRequest = item.WorkRequest;
+                    Temp.CreatedDate = (DateTime)item.CreatedDate;
+
+                    Data.Add(Temp);
+                }
+
+                return Ok(new { totalRecords = totalRecords, Data = Data }); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+        }
+
+        [HttpGet]
         public IHttpActionResult GetServiceRequestList()
         {
             try
@@ -269,6 +366,11 @@ namespace EarthCo.Controllers
                     Data.EditBy = UserId;
                     Data.isActive = true;
                     Data.isDelete = false;
+                    Data.DocNumber = Convert.ToString(DB.SPGetNumber("S").FirstOrDefault());
+                    if (Data.ServiceRequestNumber == null || Data.ServiceRequestNumber == "")
+                    {
+                        Data.ServiceRequestNumber = Data.DocNumber;
+                    }
                     DB.tblServiceRequests.Add(Data);
                     DB.SaveChanges();
 

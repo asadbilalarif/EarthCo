@@ -20,6 +20,77 @@ namespace EarthCo.Controllers
     {
         earthcoEntities DB = new earthcoEntities();
         [HttpGet]
+        public IHttpActionResult GetInvoiceServerSideList(int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
+        {
+            try
+            {
+                List<tblInvoice> Data = new List<tblInvoice>();
+                List<InvoiceList> Result = new List<InvoiceList>();
+
+                var totalRecords = DB.tblInvoices.Count(x => !x.isDelete);
+                if (StatusId != 0)
+                {
+                    Data = DB.tblInvoices.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+                else
+                {
+                    Data = DB.tblInvoices.Where(x => !x.isDelete).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+
+                if (Data == null || Data.Count == 0)
+                {
+                    return NotFound(); // 404 - No data found
+                }
+                else
+                {
+                    foreach (tblInvoice item in Data)
+                    {
+                        InvoiceList Temp = new InvoiceList();
+                        Temp.InvoiceId = item.InvoiceId;
+                        Temp.InvoiceNumber = item.InvoiceNumber;
+                        Temp.CustomerName = item.tblUser.FirstName + " " + item.tblUser.LastName;
+                        Temp.IssueDate = (DateTime)item.IssueDate;
+                        Temp.TotalAmount = item.TotalAmount;
+                        Temp.BalanceAmount = item.BalanceAmount;
+                        Temp.ProfitPercentage = item.ProfitPercentage;
+                        Result.Add(Temp);
+                    }
+                }
+
+                return Ok(new { totalRecords = totalRecords, Data = Result }); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+        }
+        [HttpGet]
         public IHttpActionResult GetInvoiceList()
         {
             try
@@ -156,6 +227,55 @@ namespace EarthCo.Controllers
 
         }
 
+        [HttpGet]
+        public IHttpActionResult GetInvoiceStatus()
+        {
+            try
+            {
+                DB.Configuration.ProxyCreationEnabled = false;
+                List<tblInvoiceStatu> Data = new List<tblInvoiceStatu>();
+                Data = DB.tblInvoiceStatus.ToList();
+                if (Data == null || Data.Count == 0)
+                {
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    return ResponseMessage(responseMessage);
+                }
+
+                return Ok(Data); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+
+        }
+
         [HttpPost]
         public IHttpActionResult AddInvoice()
         {
@@ -210,12 +330,18 @@ namespace EarthCo.Controllers
                     }
 
                     Data = Invoice.InvoiceData;
+                    Data.StatusId=1;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.CreatedBy = UserId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;
                     Data.isDelete = false;
+                    Data.DocNumber = Convert.ToString(DB.SPGetNumber("I").FirstOrDefault());
+                    if (Data.InvoiceNumber == null || Data.InvoiceNumber == "")
+                    {
+                        Data.InvoiceNumber = Data.DocNumber;
+                    }
                     DB.tblInvoices.Add(Data);
                     DB.SaveChanges();
 
@@ -337,6 +463,7 @@ namespace EarthCo.Controllers
                     Data.Shipping = Invoice.InvoiceData.Shipping;
                     Data.Profit = Invoice.InvoiceData.Profit;
                     Data.ProfitPercentage = Invoice.InvoiceData.ProfitPercentage;
+                    Data.StatusId = 1;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     Data.isActive = true;

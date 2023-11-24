@@ -34,6 +34,7 @@ namespace EarthCo.Models
         public int CustomerId { get; set; }
         public int SRTypeId { get; set; }
         public int SRStatusId { get; set; }
+        public string DocNumber { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
@@ -41,13 +42,13 @@ namespace EarthCo.Models
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
     
+        public virtual tblUser tblUser { get; set; }
         public virtual tblSRStatu tblSRStatu { get; set; }
         public virtual tblSRType tblSRType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSRFile> tblSRFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSRItem> tblSRItems { get; set; }
-        public virtual tblUser tblUser { get; set; }
         public virtual tblUser tblUser1 { get; set; }
     }
 }

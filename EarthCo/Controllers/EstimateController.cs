@@ -21,6 +21,101 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
+        public IHttpActionResult GetEstimateServerSideList(int DisplayStart=0,int DisplayLength=10,int StatusId=0)
+        {
+            try
+            {
+                List<GetEstimateItem> EstData = new List<GetEstimateItem>();
+
+                List<tblEstimate> Data = new List<tblEstimate>();
+                var totalRecords = DB.tblEstimates.Count(x => !x.isDelete);
+                if(StatusId != 0)
+                {
+                    Data = DB.tblEstimates.Where(x => !x.isDelete&& x.EstimateStatusId== StatusId).OrderBy(o => o.EstimateId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+                else
+                {
+                    Data = DB.tblEstimates.Where(x => !x.isDelete).OrderBy(o=>o.EstimateId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+                
+
+               // Data = Data.Skip(DisplayStart)
+               //.Take(DisplayLength).ToList();
+                if (Data == null || Data.Count == 0)
+                {
+                    return NotFound(); // 404 - No data found
+                }
+
+                
+
+                foreach (tblEstimate item in Data)
+                {
+                    GetEstimateItem Temp = new GetEstimateItem();
+                    Temp.EstimateId = (int)item.EstimateId;
+                    Temp.CustomerId = (int)item.CustomerId;
+                    Temp.CustomerName = item.tblUser.FirstName + " " + item.tblUser.LastName;
+                    Temp.RegionalManager = item.tblUser1.FirstName + " " + item.tblUser1.LastName;
+                    Temp.Date = item.CreatedDate;
+                    Temp.Status = item.tblEstimateStatu.Status;
+                    Temp.EstimateNumber = item.EstimateNumber;
+                    Temp.DescriptionofWork = item.EstimateNotes;
+                    //if(item.tblPurchaseOrders!=null && item.tblPurchaseOrders.Count != 0)
+                    //{
+                    //    Temp.PurchaseOrderNumber = item.tblPurchaseOrders.FirstOrDefault().PurchaseOrderNumber;
+                    //}
+                    //if(item.tblPurchaseOrders != null && item.tblPurchaseOrders.Count != 0)
+                    //{
+                    //    Temp.BillNumber = item.tblPurchaseOrders.FirstOrDefault().tblBills.FirstOrDefault().BillNumber;
+                    //}
+                    //if(item.tblInvoices != null && item.tblInvoices.Count != 0)
+                    //{
+                    //    Temp.InvoiceNumber = item.tblInvoices.FirstOrDefault().InvoiceNumber;
+                    //}
+
+                    Temp.ProfitPercentage = item.ProfitPercentage;
+                    Temp.EstimateAmount = (double)item.tblEstimateItems.Sum(s => s.Amount);
+                    EstData.Add(Temp);
+                }
+
+                return Ok(new { totalRecords=totalRecords, Data = EstData }); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+
+
+
+        }
+
+
+        [HttpGet]
         public IHttpActionResult GetEstimateList()
         {
             try
@@ -221,6 +316,11 @@ namespace EarthCo.Controllers
                     Data.EditBy = UserId;
                     Data.isActive = true;
                     Data.isDelete = false;
+                    Data.DocNumber = Convert.ToString(DB.SPGetNumber("E").FirstOrDefault());
+                    if (Data.EstimateNumber == null || Data.EstimateNumber == "")
+                    {
+                        Data.EstimateNumber = Data.DocNumber;
+                    }
                     DB.tblEstimates.Add(Data);
                     DB.SaveChanges();
 

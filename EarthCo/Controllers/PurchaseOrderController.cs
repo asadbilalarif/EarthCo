@@ -21,6 +21,81 @@ namespace EarthCo.Controllers
     {
         earthcoEntities DB = new earthcoEntities();
         [HttpGet]
+        public IHttpActionResult GetPurchaseOrderServerSideList(int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
+        {
+            try
+            {
+                List<tblPurchaseOrder> Data = new List<tblPurchaseOrder>();
+                List<PurchaseOrderList> Result = new List<PurchaseOrderList>();
+
+                var totalRecords = DB.tblPurchaseOrders.Count(x => !x.isDelete);
+                if (StatusId != 0)
+                {
+                    Data = DB.tblPurchaseOrders.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.PurchaseOrderId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+                else
+                {
+                    Data = DB.tblPurchaseOrders.Where(x => !x.isDelete).OrderBy(o => o.PurchaseOrderId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+
+                if (Data == null || Data.Count == 0)
+                {
+                    return NotFound(); // 404 - No data found
+                }
+                else
+                {
+                    foreach (tblPurchaseOrder item in Data)
+                    {
+                        PurchaseOrderList Temp = new PurchaseOrderList();
+                        Temp.PurchaseOrderId = item.PurchaseOrderId;
+                        Temp.PurchaseOrderNumber = item.PurchaseOrderNumber;
+                        Temp.SupplierName = item.tblUser.FirstName + " " + item.tblUser.LastName;
+                        Temp.Date =(DateTime) item.Date;
+                        Temp.Status =item.tblPurchaseOrderStatu.Status;
+                        Temp.RegionalManager = item.tblUser1.FirstName + " " + item.tblUser1.LastName;
+                        Temp.RequestedBy = item.tblUser2.FirstName + " " + item.tblUser2.LastName;
+                        Temp.EstimateNumber = item.EstimateNumber;
+                        Temp.BillNumber = item.BillNumber;
+                        Temp.InvoiceNumber = item.InvoiceNumber;
+                        Temp.Amount = item.Amount;
+                        Result.Add(Temp);
+                    }
+                }
+
+                return Ok(new { totalRecords = totalRecords, Data = Result }); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+        }
+        [HttpGet]
         public IHttpActionResult GetPurchaseOrderList()
         {
             try
@@ -268,6 +343,11 @@ namespace EarthCo.Controllers
                     Data.EditBy = UserId;
                     Data.isActive = true;
                     Data.isDelete = false;
+                    Data.DocNumber = Convert.ToString(DB.SPGetNumber("P").FirstOrDefault());
+                    if (Data.PurchaseOrderNumber == null || Data.PurchaseOrderNumber == "")
+                    {
+                        Data.PurchaseOrderNumber = Data.DocNumber;
+                    }
                     DB.tblPurchaseOrders.Add(Data);
                     DB.SaveChanges();
 

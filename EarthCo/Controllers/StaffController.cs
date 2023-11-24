@@ -19,6 +19,67 @@ namespace EarthCo.Controllers
     {
         earthcoEntities DB = new earthcoEntities();
         [HttpGet]
+        public IHttpActionResult GetStaffServerSideList(int DisplayStart = 0, int DisplayLength = 10)
+        {
+            try
+            {
+                //DB.Configuration.ProxyCreationEnabled = false;
+                List<tblUser> Data = new List<tblUser>();
+                List<StaffList> StaffData = new List<StaffList>();
+
+                var totalRecords = DB.tblUsers.Count(x => x.UserTypeId == 1 && x.isDelete != true);
+                Data = DB.tblUsers.Where(x => x.UserTypeId == 1 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+
+                if (Data == null || Data.Count == 0)
+                {
+                    return NotFound(); // 404 - No data found
+                }
+                foreach (var item in Data)
+                {
+                    StaffList New = new StaffList();
+                    New.UserId = item.UserId;
+                    New.FirstName = item.FirstName;
+                    New.LastName = item.LastName;
+                    New.Email = item.Email;
+                    New.Role = item.tblRole.Role;
+                    StaffData.Add(New);
+                }
+
+
+                return Ok(new { totalRecords = totalRecords, Data = StaffData }); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+        }
+        [HttpGet]
         public IHttpActionResult GetStaffList()
         {
             try

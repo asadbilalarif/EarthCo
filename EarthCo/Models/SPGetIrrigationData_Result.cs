@@ -16,6 +16,7 @@ namespace EarthCo.Models
         public int IrrigationId { get; set; }
         public string IrrigationNumber { get; set; }
         public int CustomerId { get; set; }
+        public string DocNumber { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }

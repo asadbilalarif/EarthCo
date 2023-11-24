@@ -59,7 +59,7 @@ namespace EarthCo.Controllers
             {
                 DB.Configuration.ProxyCreationEnabled = false;
                 List<tblUser> Data = new List<tblUser>();
-                Data = DB.tblUsers.Where(x => x.UserTypeId==2 && x.isDelete !=true && x.CompanyName.ToLower().Contains(Search.ToLower())).ToList();
+                Data = DB.tblUsers.Where(x => x.UserTypeId==2 && x.isDelete !=true && x.CompanyName.ToLower().Contains(Search.ToLower())).Take(10).ToList();
                 //Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).ToList();
 
                 if (Data == null || Data.Count == 0)
@@ -68,6 +68,70 @@ namespace EarthCo.Controllers
                 }
 
                 return Ok(Data); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetCustomersServerSideList(int DisplayStart = 0, int DisplayLength = 10)
+        {
+            try
+            {
+                DB.Configuration.ProxyCreationEnabled = false;
+                List<tblUser> Data = new List<tblUser>();
+                List<GetCustomerList> Result = new List<GetCustomerList>();
+                
+                var totalRecords = DB.tblUsers.Count(x => x.UserTypeId == 2 && x.isDelete != true);
+                Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+
+                if (Data == null || Data.Count == 0)
+                {
+                    return NotFound(); // 404 - No data found
+                }
+                else
+                {
+                    foreach (tblUser item in Data)
+                    {
+                        GetCustomerList Temp = new GetCustomerList();
+                        Temp.CustomerId = item.UserId;
+                        Temp.CompanyName = item.CompanyName;
+                        Temp.CustomerName = item.FirstName + " " + item.LastName;
+                        Temp.Address = item.Address;
+                        Temp.Email = item.Email;
+                        Result.Add(Temp);
+                    }
+                }
+
+                return Ok(new { totalRecords = totalRecords, Data = Result }); // 200 - Successful response with data
             }
             catch (DbEntityValidationException dbEx)
             {

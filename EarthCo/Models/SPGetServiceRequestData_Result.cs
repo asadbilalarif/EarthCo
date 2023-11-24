@@ -26,6 +26,7 @@ namespace EarthCo.Models
         public int CustomerId { get; set; }
         public int SRTypeId { get; set; }
         public int SRStatusId { get; set; }
+        public string DocNumber { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }

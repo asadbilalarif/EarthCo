@@ -34,6 +34,7 @@ namespace EarthCo.Models
         public Nullable<double> Profit { get; set; }
         public double ProfitPercentage { get; set; }
         public string Tags { get; set; }
+        public string DocNumber { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }

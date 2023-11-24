@@ -33,6 +33,7 @@ namespace EarthCo.Models
         public string Memo { get; set; }
         public double Amount { get; set; }
         public string Currency { get; set; }
+        public string DocNumber { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
@@ -42,10 +43,10 @@ namespace EarthCo.Models
     
         public virtual tblPurchaseOrder tblPurchaseOrder { get; set; }
         public virtual tblTerm tblTerm { get; set; }
+        public virtual tblUser tblUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBillFile> tblBillFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBillItem> tblBillItems { get; set; }
-        public virtual tblUser tblUser { get; set; }
     }
 }

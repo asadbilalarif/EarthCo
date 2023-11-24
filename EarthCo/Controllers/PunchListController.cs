@@ -22,6 +22,91 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
+        public IHttpActionResult GetPunchlistServerSideList(int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
+        {
+            try
+            {
+                List<int> PunchlistIds = new List<int>();
+                List<GetPunchlistList> Data = new List<GetPunchlistList>();
+                tblPunchlist PunchlistData = new tblPunchlist();
+                
+                var totalRecords = DB.tblPunchlists.Count(x => !x.isDelete);
+                if (StatusId != 0)
+                {
+                    PunchlistIds = DB.tblPunchlists.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                }
+                else
+                {
+                    PunchlistIds= DB.tblPunchlists.Where(x => !x.isDelete).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                }
+                if (PunchlistIds == null || PunchlistIds.Count==0)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    foreach (int item in PunchlistIds)
+                    {
+                        GetPunchlistList Temp = new GetPunchlistList();
+                        Temp.DetailDataList = new List<GetPunchlistDetailList>();
+                        List<SPGetPunchlistDetailData_Result> DetailTemp = new List<SPGetPunchlistDetailData_Result>();
+                        Temp.Data = DB.SPGetPunchlistData(item).FirstOrDefault();
+                        if(Temp.Data==null)
+                        {
+                            continue;
+                        }
+                        PunchlistData = DB.tblPunchlists.FirstOrDefault();
+                        DetailTemp = DB.SPGetPunchlistDetailData(item).ToList();
+                        foreach (SPGetPunchlistDetailData_Result Detailitem in DetailTemp)
+                        {
+                            GetPunchlistDetailList PDLT = new GetPunchlistDetailList();
+                            
+                            PDLT.DetailData = Detailitem;
+                            PDLT.ItemData = DB.SPGetPunchlistItemData(Detailitem.PunchlistDetailId).ToList();
+                            Temp.DetailDataList.Add(PDLT);
+                        }
+                        Temp.CustomerName = PunchlistData.tblUser.FirstName + " " + PunchlistData.tblUser.LastName;
+                        Temp.AssignToName = PunchlistData.tblUser1.FirstName + " " + PunchlistData.tblUser1.LastName;
+                        Temp.Status = PunchlistData.tblPunchlistStatu.Status;
+                        Data.Add(Temp);
+                    }
+                }
+                return Ok(new { totalRecords = totalRecords, Data = Data }); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+
+        }
+
+        [HttpGet]
         public IHttpActionResult GetPunchlistList()
         {
             try
