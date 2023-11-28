@@ -28,6 +28,7 @@ namespace EarthCo.Controllers
                 List<StaffList> StaffData = new List<StaffList>();
 
                 var totalRecords = DB.tblUsers.Count(x => x.UserTypeId == 1 && x.isDelete != true);
+                DisplayStart = (DisplayStart - 1) * DisplayLength;
                 Data = DB.tblUsers.Where(x => x.UserTypeId == 1 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
 
                 if (Data == null || Data.Count == 0)

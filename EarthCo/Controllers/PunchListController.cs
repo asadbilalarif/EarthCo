@@ -31,6 +31,7 @@ namespace EarthCo.Controllers
                 tblPunchlist PunchlistData = new tblPunchlist();
                 
                 var totalRecords = DB.tblPunchlists.Count(x => !x.isDelete);
+                DisplayStart = (DisplayStart - 1) * DisplayLength;
                 if (StatusId != 0)
                 {
                     PunchlistIds = DB.tblPunchlists.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
@@ -498,23 +499,23 @@ namespace EarthCo.Controllers
                     Data.isDelete = false;
                     Data.PunchlistId = Punchlist.PunchlistDetailData.PunchlistId;
 
-                    string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                    string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/Punchlist"));
                     if (!Directory.Exists(folder))
                     {
                         Directory.CreateDirectory(folder);
                     }
                     if (Punchlist.Files != null)
                     {
-                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.Files.FileName)));
+                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Punchlist"), Path.GetFileName("PunchlistFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.Files.FileName)));
                         Punchlist.Files.SaveAs(path);
-                        path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.Files.FileName)));
+                        path = Path.Combine("\\Uploading\\Punchlist", Path.GetFileName("Punchlist" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.Files.FileName)));
                         Data.PhotoPath = path;
                     }
                     if (Punchlist.AfterFiles != null)
                     {
-                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.AfterFiles.FileName)));
+                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Punchlist"), Path.GetFileName("PunchlistAfterFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.AfterFiles.FileName)));
                         Punchlist.AfterFiles.SaveAs(path);
-                        path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.AfterFiles.FileName)));
+                        path = Path.Combine("\\Uploading\\Punchlist", Path.GetFileName("Punchlist" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.AfterFiles.FileName)));
                         Data.AfterPhotoPath = path;
                     }
 
@@ -593,31 +594,31 @@ namespace EarthCo.Controllers
                     Data.isDelete = false;
                     Data.PunchlistId = Punchlist.PunchlistDetailData.PunchlistId;
 
-                    string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                    string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/Punchlist"));
                     if (!Directory.Exists(folder))
                     {
                         Directory.CreateDirectory(folder);
                     }
                     if (Punchlist.Files != null)
                     {
-                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.Files.FileName)));
+                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Punchlist"), Path.GetFileName("PunchlistFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.Files.FileName)));
                         if (System.IO.File.Exists(path))
                         {
                             System.IO.File.Delete(path);
                         }
                         Punchlist.Files.SaveAs(path);
-                        path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.Files.FileName)));
+                        path = Path.Combine("\\Uploading\\Punchlist", Path.GetFileName("PunchlistFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.Files.FileName)));
                         Data.PhotoPath = path;
                     }
                     if (Punchlist.AfterFiles != null)
                     {
-                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.AfterFiles.FileName)));
+                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Punchlist"), Path.GetFileName("PunchlistAfterFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.AfterFiles.FileName)));
                         if (System.IO.File.Exists(path))
                         {
                             System.IO.File.Delete(path);
                         }
                         Punchlist.AfterFiles.SaveAs(path);
-                        path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.AfterFiles.FileName)));
+                        path = Path.Combine("\\Uploading\\Punchlist", Path.GetFileName("PunchlistAfterFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(Punchlist.AfterFiles.FileName)));
                         Data.AfterPhotoPath = path;
                     }
 

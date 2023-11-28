@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 //using System.Text.Json;
@@ -39,6 +40,139 @@ namespace EarthCo.Controllers
             return View();
         }
 
+        public async Task<ActionResult> SignIn()
+        {
+
+            string apiUrl = "https://rest.method.me/api/v1/tables/Customer";
+
+
+            var requestData = new
+            {
+                Email = "david1@landscaping.com",
+                Name = "David Henderson1",
+                Title = "Ms.",
+                LastName = "Henderson1",
+                FamilyName = "Test1",
+                Phone = "1112223333",
+                FirstName = "David1"
+            };
+            string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
+
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", "APIKey NjU2NDk0MWFkMDUzMDRhN2Q3MzY2NDI3LjcxRjNEMEY2MTVDQzRBOTVBNzFCMUVGOEIwRTExRjIw ");
+
+                // Create the request content
+                var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+
+
+                var responseTask = client.GetAsync("https://rest.method.me/api/v1/tables/Customer?skip=0&top=10&select=RecordID,Email,FirstName,LastName,BillAddressCountry,TotalBalance&orderby=LastModifiedDate desc");
+                responseTask.Wait();
+
+                var result = responseTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    //var readTask = result.Content.ReadAsAsync<Bill>();
+                    //readTask.Wait();
+                    var readTask = result.Content.ReadAsStringAsync();
+                    readTask.Wait();
+                    string Test = readTask.Result;
+                    dynamic Data = Newtonsoft.Json.JsonConvert.DeserializeObject(Test);
+                    //BillInfo = JsonSerializer.Deserialize<Bill>(readTask.Result);
+                    var Tst = Data.value;
+                    foreach (var item in Tst)
+                    {
+                        var Tst1 = (int)item["RecordID"];
+                    }
+
+                    //var Tst1 = Tst[0].RecordID;
+
+                }
+
+                
+
+
+                // Make the POST request
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                // Check if the request was successful
+                if (response.IsSuccessStatusCode)
+                {
+                    // Parse and use the response data as needed
+                    string jsonResponse = await response.Content.ReadAsStringAsync();
+                    // Process jsonResponse
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    // Handle error
+                    string errorMessage = await response.Content.ReadAsStringAsync();
+                    // Handle error message
+                    return View("Error");
+                }
+            }
+
+
+
+            
+
+
+            //byte[] nonceBytes = new byte[16]; // 16 bytes will result in a 128-bit nonce
+            //using (var rng = RandomNumberGenerator.Create())
+            //{
+            //    rng.GetBytes(nonceBytes);
+            //}
+
+            //// Convert the byte array to a hexadecimal string
+            //string nonce = BitConverter.ToString(nonceBytes).Replace("-", "").ToLower();
+
+            //string methodSignInUrl = "https://auth.method.me/connect/authorize" +
+            //    "?client_id=NjU2NDk0MWFkMDUzMDRhN2Q3MzY2NDI3LjcxRjNEMEY2MTVDQzRBOTVBNzFCMUVGOEIwRTExRjIw" +
+            //    "&nonce="+nonce+"" +
+            //    "&redirect_uri=https://localhost:44363/Home/MethodCallback" +
+            //    "&response_type=code" +
+            //    "&scope=api" +
+            //    "&state=";
+
+            //return Redirect(methodSignInUrl);
+                }
+
+        public ActionResult MethodCallback(string code, string state)
+        {
+            // Use the authorization code to get an access token from Method Identity Server
+            // Perform a POST request to the token endpoint
+            int I = 0;
+            // Construct the request body
+            //string requestBody = $"code={code}" +
+            //                     $"&redirect_uri={your_redirect_url}" +
+            //                     $"&grant_type=authorization_code" +
+            //                     $"&client_id={your_client_id}" +
+            //                     $"&client_secret={your_client_secret}";
+
+            //using (var client = new HttpClient())
+            //{
+            //    var content = new StringContent(requestBody, Encoding.UTF8, "application/x-www-form-urlencoded");
+            //    var response = client.PostAsync("https://auth.methodlocal.com/connect/token", content).Result;
+
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        var result = response.Content.ReadAsStringAsync().Result;
+            //        // Parse the result to get access token, ID token, and refresh token
+            //        // Store tokens securely for future API calls
+            //        // Redirect or perform additional actions as needed
+            //    }
+            //    else
+            //    {
+            //        // Handle error response from Method Identity Server
+            //        // Redirect or display an error message
+            //    }
+            //}
+
+            return View("CallbackView"); // You can create a view for callback handling
+        }
 
         public ActionResult InitiateAuth(string submitButton)
         {
@@ -114,6 +248,7 @@ namespace EarthCo.Controllers
                         DisplayName = "Dianne's Auto Shop6",
                         PrintOnCheckName = "Dianne's Auto Shop1"
                     };
+
 
                     Vendor billAddr = new Vendor
                     {

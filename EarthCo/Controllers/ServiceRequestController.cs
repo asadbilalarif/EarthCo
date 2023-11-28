@@ -38,6 +38,7 @@ namespace EarthCo.Controllers
                 if(RoleId==1)
                 {
                     totalRecords = DB.tblServiceRequests.Count(x => !x.isDelete);
+                    DisplayStart = (DisplayStart - 1) * DisplayLength;
                     if (StatusId != 0)
                     {
                         SRData = DB.tblServiceRequests.Where(x => !x.isDelete && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
@@ -51,6 +52,7 @@ namespace EarthCo.Controllers
                 else
                 {
                     totalRecords = DB.tblServiceRequests.Count(x => x.Assign == UserId && x.isDelete == false);
+                    DisplayStart = (DisplayStart - 1) * DisplayLength;
                     if (StatusId != 0)
                     {
                         SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
@@ -396,7 +398,7 @@ namespace EarthCo.Controllers
                     if (ServiceRequest.Files != null && ServiceRequest.Files.Count != 0)
                     {
                         tblSRFile FileData = null;
-                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/ServiceRequest"));
                         if (!Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
@@ -405,11 +407,11 @@ namespace EarthCo.Controllers
                         foreach (var item in ServiceRequest.Files)
                         {
                             FileData = new tblSRFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/ServiceRequest"), Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = Path.GetFileName(item.FileName);
-                            FileData.Caption = "";
+                            path = Path.Combine("\\Uploading\\ServiceRequest", Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.SRId = Data.ServiceRequestId;
                             FileData.CreatedBy = UserId;
@@ -486,6 +488,10 @@ namespace EarthCo.Controllers
                     Data.ContactId = ServiceRequest.ServiceRequestData.ContactId;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
+                    if (ServiceRequest.ServiceRequestData.ServiceRequestNumber == null || ServiceRequest.ServiceRequestData.ServiceRequestNumber == "")
+                    {
+                        Data.ServiceRequestNumber = Data.DocNumber;
+                    }
                     Data.isActive = true;
                     Data.isDelete = false;
                     DB.Entry(Data);
@@ -518,17 +524,17 @@ namespace EarthCo.Controllers
                         }
                     }
 
-                    List<tblSRFile> ConFList = DB.tblSRFiles.Where(x => x.SRId == ServiceRequest.ServiceRequestData.ServiceRequestId).ToList();
-                    if (ConFList != null && ConFList.Count != 0)
-                    {
-                        DB.tblSRFiles.RemoveRange(ConFList);
-                        DB.SaveChanges();
-                    }
+                    //List<tblSRFile> ConFList = DB.tblSRFiles.Where(x => x.SRId == ServiceRequest.ServiceRequestData.ServiceRequestId).ToList();
+                    //if (ConFList != null && ConFList.Count != 0)
+                    //{
+                    //    DB.tblSRFiles.RemoveRange(ConFList);
+                    //    DB.SaveChanges();
+                    //}
 
                     if (ServiceRequest.Files != null && ServiceRequest.Files.Count != 0)
                     {
                         tblSRFile FileData = null;
-                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/ServiceRequest"));
                         if (!Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
@@ -537,11 +543,11 @@ namespace EarthCo.Controllers
                         foreach (var item in ServiceRequest.Files)
                         {
                             FileData = new tblSRFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/ServiceRequest"), Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = Path.GetFileName(item.FileName);
-                            FileData.Caption = "";
+                            path = Path.Combine("\\Uploading\\ServiceRequest", Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.SRId = Data.ServiceRequestId;
                             FileData.CreatedBy = UserId;
@@ -788,6 +794,67 @@ namespace EarthCo.Controllers
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
                 return Ok("All selected Service Request has been deleted successfully.");
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult DeleteServiceRequestFile(int FileId)
+        {
+            tblSRFile Data = new tblSRFile();
+
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+            try
+            {
+                Data = DB.tblSRFiles.Select(r => r).Where(x => x.SRFileId == FileId).FirstOrDefault();
+                if (Data == null)
+                {
+                    return NotFound(); // 404 - Customer not found
+                }
+
+                Data.isDelete = true;
+                Data.EditBy = UserId;
+                Data.EditDate = DateTime.Now;
+                DB.Entry(Data);
+                DB.SaveChanges();
+
+                tblLog LogData = new tblLog();
+                LogData.UserId = UserId;
+                LogData.Action = "Delete Service Request File";
+                LogData.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(LogData);
+                DB.SaveChanges();
+                return Ok("Service Request file has been deleted successfully.");
             }
             catch (DbEntityValidationException dbEx)
             {

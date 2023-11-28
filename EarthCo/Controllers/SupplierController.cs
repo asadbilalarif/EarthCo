@@ -76,6 +76,7 @@ namespace EarthCo.Controllers
                 List<GetSupplierList> SupplierData = new List<GetSupplierList>();
 
                 var totalRecords = DB.tblUsers.Count(x => x.UserTypeId == 3 && x.isDelete != true);
+                DisplayStart = (DisplayStart - 1) * DisplayLength;
                 Data = DB.tblUsers.Where(x => x.UserTypeId == 3 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
 
                 if (Data == null || Data.Count == 0)

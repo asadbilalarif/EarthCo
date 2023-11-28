@@ -28,6 +28,7 @@ namespace EarthCo.Controllers
                 List<tblBill> Data = new List<tblBill>();
                 List<BillList> Result = new List<BillList>();
                 var totalRecords = DB.tblBills.Count(x => !x.isDelete);
+                DisplayStart = (DisplayStart - 1) * DisplayLength;
                 Data = DB.tblBills.Where(x => !x.isDelete).OrderBy(o => o.BillId).Skip(DisplayStart).Take(DisplayLength).ToList();
 
                 if (Data == null || Data.Count == 0)
@@ -344,7 +345,7 @@ namespace EarthCo.Controllers
                     if (Bill.Files != null && Bill.Files.Count != 0)
                     {
                         tblBillFile FileData = null;
-                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/Bill"));
                         if (!Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
@@ -353,10 +354,11 @@ namespace EarthCo.Controllers
                         foreach (var item in Bill.Files)
                         {
                             FileData = new tblBillFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Bill"), Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = Path.GetFileName(item.FileName);
+                            path = Path.Combine("\\Uploading\\Bill", Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            //FileData.FileName = Path.GetFileName(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.BillId = Data.BillId;
@@ -435,6 +437,10 @@ namespace EarthCo.Controllers
                     Data.Amount = Bill.BillData.Amount;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
+                    if(Bill.BillData.BillNumber==null || Bill.BillData.BillNumber == "")
+                    {
+                        Data.BillNumber = Data.DocNumber;
+                    }
                     Data.isActive = true;
                     Data.isDelete = false;
                     DB.Entry(Data);
@@ -460,17 +466,17 @@ namespace EarthCo.Controllers
                         }
                     }
 
-                    List<tblBillFile> ConFList = DB.tblBillFiles.Where(x => x.BillId == Bill.BillData.BillId).ToList();
-                    if (ConFList != null && ConFList.Count != 0)
-                    {
-                        DB.tblBillFiles.RemoveRange(ConFList);
-                        DB.SaveChanges();
-                    }
+                    //List<tblBillFile> ConFList = DB.tblBillFiles.Where(x => x.BillId == Bill.BillData.BillId).ToList();
+                    //if (ConFList != null && ConFList.Count != 0)
+                    //{
+                    //    DB.tblBillFiles.RemoveRange(ConFList);
+                    //    DB.SaveChanges();
+                    //}
 
                     if (Bill.Files != null && Bill.Files.Count != 0)
                     {
                         tblBillFile FileData = null;
-                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/Bill"));
                         if (!Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
@@ -479,11 +485,12 @@ namespace EarthCo.Controllers
                         foreach (var item in Bill.Files)
                         {
                             FileData = new tblBillFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Bill"), Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = Path.GetFileName(item.FileName);
-                            FileData.Caption = "";
+                            path = Path.Combine("\\Uploading\\Bill", Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            //FileData.FileName = Path.GetFileName(item.FileName);
+                            FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.BillId = Data.BillId;
                             FileData.CreatedBy = UserId;
@@ -589,6 +596,69 @@ namespace EarthCo.Controllers
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
                 return Ok("Bill has been deleted successfully.");
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult DeleteBillFile(int FileId)
+        {
+            tblBillFile Data = new tblBillFile();
+            //HttpCookie cookieObj = Request.Cookies["User"];
+            //int CUserId = Int32.Parse(cookieObj["UserId"]);
+
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+            try
+            {
+                Data = DB.tblBillFiles.Select(r => r).Where(x => x.BillFileId == FileId).FirstOrDefault();
+                if (Data == null)
+                {
+                    return NotFound(); // 404 - Customer not found
+                }
+
+                Data.isDelete = true;
+                Data.EditBy = UserId;
+                Data.EditDate = DateTime.Now;
+                DB.Entry(Data);
+                DB.SaveChanges();
+
+                tblLog LogData = new tblLog();
+                LogData.UserId = UserId;
+                LogData.Action = "Delete Bill File";
+                LogData.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(LogData);
+                DB.SaveChanges();
+                return Ok("Bill file has been deleted successfully.");
             }
             catch (DbEntityValidationException dbEx)
             {

@@ -26,6 +26,7 @@ namespace EarthCo.Controllers
                 DB.Configuration.ProxyCreationEnabled = false;
                 List<tblItem> Data = new List<tblItem>();
                 var totalRecords = DB.tblItems.Where(x => x.isDelete!=true).Count();
+                DisplayStart = (DisplayStart - 1) * DisplayLength;
                 Data = DB.tblItems.Where(x => x.isDelete!=true).OrderBy(o => o.ItemId).Skip(DisplayStart).Take(DisplayLength).ToList();
 
                 if (Data == null || Data.Count == 0)

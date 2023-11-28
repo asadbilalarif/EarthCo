@@ -29,7 +29,8 @@ namespace EarthCo.Controllers
 
                 List<tblEstimate> Data = new List<tblEstimate>();
                 var totalRecords = DB.tblEstimates.Count(x => !x.isDelete);
-                if(StatusId != 0)
+                DisplayStart = (DisplayStart - 1) * DisplayLength;
+                if (StatusId != 0)
                 {
                     Data = DB.tblEstimates.Where(x => !x.isDelete&& x.EstimateStatusId== StatusId).OrderBy(o => o.EstimateId).Skip(DisplayStart).Take(DisplayLength).ToList();
                 }
@@ -268,7 +269,7 @@ namespace EarthCo.Controllers
             Estimate.Files = new List<HttpPostedFile>();
             for (int i = 0; i < HttpContext.Current.Request.Files.Count; i++)
             {
-                Estimate.Files.Add(HttpContext.Current.Request.Files[i]); ;
+                Estimate.Files.Add(HttpContext.Current.Request.Files[i]);
             }
 
             Estimate.EstimateData = JsonSerializer.Deserialize<tblEstimate>(Data1);
@@ -346,7 +347,7 @@ namespace EarthCo.Controllers
                     if (Estimate.Files != null && Estimate.Files.Count != 0)
                     {
                         tblEstimateFile FileData = null;
-                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/Estimate"));
                         if (!Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
@@ -355,10 +356,11 @@ namespace EarthCo.Controllers
                         foreach (var item in Estimate.Files)
                         {
                             FileData = new tblEstimateFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Estimate"), Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = Path.GetFileName(item.FileName);
+                            path = Path.Combine("\\Uploading\\Estimate", Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss")+ Path.GetExtension(item.FileName);
+                            //FileData.FileName = Path.GetFileName(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.EstimateId = Data.EstimateId;
@@ -449,6 +451,10 @@ namespace EarthCo.Controllers
                     Data.ProfitPercentage = Estimate.EstimateData.ProfitPercentage;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
+                    if (Estimate.EstimateData.EstimateNumber == null || Estimate.EstimateData.EstimateNumber == "")
+                    {
+                        Data.EstimateNumber = Data.DocNumber;
+                    }
                     Data.isActive = true;
                     Data.isDelete = false;
                     DB.Entry(Data);
@@ -475,17 +481,17 @@ namespace EarthCo.Controllers
                         }
                     }
 
-                    List<tblEstimateFile> ConFList = DB.tblEstimateFiles.Where(x => x.EstimateId == Estimate.EstimateData.EstimateId).ToList();
-                    if (ConFList != null && ConFList.Count != 0)
-                    {
-                        DB.tblEstimateFiles.RemoveRange(ConFList);
-                        DB.SaveChanges();
-                    }
+                    //List<tblEstimateFile> ConFList = DB.tblEstimateFiles.Where(x => x.EstimateId == Estimate.EstimateData.EstimateId).ToList();
+                    //if (ConFList != null && ConFList.Count != 0)
+                    //{
+                    //    DB.tblEstimateFiles.RemoveRange(ConFList);
+                    //    DB.SaveChanges();
+                    //}
 
                     if (Estimate.Files != null && Estimate.Files.Count != 0)
                     {
                         tblEstimateFile FileData = null;
-                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/Estimate"));
                         if (!Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
@@ -494,10 +500,11 @@ namespace EarthCo.Controllers
                         foreach (var item in Estimate.Files)
                         {
                             FileData = new tblEstimateFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Estimate"), Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = Path.GetFileName(item.FileName);
+                            path = Path.Combine("\\Uploading\\Estimate", Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            //FileData.FileName = Path.GetFileName(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.EstimateId = Data.EstimateId;
@@ -808,6 +815,67 @@ namespace EarthCo.Controllers
                 return ResponseMessage(responseMessage);
             }
 
+        }
+
+        [HttpGet]
+        public IHttpActionResult DeleteEstimateFile(int FileId)
+        {
+            tblEstimateFile Data = new tblEstimateFile();
+            
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+            try
+            {
+                Data = DB.tblEstimateFiles.Select(r => r).Where(x => x.EstimateFileId == FileId).FirstOrDefault();
+                if (Data == null)
+                {
+                    return NotFound(); // 404 - Customer not found
+                }
+
+                Data.isDelete = true;
+                Data.EditBy = UserId;
+                Data.EditDate = DateTime.Now;
+                DB.Entry(Data);
+                DB.SaveChanges();
+
+                tblLog LogData = new tblLog();
+                LogData.UserId = UserId;
+                LogData.Action = "Delete Estimate File";
+                LogData.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(LogData);
+                DB.SaveChanges();
+                return Ok("Estimate file has been deleted successfully.");
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
         }
     }
 }

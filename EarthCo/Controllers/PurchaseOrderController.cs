@@ -29,6 +29,7 @@ namespace EarthCo.Controllers
                 List<PurchaseOrderList> Result = new List<PurchaseOrderList>();
 
                 var totalRecords = DB.tblPurchaseOrders.Count(x => !x.isDelete);
+                DisplayStart = (DisplayStart - 1) * DisplayLength;
                 if (StatusId != 0)
                 {
                     Data = DB.tblPurchaseOrders.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.PurchaseOrderId).Skip(DisplayStart).Take(DisplayLength).ToList();
@@ -373,7 +374,7 @@ namespace EarthCo.Controllers
                     if (PurchaseOrder.Files != null && PurchaseOrder.Files.Count != 0)
                     {
                         tblPurchaseOrderFile FileData = null;
-                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/PurchaseOrder"));
                         if (!Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
@@ -382,10 +383,10 @@ namespace EarthCo.Controllers
                         foreach (var item in PurchaseOrder.Files)
                         {
                             FileData = new tblPurchaseOrderFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/PurchaseOrder"), Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = Path.GetFileName(item.FileName);
+                            path = Path.Combine("\\Uploading\\PurchaseOrder", Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.PurchaseOrderId = Data.PurchaseOrderId;
@@ -394,6 +395,7 @@ namespace EarthCo.Controllers
                             FileData.EditBy = UserId;
                             FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             FileData.isActive = true;
+                            FileData.idDelete = false;
                             DB.tblPurchaseOrderFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -471,6 +473,10 @@ namespace EarthCo.Controllers
                     Data.Amount = PurchaseOrder.PurchaseOrderData.Amount;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
+                    if (PurchaseOrder.PurchaseOrderData.PurchaseOrderNumber == null || PurchaseOrder.PurchaseOrderData.PurchaseOrderNumber == "")
+                    {
+                        Data.PurchaseOrderNumber = Data.DocNumber;
+                    }
                     Data.isActive = true;
                     Data.isDelete = false;
                     DB.Entry(Data);
@@ -496,17 +502,17 @@ namespace EarthCo.Controllers
                         }
                     }
 
-                    List<tblPurchaseOrderFile> ConFList = DB.tblPurchaseOrderFiles.Where(x => x.PurchaseOrderId == PurchaseOrder.PurchaseOrderData.PurchaseOrderId).ToList();
-                    if (ConFList != null && ConFList.Count != 0)
-                    {
-                        DB.tblPurchaseOrderFiles.RemoveRange(ConFList);
-                        DB.SaveChanges();
-                    }
+                    //List<tblPurchaseOrderFile> ConFList = DB.tblPurchaseOrderFiles.Where(x => x.PurchaseOrderId == PurchaseOrder.PurchaseOrderData.PurchaseOrderId).ToList();
+                    //if (ConFList != null && ConFList.Count != 0)
+                    //{
+                    //    DB.tblPurchaseOrderFiles.RemoveRange(ConFList);
+                    //    DB.SaveChanges();
+                    //}
 
                     if (PurchaseOrder.Files != null && PurchaseOrder.Files.Count != 0)
                     {
                         tblPurchaseOrderFile FileData = null;
-                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/PurhaseOrder"));
                         if (!Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
@@ -515,11 +521,11 @@ namespace EarthCo.Controllers
                         foreach (var item in PurchaseOrder.Files)
                         {
                             FileData = new tblPurchaseOrderFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/PurchaseOrder"), Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = Path.GetFileName(item.FileName);
-                            FileData.Caption = "";
+                            path = Path.Combine("\\Uploading\\PurchaseOrder", Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.PurchaseOrderId = Data.PurchaseOrderId;
                             FileData.CreatedBy = UserId;
@@ -527,6 +533,7 @@ namespace EarthCo.Controllers
                             FileData.EditBy = UserId;
                             FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             FileData.isActive = true;
+                            FileData.idDelete = false;
                             DB.tblPurchaseOrderFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -703,6 +710,67 @@ namespace EarthCo.Controllers
                 return ResponseMessage(responseMessage);
             }
 
+        }
+
+        [HttpGet]
+        public IHttpActionResult DeletePurchaseOrderFile(int FileId)
+        {
+            tblPurchaseOrderFile Data = new tblPurchaseOrderFile();
+
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+            try
+            {
+                Data = DB.tblPurchaseOrderFiles.Select(r => r).Where(x => x.PurchaseOrderFileId == FileId).FirstOrDefault();
+                if (Data == null)
+                {
+                    return NotFound(); // 404 - Customer not found
+                }
+
+                Data.idDelete = true;
+                Data.EditBy = UserId;
+                Data.EditDate = DateTime.Now;
+                DB.Entry(Data);
+                DB.SaveChanges();
+
+                tblLog LogData = new tblLog();
+                LogData.UserId = UserId;
+                LogData.Action = "Delete Purchase Order File";
+                LogData.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(LogData);
+                DB.SaveChanges();
+                return Ok("Purchase Order file has been deleted successfully.");
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
         }
     }
 }
