@@ -28,6 +28,10 @@ namespace EarthCo.Controllers
                 List<InvoiceList> Result = new List<InvoiceList>();
 
                 var totalRecords = DB.tblInvoices.Count(x => !x.isDelete);
+                var totalDraftRecords = DB.tblInvoices.Where(x => x.StatusId == 1).Count(x => !x.isDelete);
+                var totalSentRecords = DB.tblInvoices.Where(x => x.StatusId == 2).Count(x => !x.isDelete);
+                var totalOverDueRecords = DB.tblInvoices.Where(x => x.StatusId == 3).Count(x => !x.isDelete);
+                var totalPaidRecords = DB.tblInvoices.Where(x => x.StatusId == 4).Count(x => !x.isDelete);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
                 if (StatusId != 0)
                 {
@@ -58,7 +62,7 @@ namespace EarthCo.Controllers
                     }
                 }
 
-                return Ok(new { totalRecords = totalRecords, Data = Result }); // 200 - Successful response with data
+                return Ok(new { totalRecords = totalRecords, totalDraftRecords = totalDraftRecords, totalSentRecords = totalSentRecords, totalOverDueRecords = totalOverDueRecords, totalPaidRecords = totalPaidRecords, Data = Result }); // 200 - Successful response with data
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -377,10 +381,10 @@ namespace EarthCo.Controllers
                         foreach (var item in Invoice.Files)
                         {
                             FileData = new tblInvoiceFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Invoice"), Path.GetFileName("Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Invoice"), Path.GetFileName("Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\Invoice", Path.GetFileName("Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = "Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            path = Path.Combine("\\Uploading\\Invoice", Path.GetFileName("Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
                             //FileData.FileName = Path.GetFileName(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
@@ -517,10 +521,10 @@ namespace EarthCo.Controllers
                         foreach (var item in Invoice.Files)
                         {
                             FileData = new tblInvoiceFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Invoice"), Path.GetFileName("Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Invoice"), Path.GetFileName("Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\Invoice", Path.GetFileName("Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = "Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            path = Path.Combine("\\Uploading\\Invoice", Path.GetFileName("Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "Invoice" + Data.InvoiceId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.InvoiceId = Data.InvoiceId;

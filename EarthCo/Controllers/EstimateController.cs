@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using System.Web;
 using System.Web.Http;
@@ -29,6 +30,9 @@ namespace EarthCo.Controllers
 
                 List<tblEstimate> Data = new List<tblEstimate>();
                 var totalRecords = DB.tblEstimates.Count(x => !x.isDelete);
+                var totalApprovedRecords = DB.tblEstimates.Where(x=>x.EstimateStatusId==1).Count(x => !x.isDelete);
+                var totalClosedRecords = DB.tblEstimates.Where(x=>x.EstimateStatusId==2).Count(x => !x.isDelete);
+                var totalNewRecords = DB.tblEstimates.Where(x=>x.EstimateStatusId==4).Count(x => !x.isDelete);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
                 if (StatusId != 0)
                 {
@@ -78,7 +82,7 @@ namespace EarthCo.Controllers
                     EstData.Add(Temp);
                 }
 
-                return Ok(new { totalRecords=totalRecords, Data = EstData }); // 200 - Successful response with data
+                return Ok(new { totalRecords=totalRecords, totalApprovedRecords = totalApprovedRecords, totalClosedRecords = totalClosedRecords, totalNewRecords = totalNewRecords, Data = EstData }); // 200 - Successful response with data
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -260,7 +264,7 @@ namespace EarthCo.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult AddEstimate()
+        public async System.Threading.Tasks.Task<IHttpActionResult> AddEstimate()
         {
             var Data1 = HttpContext.Current.Request.Params.Get("EstimateData");
             HttpPostedFile file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
@@ -356,10 +360,10 @@ namespace EarthCo.Controllers
                         foreach (var item in Estimate.Files)
                         {
                             FileData = new tblEstimateFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Estimate"), Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Estimate"), Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\Estimate", Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = "Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss")+ Path.GetExtension(item.FileName);
+                            path = Path.Combine("\\Uploading\\Estimate", Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss")+ Path.GetExtension(item.FileName);
                             //FileData.FileName = Path.GetFileName(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
@@ -382,6 +386,54 @@ namespace EarthCo.Controllers
                     LogData.CreatedDate = DateTime.Now;
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
+
+
+                    var requestData = new
+                    {
+                        TxnDate = DateTime.Now,
+                        RefNumber = Data.EstimateNumber,
+                        IsActive = Data.isActive,
+                        TotalAmount = Data.TotalAmount,
+                        Memo = Data.EstimateNotes,
+                        DiscountAmt = Data.Discount,
+                        ShippingAmt = Data.Shipping,
+                        TagList = Data.Tags,
+                        Customer_RecordID = Data.CustomerId,
+                        EstimateStatus_RecordID = Data.EstimateStatusId,
+                        AssignedTo_RecordID = Data.AssignTo,
+                    };
+
+                    string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
+
+                    using (HttpClient client = new HttpClient())
+                    {
+                        string apiUrl = "https://rest.method.me/api/v1/tables/Estimate";
+                        client.DefaultRequestHeaders.Add("Authorization", "APIKey NjU2NDk0MWFkMDUzMDRhN2Q3MzY2NDI3LjcxRjNEMEY2MTVDQzRBOTVBNzFCMUVGOEIwRTExRjIw ");
+
+                        // Create the request content
+                        var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                        //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                        // Make the POST request
+                        HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                        // Check if the request was successful
+                        if (response.IsSuccessStatusCode)
+                        {
+                            // Parse and use the response data as needed
+                            string jsonResponse = await response.Content.ReadAsStringAsync();
+                            // Process jsonResponse
+                        }
+                        else
+                        {
+                            // Handle error
+                            string errorMessage = await response.Content.ReadAsStringAsync();
+                            // Handle error message
+                        }
+                    }
+
+
+
                     //return Ok("Estimate has been added successfully.");
                     return Ok(new { Id = Data.EstimateId, Message = "Estimate has been added successfully." });
                 }
@@ -449,6 +501,8 @@ namespace EarthCo.Controllers
                     Data.Shipping = Estimate.EstimateData.Shipping;
                     Data.Profit = Estimate.EstimateData.Profit;
                     Data.ProfitPercentage = Estimate.EstimateData.ProfitPercentage;
+                    Data.TotalAmount = Estimate.EstimateData.TotalAmount;
+                    Data.BalanceAmount = Estimate.EstimateData.BalanceAmount;
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditBy = UserId;
                     if (Estimate.EstimateData.EstimateNumber == null || Estimate.EstimateData.EstimateNumber == "")
@@ -500,10 +554,10 @@ namespace EarthCo.Controllers
                         foreach (var item in Estimate.Files)
                         {
                             FileData = new tblEstimateFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Estimate"), Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Estimate"), Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\Estimate", Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = "Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            path = Path.Combine("\\Uploading\\Estimate", Path.GetFileName("Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "Estimate" + Data.EstimateId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
                             //FileData.FileName = Path.GetFileName(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;

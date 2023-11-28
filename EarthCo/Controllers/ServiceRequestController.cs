@@ -34,10 +34,14 @@ namespace EarthCo.Controllers
                 GetServiceRequest Temp = null;
                 List<tblServiceRequest> SRData = new List<tblServiceRequest>();
                 var totalRecords = 0;
-                int RoleId =(int) DB.tblUsers.Where(x => x.UserId == UserId).Select(s => s.RoleId).FirstOrDefault();
+                var totalOpenRecords = 0;
+                var totalClosedRecords = 0;
+               int RoleId =(int) DB.tblUsers.Where(x => x.UserId == UserId).Select(s => s.RoleId).FirstOrDefault();
                 if(RoleId==1)
                 {
                     totalRecords = DB.tblServiceRequests.Count(x => !x.isDelete);
+                    totalOpenRecords = DB.tblServiceRequests.Where(x => x.SRStatusId == 1).Count(x => !x.isDelete);
+                    totalClosedRecords = DB.tblServiceRequests.Where(x => x.SRStatusId == 2).Count(x => !x.isDelete);
                     DisplayStart = (DisplayStart - 1) * DisplayLength;
                     if (StatusId != 0)
                     {
@@ -52,6 +56,8 @@ namespace EarthCo.Controllers
                 else
                 {
                     totalRecords = DB.tblServiceRequests.Count(x => x.Assign == UserId && x.isDelete == false);
+                    totalOpenRecords = DB.tblServiceRequests.Where(x => x.SRStatusId == 1).Count(x => x.Assign == UserId && x.isDelete == false);
+                    totalClosedRecords = DB.tblServiceRequests.Where(x => x.SRStatusId == 2).Count(x => x.Assign == UserId && x.isDelete == false);
                     DisplayStart = (DisplayStart - 1) * DisplayLength;
                     if (StatusId != 0)
                     {
@@ -87,7 +93,7 @@ namespace EarthCo.Controllers
                     Data.Add(Temp);
                 }
 
-                return Ok(new { totalRecords = totalRecords, Data = Data }); // 200 - Successful response with data
+                return Ok(new { totalRecords = totalRecords, totalOpenRecords = totalOpenRecords, totalClosedRecords = totalClosedRecords, Data = Data }); // 200 - Successful response with data
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -407,10 +413,10 @@ namespace EarthCo.Controllers
                         foreach (var item in ServiceRequest.Files)
                         {
                             FileData = new tblSRFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/ServiceRequest"), Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/ServiceRequest"), Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\ServiceRequest", Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = "ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            path = Path.Combine("\\Uploading\\ServiceRequest", Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.SRId = Data.ServiceRequestId;
@@ -543,10 +549,10 @@ namespace EarthCo.Controllers
                         foreach (var item in ServiceRequest.Files)
                         {
                             FileData = new tblSRFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/ServiceRequest"), Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/ServiceRequest"), Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\ServiceRequest", Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = "ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            path = Path.Combine("\\Uploading\\ServiceRequest", Path.GetFileName("ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "ServiceRequest" + Data.ServiceRequestId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.SRId = Data.ServiceRequestId;

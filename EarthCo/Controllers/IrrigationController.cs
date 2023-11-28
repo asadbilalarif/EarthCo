@@ -399,16 +399,16 @@ namespace EarthCo.Controllers
                         }
                         if (ParaData.ControllerPhoto != null)
                         {
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Irrigation"), Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Irrigation"), Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
                             ParaData.ControllerPhoto.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\Irrigation", Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
+                            path = Path.Combine("\\Uploading\\Irrigation", Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
                             ConData.ControllerPhotoPath = path;
                         }
                         if (ParaData.Photo != null)
                         {
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Irrigation"), Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.Photo.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Irrigation"), Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(ParaData.Photo.FileName)));
                             ParaData.Photo.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\Irrigation", Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.Photo.FileName)));
+                            path = Path.Combine("\\Uploading\\Irrigation", Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(ParaData.Photo.FileName)));
                             ConData.PhotoPath = path;
                         }
 
@@ -465,16 +465,16 @@ namespace EarthCo.Controllers
                     }
                     if (ParaData.ControllerPhoto != null)
                     {
-                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Irrigation"), Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
+                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Irrigation"), Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
                         ParaData.ControllerPhoto.SaveAs(path);
-                        path = Path.Combine("\\Uploading\\Irrigation", Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
+                        path = Path.Combine("\\Uploading\\Irrigation", Path.GetFileName("ControllerPhoto" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
                         ConData.ControllerPhotoPath = path;
                     }
                     if (ParaData.Photo != null)
                     {
-                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Irrigation"), Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.Photo.FileName)));
+                        string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Irrigation"), Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(ParaData.Photo.FileName)));
                         ParaData.Photo.SaveAs(path);
-                        path = Path.Combine("\\Uploading\\Irrigation", Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(ParaData.Photo.FileName)));
+                        path = Path.Combine("\\Uploading\\Irrigation", Path.GetFileName("Photo" + ParaData.IrrigationId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(ParaData.Photo.FileName)));
                         ConData.PhotoPath = path;
                     }
 

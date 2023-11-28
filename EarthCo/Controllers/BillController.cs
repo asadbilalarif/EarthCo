@@ -354,10 +354,10 @@ namespace EarthCo.Controllers
                         foreach (var item in Bill.Files)
                         {
                             FileData = new tblBillFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Bill"), Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Bill"), Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\Bill", Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = "Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            path = Path.Combine("\\Uploading\\Bill", Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
                             //FileData.FileName = Path.GetFileName(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
@@ -485,10 +485,10 @@ namespace EarthCo.Controllers
                         foreach (var item in Bill.Files)
                         {
                             FileData = new tblBillFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Bill"), Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Bill"), Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\Bill", Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = "Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            path = Path.Combine("\\Uploading\\Bill", Path.GetFileName("Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "Bill" + Data.BillId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
                             //FileData.FileName = Path.GetFileName(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;

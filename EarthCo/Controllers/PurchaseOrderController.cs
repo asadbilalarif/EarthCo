@@ -29,6 +29,8 @@ namespace EarthCo.Controllers
                 List<PurchaseOrderList> Result = new List<PurchaseOrderList>();
 
                 var totalRecords = DB.tblPurchaseOrders.Count(x => !x.isDelete);
+                var totalOpenRecords = DB.tblPurchaseOrders.Where(x => x.StatusId == 1).Count(x => !x.isDelete);
+                var totalClosedRecords = DB.tblPurchaseOrders.Where(x => x.StatusId == 2).Count(x => !x.isDelete);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
                 if (StatusId != 0)
                 {
@@ -63,7 +65,7 @@ namespace EarthCo.Controllers
                     }
                 }
 
-                return Ok(new { totalRecords = totalRecords, Data = Result }); // 200 - Successful response with data
+                return Ok(new { totalRecords = totalRecords, totalOpenRecords = totalOpenRecords, totalClosedRecords = totalClosedRecords, Data = Result }); // 200 - Successful response with data
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -383,10 +385,10 @@ namespace EarthCo.Controllers
                         foreach (var item in PurchaseOrder.Files)
                         {
                             FileData = new tblPurchaseOrderFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/PurchaseOrder"), Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/PurchaseOrder"), Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\PurchaseOrder", Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = "PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            path = Path.Combine("\\Uploading\\PurchaseOrder", Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.PurchaseOrderId = Data.PurchaseOrderId;
@@ -512,7 +514,7 @@ namespace EarthCo.Controllers
                     if (PurchaseOrder.Files != null && PurchaseOrder.Files.Count != 0)
                     {
                         tblPurchaseOrderFile FileData = null;
-                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/PurhaseOrder"));
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/PurchaseOrder"));
                         if (!Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
@@ -521,10 +523,10 @@ namespace EarthCo.Controllers
                         foreach (var item in PurchaseOrder.Files)
                         {
                             FileData = new tblPurchaseOrderFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/PurchaseOrder"), Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/PurchaseOrder"), Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading\\PurchaseOrder", Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = "PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName);
+                            path = Path.Combine("\\Uploading\\PurchaseOrder", Path.GetFileName("PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "PurchaseOrder" + Data.PurchaseOrderId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.PurchaseOrderId = Data.PurchaseOrderId;
