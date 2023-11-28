@@ -31,8 +31,8 @@ namespace EarthCo.Models
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
     
+        public virtual tblUser tblUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblController> tblControllers { get; set; }
-        public virtual tblUser tblUser { get; set; }
     }
 }

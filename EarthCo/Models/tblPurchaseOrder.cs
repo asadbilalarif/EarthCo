@@ -17,9 +17,9 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tblPurchaseOrder()
         {
+            this.tblPurchaseOrderItems = new HashSet<tblPurchaseOrderItem>();
             this.tblBills = new HashSet<tblBill>();
             this.tblPurchaseOrderFiles = new HashSet<tblPurchaseOrderFile>();
-            this.tblPurchaseOrderItems = new HashSet<tblPurchaseOrderItem>();
         }
     
         public int PurchaseOrderId { get; set; }
@@ -50,17 +50,17 @@ namespace EarthCo.Models
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblBill> tblBills { get; set; }
-        public virtual tblEstimate tblEstimate { get; set; }
         public virtual tblPurchaseOrderStatu tblPurchaseOrderStatu { get; set; }
         public virtual tblTerm tblTerm { get; set; }
         public virtual tblUser tblUser { get; set; }
         public virtual tblUser tblUser1 { get; set; }
         public virtual tblUser tblUser2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPurchaseOrderFile> tblPurchaseOrderFiles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPurchaseOrderItem> tblPurchaseOrderItems { get; set; }
+        public virtual tblEstimate tblEstimate { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblBill> tblBills { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPurchaseOrderFile> tblPurchaseOrderFiles { get; set; }
     }
 }

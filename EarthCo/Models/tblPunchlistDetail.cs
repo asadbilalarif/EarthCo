@@ -35,8 +35,8 @@ namespace EarthCo.Models
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
     
+        public virtual tblPunchlist tblPunchlist { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPunchlistItem> tblPunchlistItems { get; set; }
-        public virtual tblPunchlist tblPunchlist { get; set; }
     }
 }

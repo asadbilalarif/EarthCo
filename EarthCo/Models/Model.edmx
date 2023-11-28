@@ -65,10 +65,10 @@
             <PropertyRef Name="BillFileId" />
           </Key>
           <Property Name="BillFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FileName" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="Caption" Type="nvarchar" MaxLength="20" />
-          <Property Name="FilePath" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Share" Type="nvarchar" MaxLength="20" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Caption" Type="nvarchar" MaxLength="150" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Share" Type="nvarchar" MaxLength="150" />
           <Property Name="BillId" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -234,16 +234,18 @@
           <Property Name="EditDate" Type="datetime" />
           <Property Name="isActive" Type="bit" Nullable="false" />
           <Property Name="isDelete" Type="bit" Nullable="false" />
+          <Property Name="TotalAmount" Type="float" />
+          <Property Name="BalanceAmount" Type="float" />
         </EntityType>
         <EntityType Name="tblEstimateFile">
           <Key>
             <PropertyRef Name="EstimateFileId" />
           </Key>
           <Property Name="EstimateFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FileName" Type="nvarchar" MaxLength="500" Nullable="false" />
-          <Property Name="Caption" Type="nvarchar" MaxLength="500" />
-          <Property Name="FilePath" Type="nvarchar" MaxLength="500" Nullable="false" />
-          <Property Name="Share" Type="nvarchar" MaxLength="500" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Caption" Type="nvarchar" MaxLength="150" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Share" Type="nvarchar" MaxLength="150" />
           <Property Name="EstimateId" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -322,10 +324,10 @@
             <PropertyRef Name="InvoiceFileId" />
           </Key>
           <Property Name="InvoiceFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Caption" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="FilePath" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Share" Type="nvarchar" MaxLength="50" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Caption" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Share" Type="nvarchar" MaxLength="150" />
           <Property Name="InvoiceId" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -488,11 +490,11 @@
             <PropertyRef Name="PunchlistDetailId" />
           </Key>
           <Property Name="PunchlistDetailId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="PhotoPath" Type="nvarchar" MaxLength="50" />
+          <Property Name="PhotoPath" Type="nvarchar" MaxLength="150" />
           <Property Name="Notes" Type="nvarchar" MaxLength="500" />
           <Property Name="Address" Type="nvarchar" MaxLength="150" />
           <Property Name="isAfterPhoto" Type="bit" />
-          <Property Name="AfterPhotoPath" Type="nvarchar" MaxLength="50" />
+          <Property Name="AfterPhotoPath" Type="nvarchar" MaxLength="150" />
           <Property Name="isComplete" Type="bit" />
           <Property Name="PunchlistId" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
@@ -566,10 +568,10 @@
             <PropertyRef Name="PurchaseOrderFileId" />
           </Key>
           <Property Name="PurchaseOrderFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FileName" Type="nvarchar" MaxLength="500" />
-          <Property Name="Caption" Type="nvarchar" MaxLength="500" />
-          <Property Name="FilePath" Type="nvarchar" MaxLength="500" />
-          <Property Name="Share" Type="nvarchar" MaxLength="500" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="150" />
+          <Property Name="Caption" Type="nvarchar" MaxLength="150" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="150" />
+          <Property Name="Share" Type="nvarchar" MaxLength="150" />
           <Property Name="PurchaseOrderId" Type="int" />
           <Property Name="CreatedBy" Type="int" />
           <Property Name="CreatedDate" Type="datetime" />
@@ -681,9 +683,9 @@
             <PropertyRef Name="SRFileId" />
           </Key>
           <Property Name="SRFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FileName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Caption" Type="nvarchar" MaxLength="20" />
-          <Property Name="FilePath" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Caption" Type="nvarchar" MaxLength="150" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="SRId" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -2138,7 +2140,6 @@
           <EntitySet Name="tblContacts" EntityType="earthcoModel.tblContact" />
           <EntitySet Name="tblServiceLocations" EntityType="earthcoModel.tblServiceLocation" />
           <EntitySet Name="tblUserTypes" EntityType="earthcoModel.tblUserType" />
-          <EntitySet Name="tblPurchaseOrderFiles" EntityType="earthcoModel.tblPurchaseOrderFile" />
           <EntitySet Name="tblPurchaseOrderStatus" EntityType="earthcoModel.tblPurchaseOrderStatu" />
           <EntitySet Name="tblAccounts" EntityType="earthcoModel.tblAccount" />
           <EntitySet Name="tblItems" EntityType="earthcoModel.tblItem" />
@@ -2150,7 +2151,6 @@
             <End Role="tblAccount" EntitySet="tblAccounts" />
             <End Role="tblItem" EntitySet="tblItems" />
           </AssociationSet>
-          <EntitySet Name="tblEstimateFiles" EntityType="earthcoModel.tblEstimateFile" />
           <EntitySet Name="tblEstimateItems" EntityType="earthcoModel.tblEstimateItem" />
           <EntitySet Name="tblTags" EntityType="earthcoModel.tblTag" />
           <AssociationSet Name="FK_tblEstimateItem_tblItem" Association="earthcoModel.FK_tblEstimateItem_tblItem">
@@ -2167,14 +2167,12 @@
           <FunctionImport Name="SPGetPurchaseOrderFileData" ReturnType="Collection(earthcoModel.SPGetPurchaseOrderFileData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="tblBillFiles" EntityType="earthcoModel.tblBillFile" />
           <FunctionImport Name="SPGetBillFileData" ReturnType="Collection(earthcoModel.SPGetBillFileData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SPGetInvoiceFileData" ReturnType="Collection(earthcoModel.SPGetInvoiceFileData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="tblSRFiles" EntityType="earthcoModel.tblSRFile" />
           <FunctionImport Name="SPGetServiceRequestFileData" ReturnType="Collection(earthcoModel.SPGetServiceRequestFileData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -2232,16 +2230,9 @@
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="tblEstimateStatus" EntityType="earthcoModel.tblEstimateStatu" />
-          <EntitySet Name="tblInvoiceFiles" EntityType="earthcoModel.tblInvoiceFile" />
-          <EntitySet Name="tblPunchlistDetails" EntityType="earthcoModel.tblPunchlistDetail" />
-          <AssociationSet Name="FK__tblPunchl__Punch__5AEE82B9" Association="earthcoModel.FK__tblPunchl__Punch__5AEE82B9">
-            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetails" />
-            <End Role="tblPunchlistItem" EntitySet="tblPunchlistItems" />
-          </AssociationSet>
           <FunctionImport Name="SPGetPunchlistDetailData" ReturnType="Collection(earthcoModel.SPGetPunchlistDetailData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="tblControllers" EntityType="earthcoModel.tblController" />
           <FunctionImport Name="SPGetIrrigationControllerData" ReturnType="Collection(earthcoModel.SPGetIrrigationControllerData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -2260,10 +2251,6 @@
           <AssociationSet Name="FK_tblPunchlist_tblServiceLocation" Association="earthcoModel.FK_tblPunchlist_tblServiceLocation">
             <End Role="tblServiceLocation" EntitySet="tblServiceLocations" />
             <End Role="tblPunchlist" EntitySet="tblPunchlists" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblPunchlistDetail_tblPunchlist" Association="earthcoModel.FK_tblPunchlistDetail_tblPunchlist">
-            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
-            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetails" />
           </AssociationSet>
           <EntitySet Name="tblUsers" EntityType="earthcoModel.tblUser" />
           <AssociationSet Name="FK_tblUser_tblCustomerType" Association="earthcoModel.FK_tblUser_tblCustomerType">
@@ -2298,79 +2285,13 @@
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="tblInvoiceStatus" EntityType="earthcoModel.tblInvoiceStatu" />
-          <EntitySet Name="tblBills" EntityType="earthcoModel.tblBill" />
-          <EntitySet Name="tblEstimates" EntityType="earthcoModel.tblEstimate" />
           <EntitySet Name="tblInvoices" EntityType="earthcoModel.tblInvoice" />
           <EntitySet Name="tblIrrigations" EntityType="earthcoModel.tblIrrigation" />
           <EntitySet Name="tblPurchaseOrders" EntityType="earthcoModel.tblPurchaseOrder" />
           <EntitySet Name="tblServiceRequests" EntityType="earthcoModel.tblServiceRequest" />
-          <AssociationSet Name="FK_tblBill_tblPurchaseOrder" Association="earthcoModel.FK_tblBill_tblPurchaseOrder">
-            <End Role="tblPurchaseOrder" EntitySet="tblPurchaseOrders" />
-            <End Role="tblBill" EntitySet="tblBills" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblBill_tblTerm" Association="earthcoModel.FK_tblBill_tblTerm">
-            <End Role="tblTerm" EntitySet="tblTerms" />
-            <End Role="tblBill" EntitySet="tblBills" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblBill_tblUser" Association="earthcoModel.FK_tblBill_tblUser">
-            <End Role="tblUser" EntitySet="tblUsers" />
-            <End Role="tblBill" EntitySet="tblBills" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblBillFile_tblBill" Association="earthcoModel.FK_tblBillFile_tblBill">
-            <End Role="tblBill" EntitySet="tblBills" />
-            <End Role="tblBillFile" EntitySet="tblBillFiles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblBillItem_tblBill" Association="earthcoModel.FK_tblBillItem_tblBill">
-            <End Role="tblBill" EntitySet="tblBills" />
-            <End Role="tblBillItem" EntitySet="tblBillItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblEstimate_tblContact" Association="earthcoModel.FK_tblEstimate_tblContact">
-            <End Role="tblContact" EntitySet="tblContacts" />
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-          </AssociationSet>
           <AssociationSet Name="FK_tblInvoice_tblContact" Association="earthcoModel.FK_tblInvoice_tblContact">
             <End Role="tblContact" EntitySet="tblContacts" />
             <End Role="tblInvoice" EntitySet="tblInvoices" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblContro__Irrig__5441852A" Association="earthcoModel.FK__tblContro__Irrig__5441852A">
-            <End Role="tblIrrigation" EntitySet="tblIrrigations" />
-            <End Role="tblController" EntitySet="tblControllers" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblEstima__Estim__3A81B327" Association="earthcoModel.FK__tblEstima__Estim__3A81B327">
-            <End Role="tblEstimateStatu" EntitySet="tblEstimateStatus" />
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-          </AssociationSet>
-          <AssociationSet Name="FK__tblEstima__Estim__3D5E1FD2" Association="earthcoModel.FK__tblEstima__Estim__3D5E1FD2">
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-            <End Role="tblEstimateItem" EntitySet="tblEstimateItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblEstimate_tblServiceLocation" Association="earthcoModel.FK_tblEstimate_tblServiceLocation">
-            <End Role="tblServiceLocation" EntitySet="tblServiceLocations" />
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblEstimate_tblUser" Association="earthcoModel.FK_tblEstimate_tblUser">
-            <End Role="tblUser" EntitySet="tblUsers" />
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblEstimate_tblUser1" Association="earthcoModel.FK_tblEstimate_tblUser1">
-            <End Role="tblUser" EntitySet="tblUsers" />
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblEstimate_tblUser2" Association="earthcoModel.FK_tblEstimate_tblUser2">
-            <End Role="tblUser" EntitySet="tblUsers" />
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblEstimateFile_tblEstimate" Association="earthcoModel.FK_tblEstimateFile_tblEstimate">
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-            <End Role="tblEstimateFile" EntitySet="tblEstimateFiles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblInvoice_tblPurchaseOrder" Association="earthcoModel.FK_tblInvoice_tblPurchaseOrder">
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-            <End Role="tblInvoice" EntitySet="tblInvoices" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblPurchaseOrder_tblEstimate" Association="earthcoModel.FK_tblPurchaseOrder_tblEstimate">
-            <End Role="tblEstimate" EntitySet="tblEstimates" />
-            <End Role="tblPurchaseOrder" EntitySet="tblPurchaseOrders" />
           </AssociationSet>
           <AssociationSet Name="FK_tblInvoice_tblInvoiceStatus" Association="earthcoModel.FK_tblInvoice_tblInvoiceStatus">
             <End Role="tblInvoiceStatu" EntitySet="tblInvoiceStatus" />
@@ -2391,10 +2312,6 @@
           <AssociationSet Name="FK_tblInvoice_tblUser1" Association="earthcoModel.FK_tblInvoice_tblUser1">
             <End Role="tblUser" EntitySet="tblUsers" />
             <End Role="tblInvoice" EntitySet="tblInvoices" />
-          </AssociationSet>
-          <AssociationSet Name="FK_tblInvoiceFile_tblInvoice" Association="earthcoModel.FK_tblInvoiceFile_tblInvoice">
-            <End Role="tblInvoice" EntitySet="tblInvoices" />
-            <End Role="tblInvoiceFile" EntitySet="tblInvoiceFiles" />
           </AssociationSet>
           <AssociationSet Name="FK_tblInvoiceItem_tblInvoice" Association="earthcoModel.FK_tblInvoiceItem_tblInvoice">
             <End Role="tblInvoice" EntitySet="tblInvoices" />
@@ -2424,10 +2341,6 @@
             <End Role="tblUser" EntitySet="tblUsers" />
             <End Role="tblPurchaseOrder" EntitySet="tblPurchaseOrders" />
           </AssociationSet>
-          <AssociationSet Name="FK_tblPurchaseOrderFile_tblPurchaseOrder" Association="earthcoModel.FK_tblPurchaseOrderFile_tblPurchaseOrder">
-            <End Role="tblPurchaseOrder" EntitySet="tblPurchaseOrders" />
-            <End Role="tblPurchaseOrderFile" EntitySet="tblPurchaseOrderFiles" />
-          </AssociationSet>
           <AssociationSet Name="FK_tblPurchaseOrderItem_tblPurchaseOrder" Association="earthcoModel.FK_tblPurchaseOrderItem_tblPurchaseOrder">
             <End Role="tblPurchaseOrder" EntitySet="tblPurchaseOrders" />
             <End Role="tblPurchaseOrderItem" EntitySet="tblPurchaseOrderItems" />
@@ -2444,10 +2357,6 @@
             <End Role="tblSRType" EntitySet="tblSRTypes" />
             <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
           </AssociationSet>
-          <AssociationSet Name="FK__tblSRFile__SRId__4E88ABD4" Association="earthcoModel.FK__tblSRFile__SRId__4E88ABD4">
-            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
-            <End Role="tblSRFile" EntitySet="tblSRFiles" />
-          </AssociationSet>
           <AssociationSet Name="FK__tblSRItem__SRId__4BAC3F29" Association="earthcoModel.FK__tblSRItem__SRId__4BAC3F29">
             <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
             <End Role="tblSRItem" EntitySet="tblSRItems" />
@@ -2455,6 +2364,49 @@
           <AssociationSet Name="FK_tblServiceRequest_tblUser" Association="earthcoModel.FK_tblServiceRequest_tblUser">
             <End Role="tblUser" EntitySet="tblUsers" />
             <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
+          </AssociationSet>
+          <FunctionImport Name="SPGetIrrigationData" ReturnType="Collection(earthcoModel.SPGetIrrigationData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetNumber" ReturnType="Collection(String)">
+          <Parameter Name="Type" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="tblEstimates" EntityType="earthcoModel.tblEstimate" />
+          <AssociationSet Name="FK_tblEstimate_tblContact" Association="earthcoModel.FK_tblEstimate_tblContact">
+            <End Role="tblContact" EntitySet="tblContacts" />
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblEstima__Estim__3A81B327" Association="earthcoModel.FK__tblEstima__Estim__3A81B327">
+            <End Role="tblEstimateStatu" EntitySet="tblEstimateStatus" />
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblEstima__Estim__3D5E1FD2" Association="earthcoModel.FK__tblEstima__Estim__3D5E1FD2">
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+            <End Role="tblEstimateItem" EntitySet="tblEstimateItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEstimate_tblServiceLocation" Association="earthcoModel.FK_tblEstimate_tblServiceLocation">
+            <End Role="tblServiceLocation" EntitySet="tblServiceLocations" />
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEstimate_tblUser" Association="earthcoModel.FK_tblEstimate_tblUser">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEstimate_tblUser1" Association="earthcoModel.FK_tblEstimate_tblUser1">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEstimate_tblUser2" Association="earthcoModel.FK_tblEstimate_tblUser2">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblInvoice_tblPurchaseOrder" Association="earthcoModel.FK_tblInvoice_tblPurchaseOrder">
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+            <End Role="tblInvoice" EntitySet="tblInvoices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPurchaseOrder_tblEstimate" Association="earthcoModel.FK_tblPurchaseOrder_tblEstimate">
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+            <End Role="tblPurchaseOrder" EntitySet="tblPurchaseOrders" />
           </AssociationSet>
           <FunctionImport Name="SPGetBillData" ReturnType="Collection(earthcoModel.SPGetBillData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
@@ -2465,18 +2417,68 @@
           <FunctionImport Name="SPGetInvoiceData" ReturnType="Collection(earthcoModel.SPGetInvoiceData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="SPGetIrrigationData" ReturnType="Collection(earthcoModel.SPGetIrrigationData_Result)">
-          <Parameter Name="ID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="SPGetPurchaseOrderData" ReturnType="Collection(earthcoModel.SPGetPurchaseOrderData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SPGetServiceRequestData" ReturnType="Collection(earthcoModel.SPGetServiceRequestData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="SPGetNumber" ReturnType="Collection(String)">
-            <Parameter Name="Type" Mode="In" Type="String" />
-          </FunctionImport>
+          <EntitySet Name="tblBills" EntityType="earthcoModel.tblBill" />
+          <EntitySet Name="tblBillFiles" EntityType="earthcoModel.tblBillFile" />
+          <EntitySet Name="tblControllers" EntityType="earthcoModel.tblController" />
+          <EntitySet Name="tblEstimateFiles" EntityType="earthcoModel.tblEstimateFile" />
+          <EntitySet Name="tblInvoiceFiles" EntityType="earthcoModel.tblInvoiceFile" />
+          <EntitySet Name="tblPunchlistDetails" EntityType="earthcoModel.tblPunchlistDetail" />
+          <EntitySet Name="tblPurchaseOrderFiles" EntityType="earthcoModel.tblPurchaseOrderFile" />
+          <EntitySet Name="tblSRFiles" EntityType="earthcoModel.tblSRFile" />
+          <AssociationSet Name="FK_tblBill_tblPurchaseOrder" Association="earthcoModel.FK_tblBill_tblPurchaseOrder">
+            <End Role="tblPurchaseOrder" EntitySet="tblPurchaseOrders" />
+            <End Role="tblBill" EntitySet="tblBills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBill_tblTerm" Association="earthcoModel.FK_tblBill_tblTerm">
+            <End Role="tblTerm" EntitySet="tblTerms" />
+            <End Role="tblBill" EntitySet="tblBills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBill_tblUser" Association="earthcoModel.FK_tblBill_tblUser">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblBill" EntitySet="tblBills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillFile_tblBill" Association="earthcoModel.FK_tblBillFile_tblBill">
+            <End Role="tblBill" EntitySet="tblBills" />
+            <End Role="tblBillFile" EntitySet="tblBillFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillItem_tblBill" Association="earthcoModel.FK_tblBillItem_tblBill">
+            <End Role="tblBill" EntitySet="tblBills" />
+            <End Role="tblBillItem" EntitySet="tblBillItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblContro__Irrig__5441852A" Association="earthcoModel.FK__tblContro__Irrig__5441852A">
+            <End Role="tblIrrigation" EntitySet="tblIrrigations" />
+            <End Role="tblController" EntitySet="tblControllers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEstimateFile_tblEstimate" Association="earthcoModel.FK_tblEstimateFile_tblEstimate">
+            <End Role="tblEstimate" EntitySet="tblEstimates" />
+            <End Role="tblEstimateFile" EntitySet="tblEstimateFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblInvoiceFile_tblInvoice" Association="earthcoModel.FK_tblInvoiceFile_tblInvoice">
+            <End Role="tblInvoice" EntitySet="tblInvoices" />
+            <End Role="tblInvoiceFile" EntitySet="tblInvoiceFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlistDetail_tblPunchlist" Association="earthcoModel.FK_tblPunchlistDetail_tblPunchlist">
+            <End Role="tblPunchlist" EntitySet="tblPunchlists" />
+            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblPunchl__Punch__5AEE82B9" Association="earthcoModel.FK__tblPunchl__Punch__5AEE82B9">
+            <End Role="tblPunchlistDetail" EntitySet="tblPunchlistDetails" />
+            <End Role="tblPunchlistItem" EntitySet="tblPunchlistItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPurchaseOrderFile_tblPurchaseOrder" Association="earthcoModel.FK_tblPurchaseOrderFile_tblPurchaseOrder">
+            <End Role="tblPurchaseOrder" EntitySet="tblPurchaseOrders" />
+            <End Role="tblPurchaseOrderFile" EntitySet="tblPurchaseOrderFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblSRFile__SRId__4E88ABD4" Association="earthcoModel.FK__tblSRFile__SRId__4E88ABD4">
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
+            <End Role="tblSRFile" EntitySet="tblSRFiles" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="tblSetting">
           <Key>
@@ -2640,8 +2642,8 @@
           <Property Name="isPrimary" Type="Boolean" />
           <Property Name="isDelete" Type="Boolean" />
           <NavigationProperty Name="tblPunchlists" Relationship="earthcoModel.FK_tblPunchlist_tblContact" FromRole="tblContact" ToRole="tblPunchlist" />
-          <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK_tblEstimate_tblContact" FromRole="tblContact" ToRole="tblEstimate" />
           <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblContact" FromRole="tblContact" ToRole="tblInvoice" />
+          <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK_tblEstimate_tblContact" FromRole="tblContact" ToRole="tblEstimate" />
           </EntityType>
         <EntityType Name="tblServiceLocation">
           <Key>
@@ -2662,8 +2664,8 @@
           <Property Name="isDelete" Type="Boolean" />
           <NavigationProperty Name="tblPunchlists" Relationship="earthcoModel.FK_tblPunchlist_tblServiceLocation" FromRole="tblServiceLocation" ToRole="tblPunchlist" />
           <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblServiceLocation_tblCustomer" FromRole="tblServiceLocation" ToRole="tblUser" />
-          <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK_tblEstimate_tblServiceLocation" FromRole="tblServiceLocation" ToRole="tblEstimate" />
           <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblServiceLocation" FromRole="tblServiceLocation" ToRole="tblInvoice" />
+          <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK_tblEstimate_tblServiceLocation" FromRole="tblServiceLocation" ToRole="tblEstimate" />
           </EntityType>
         <EntityType Name="tblUserType">
           <Key>
@@ -2672,24 +2674,6 @@
           <Property Name="UserTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserType" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="tblUsers" Relationship="earthcoModel.FK_tblUser_tblUserType" FromRole="tblUserType" ToRole="tblUser" />
-        </EntityType>
-        <EntityType Name="tblPurchaseOrderFile">
-          <Key>
-            <PropertyRef Name="PurchaseOrderFileId" />
-          </Key>
-          <Property Name="PurchaseOrderFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FileName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Caption" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="FilePath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Share" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="PurchaseOrderId" Type="Int32" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <Property Name="idDelete" Type="Boolean" />
-          <NavigationProperty Name="tblPurchaseOrder" Relationship="earthcoModel.FK_tblPurchaseOrderFile_tblPurchaseOrder" FromRole="tblPurchaseOrderFile" ToRole="tblPurchaseOrder" />
         </EntityType>
         <EntityType Name="tblPurchaseOrderStatu">
           <Key>
@@ -2773,24 +2757,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="tblEstimateFile">
-          <Key>
-            <PropertyRef Name="EstimateFileId" />
-          </Key>
-          <Property Name="EstimateFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FileName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Caption" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="FilePath" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Share" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="EstimateId" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblEstimate" Relationship="earthcoModel.FK_tblEstimateFile_tblEstimate" FromRole="tblEstimateFile" ToRole="tblEstimate" />
-        </EntityType>
         <EntityType Name="tblEstimateItem">
           <Key>
             <PropertyRef Name="EstimateItemId" />
@@ -2873,9 +2839,9 @@
           <Property Name="TermId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Term" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblBills" Relationship="earthcoModel.FK_tblBill_tblTerm" FromRole="tblTerm" ToRole="tblBill" />
           <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblTerm" FromRole="tblTerm" ToRole="tblInvoice" />
           <NavigationProperty Name="tblPurchaseOrders" Relationship="earthcoModel.FK_tblPurchaseOrder_tblTerm" FromRole="tblTerm" ToRole="tblPurchaseOrder" />
+          <NavigationProperty Name="tblBills" Relationship="earthcoModel.FK_tblBill_tblTerm" FromRole="tblTerm" ToRole="tblBill" />
           </EntityType>
         <ComplexType Name="SPGetPurchaseOrderFileData_Result">
           <Property Type="Int32" Name="PurchaseOrderFileId" Nullable="false" />
@@ -2891,24 +2857,6 @@
           <Property Type="Boolean" Name="isActive" Nullable="true" />
           <Property Type="Boolean" Name="idDelete" Nullable="true" />
         </ComplexType>
-        <EntityType Name="tblBillFile">
-          <Key>
-            <PropertyRef Name="BillFileId" />
-          </Key>
-          <Property Name="BillFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FileName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="Caption" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="FilePath" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Share" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="BillId" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblBill" Relationship="earthcoModel.FK_tblBillFile_tblBill" FromRole="tblBillFile" ToRole="tblBill" />
-        </EntityType>
         <ComplexType Name="SPGetBillFileData_Result">
           <Property Type="Int32" Name="BillFileId" Nullable="false" />
           <Property Type="String" Name="FileName" Nullable="false" MaxLength="20" />
@@ -2937,23 +2885,6 @@
           <Property Type="Boolean" Name="isActive" Nullable="false" />
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
         </ComplexType>
-        <EntityType Name="tblSRFile">
-          <Key>
-            <PropertyRef Name="SRFileId" />
-          </Key>
-          <Property Name="SRFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FileName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Caption" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="FilePath" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="SRId" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblServiceRequest" Relationship="earthcoModel.FK__tblSRFile__SRId__4E88ABD4" FromRole="tblSRFile" ToRole="tblServiceRequest" />
-        </EntityType>
         <ComplexType Name="SPGetServiceRequestFileData_Result">
           <Property Type="Int32" Name="SRFileId" Nullable="false" />
           <Property Type="String" Name="FileName" Nullable="false" MaxLength="20" />
@@ -3337,57 +3268,6 @@
           <Property Name="isActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK__tblEstima__Estim__3A81B327" FromRole="tblEstimateStatu" ToRole="tblEstimate" />
         </EntityType>
-        <EntityType Name="tblInvoiceFile">
-          <Key>
-            <PropertyRef Name="InvoiceFileId" />
-          </Key>
-          <Property Name="InvoiceFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Caption" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FilePath" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Share" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="InvoiceId" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblInvoice" Relationship="earthcoModel.FK_tblInvoiceFile_tblInvoice" FromRole="tblInvoiceFile" ToRole="tblInvoice" />
-        </EntityType>
-        <EntityType Name="tblPunchlistDetail">
-          <Key>
-            <PropertyRef Name="PunchlistDetailId" />
-          </Key>
-          <Property Name="PunchlistDetailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PhotoPath" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Address" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="isAfterPhoto" Type="Boolean" />
-          <Property Name="AfterPhotoPath" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="isComplete" Type="Boolean" />
-          <Property Name="PunchlistId" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblPunchlistItems" Relationship="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" FromRole="tblPunchlistDetail" ToRole="tblPunchlistItem" />
-          <NavigationProperty Name="tblPunchlist" Relationship="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" FromRole="tblPunchlistDetail" ToRole="tblPunchlist" />
-        </EntityType>
-        <Association Name="FK__tblPunchl__Punch__5AEE82B9">
-          <End Type="earthcoModel.tblPunchlistDetail" Role="tblPunchlistDetail" Multiplicity="1" />
-          <End Type="earthcoModel.tblPunchlistItem" Role="tblPunchlistItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblPunchlistDetail">
-              <PropertyRef Name="PunchlistDetailId" />
-            </Principal>
-            <Dependent Role="tblPunchlistItem">
-              <PropertyRef Name="PunchlistDetailId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="SPGetPunchlistDetailData_Result">
           <Property Type="Int32" Name="PunchlistDetailId" Nullable="false" />
           <Property Type="String" Name="PhotoPath" Nullable="true" MaxLength="50" />
@@ -3404,39 +3284,6 @@
           <Property Type="Boolean" Name="isActive" Nullable="false" />
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
         </ComplexType>
-        <EntityType Name="tblController">
-          <Key>
-            <PropertyRef Name="ControllerId" />
-          </Key>
-          <Property Name="ControllerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="MakeAndModel" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ControllerPhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="SerialNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="LoacationClosestAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="isSatelliteBased" Type="Boolean" />
-          <Property Name="TypeofWater" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="MeterNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="MeterSize" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="NumberofStation" Type="Int32" />
-          <Property Name="NumberofValves" Type="Int32" />
-          <Property Name="NumberofBrokenMainLines" Type="Int32" />
-          <Property Name="TypeofValves" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="LeakingValves" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="MalfunctioningValves" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="NumberofBrokenLateralLines" Type="Int32" />
-          <Property Name="NumberofBrokenHeads" Type="Int32" />
-          <Property Name="RepairsMade" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="UpgradesMade" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="PhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="IrrigationId" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblIrrigation" Relationship="earthcoModel.FK__tblContro__Irrig__5441852A" FromRole="tblController" ToRole="tblIrrigation" />
-        </EntityType>
         <ComplexType Name="SPGetIrrigationControllerData_Result">
           <Property Type="Int32" Name="ControllerId" Nullable="false" />
           <Property Type="String" Name="MakeAndModel" Nullable="true" MaxLength="500" />
@@ -3505,9 +3352,9 @@
           <NavigationProperty Name="tblContact" Relationship="earthcoModel.FK_tblPunchlist_tblContact" FromRole="tblPunchlist" ToRole="tblContact" />
           <NavigationProperty Name="tblPunchlistStatu" Relationship="earthcoModel.FK_tblPunchlist_tblPunchlistStatus" FromRole="tblPunchlist" ToRole="tblPunchlistStatu" />
           <NavigationProperty Name="tblServiceLocation" Relationship="earthcoModel.FK_tblPunchlist_tblServiceLocation" FromRole="tblPunchlist" ToRole="tblServiceLocation" />
-          <NavigationProperty Name="tblPunchlistDetails" Relationship="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" FromRole="tblPunchlist" ToRole="tblPunchlistDetail" />
           <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK__tblPunchl__Custo__571DF1D5" FromRole="tblPunchlist" ToRole="tblUser" />
           <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblPunchlist_tblUser" FromRole="tblPunchlist" ToRole="tblUser" />
+          <NavigationProperty Name="tblPunchlistDetails" Relationship="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" FromRole="tblPunchlist" ToRole="tblPunchlistDetail" />
         </EntityType>
         <Association Name="FK_tblPunchlist_tblContact">
           <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="1" />
@@ -3542,18 +3389,6 @@
             </Principal>
             <Dependent Role="tblPunchlist">
               <PropertyRef Name="ServiceLocationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblPunchlistDetail_tblPunchlist">
-          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="1" />
-          <End Type="earthcoModel.tblPunchlistDetail" Role="tblPunchlistDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblPunchlist">
-              <PropertyRef Name="PunchlistId" />
-            </Principal>
-            <Dependent Role="tblPunchlistDetail">
-              <PropertyRef Name="PunchlistId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3597,10 +3432,6 @@
           <NavigationProperty Name="tblServiceLocations" Relationship="earthcoModel.FK_tblServiceLocation_tblCustomer" FromRole="tblUser" ToRole="tblServiceLocation" />
           <NavigationProperty Name="tblSettings" Relationship="earthcoModel.FK_tblSetting_tblUser" FromRole="tblUser" ToRole="tblSetting" />
           <NavigationProperty Name="tblUserType" Relationship="earthcoModel.FK_tblUser_tblUserType" FromRole="tblUser" ToRole="tblUserType" />
-          <NavigationProperty Name="tblBills" Relationship="earthcoModel.FK_tblBill_tblUser" FromRole="tblUser" ToRole="tblBill" />
-          <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK_tblEstimate_tblUser" FromRole="tblUser" ToRole="tblEstimate" />
-          <NavigationProperty Name="tblEstimates1" Relationship="earthcoModel.FK_tblEstimate_tblUser1" FromRole="tblUser" ToRole="tblEstimate" />
-          <NavigationProperty Name="tblEstimates2" Relationship="earthcoModel.FK_tblEstimate_tblUser2" FromRole="tblUser" ToRole="tblEstimate" />
           <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblUser" FromRole="tblUser" ToRole="tblInvoice" />
           <NavigationProperty Name="tblInvoices1" Relationship="earthcoModel.FK_tblInvoice_tblUser1" FromRole="tblUser" ToRole="tblInvoice" />
           <NavigationProperty Name="tblIrrigations" Relationship="earthcoModel.FK_tblIrrigation_tblUser" FromRole="tblUser" ToRole="tblIrrigation" />
@@ -3609,6 +3440,10 @@
           <NavigationProperty Name="tblPurchaseOrders2" Relationship="earthcoModel.FK_tblPurchaseOrder_tblUser2" FromRole="tblUser" ToRole="tblPurchaseOrder" />
           <NavigationProperty Name="tblServiceRequests" Relationship="earthcoModel.FK__tblServic__Custo__440B1D61" FromRole="tblUser" ToRole="tblServiceRequest" />
           <NavigationProperty Name="tblServiceRequests1" Relationship="earthcoModel.FK_tblServiceRequest_tblUser" FromRole="tblUser" ToRole="tblServiceRequest" />
+          <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK_tblEstimate_tblUser" FromRole="tblUser" ToRole="tblEstimate" />
+          <NavigationProperty Name="tblEstimates1" Relationship="earthcoModel.FK_tblEstimate_tblUser1" FromRole="tblUser" ToRole="tblEstimate" />
+          <NavigationProperty Name="tblEstimates2" Relationship="earthcoModel.FK_tblEstimate_tblUser2" FromRole="tblUser" ToRole="tblEstimate" />
+          <NavigationProperty Name="tblBills" Relationship="earthcoModel.FK_tblBill_tblUser" FromRole="tblUser" ToRole="tblBill" />
           </EntityType>
         <Association Name="FK_tblUser_tblCustomerType">
           <End Type="earthcoModel.tblCustomerType" Role="tblCustomerType" Multiplicity="0..1" />
@@ -3721,78 +3556,6 @@
           <Property Name="isActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblInvoiceStatus" FromRole="tblInvoiceStatu" ToRole="tblInvoice" />
         </EntityType>
-        <EntityType Name="tblBill">
-          <Key>
-            <PropertyRef Name="BillId" />
-          </Key>
-          <Property Name="BillId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SupplierId" Type="Int32" Nullable="false" />
-          <Property Name="BillNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="Tags" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="BillDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DueDate" Type="DateTime" Precision="3" />
-          <Property Name="PurchaseOrderId" Type="Int32" />
-          <Property Name="PurchaseOrderNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="TermId" Type="Int32" />
-          <Property Name="Memo" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Amount" Type="Double" Nullable="false" />
-          <Property Name="Currency" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="DocNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblPurchaseOrder" Relationship="earthcoModel.FK_tblBill_tblPurchaseOrder" FromRole="tblBill" ToRole="tblPurchaseOrder" />
-          <NavigationProperty Name="tblTerm" Relationship="earthcoModel.FK_tblBill_tblTerm" FromRole="tblBill" ToRole="tblTerm" />
-          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblBill_tblUser" FromRole="tblBill" ToRole="tblUser" />
-          <NavigationProperty Name="tblBillFiles" Relationship="earthcoModel.FK_tblBillFile_tblBill" FromRole="tblBill" ToRole="tblBillFile" />
-          <NavigationProperty Name="tblBillItems" Relationship="earthcoModel.FK_tblBillItem_tblBill" FromRole="tblBill" ToRole="tblBillItem" />
-        </EntityType>
-        <EntityType Name="tblEstimate">
-          <Key>
-            <PropertyRef Name="EstimateId" />
-          </Key>
-          <Property Name="EstimateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EstimateNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ServiceLocationId" Type="Int32" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="IssueDate" Type="DateTime" Precision="3" />
-          <Property Name="CustomerId" Type="Int32" Nullable="false" />
-          <Property Name="ContactId" Type="Int32" Nullable="false" />
-          <Property Name="RegionalManagerId" Type="Int32" Nullable="false" />
-          <Property Name="AssignTo" Type="Int32" Nullable="false" />
-          <Property Name="RequestedBy" Type="Int32" Nullable="false" />
-          <Property Name="EstimateStatusId" Type="Int32" Nullable="false" />
-          <Property Name="QBStatus" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="EstimateNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ServiceLocationNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="PrivateNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Tax" Type="Double" />
-          <Property Name="Discount" Type="Double" />
-          <Property Name="Shipping" Type="Double" />
-          <Property Name="Profit" Type="Double" />
-          <Property Name="ProfitPercentage" Type="Double" Nullable="false" />
-          <Property Name="Tags" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="DocNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblContact" Relationship="earthcoModel.FK_tblEstimate_tblContact" FromRole="tblEstimate" ToRole="tblContact" />
-          <NavigationProperty Name="tblEstimateStatu" Relationship="earthcoModel.FK__tblEstima__Estim__3A81B327" FromRole="tblEstimate" ToRole="tblEstimateStatu" />
-          <NavigationProperty Name="tblEstimateItems" Relationship="earthcoModel.FK__tblEstima__Estim__3D5E1FD2" FromRole="tblEstimate" ToRole="tblEstimateItem" />
-          <NavigationProperty Name="tblServiceLocation" Relationship="earthcoModel.FK_tblEstimate_tblServiceLocation" FromRole="tblEstimate" ToRole="tblServiceLocation" />
-          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblEstimate_tblUser" FromRole="tblEstimate" ToRole="tblUser" />
-          <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblEstimate_tblUser1" FromRole="tblEstimate" ToRole="tblUser" />
-          <NavigationProperty Name="tblUser2" Relationship="earthcoModel.FK_tblEstimate_tblUser2" FromRole="tblEstimate" ToRole="tblUser" />
-          <NavigationProperty Name="tblEstimateFiles" Relationship="earthcoModel.FK_tblEstimateFile_tblEstimate" FromRole="tblEstimate" ToRole="tblEstimateFile" />
-          <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblPurchaseOrder" FromRole="tblEstimate" ToRole="tblInvoice" />
-          <NavigationProperty Name="tblPurchaseOrders" Relationship="earthcoModel.FK_tblPurchaseOrder_tblEstimate" FromRole="tblEstimate" ToRole="tblPurchaseOrder" />
-        </EntityType>
         <EntityType Name="tblInvoice">
           <Key>
             <PropertyRef Name="InvoiceId" />
@@ -3829,14 +3592,14 @@
           <Property Name="isActive" Type="Boolean" Nullable="false" />
           <Property Name="isDelete" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="tblContact" Relationship="earthcoModel.FK_tblInvoice_tblContact" FromRole="tblInvoice" ToRole="tblContact" />
-          <NavigationProperty Name="tblEstimate" Relationship="earthcoModel.FK_tblInvoice_tblPurchaseOrder" FromRole="tblInvoice" ToRole="tblEstimate" />
           <NavigationProperty Name="tblInvoiceStatu" Relationship="earthcoModel.FK_tblInvoice_tblInvoiceStatus" FromRole="tblInvoice" ToRole="tblInvoiceStatu" />
           <NavigationProperty Name="tblServiceLocation" Relationship="earthcoModel.FK_tblInvoice_tblServiceLocation" FromRole="tblInvoice" ToRole="tblServiceLocation" />
           <NavigationProperty Name="tblTerm" Relationship="earthcoModel.FK_tblInvoice_tblTerm" FromRole="tblInvoice" ToRole="tblTerm" />
           <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblInvoice_tblUser" FromRole="tblInvoice" ToRole="tblUser" />
           <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblInvoice_tblUser1" FromRole="tblInvoice" ToRole="tblUser" />
-          <NavigationProperty Name="tblInvoiceFiles" Relationship="earthcoModel.FK_tblInvoiceFile_tblInvoice" FromRole="tblInvoice" ToRole="tblInvoiceFile" />
           <NavigationProperty Name="tblInvoiceItems" Relationship="earthcoModel.FK_tblInvoiceItem_tblInvoice" FromRole="tblInvoice" ToRole="tblInvoiceItem" />
+          <NavigationProperty Name="tblEstimate" Relationship="earthcoModel.FK_tblInvoice_tblPurchaseOrder" FromRole="tblInvoice" ToRole="tblEstimate" />
+          <NavigationProperty Name="tblInvoiceFiles" Relationship="earthcoModel.FK_tblInvoiceFile_tblInvoice" FromRole="tblInvoice" ToRole="tblInvoiceFile" />
         </EntityType>
         <EntityType Name="tblIrrigation">
           <Key>
@@ -3852,8 +3615,8 @@
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" Nullable="false" />
           <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblControllers" Relationship="earthcoModel.FK__tblContro__Irrig__5441852A" FromRole="tblIrrigation" ToRole="tblController" />
           <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblIrrigation_tblUser" FromRole="tblIrrigation" ToRole="tblUser" />
+          <NavigationProperty Name="tblControllers" Relationship="earthcoModel.FK__tblContro__Irrig__5441852A" FromRole="tblIrrigation" ToRole="tblController" />
         </EntityType>
         <EntityType Name="tblPurchaseOrder">
           <Key>
@@ -3886,15 +3649,15 @@
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" Nullable="false" />
           <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblBills" Relationship="earthcoModel.FK_tblBill_tblPurchaseOrder" FromRole="tblPurchaseOrder" ToRole="tblBill" />
-          <NavigationProperty Name="tblEstimate" Relationship="earthcoModel.FK_tblPurchaseOrder_tblEstimate" FromRole="tblPurchaseOrder" ToRole="tblEstimate" />
           <NavigationProperty Name="tblPurchaseOrderStatu" Relationship="earthcoModel.FK_tblPurchaseOrder_tblPurchaseOrderStatus" FromRole="tblPurchaseOrder" ToRole="tblPurchaseOrderStatu" />
           <NavigationProperty Name="tblTerm" Relationship="earthcoModel.FK_tblPurchaseOrder_tblTerm" FromRole="tblPurchaseOrder" ToRole="tblTerm" />
           <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblPurchaseOrder_tblUser" FromRole="tblPurchaseOrder" ToRole="tblUser" />
           <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblPurchaseOrder_tblUser1" FromRole="tblPurchaseOrder" ToRole="tblUser" />
           <NavigationProperty Name="tblUser2" Relationship="earthcoModel.FK_tblPurchaseOrder_tblUser2" FromRole="tblPurchaseOrder" ToRole="tblUser" />
-          <NavigationProperty Name="tblPurchaseOrderFiles" Relationship="earthcoModel.FK_tblPurchaseOrderFile_tblPurchaseOrder" FromRole="tblPurchaseOrder" ToRole="tblPurchaseOrderFile" />
           <NavigationProperty Name="tblPurchaseOrderItems" Relationship="earthcoModel.FK_tblPurchaseOrderItem_tblPurchaseOrder" FromRole="tblPurchaseOrder" ToRole="tblPurchaseOrderItem" />
+          <NavigationProperty Name="tblEstimate" Relationship="earthcoModel.FK_tblPurchaseOrder_tblEstimate" FromRole="tblPurchaseOrder" ToRole="tblEstimate" />
+          <NavigationProperty Name="tblBills" Relationship="earthcoModel.FK_tblBill_tblPurchaseOrder" FromRole="tblPurchaseOrder" ToRole="tblBill" />
+          <NavigationProperty Name="tblPurchaseOrderFiles" Relationship="earthcoModel.FK_tblPurchaseOrderFile_tblPurchaseOrder" FromRole="tblPurchaseOrder" ToRole="tblPurchaseOrderFile" />
         </EntityType>
         <EntityType Name="tblServiceRequest">
           <Key>
@@ -3923,82 +3686,10 @@
           <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK__tblServic__Custo__440B1D61" FromRole="tblServiceRequest" ToRole="tblUser" />
           <NavigationProperty Name="tblSRStatu" Relationship="earthcoModel.FK__tblServic__SRSta__45F365D3" FromRole="tblServiceRequest" ToRole="tblSRStatu" />
           <NavigationProperty Name="tblSRType" Relationship="earthcoModel.FK__tblServic__SRTyp__44FF419A" FromRole="tblServiceRequest" ToRole="tblSRType" />
-          <NavigationProperty Name="tblSRFiles" Relationship="earthcoModel.FK__tblSRFile__SRId__4E88ABD4" FromRole="tblServiceRequest" ToRole="tblSRFile" />
           <NavigationProperty Name="tblSRItems" Relationship="earthcoModel.FK__tblSRItem__SRId__4BAC3F29" FromRole="tblServiceRequest" ToRole="tblSRItem" />
           <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblServiceRequest_tblUser" FromRole="tblServiceRequest" ToRole="tblUser" />
+          <NavigationProperty Name="tblSRFiles" Relationship="earthcoModel.FK__tblSRFile__SRId__4E88ABD4" FromRole="tblServiceRequest" ToRole="tblSRFile" />
         </EntityType>
-        <Association Name="FK_tblBill_tblPurchaseOrder">
-          <End Type="earthcoModel.tblPurchaseOrder" Role="tblPurchaseOrder" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblPurchaseOrder">
-              <PropertyRef Name="PurchaseOrderId" />
-            </Principal>
-            <Dependent Role="tblBill">
-              <PropertyRef Name="PurchaseOrderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblBill_tblTerm">
-          <End Type="earthcoModel.tblTerm" Role="tblTerm" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblTerm">
-              <PropertyRef Name="TermId" />
-            </Principal>
-            <Dependent Role="tblBill">
-              <PropertyRef Name="TermId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblBill_tblUser">
-          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
-          <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblUser">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="tblBill">
-              <PropertyRef Name="SupplierId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblBillFile_tblBill">
-          <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="1" />
-          <End Type="earthcoModel.tblBillFile" Role="tblBillFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblBill">
-              <PropertyRef Name="BillId" />
-            </Principal>
-            <Dependent Role="tblBillFile">
-              <PropertyRef Name="BillId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblBillItem_tblBill">
-          <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="1" />
-          <End Type="earthcoModel.tblBillItem" Role="tblBillItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblBill">
-              <PropertyRef Name="BillId" />
-            </Principal>
-            <Dependent Role="tblBillItem">
-              <PropertyRef Name="BillId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblEstimate_tblContact">
-          <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="1" />
-          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblContact">
-              <PropertyRef Name="ContactId" />
-            </Principal>
-            <Dependent Role="tblEstimate">
-              <PropertyRef Name="ContactId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_tblInvoice_tblContact">
           <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="0..1" />
           <End Type="earthcoModel.tblInvoice" Role="tblInvoice" Multiplicity="*" />
@@ -4008,126 +3699,6 @@
             </Principal>
             <Dependent Role="tblInvoice">
               <PropertyRef Name="ContactId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblContro__Irrig__5441852A">
-          <End Type="earthcoModel.tblIrrigation" Role="tblIrrigation" Multiplicity="1" />
-          <End Type="earthcoModel.tblController" Role="tblController" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblIrrigation">
-              <PropertyRef Name="IrrigationId" />
-            </Principal>
-            <Dependent Role="tblController">
-              <PropertyRef Name="IrrigationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblEstima__Estim__3A81B327">
-          <End Type="earthcoModel.tblEstimateStatu" Role="tblEstimateStatu" Multiplicity="1" />
-          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblEstimateStatu">
-              <PropertyRef Name="EstimateStatusId" />
-            </Principal>
-            <Dependent Role="tblEstimate">
-              <PropertyRef Name="EstimateStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__tblEstima__Estim__3D5E1FD2">
-          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="1" />
-          <End Type="earthcoModel.tblEstimateItem" Role="tblEstimateItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblEstimate">
-              <PropertyRef Name="EstimateId" />
-            </Principal>
-            <Dependent Role="tblEstimateItem">
-              <PropertyRef Name="EstimateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblEstimate_tblServiceLocation">
-          <End Type="earthcoModel.tblServiceLocation" Role="tblServiceLocation" Multiplicity="1" />
-          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblServiceLocation">
-              <PropertyRef Name="ServiceLocationId" />
-            </Principal>
-            <Dependent Role="tblEstimate">
-              <PropertyRef Name="ServiceLocationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblEstimate_tblUser">
-          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
-          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblUser">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="tblEstimate">
-              <PropertyRef Name="RegionalManagerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblEstimate_tblUser1">
-          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
-          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblUser">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="tblEstimate">
-              <PropertyRef Name="RequestedBy" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblEstimate_tblUser2">
-          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
-          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblUser">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="tblEstimate">
-              <PropertyRef Name="AssignTo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblEstimateFile_tblEstimate">
-          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="1" />
-          <End Type="earthcoModel.tblEstimateFile" Role="tblEstimateFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblEstimate">
-              <PropertyRef Name="EstimateId" />
-            </Principal>
-            <Dependent Role="tblEstimateFile">
-              <PropertyRef Name="EstimateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblInvoice_tblPurchaseOrder">
-          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblInvoice" Role="tblInvoice" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblEstimate">
-              <PropertyRef Name="EstimateId" />
-            </Principal>
-            <Dependent Role="tblInvoice">
-              <PropertyRef Name="EstimateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblPurchaseOrder_tblEstimate">
-          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblPurchaseOrder" Role="tblPurchaseOrder" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblEstimate">
-              <PropertyRef Name="EstimateId" />
-            </Principal>
-            <Dependent Role="tblPurchaseOrder">
-              <PropertyRef Name="EstimateId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4188,18 +3759,6 @@
             </Principal>
             <Dependent Role="tblInvoice">
               <PropertyRef Name="AssignTo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblInvoiceFile_tblInvoice">
-          <End Type="earthcoModel.tblInvoice" Role="tblInvoice" Multiplicity="1" />
-          <End Type="earthcoModel.tblInvoiceFile" Role="tblInvoiceFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblInvoice">
-              <PropertyRef Name="InvoiceId" />
-            </Principal>
-            <Dependent Role="tblInvoiceFile">
-              <PropertyRef Name="InvoiceId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4287,18 +3846,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_tblPurchaseOrderFile_tblPurchaseOrder">
-          <End Type="earthcoModel.tblPurchaseOrder" Role="tblPurchaseOrder" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblPurchaseOrderFile" Role="tblPurchaseOrderFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblPurchaseOrder">
-              <PropertyRef Name="PurchaseOrderId" />
-            </Principal>
-            <Dependent Role="tblPurchaseOrderFile">
-              <PropertyRef Name="PurchaseOrderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_tblPurchaseOrderItem_tblPurchaseOrder">
           <End Type="earthcoModel.tblPurchaseOrder" Role="tblPurchaseOrder" Multiplicity="1" />
           <End Type="earthcoModel.tblPurchaseOrderItem" Role="tblPurchaseOrderItem" Multiplicity="*" />
@@ -4347,18 +3894,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__tblSRFile__SRId__4E88ABD4">
-          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="1" />
-          <End Type="earthcoModel.tblSRFile" Role="tblSRFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblServiceRequest">
-              <PropertyRef Name="ServiceRequestId" />
-            </Principal>
-            <Dependent Role="tblSRFile">
-              <PropertyRef Name="SRId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__tblSRItem__SRId__4BAC3F29">
           <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="1" />
           <End Type="earthcoModel.tblSRItem" Role="tblSRItem" Multiplicity="*" />
@@ -4383,6 +3918,171 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="SPGetIrrigationData_Result">
+          <Property Type="Int32" Name="IrrigationId" Nullable="false" />
+          <Property Type="String" Name="IrrigationNumber" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="String" Name="DocNumber" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="tblEstimate">
+          <Key>
+            <PropertyRef Name="EstimateId" />
+          </Key>
+          <Property Name="EstimateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EstimateNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ServiceLocationId" Type="Int32" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IssueDate" Type="DateTime" Precision="3" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="ContactId" Type="Int32" Nullable="false" />
+          <Property Name="RegionalManagerId" Type="Int32" Nullable="false" />
+          <Property Name="AssignTo" Type="Int32" Nullable="false" />
+          <Property Name="RequestedBy" Type="Int32" Nullable="false" />
+          <Property Name="EstimateStatusId" Type="Int32" Nullable="false" />
+          <Property Name="QBStatus" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EstimateNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ServiceLocationNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="PrivateNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Tax" Type="Double" />
+          <Property Name="Discount" Type="Double" />
+          <Property Name="Shipping" Type="Double" />
+          <Property Name="Profit" Type="Double" />
+          <Property Name="ProfitPercentage" Type="Double" Nullable="false" />
+          <Property Name="Tags" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DocNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <Property Name="TotalAmount" Type="Double" />
+          <Property Name="BalanceAmount" Type="Double" />
+          <NavigationProperty Name="tblContact" Relationship="earthcoModel.FK_tblEstimate_tblContact" FromRole="tblEstimate" ToRole="tblContact" />
+          <NavigationProperty Name="tblEstimateStatu" Relationship="earthcoModel.FK__tblEstima__Estim__3A81B327" FromRole="tblEstimate" ToRole="tblEstimateStatu" />
+          <NavigationProperty Name="tblEstimateItems" Relationship="earthcoModel.FK__tblEstima__Estim__3D5E1FD2" FromRole="tblEstimate" ToRole="tblEstimateItem" />
+          <NavigationProperty Name="tblServiceLocation" Relationship="earthcoModel.FK_tblEstimate_tblServiceLocation" FromRole="tblEstimate" ToRole="tblServiceLocation" />
+          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblEstimate_tblUser" FromRole="tblEstimate" ToRole="tblUser" />
+          <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblEstimate_tblUser1" FromRole="tblEstimate" ToRole="tblUser" />
+          <NavigationProperty Name="tblUser2" Relationship="earthcoModel.FK_tblEstimate_tblUser2" FromRole="tblEstimate" ToRole="tblUser" />
+          <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblPurchaseOrder" FromRole="tblEstimate" ToRole="tblInvoice" />
+          <NavigationProperty Name="tblPurchaseOrders" Relationship="earthcoModel.FK_tblPurchaseOrder_tblEstimate" FromRole="tblEstimate" ToRole="tblPurchaseOrder" />
+          <NavigationProperty Name="tblEstimateFiles" Relationship="earthcoModel.FK_tblEstimateFile_tblEstimate" FromRole="tblEstimate" ToRole="tblEstimateFile" />
+        </EntityType>
+        <Association Name="FK_tblEstimate_tblContact">
+          <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="1" />
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblContact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="tblEstimate">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblEstima__Estim__3A81B327">
+          <End Type="earthcoModel.tblEstimateStatu" Role="tblEstimateStatu" Multiplicity="1" />
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEstimateStatu">
+              <PropertyRef Name="EstimateStatusId" />
+            </Principal>
+            <Dependent Role="tblEstimate">
+              <PropertyRef Name="EstimateStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblEstima__Estim__3D5E1FD2">
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="1" />
+          <End Type="earthcoModel.tblEstimateItem" Role="tblEstimateItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEstimate">
+              <PropertyRef Name="EstimateId" />
+            </Principal>
+            <Dependent Role="tblEstimateItem">
+              <PropertyRef Name="EstimateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEstimate_tblServiceLocation">
+          <End Type="earthcoModel.tblServiceLocation" Role="tblServiceLocation" Multiplicity="1" />
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceLocation">
+              <PropertyRef Name="ServiceLocationId" />
+            </Principal>
+            <Dependent Role="tblEstimate">
+              <PropertyRef Name="ServiceLocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEstimate_tblUser">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblEstimate">
+              <PropertyRef Name="RegionalManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEstimate_tblUser1">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblEstimate">
+              <PropertyRef Name="RequestedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEstimate_tblUser2">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblEstimate">
+              <PropertyRef Name="AssignTo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblInvoice_tblPurchaseOrder">
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblInvoice" Role="tblInvoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEstimate">
+              <PropertyRef Name="EstimateId" />
+            </Principal>
+            <Dependent Role="tblInvoice">
+              <PropertyRef Name="EstimateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPurchaseOrder_tblEstimate">
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblPurchaseOrder" Role="tblPurchaseOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEstimate">
+              <PropertyRef Name="EstimateId" />
+            </Principal>
+            <Dependent Role="tblPurchaseOrder">
+              <PropertyRef Name="EstimateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <ComplexType Name="SPGetBillData_Result">
           <Property Type="Int32" Name="BillId" Nullable="false" />
           <Property Type="Int32" Name="SupplierId" Nullable="false" />
@@ -4403,6 +4103,7 @@
           <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
           <Property Type="Boolean" Name="isActive" Nullable="false" />
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="50" />
         </ComplexType>
         <ComplexType Name="SPGetEstimateData_Result">
           <Property Type="Int32" Name="EstimateId" Nullable="false" />
@@ -4433,6 +4134,9 @@
           <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
           <Property Type="Boolean" Name="isActive" Nullable="false" />
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="Double" Name="TotalAmount" Nullable="true" />
+          <Property Type="Double" Name="BalanceAmount" Nullable="true" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="50" />
         </ComplexType>
         <ComplexType Name="SPGetInvoiceData_Result">
           <Property Type="Int32" Name="InvoiceId" Nullable="false" />
@@ -4466,18 +4170,7 @@
           <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
           <Property Type="Boolean" Name="isActive" Nullable="false" />
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
-        </ComplexType>
-        <ComplexType Name="SPGetIrrigationData_Result">
-          <Property Type="Int32" Name="IrrigationId" Nullable="false" />
-          <Property Type="String" Name="IrrigationNumber" Nullable="true" MaxLength="500" />
-          <Property Type="Int32" Name="CustomerId" Nullable="false" />
-          <Property Type="String" Name="DocNumber" Nullable="true" MaxLength="500" />
-          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
-          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
-          <Property Type="Int32" Name="EditBy" Nullable="true" />
-          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
-          <Property Type="Boolean" Name="isActive" Nullable="false" />
-          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="50" />
         </ComplexType>
         <ComplexType Name="SPGetPurchaseOrderData_Result">
           <Property Type="Int32" Name="PurchaseOrderId" Nullable="false" />
@@ -4507,6 +4200,7 @@
           <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
           <Property Type="Boolean" Name="isActive" Nullable="false" />
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="50" />
         </ComplexType>
         <ComplexType Name="SPGetServiceRequestData_Result">
           <Property Type="Int32" Name="ServiceRequestId" Nullable="false" />
@@ -4529,7 +4223,324 @@
           <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
           <Property Type="Boolean" Name="isActive" Nullable="false" />
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="tblBill">
+          <Key>
+            <PropertyRef Name="BillId" />
+          </Key>
+          <Property Name="BillId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SupplierId" Type="Int32" Nullable="false" />
+          <Property Name="BillNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Tags" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="BillDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DueDate" Type="DateTime" Precision="3" />
+          <Property Name="PurchaseOrderId" Type="Int32" />
+          <Property Name="PurchaseOrderNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="TermId" Type="Int32" />
+          <Property Name="Memo" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Amount" Type="Double" Nullable="false" />
+          <Property Name="Currency" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DocNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblPurchaseOrder" Relationship="earthcoModel.FK_tblBill_tblPurchaseOrder" FromRole="tblBill" ToRole="tblPurchaseOrder" />
+          <NavigationProperty Name="tblTerm" Relationship="earthcoModel.FK_tblBill_tblTerm" FromRole="tblBill" ToRole="tblTerm" />
+          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblBill_tblUser" FromRole="tblBill" ToRole="tblUser" />
+          <NavigationProperty Name="tblBillFiles" Relationship="earthcoModel.FK_tblBillFile_tblBill" FromRole="tblBill" ToRole="tblBillFile" />
+          <NavigationProperty Name="tblBillItems" Relationship="earthcoModel.FK_tblBillItem_tblBill" FromRole="tblBill" ToRole="tblBillItem" />
+        </EntityType>
+        <EntityType Name="tblBillFile">
+          <Key>
+            <PropertyRef Name="BillFileId" />
+          </Key>
+          <Property Name="BillFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Caption" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="FilePath" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Share" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="BillId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblBill" Relationship="earthcoModel.FK_tblBillFile_tblBill" FromRole="tblBillFile" ToRole="tblBill" />
+        </EntityType>
+        <EntityType Name="tblController">
+          <Key>
+            <PropertyRef Name="ControllerId" />
+          </Key>
+          <Property Name="ControllerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MakeAndModel" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ControllerPhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SerialNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="LoacationClosestAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="isSatelliteBased" Type="Boolean" />
+          <Property Name="TypeofWater" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="MeterNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="MeterSize" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="NumberofStation" Type="Int32" />
+          <Property Name="NumberofValves" Type="Int32" />
+          <Property Name="NumberofBrokenMainLines" Type="Int32" />
+          <Property Name="TypeofValves" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="LeakingValves" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="MalfunctioningValves" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="NumberofBrokenLateralLines" Type="Int32" />
+          <Property Name="NumberofBrokenHeads" Type="Int32" />
+          <Property Name="RepairsMade" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="UpgradesMade" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="PhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IrrigationId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblIrrigation" Relationship="earthcoModel.FK__tblContro__Irrig__5441852A" FromRole="tblController" ToRole="tblIrrigation" />
+        </EntityType>
+        <EntityType Name="tblEstimateFile">
+          <Key>
+            <PropertyRef Name="EstimateFileId" />
+          </Key>
+          <Property Name="EstimateFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Caption" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="FilePath" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Share" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="EstimateId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblEstimate" Relationship="earthcoModel.FK_tblEstimateFile_tblEstimate" FromRole="tblEstimateFile" ToRole="tblEstimate" />
+        </EntityType>
+        <EntityType Name="tblInvoiceFile">
+          <Key>
+            <PropertyRef Name="InvoiceFileId" />
+          </Key>
+          <Property Name="InvoiceFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Caption" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="FilePath" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Share" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="InvoiceId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblInvoice" Relationship="earthcoModel.FK_tblInvoiceFile_tblInvoice" FromRole="tblInvoiceFile" ToRole="tblInvoice" />
+        </EntityType>
+        <EntityType Name="tblPunchlistDetail">
+          <Key>
+            <PropertyRef Name="PunchlistDetailId" />
+          </Key>
+          <Property Name="PunchlistDetailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PhotoPath" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="isAfterPhoto" Type="Boolean" />
+          <Property Name="AfterPhotoPath" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="isComplete" Type="Boolean" />
+          <Property Name="PunchlistId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblPunchlist" Relationship="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" FromRole="tblPunchlistDetail" ToRole="tblPunchlist" />
+          <NavigationProperty Name="tblPunchlistItems" Relationship="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" FromRole="tblPunchlistDetail" ToRole="tblPunchlistItem" />
+        </EntityType>
+        <EntityType Name="tblPurchaseOrderFile">
+          <Key>
+            <PropertyRef Name="PurchaseOrderFileId" />
+          </Key>
+          <Property Name="PurchaseOrderFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Caption" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="FilePath" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Share" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="PurchaseOrderId" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="idDelete" Type="Boolean" />
+          <NavigationProperty Name="tblPurchaseOrder" Relationship="earthcoModel.FK_tblPurchaseOrderFile_tblPurchaseOrder" FromRole="tblPurchaseOrderFile" ToRole="tblPurchaseOrder" />
+        </EntityType>
+        <EntityType Name="tblSRFile">
+          <Key>
+            <PropertyRef Name="SRFileId" />
+          </Key>
+          <Property Name="SRFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Caption" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="FilePath" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="SRId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblServiceRequest" Relationship="earthcoModel.FK__tblSRFile__SRId__4E88ABD4" FromRole="tblSRFile" ToRole="tblServiceRequest" />
+        </EntityType>
+        <Association Name="FK_tblBill_tblPurchaseOrder">
+          <End Type="earthcoModel.tblPurchaseOrder" Role="tblPurchaseOrder" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPurchaseOrder">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Principal>
+            <Dependent Role="tblBill">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBill_tblTerm">
+          <End Type="earthcoModel.tblTerm" Role="tblTerm" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTerm">
+              <PropertyRef Name="TermId" />
+            </Principal>
+            <Dependent Role="tblBill">
+              <PropertyRef Name="TermId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBill_tblUser">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
+          <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblBill">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillFile_tblBill">
+          <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="1" />
+          <End Type="earthcoModel.tblBillFile" Role="tblBillFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBill">
+              <PropertyRef Name="BillId" />
+            </Principal>
+            <Dependent Role="tblBillFile">
+              <PropertyRef Name="BillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillItem_tblBill">
+          <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="1" />
+          <End Type="earthcoModel.tblBillItem" Role="tblBillItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBill">
+              <PropertyRef Name="BillId" />
+            </Principal>
+            <Dependent Role="tblBillItem">
+              <PropertyRef Name="BillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblContro__Irrig__5441852A">
+          <End Type="earthcoModel.tblIrrigation" Role="tblIrrigation" Multiplicity="1" />
+          <End Type="earthcoModel.tblController" Role="tblController" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblIrrigation">
+              <PropertyRef Name="IrrigationId" />
+            </Principal>
+            <Dependent Role="tblController">
+              <PropertyRef Name="IrrigationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEstimateFile_tblEstimate">
+          <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="1" />
+          <End Type="earthcoModel.tblEstimateFile" Role="tblEstimateFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEstimate">
+              <PropertyRef Name="EstimateId" />
+            </Principal>
+            <Dependent Role="tblEstimateFile">
+              <PropertyRef Name="EstimateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblInvoiceFile_tblInvoice">
+          <End Type="earthcoModel.tblInvoice" Role="tblInvoice" Multiplicity="1" />
+          <End Type="earthcoModel.tblInvoiceFile" Role="tblInvoiceFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblInvoice">
+              <PropertyRef Name="InvoiceId" />
+            </Principal>
+            <Dependent Role="tblInvoiceFile">
+              <PropertyRef Name="InvoiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlistDetail_tblPunchlist">
+          <End Type="earthcoModel.tblPunchlist" Role="tblPunchlist" Multiplicity="1" />
+          <End Type="earthcoModel.tblPunchlistDetail" Role="tblPunchlistDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPunchlist">
+              <PropertyRef Name="PunchlistId" />
+            </Principal>
+            <Dependent Role="tblPunchlistDetail">
+              <PropertyRef Name="PunchlistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblPunchl__Punch__5AEE82B9">
+          <End Type="earthcoModel.tblPunchlistDetail" Role="tblPunchlistDetail" Multiplicity="1" />
+          <End Type="earthcoModel.tblPunchlistItem" Role="tblPunchlistItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPunchlistDetail">
+              <PropertyRef Name="PunchlistDetailId" />
+            </Principal>
+            <Dependent Role="tblPunchlistItem">
+              <PropertyRef Name="PunchlistDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPurchaseOrderFile_tblPurchaseOrder">
+          <End Type="earthcoModel.tblPurchaseOrder" Role="tblPurchaseOrder" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblPurchaseOrderFile" Role="tblPurchaseOrderFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPurchaseOrder">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Principal>
+            <Dependent Role="tblPurchaseOrderFile">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblSRFile__SRId__4E88ABD4">
+          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="1" />
+          <End Type="earthcoModel.tblSRFile" Role="tblSRFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceRequest">
+              <PropertyRef Name="ServiceRequestId" />
+            </Principal>
+            <Dependent Role="tblSRFile">
+              <PropertyRef Name="SRId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4807,24 +4818,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblPurchaseOrderFiles">
-            <EntityTypeMapping TypeName="earthcoModel.tblPurchaseOrderFile">
-              <MappingFragment StoreEntitySet="tblPurchaseOrderFile">
-                <ScalarProperty Name="idDelete" ColumnName="idDelete" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
-                <ScalarProperty Name="Share" ColumnName="Share" />
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="Caption" ColumnName="Caption" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="PurchaseOrderFileId" ColumnName="PurchaseOrderFileId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblPurchaseOrderStatus">
             <EntityTypeMapping TypeName="earthcoModel.tblPurchaseOrderStatu">
               <MappingFragment StoreEntitySet="tblPurchaseOrderStatus">
@@ -4872,24 +4865,6 @@
                 <ScalarProperty Name="SKU" ColumnName="SKU" />
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="ItemId" ColumnName="ItemId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblEstimateFiles">
-            <EntityTypeMapping TypeName="earthcoModel.tblEstimateFile">
-              <MappingFragment StoreEntitySet="tblEstimateFile">
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
-                <ScalarProperty Name="Share" ColumnName="Share" />
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="Caption" ColumnName="Caption" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="EstimateFileId" ColumnName="EstimateFileId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -4991,24 +4966,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="tblBillFiles">
-            <EntityTypeMapping TypeName="earthcoModel.tblBillFile">
-              <MappingFragment StoreEntitySet="tblBillFile">
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="BillId" ColumnName="BillId" />
-                <ScalarProperty Name="Share" ColumnName="Share" />
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="Caption" ColumnName="Caption" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="BillFileId" ColumnName="BillFileId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="SPGetBillFileData" FunctionName="earthcoModel.Store.SPGetBillFileData">
             <ResultMapping>
               <ComplexTypeMapping TypeName="earthcoModel.SPGetBillFileData_Result">
@@ -5045,23 +5002,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="tblSRFiles">
-            <EntityTypeMapping TypeName="earthcoModel.tblSRFile">
-              <MappingFragment StoreEntitySet="tblSRFile">
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="SRId" ColumnName="SRId" />
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="Caption" ColumnName="Caption" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="SRFileId" ColumnName="SRFileId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="SPGetServiceRequestFileData" FunctionName="earthcoModel.Store.SPGetServiceRequestFileData">
             <ResultMapping>
               <ComplexTypeMapping TypeName="earthcoModel.SPGetServiceRequestFileData_Result">
@@ -5420,44 +5360,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblInvoiceFiles">
-            <EntityTypeMapping TypeName="earthcoModel.tblInvoiceFile">
-              <MappingFragment StoreEntitySet="tblInvoiceFile">
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="InvoiceId" ColumnName="InvoiceId" />
-                <ScalarProperty Name="Share" ColumnName="Share" />
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="Caption" ColumnName="Caption" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="InvoiceFileId" ColumnName="InvoiceFileId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblPunchlistDetails">
-            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistDetail">
-              <MappingFragment StoreEntitySet="tblPunchlistDetail">
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
-                <ScalarProperty Name="isComplete" ColumnName="isComplete" />
-                <ScalarProperty Name="AfterPhotoPath" ColumnName="AfterPhotoPath" />
-                <ScalarProperty Name="isAfterPhoto" ColumnName="isAfterPhoto" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
-                <ScalarProperty Name="PunchlistDetailId" ColumnName="PunchlistDetailId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="SPGetPunchlistDetailData" FunctionName="earthcoModel.Store.SPGetPunchlistDetailData">
             <ResultMapping>
               <ComplexTypeMapping TypeName="earthcoModel.SPGetPunchlistDetailData_Result">
@@ -5478,39 +5380,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="tblControllers">
-            <EntityTypeMapping TypeName="earthcoModel.tblController">
-              <MappingFragment StoreEntitySet="tblController">
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
-                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
-                <ScalarProperty Name="UpgradesMade" ColumnName="UpgradesMade" />
-                <ScalarProperty Name="RepairsMade" ColumnName="RepairsMade" />
-                <ScalarProperty Name="NumberofBrokenHeads" ColumnName="NumberofBrokenHeads" />
-                <ScalarProperty Name="NumberofBrokenLateralLines" ColumnName="NumberofBrokenLateralLines" />
-                <ScalarProperty Name="MalfunctioningValves" ColumnName="MalfunctioningValves" />
-                <ScalarProperty Name="LeakingValves" ColumnName="LeakingValves" />
-                <ScalarProperty Name="TypeofValves" ColumnName="TypeofValves" />
-                <ScalarProperty Name="NumberofBrokenMainLines" ColumnName="NumberofBrokenMainLines" />
-                <ScalarProperty Name="NumberofValves" ColumnName="NumberofValves" />
-                <ScalarProperty Name="NumberofStation" ColumnName="NumberofStation" />
-                <ScalarProperty Name="MeterSize" ColumnName="MeterSize" />
-                <ScalarProperty Name="MeterNumber" ColumnName="MeterNumber" />
-                <ScalarProperty Name="TypeofWater" ColumnName="TypeofWater" />
-                <ScalarProperty Name="isSatelliteBased" ColumnName="isSatelliteBased" />
-                <ScalarProperty Name="LoacationClosestAddress" ColumnName="LoacationClosestAddress" />
-                <ScalarProperty Name="SerialNumber" ColumnName="SerialNumber" />
-                <ScalarProperty Name="ControllerPhotoPath" ColumnName="ControllerPhotoPath" />
-                <ScalarProperty Name="MakeAndModel" ColumnName="MakeAndModel" />
-                <ScalarProperty Name="ControllerId" ColumnName="ControllerId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="SPGetIrrigationControllerData" FunctionName="earthcoModel.Store.SPGetIrrigationControllerData">
             <ResultMapping>
               <ComplexTypeMapping TypeName="earthcoModel.SPGetIrrigationControllerData_Result">
@@ -5652,65 +5521,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblBills">
-            <EntityTypeMapping TypeName="earthcoModel.tblBill">
-              <MappingFragment StoreEntitySet="tblBill">
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="DocNumber" ColumnName="DocNumber" />
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="Memo" ColumnName="Memo" />
-                <ScalarProperty Name="TermId" ColumnName="TermId" />
-                <ScalarProperty Name="PurchaseOrderNumber" ColumnName="PurchaseOrderNumber" />
-                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
-                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
-                <ScalarProperty Name="BillDate" ColumnName="BillDate" />
-                <ScalarProperty Name="Tags" ColumnName="Tags" />
-                <ScalarProperty Name="BillNumber" ColumnName="BillNumber" />
-                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
-                <ScalarProperty Name="BillId" ColumnName="BillId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblEstimates">
-            <EntityTypeMapping TypeName="earthcoModel.tblEstimate">
-              <MappingFragment StoreEntitySet="tblEstimate">
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="DocNumber" ColumnName="DocNumber" />
-                <ScalarProperty Name="Tags" ColumnName="Tags" />
-                <ScalarProperty Name="ProfitPercentage" ColumnName="ProfitPercentage" />
-                <ScalarProperty Name="Profit" ColumnName="Profit" />
-                <ScalarProperty Name="Shipping" ColumnName="Shipping" />
-                <ScalarProperty Name="Discount" ColumnName="Discount" />
-                <ScalarProperty Name="Tax" ColumnName="Tax" />
-                <ScalarProperty Name="PrivateNotes" ColumnName="PrivateNotes" />
-                <ScalarProperty Name="ServiceLocationNotes" ColumnName="ServiceLocationNotes" />
-                <ScalarProperty Name="EstimateNotes" ColumnName="EstimateNotes" />
-                <ScalarProperty Name="QBStatus" ColumnName="QBStatus" />
-                <ScalarProperty Name="EstimateStatusId" ColumnName="EstimateStatusId" />
-                <ScalarProperty Name="RequestedBy" ColumnName="RequestedBy" />
-                <ScalarProperty Name="AssignTo" ColumnName="AssignTo" />
-                <ScalarProperty Name="RegionalManagerId" ColumnName="RegionalManagerId" />
-                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
-                <ScalarProperty Name="EstimateNumber" ColumnName="EstimateNumber" />
-                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblInvoices">
             <EntityTypeMapping TypeName="earthcoModel.tblInvoice">
               <MappingFragment StoreEntitySet="tblInvoice">
@@ -5823,6 +5633,59 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SPGetIrrigationData" FunctionName="earthcoModel.Store.SPGetIrrigationData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetIrrigationData_Result">
+                <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
+                <ScalarProperty Name="IrrigationNumber" ColumnName="IrrigationNumber" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="DocNumber" ColumnName="DocNumber" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetNumber" FunctionName="earthcoModel.Store.SPGetNumber" />
+          <EntitySetMapping Name="tblEstimates">
+            <EntityTypeMapping TypeName="earthcoModel.tblEstimate">
+              <MappingFragment StoreEntitySet="tblEstimate">
+                <ScalarProperty Name="BalanceAmount" ColumnName="BalanceAmount" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="DocNumber" ColumnName="DocNumber" />
+                <ScalarProperty Name="Tags" ColumnName="Tags" />
+                <ScalarProperty Name="ProfitPercentage" ColumnName="ProfitPercentage" />
+                <ScalarProperty Name="Profit" ColumnName="Profit" />
+                <ScalarProperty Name="Shipping" ColumnName="Shipping" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="Tax" ColumnName="Tax" />
+                <ScalarProperty Name="PrivateNotes" ColumnName="PrivateNotes" />
+                <ScalarProperty Name="ServiceLocationNotes" ColumnName="ServiceLocationNotes" />
+                <ScalarProperty Name="EstimateNotes" ColumnName="EstimateNotes" />
+                <ScalarProperty Name="QBStatus" ColumnName="QBStatus" />
+                <ScalarProperty Name="EstimateStatusId" ColumnName="EstimateStatusId" />
+                <ScalarProperty Name="RequestedBy" ColumnName="RequestedBy" />
+                <ScalarProperty Name="AssignTo" ColumnName="AssignTo" />
+                <ScalarProperty Name="RegionalManagerId" ColumnName="RegionalManagerId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="EstimateNumber" ColumnName="EstimateNumber" />
+                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="SPGetBillData" FunctionName="earthcoModel.Store.SPGetBillData">
             <ResultMapping>
               <ComplexTypeMapping TypeName="earthcoModel.SPGetBillData_Result">
@@ -5845,6 +5708,7 @@
                 <ScalarProperty Name="EditDate" ColumnName="EditDate" />
                 <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -5879,6 +5743,9 @@
                 <ScalarProperty Name="EditDate" ColumnName="EditDate" />
                 <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="BalanceAmount" ColumnName="BalanceAmount" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -5916,22 +5783,7 @@
                 <ScalarProperty Name="EditDate" ColumnName="EditDate" />
                 <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SPGetIrrigationData" FunctionName="earthcoModel.Store.SPGetIrrigationData">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="earthcoModel.SPGetIrrigationData_Result">
-                <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
-                <ScalarProperty Name="IrrigationNumber" ColumnName="IrrigationNumber" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="DocNumber" ColumnName="DocNumber" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -5965,6 +5817,7 @@
                 <ScalarProperty Name="EditDate" ColumnName="EditDate" />
                 <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -5991,10 +5844,177 @@
                 <ScalarProperty Name="EditDate" ColumnName="EditDate" />
                 <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SPGetNumber" FunctionName="earthcoModel.Store.SPGetNumber" />
+          <EntitySetMapping Name="tblBills">
+            <EntityTypeMapping TypeName="earthcoModel.tblBill">
+              <MappingFragment StoreEntitySet="tblBill">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="DocNumber" ColumnName="DocNumber" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Memo" ColumnName="Memo" />
+                <ScalarProperty Name="TermId" ColumnName="TermId" />
+                <ScalarProperty Name="PurchaseOrderNumber" ColumnName="PurchaseOrderNumber" />
+                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="BillDate" ColumnName="BillDate" />
+                <ScalarProperty Name="Tags" ColumnName="Tags" />
+                <ScalarProperty Name="BillNumber" ColumnName="BillNumber" />
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+                <ScalarProperty Name="BillId" ColumnName="BillId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblBillFiles">
+            <EntityTypeMapping TypeName="earthcoModel.tblBillFile">
+              <MappingFragment StoreEntitySet="tblBillFile">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="BillId" ColumnName="BillId" />
+                <ScalarProperty Name="Share" ColumnName="Share" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="BillFileId" ColumnName="BillFileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblControllers">
+            <EntityTypeMapping TypeName="earthcoModel.tblController">
+              <MappingFragment StoreEntitySet="tblController">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
+                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
+                <ScalarProperty Name="UpgradesMade" ColumnName="UpgradesMade" />
+                <ScalarProperty Name="RepairsMade" ColumnName="RepairsMade" />
+                <ScalarProperty Name="NumberofBrokenHeads" ColumnName="NumberofBrokenHeads" />
+                <ScalarProperty Name="NumberofBrokenLateralLines" ColumnName="NumberofBrokenLateralLines" />
+                <ScalarProperty Name="MalfunctioningValves" ColumnName="MalfunctioningValves" />
+                <ScalarProperty Name="LeakingValves" ColumnName="LeakingValves" />
+                <ScalarProperty Name="TypeofValves" ColumnName="TypeofValves" />
+                <ScalarProperty Name="NumberofBrokenMainLines" ColumnName="NumberofBrokenMainLines" />
+                <ScalarProperty Name="NumberofValves" ColumnName="NumberofValves" />
+                <ScalarProperty Name="NumberofStation" ColumnName="NumberofStation" />
+                <ScalarProperty Name="MeterSize" ColumnName="MeterSize" />
+                <ScalarProperty Name="MeterNumber" ColumnName="MeterNumber" />
+                <ScalarProperty Name="TypeofWater" ColumnName="TypeofWater" />
+                <ScalarProperty Name="isSatelliteBased" ColumnName="isSatelliteBased" />
+                <ScalarProperty Name="LoacationClosestAddress" ColumnName="LoacationClosestAddress" />
+                <ScalarProperty Name="SerialNumber" ColumnName="SerialNumber" />
+                <ScalarProperty Name="ControllerPhotoPath" ColumnName="ControllerPhotoPath" />
+                <ScalarProperty Name="MakeAndModel" ColumnName="MakeAndModel" />
+                <ScalarProperty Name="ControllerId" ColumnName="ControllerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblEstimateFiles">
+            <EntityTypeMapping TypeName="earthcoModel.tblEstimateFile">
+              <MappingFragment StoreEntitySet="tblEstimateFile">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
+                <ScalarProperty Name="Share" ColumnName="Share" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="EstimateFileId" ColumnName="EstimateFileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblInvoiceFiles">
+            <EntityTypeMapping TypeName="earthcoModel.tblInvoiceFile">
+              <MappingFragment StoreEntitySet="tblInvoiceFile">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="InvoiceId" ColumnName="InvoiceId" />
+                <ScalarProperty Name="Share" ColumnName="Share" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="InvoiceFileId" ColumnName="InvoiceFileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPunchlistDetails">
+            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistDetail">
+              <MappingFragment StoreEntitySet="tblPunchlistDetail">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
+                <ScalarProperty Name="isComplete" ColumnName="isComplete" />
+                <ScalarProperty Name="AfterPhotoPath" ColumnName="AfterPhotoPath" />
+                <ScalarProperty Name="isAfterPhoto" ColumnName="isAfterPhoto" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
+                <ScalarProperty Name="PunchlistDetailId" ColumnName="PunchlistDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPurchaseOrderFiles">
+            <EntityTypeMapping TypeName="earthcoModel.tblPurchaseOrderFile">
+              <MappingFragment StoreEntitySet="tblPurchaseOrderFile">
+                <ScalarProperty Name="idDelete" ColumnName="idDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
+                <ScalarProperty Name="Share" ColumnName="Share" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="PurchaseOrderFileId" ColumnName="PurchaseOrderFileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSRFiles">
+            <EntityTypeMapping TypeName="earthcoModel.tblSRFile">
+              <MappingFragment StoreEntitySet="tblSRFile">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="SRId" ColumnName="SRId" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="SRFileId" ColumnName="SRFileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

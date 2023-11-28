@@ -17,8 +17,8 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tblServiceRequest()
         {
-            this.tblSRFiles = new HashSet<tblSRFile>();
             this.tblSRItems = new HashSet<tblSRItem>();
+            this.tblSRFiles = new HashSet<tblSRFile>();
         }
     
         public int ServiceRequestId { get; set; }
@@ -46,9 +46,9 @@ namespace EarthCo.Models
         public virtual tblSRStatu tblSRStatu { get; set; }
         public virtual tblSRType tblSRType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblSRFile> tblSRFiles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSRItem> tblSRItems { get; set; }
         public virtual tblUser tblUser1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblSRFile> tblSRFiles { get; set; }
     }
 }
