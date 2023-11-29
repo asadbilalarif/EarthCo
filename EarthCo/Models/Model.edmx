@@ -128,25 +128,25 @@
             <PropertyRef Name="ControllerId" />
           </Key>
           <Property Name="ControllerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="MakeAndModel" Type="nvarchar" MaxLength="500" />
+          <Property Name="MakeAndModel" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="ControllerPhotoPath" Type="nvarchar" MaxLength="500" />
-          <Property Name="SerialNumber" Type="nvarchar" MaxLength="500" />
-          <Property Name="LoacationClosestAddress" Type="nvarchar" MaxLength="500" />
+          <Property Name="SerialNumber" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="LoacationClosestAddress" Type="nvarchar" MaxLength="200" />
           <Property Name="isSatelliteBased" Type="bit" />
-          <Property Name="TypeofWater" Type="nvarchar" MaxLength="500" />
-          <Property Name="MeterNumber" Type="nvarchar" MaxLength="500" />
-          <Property Name="MeterSize" Type="nvarchar" MaxLength="500" />
+          <Property Name="TypeofWater" Type="nvarchar" MaxLength="200" />
+          <Property Name="MeterNumber" Type="nvarchar" MaxLength="200" />
+          <Property Name="MeterSize" Type="nvarchar" MaxLength="200" />
           <Property Name="NumberofStation" Type="int" />
           <Property Name="NumberofValves" Type="int" />
           <Property Name="NumberofBrokenMainLines" Type="int" />
-          <Property Name="TypeofValves" Type="nvarchar" MaxLength="500" />
-          <Property Name="LeakingValves" Type="nvarchar" MaxLength="500" />
-          <Property Name="MalfunctioningValves" Type="nvarchar" MaxLength="500" />
+          <Property Name="TypeofValves" Type="nvarchar" MaxLength="200" />
+          <Property Name="LeakingValves" Type="nvarchar" MaxLength="200" />
+          <Property Name="MalfunctioningValves" Type="nvarchar" MaxLength="200" />
           <Property Name="NumberofBrokenLateralLines" Type="int" />
           <Property Name="NumberofBrokenHeads" Type="int" />
-          <Property Name="RepairsMade" Type="nvarchar" MaxLength="500" />
-          <Property Name="UpgradesMade" Type="nvarchar" MaxLength="500" />
-          <Property Name="PhotoPath" Type="nvarchar" MaxLength="500" />
+          <Property Name="RepairsMade" Type="nvarchar" MaxLength="200" />
+          <Property Name="UpgradesMade" Type="nvarchar" MaxLength="200" />
+          <Property Name="PhotoPath" Type="nvarchar" MaxLength="200" />
           <Property Name="IrrigationId" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -2281,9 +2281,6 @@
             <End Role="tblUserType" EntitySet="tblUserTypes" />
             <End Role="tblUser" EntitySet="tblUsers" />
           </AssociationSet>
-          <FunctionImport Name="SPGetPunchlistData" ReturnType="Collection(earthcoModel.SPGetPunchlistData_Result)">
-          <Parameter Name="ID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <EntitySet Name="tblInvoiceStatus" EntityType="earthcoModel.tblInvoiceStatu" />
           <EntitySet Name="tblInvoices" EntityType="earthcoModel.tblInvoice" />
           <EntitySet Name="tblIrrigations" EntityType="earthcoModel.tblIrrigation" />
@@ -2365,9 +2362,6 @@
             <End Role="tblUser" EntitySet="tblUsers" />
             <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
           </AssociationSet>
-          <FunctionImport Name="SPGetIrrigationData" ReturnType="Collection(earthcoModel.SPGetIrrigationData_Result)">
-          <Parameter Name="ID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="SPGetNumber" ReturnType="Collection(String)">
           <Parameter Name="Type" Mode="In" Type="String" />
           </FunctionImport>
@@ -2425,7 +2419,6 @@
           </FunctionImport>
           <EntitySet Name="tblBills" EntityType="earthcoModel.tblBill" />
           <EntitySet Name="tblBillFiles" EntityType="earthcoModel.tblBillFile" />
-          <EntitySet Name="tblControllers" EntityType="earthcoModel.tblController" />
           <EntitySet Name="tblEstimateFiles" EntityType="earthcoModel.tblEstimateFile" />
           <EntitySet Name="tblInvoiceFiles" EntityType="earthcoModel.tblInvoiceFile" />
           <EntitySet Name="tblPunchlistDetails" EntityType="earthcoModel.tblPunchlistDetail" />
@@ -2451,10 +2444,6 @@
             <End Role="tblBill" EntitySet="tblBills" />
             <End Role="tblBillItem" EntitySet="tblBillItems" />
           </AssociationSet>
-          <AssociationSet Name="FK__tblContro__Irrig__5441852A" Association="earthcoModel.FK__tblContro__Irrig__5441852A">
-            <End Role="tblIrrigation" EntitySet="tblIrrigations" />
-            <End Role="tblController" EntitySet="tblControllers" />
-          </AssociationSet>
           <AssociationSet Name="FK_tblEstimateFile_tblEstimate" Association="earthcoModel.FK_tblEstimateFile_tblEstimate">
             <End Role="tblEstimate" EntitySet="tblEstimates" />
             <End Role="tblEstimateFile" EntitySet="tblEstimateFiles" />
@@ -2479,6 +2468,17 @@
             <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
             <End Role="tblSRFile" EntitySet="tblSRFiles" />
           </AssociationSet>
+          <EntitySet Name="tblControllers" EntityType="earthcoModel.tblController" />
+          <AssociationSet Name="FK__tblContro__Irrig__5441852A" Association="earthcoModel.FK__tblContro__Irrig__5441852A">
+            <End Role="tblIrrigation" EntitySet="tblIrrigations" />
+            <End Role="tblController" EntitySet="tblControllers" />
+          </AssociationSet>
+          <FunctionImport Name="SPGetPunchlistData" ReturnType="Collection(earthcoModel.SPGetPunchlistData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetIrrigationData" ReturnType="Collection(earthcoModel.SPGetIrrigationData_Result)">
+            <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="tblSetting">
           <Key>
@@ -3529,24 +3529,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="SPGetPunchlistData_Result">
-          <Property Type="Int32" Name="PunchlistId" Nullable="false" />
-          <Property Type="String" Name="Title" Nullable="true" MaxLength="50" />
-          <Property Type="Int32" Name="StatusId" Nullable="false" />
-          <Property Type="Int32" Name="CustomerId" Nullable="false" />
-          <Property Type="Int32" Name="ServiceLocationId" Nullable="true" />
-          <Property Type="Int32" Name="ContactId" Nullable="false" />
-          <Property Type="Int32" Name="AssignedTo" Nullable="false" />
-          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
-          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
-          <Property Type="Int32" Name="EditBy" Nullable="true" />
-          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
-          <Property Type="Boolean" Name="isActive" Nullable="false" />
-          <Property Type="Boolean" Name="isDelete" Nullable="false" />
-          <Property Type="String" Name="ContactName" Nullable="true" MaxLength="150" />
-          <Property Type="String" Name="ContactCompany" Nullable="true" MaxLength="150" />
-          <Property Type="String" Name="ContactEmail" Nullable="true" MaxLength="150" />
-        </ComplexType>
         <EntityType Name="tblInvoiceStatu">
           <Key>
             <PropertyRef Name="InvoiceStatusId" />
@@ -3918,18 +3900,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="SPGetIrrigationData_Result">
-          <Property Type="Int32" Name="IrrigationId" Nullable="false" />
-          <Property Type="String" Name="IrrigationNumber" Nullable="true" MaxLength="500" />
-          <Property Type="Int32" Name="CustomerId" Nullable="false" />
-          <Property Type="String" Name="DocNumber" Nullable="true" MaxLength="500" />
-          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
-          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
-          <Property Type="Int32" Name="EditBy" Nullable="true" />
-          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
-          <Property Type="Boolean" Name="isActive" Nullable="false" />
-          <Property Type="Boolean" Name="isDelete" Nullable="false" />
-        </ComplexType>
         <EntityType Name="tblEstimate">
           <Key>
             <PropertyRef Name="EstimateId" />
@@ -4272,39 +4242,6 @@
           <Property Name="isDelete" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="tblBill" Relationship="earthcoModel.FK_tblBillFile_tblBill" FromRole="tblBillFile" ToRole="tblBill" />
         </EntityType>
-        <EntityType Name="tblController">
-          <Key>
-            <PropertyRef Name="ControllerId" />
-          </Key>
-          <Property Name="ControllerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="MakeAndModel" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ControllerPhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="SerialNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="LoacationClosestAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="isSatelliteBased" Type="Boolean" />
-          <Property Name="TypeofWater" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="MeterNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="MeterSize" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="NumberofStation" Type="Int32" />
-          <Property Name="NumberofValves" Type="Int32" />
-          <Property Name="NumberofBrokenMainLines" Type="Int32" />
-          <Property Name="TypeofValves" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="LeakingValves" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="MalfunctioningValves" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="NumberofBrokenLateralLines" Type="Int32" />
-          <Property Name="NumberofBrokenHeads" Type="Int32" />
-          <Property Name="RepairsMade" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="UpgradesMade" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="PhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="IrrigationId" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblIrrigation" Relationship="earthcoModel.FK__tblContro__Irrig__5441852A" FromRole="tblController" ToRole="tblIrrigation" />
-        </EntityType>
         <EntityType Name="tblEstimateFile">
           <Key>
             <PropertyRef Name="EstimateFileId" />
@@ -4457,18 +4394,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__tblContro__Irrig__5441852A">
-          <End Type="earthcoModel.tblIrrigation" Role="tblIrrigation" Multiplicity="1" />
-          <End Type="earthcoModel.tblController" Role="tblController" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblIrrigation">
-              <PropertyRef Name="IrrigationId" />
-            </Principal>
-            <Dependent Role="tblController">
-              <PropertyRef Name="IrrigationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_tblEstimateFile_tblEstimate">
           <End Type="earthcoModel.tblEstimate" Role="tblEstimate" Multiplicity="1" />
           <End Type="earthcoModel.tblEstimateFile" Role="tblEstimateFile" Multiplicity="*" />
@@ -4541,6 +4466,83 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="tblController">
+          <Key>
+            <PropertyRef Name="ControllerId" />
+          </Key>
+          <Property Name="ControllerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MakeAndModel" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ControllerPhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SerialNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="LoacationClosestAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="isSatelliteBased" Type="Boolean" />
+          <Property Name="TypeofWater" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MeterNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MeterSize" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="NumberofStation" Type="Int32" />
+          <Property Name="NumberofValves" Type="Int32" />
+          <Property Name="NumberofBrokenMainLines" Type="Int32" />
+          <Property Name="TypeofValves" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="LeakingValves" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MalfunctioningValves" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="NumberofBrokenLateralLines" Type="Int32" />
+          <Property Name="NumberofBrokenHeads" Type="Int32" />
+          <Property Name="RepairsMade" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="UpgradesMade" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PhotoPath" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="IrrigationId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblIrrigation" Relationship="earthcoModel.FK__tblContro__Irrig__5441852A" FromRole="tblController" ToRole="tblIrrigation" />
+        </EntityType>
+        <Association Name="FK__tblContro__Irrig__5441852A">
+          <End Type="earthcoModel.tblIrrigation" Role="tblIrrigation" Multiplicity="1" />
+          <End Type="earthcoModel.tblController" Role="tblController" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblIrrigation">
+              <PropertyRef Name="IrrigationId" />
+            </Principal>
+            <Dependent Role="tblController">
+              <PropertyRef Name="IrrigationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="SPGetPunchlistData_Result">
+          <Property Type="Int32" Name="PunchlistId" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="StatusId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="Int32" Name="ServiceLocationId" Nullable="true" />
+          <Property Type="Int32" Name="ContactId" Nullable="false" />
+          <Property Type="Int32" Name="AssignedTo" Nullable="false" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="String" Name="ContactName" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="ContactCompany" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="ContactEmail" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="SPGetIrrigationData_Result">
+          <Property Type="Int32" Name="IrrigationId" Nullable="false" />
+          <Property Type="String" Name="IrrigationNumber" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="String" Name="DocNumber" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="500" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5490,28 +5492,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SPGetPunchlistData" FunctionName="earthcoModel.Store.SPGetPunchlistData">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="earthcoModel.SPGetPunchlistData_Result">
-                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
-                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-                <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
-                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
-                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="tblInvoiceStatus">
             <EntityTypeMapping TypeName="earthcoModel.tblInvoiceStatu">
               <MappingFragment StoreEntitySet="tblInvoiceStatus">
@@ -5633,22 +5613,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SPGetIrrigationData" FunctionName="earthcoModel.Store.SPGetIrrigationData">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="earthcoModel.SPGetIrrigationData_Result">
-                <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
-                <ScalarProperty Name="IrrigationNumber" ColumnName="IrrigationNumber" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="DocNumber" ColumnName="DocNumber" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SPGetNumber" FunctionName="earthcoModel.Store.SPGetNumber" />
           <EntitySetMapping Name="tblEstimates">
             <EntityTypeMapping TypeName="earthcoModel.tblEstimate">
@@ -5891,39 +5855,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblControllers">
-            <EntityTypeMapping TypeName="earthcoModel.tblController">
-              <MappingFragment StoreEntitySet="tblController">
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
-                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
-                <ScalarProperty Name="UpgradesMade" ColumnName="UpgradesMade" />
-                <ScalarProperty Name="RepairsMade" ColumnName="RepairsMade" />
-                <ScalarProperty Name="NumberofBrokenHeads" ColumnName="NumberofBrokenHeads" />
-                <ScalarProperty Name="NumberofBrokenLateralLines" ColumnName="NumberofBrokenLateralLines" />
-                <ScalarProperty Name="MalfunctioningValves" ColumnName="MalfunctioningValves" />
-                <ScalarProperty Name="LeakingValves" ColumnName="LeakingValves" />
-                <ScalarProperty Name="TypeofValves" ColumnName="TypeofValves" />
-                <ScalarProperty Name="NumberofBrokenMainLines" ColumnName="NumberofBrokenMainLines" />
-                <ScalarProperty Name="NumberofValves" ColumnName="NumberofValves" />
-                <ScalarProperty Name="NumberofStation" ColumnName="NumberofStation" />
-                <ScalarProperty Name="MeterSize" ColumnName="MeterSize" />
-                <ScalarProperty Name="MeterNumber" ColumnName="MeterNumber" />
-                <ScalarProperty Name="TypeofWater" ColumnName="TypeofWater" />
-                <ScalarProperty Name="isSatelliteBased" ColumnName="isSatelliteBased" />
-                <ScalarProperty Name="LoacationClosestAddress" ColumnName="LoacationClosestAddress" />
-                <ScalarProperty Name="SerialNumber" ColumnName="SerialNumber" />
-                <ScalarProperty Name="ControllerPhotoPath" ColumnName="ControllerPhotoPath" />
-                <ScalarProperty Name="MakeAndModel" ColumnName="MakeAndModel" />
-                <ScalarProperty Name="ControllerId" ColumnName="ControllerId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblEstimateFiles">
             <EntityTypeMapping TypeName="earthcoModel.tblEstimateFile">
               <MappingFragment StoreEntitySet="tblEstimateFile">
@@ -6015,6 +5946,79 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="tblControllers">
+            <EntityTypeMapping TypeName="earthcoModel.tblController">
+              <MappingFragment StoreEntitySet="tblController">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
+                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
+                <ScalarProperty Name="UpgradesMade" ColumnName="UpgradesMade" />
+                <ScalarProperty Name="RepairsMade" ColumnName="RepairsMade" />
+                <ScalarProperty Name="NumberofBrokenHeads" ColumnName="NumberofBrokenHeads" />
+                <ScalarProperty Name="NumberofBrokenLateralLines" ColumnName="NumberofBrokenLateralLines" />
+                <ScalarProperty Name="MalfunctioningValves" ColumnName="MalfunctioningValves" />
+                <ScalarProperty Name="LeakingValves" ColumnName="LeakingValves" />
+                <ScalarProperty Name="TypeofValves" ColumnName="TypeofValves" />
+                <ScalarProperty Name="NumberofBrokenMainLines" ColumnName="NumberofBrokenMainLines" />
+                <ScalarProperty Name="NumberofValves" ColumnName="NumberofValves" />
+                <ScalarProperty Name="NumberofStation" ColumnName="NumberofStation" />
+                <ScalarProperty Name="MeterSize" ColumnName="MeterSize" />
+                <ScalarProperty Name="MeterNumber" ColumnName="MeterNumber" />
+                <ScalarProperty Name="TypeofWater" ColumnName="TypeofWater" />
+                <ScalarProperty Name="isSatelliteBased" ColumnName="isSatelliteBased" />
+                <ScalarProperty Name="LoacationClosestAddress" ColumnName="LoacationClosestAddress" />
+                <ScalarProperty Name="SerialNumber" ColumnName="SerialNumber" />
+                <ScalarProperty Name="ControllerPhotoPath" ColumnName="ControllerPhotoPath" />
+                <ScalarProperty Name="MakeAndModel" ColumnName="MakeAndModel" />
+                <ScalarProperty Name="ControllerId" ColumnName="ControllerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SPGetPunchlistData" FunctionName="earthcoModel.Store.SPGetPunchlistData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetPunchlistData_Result">
+                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
+                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetIrrigationData" FunctionName="earthcoModel.Store.SPGetIrrigationData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetIrrigationData_Result">
+                <ScalarProperty Name="IrrigationId" ColumnName="IrrigationId" />
+                <ScalarProperty Name="IrrigationNumber" ColumnName="IrrigationNumber" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="DocNumber" ColumnName="DocNumber" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

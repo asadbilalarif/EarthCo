@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -388,49 +389,149 @@ namespace EarthCo.Controllers
                     DB.SaveChanges();
 
 
-                    var requestData = new
-                    {
-                        TxnDate = DateTime.Now,
-                        RefNumber = Data.EstimateNumber,
-                        IsActive = Data.isActive,
-                        TotalAmount = Data.TotalAmount,
-                        Memo = Data.EstimateNotes,
-                        DiscountAmt = Data.Discount,
-                        ShippingAmt = Data.Shipping,
-                        TagList = Data.Tags,
-                        Customer_RecordID = Data.CustomerId,
-                        EstimateStatus_RecordID = Data.EstimateStatusId,
-                        AssignedTo_RecordID = Data.AssignTo,
-                    };
+                    //var requestData = new
+                    //{
+                    //    TxnDate = DateTime.Now,
+                    //    RefNumber = Data.EstimateNumber,
+                    //    IsActive = Data.isActive,
+                    //    TotalAmount = Data.TotalAmount,
+                    //    Memo = Data.EstimateNotes,
+                    //    DiscountAmt = Data.Discount,
+                    //    ShippingAmt = Data.Shipping,
+                    //    TagList = Data.Tags,
+                    //    //Customer_RecordID = Data.CustomerId,
+                    //    Customer_RecordID = 2,
+                    //    EstimateStatus_RecordID = Data.EstimateStatusId,
+                    //    AssignedTo_RecordID = 1,
+                    //    //AssignedTo_RecordID = Data.AssignTo,
+                    //};
 
-                    string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
+                    //string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
 
-                    using (HttpClient client = new HttpClient())
-                    {
-                        string apiUrl = "https://rest.method.me/api/v1/tables/Estimate";
-                        client.DefaultRequestHeaders.Add("Authorization", "APIKey NjU2NDk0MWFkMDUzMDRhN2Q3MzY2NDI3LjcxRjNEMEY2MTVDQzRBOTVBNzFCMUVGOEIwRTExRjIw ");
+                    //using (HttpClient client = new HttpClient())
+                    //{
+                    //    string apiUrl = "https://rest.method.me/api/v1/tables/Estimate";
+                    //    client.DefaultRequestHeaders.Add("Authorization", "APIKey NjU2NDk0MWFkMDUzMDRhN2Q3MzY2NDI3LjcxRjNEMEY2MTVDQzRBOTVBNzFCMUVGOEIwRTExRjIw ");
 
-                        // Create the request content
-                        var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-                        //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                    //    // Create the request content
+                    //    var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                    //    //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-                        // Make the POST request
-                        HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                    //    // Make the POST request
+                    //    HttpResponseMessage response = await client.PostAsync(apiUrl, content);
 
-                        // Check if the request was successful
-                        if (response.IsSuccessStatusCode)
-                        {
-                            // Parse and use the response data as needed
-                            string jsonResponse = await response.Content.ReadAsStringAsync();
-                            // Process jsonResponse
-                        }
-                        else
-                        {
-                            // Handle error
-                            string errorMessage = await response.Content.ReadAsStringAsync();
-                            // Handle error message
-                        }
-                    }
+                    //    // Check if the request was successful
+                    //    if (response.IsSuccessStatusCode)
+                    //    {
+                    //        // Parse and use the response data as needed
+                    //        string jsonResponse = await response.Content.ReadAsStringAsync();
+                    //        // Process jsonResponse
+                    //    }
+                    //    else
+                    //    {
+                    //        // Handle error
+                    //        string errorMessage = await response.Content.ReadAsStringAsync();
+                    //        // Handle error message
+                    //    }
+                    //}
+
+
+                    //if (Estimate.EstimateData.tblEstimateItems != null && Estimate.EstimateData.tblEstimateItems.Count != 0)
+                    //{
+                    //    foreach (var item in Estimate.EstimateData.tblEstimateItems)
+                    //    {
+                    //        var requestItemData = new
+                    //        {
+                    //            Desc = item.Description,
+                    //            Quantity = item.Qty,
+                    //            Rate = item.Rate,
+                    //            TotalAmount = item.Amount,
+                    //            EstimateRecordID = item.EstimateId,
+                    //            Item = item.Name,
+                    //            Item_RecordID = item.ItemId,
+                    //            SalesTaxCode = item.Tax
+                    //        };
+
+                    //        string jsonItemRequest = Newtonsoft.Json.JsonConvert.SerializeObject(requestItemData);
+
+                    //        using (HttpClient client = new HttpClient())
+                    //        {
+                    //            string apiUrl = "https://rest.method.me/api/v1/tables/EstimateLine";
+                    //            client.DefaultRequestHeaders.Add("Authorization", "APIKey NjU2NDk0MWFkMDUzMDRhN2Q3MzY2NDI3LjcxRjNEMEY2MTVDQzRBOTVBNzFCMUVGOEIwRTExRjIw ");
+
+                    //            // Create the request content
+                    //            var content = new StringContent(jsonItemRequest, Encoding.UTF8, "application/json");
+                    //            //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                    //            // Make the POST request
+                    //            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                    //            // Check if the request was successful
+                    //            if (response.IsSuccessStatusCode)
+                    //            {
+                    //                // Parse and use the response data as needed
+                    //                string jsonResponse = await response.Content.ReadAsStringAsync();
+                    //                // Process jsonResponse
+                    //            }
+                    //            else
+                    //            {
+                    //                // Handle error
+                    //                string errorMessage = await response.Content.ReadAsStringAsync();
+                    //                // Handle error message
+                    //            }
+                    //        }
+
+                    //    }
+                    //}
+
+
+                    //string url = "https://rest.method.me/api/v1/files";
+                    //string apiKey = "NjU2NDk0MWFkMDUzMDRhN2Q3MzY2NDI3LjcxRjNEMEY2MTVDQzRBOTVBNzFCMUVGOEIwRTExRjIw";
+
+                    ////HttpPostedFileBase file = Request.Files["fileInput"];
+
+                    //using (var httpClient = new HttpClient())
+                    //{
+                    //    using (var formData = new MultipartFormDataContent())
+                    //    {
+                    //        formData.Add(new StringContent("Estimate"), "table");
+                    //        formData.Add(new StringContent("11"), "recordId");
+                    //        //formData.Add(new StringContent("true"), "attachToEmail");
+
+                    //        if (file != null && file.ContentLength > 0)
+                    //        {
+                    //            using (var fileStream = file.InputStream)
+                    //            {
+                    //                var fileContent = new StreamContent(fileStream);
+                    //                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    //                {
+                    //                    Name = "\"\"",
+                    //                    FileName = $"\"{Path.GetFileName(file.FileName)}\""
+                    //                };
+
+                    //                formData.Add(fileContent);
+
+                    //                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("APIKey", apiKey);
+
+                    //                using (var response = await httpClient.PostAsync(url, formData))
+                    //                {
+                    //                    if (response.IsSuccessStatusCode)
+                    //                    {
+                    //                        string responseContent = await response.Content.ReadAsStringAsync();
+                    //                        Console.WriteLine(responseContent);
+                    //                        // Handle successful response
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        Console.WriteLine($"Error: {response.StatusCode}");
+                    //                        // Handle error response
+                    //                    }
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
 
 
 

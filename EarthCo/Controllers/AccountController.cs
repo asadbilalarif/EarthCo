@@ -36,13 +36,17 @@ namespace EarthCo.Controllers
                     Data = User;
                     Data.FirstName = User.username;
                     Data.RoleId = 2;
+                    Data.UserTypeId = 2;
+                    Data.isLoginAllow = true;
                     byte[] EncDataBtye = new byte[User.Password.Length];
                     EncDataBtye = System.Text.Encoding.UTF8.GetBytes(User.Password);
                     Data.Password = Convert.ToBase64String(EncDataBtye);
 
+                    Data.CreatedBy = 0;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.isActive = true;
+                    Data.isDelete = false;
                     DB.tblUsers.Add(Data);
                     DB.SaveChanges();
                     return Ok("User has been added successfully.");

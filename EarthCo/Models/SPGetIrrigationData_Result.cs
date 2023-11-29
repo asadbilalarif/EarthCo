@@ -23,5 +23,6 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
+        public string CompanyName { get; set; }
     }
 }

@@ -29,5 +29,6 @@ namespace EarthCo.Models
         public string ContactName { get; set; }
         public string ContactCompany { get; set; }
         public string ContactEmail { get; set; }
+        public string CompanyName { get; set; }
     }
 }
