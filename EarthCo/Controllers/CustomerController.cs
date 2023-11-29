@@ -1,5 +1,6 @@
 ﻿using EarthCo.Models;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -102,7 +103,7 @@ namespace EarthCo.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult GetCustomersServerSideList(int DisplayStart = 0, int DisplayLength = 10)
+        public IHttpActionResult GetCustomersServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10)
         {
             try
             {
@@ -112,7 +113,28 @@ namespace EarthCo.Controllers
                 
                 var totalRecords = DB.tblUsers.Count(x => x.UserTypeId == 2 && x.isDelete != true);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
-                Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                if (Search == null)
+                {
+                    Search = "\"\"";
+                }
+                Search = JsonSerializer.Deserialize<string>(Search);
+                if (!string.IsNullOrEmpty(Search) && Search != "")
+                {
+                    Data = DB.tblUsers.Where(x => x.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.LastName.ToLower().Contains(Search.ToLower())
+                                                  || x.CompanyName.ToString().ToLower().Contains(Search.ToLower())
+                                                  || x.Address.ToLower().Contains(Search.ToLower())
+                                                  || x.Email.ToLower().Contains(Search.ToLower())
+                                                  || x.UserId.ToString().ToLower().Contains(Search.ToLower())).ToList();
+                    Data = Data.Where(x => x.UserTypeId == 2 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+                else
+                {
+                    Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+
+
+                
 
                 if (Data == null || Data.Count == 0)
                 {
@@ -327,7 +349,7 @@ namespace EarthCo.Controllers
                 if (Data == null)
                 {
                     GetCustomerData NewData = new GetCustomerData();
-                    string userJson = JsonConvert.SerializeObject(NewData);
+                    string userJson = Newtonsoft.Json.JsonConvert.SerializeObject(NewData);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);
@@ -386,7 +408,7 @@ namespace EarthCo.Controllers
                 if (Data == null || Data.Count==0)
                 {
                     Data = new List<tblContact>();
-                    string userJson = JsonConvert.SerializeObject(Data);
+                    string userJson = Newtonsoft.Json.JsonConvert.SerializeObject(Data);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);
@@ -488,7 +510,7 @@ namespace EarthCo.Controllers
                 if (Data == null || Data.Count == 0)
                 {
                     Data = new List<tblServiceLocation>();
-                    string userJson = JsonConvert.SerializeObject(Data);
+                    string userJson = Newtonsoft.Json.JsonConvert.SerializeObject(Data);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);

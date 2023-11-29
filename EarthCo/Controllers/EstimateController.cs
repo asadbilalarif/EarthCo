@@ -23,7 +23,7 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public IHttpActionResult GetEstimateServerSideList(int DisplayStart=0,int DisplayLength=10,int StatusId=0)
+        public IHttpActionResult GetEstimateServerSideList(string Search,int DisplayStart=0,int DisplayLength=10,int StatusId=0)
         {
             try
             {
@@ -35,14 +35,45 @@ namespace EarthCo.Controllers
                 var totalClosedRecords = DB.tblEstimates.Where(x=>x.EstimateStatusId==2).Count(x => !x.isDelete);
                 var totalNewRecords = DB.tblEstimates.Where(x=>x.EstimateStatusId==4).Count(x => !x.isDelete);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
-                if (StatusId != 0)
+                if (Search == null)
                 {
-                    Data = DB.tblEstimates.Where(x => !x.isDelete&& x.EstimateStatusId== StatusId).OrderBy(o => o.EstimateId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    Search = "\"\"";
+                }
+                Search = JsonSerializer.Deserialize<string>(Search);
+                if (!string.IsNullOrEmpty(Search) && Search != "")
+                {
+                    Data = DB.tblEstimates.Where(x => x.tblUser.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser.LastName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser1.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser1.LastName.ToLower().Contains(Search.ToLower())
+                                                  || x.EstimateNumber.ToString().ToLower().Contains(Search.ToLower())
+                                                  || x.tblEstimateStatu.Status.ToString().ToLower().Contains(Search.ToLower())
+                                                  || x.EstimateNotes.ToLower().Contains(Search.ToLower())
+                                                  || x.ProfitPercentage.ToString().ToLower().Contains(Search.ToLower())
+                                                  || x.TotalAmount.ToString().ToLower().Contains(Search.ToLower())).ToList();
+                    if (StatusId != 0)
+                    {
+                        Data = Data.Where(x => !x.isDelete && x.EstimateStatusId == StatusId).OrderBy(o => o.EstimateId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
+                    else
+                    {
+                        Data = Data.Where(x => !x.isDelete).OrderBy(o => o.EstimateId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
                 }
                 else
                 {
-                    Data = DB.tblEstimates.Where(x => !x.isDelete).OrderBy(o=>o.EstimateId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    if (StatusId != 0)
+                    {
+                        Data = DB.tblEstimates.Where(x => !x.isDelete && x.EstimateStatusId == StatusId).OrderBy(o => o.EstimateId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
+                    else
+                    {
+                        Data = DB.tblEstimates.Where(x => !x.isDelete).OrderBy(o => o.EstimateId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
                 }
+
+
+                
                 
 
                // Data = Data.Skip(DisplayStart)

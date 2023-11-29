@@ -23,7 +23,7 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public IHttpActionResult GetServiceRequestServerSideList(int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
+        public IHttpActionResult GetServiceRequestServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
         {
             try
             {
@@ -43,15 +43,37 @@ namespace EarthCo.Controllers
                     totalOpenRecords = DB.tblServiceRequests.Where(x => x.SRStatusId == 1).Count(x => !x.isDelete);
                     totalClosedRecords = DB.tblServiceRequests.Where(x => x.SRStatusId == 2).Count(x => !x.isDelete);
                     DisplayStart = (DisplayStart - 1) * DisplayLength;
-                    if (StatusId != 0)
+
+                    Search = JsonSerializer.Deserialize<string>(Search);
+                    if (!string.IsNullOrEmpty(Search) && Search != "")
                     {
-                        SRData = DB.tblServiceRequests.Where(x => !x.isDelete && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        SRData = DB.tblServiceRequests.Where(x => x.tblUser.FirstName.ToLower().Contains(Search.ToLower())
+                                                      || x.tblUser.LastName.ToLower().Contains(Search.ToLower())
+                                                      || x.tblUser1.FirstName.ToLower().Contains(Search.ToLower())
+                                                      || x.tblUser1.LastName.ToLower().Contains(Search.ToLower())
+                                                      || x.ServiceRequestNumber.ToString().ToLower().Contains(Search.ToLower())
+                                                      || x.tblSRStatu.Status.ToLower().Contains(Search.ToLower())
+                                                      || x.WorkRequest.ToLower().Contains(Search.ToLower())).ToList();
+                        if (StatusId != 0)
+                        {
+                            SRData = SRData.Where(x => !x.isDelete && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        }
+                        else
+                        {
+                            SRData = SRData.Where(x => !x.isDelete).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        }
                     }
                     else
                     {
-                        SRData = DB.tblServiceRequests.Where(x => !x.isDelete).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        if (StatusId != 0)
+                        {
+                            SRData = DB.tblServiceRequests.Where(x => !x.isDelete && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        }
+                        else
+                        {
+                            SRData = DB.tblServiceRequests.Where(x => !x.isDelete).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        }
                     }
-
                 }
                 else
                 {
@@ -59,13 +81,41 @@ namespace EarthCo.Controllers
                     totalOpenRecords = DB.tblServiceRequests.Where(x => x.SRStatusId == 1).Count(x => x.Assign == UserId && x.isDelete == false);
                     totalClosedRecords = DB.tblServiceRequests.Where(x => x.SRStatusId == 2).Count(x => x.Assign == UserId && x.isDelete == false);
                     DisplayStart = (DisplayStart - 1) * DisplayLength;
-                    if (StatusId != 0)
+
+
+                    if (Search == null)
                     {
-                        SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        Search = "\"\"";
+                    }
+                    Search = JsonSerializer.Deserialize<string>(Search);
+                    if (!string.IsNullOrEmpty(Search) && Search != "")
+                    {
+                        SRData = DB.tblServiceRequests.Where(x => x.tblUser.FirstName.ToLower().Contains(Search.ToLower())
+                                                      || x.tblUser.LastName.ToLower().Contains(Search.ToLower())
+                                                      || x.tblUser1.FirstName.ToLower().Contains(Search.ToLower())
+                                                      || x.tblUser1.LastName.ToLower().Contains(Search.ToLower())
+                                                      || x.ServiceRequestNumber.ToString().ToLower().Contains(Search.ToLower())
+                                                      || x.tblSRStatu.Status.ToLower().Contains(Search.ToLower())
+                                                      || x.WorkRequest.ToLower().Contains(Search.ToLower())).ToList();
+                        if (StatusId != 0)
+                        {
+                            SRData = SRData.Where(x => x.Assign == UserId && x.isDelete == false && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        }
+                        else
+                        {
+                            SRData = SRData.Where(x => x.Assign == UserId && x.isDelete == false).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        }
                     }
                     else
                     {
-                        SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        if (StatusId != 0)
+                        {
+                            SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        }
+                        else
+                        {
+                            SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        }
                     }
                 }
                 

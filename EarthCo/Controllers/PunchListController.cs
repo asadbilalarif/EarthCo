@@ -22,7 +22,7 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public IHttpActionResult GetPunchlistServerSideList(int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
+        public IHttpActionResult GetPunchlistServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
         {
             try
             {
@@ -35,14 +35,47 @@ namespace EarthCo.Controllers
                 var totalNewRecords = DB.tblPunchlists.Where(x => x.StatusId == 2).Count(x => !x.isDelete);
                 var totalOpenRecords = DB.tblPunchlists.Where(x => x.StatusId == 3).Count(x => !x.isDelete);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
-                if (StatusId != 0)
+                if (Search == null)
                 {
-                    PunchlistIds = DB.tblPunchlists.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                    Search = "\"\"";
+                }
+                Search = JsonSerializer.Deserialize<string>(Search);
+                if (!string.IsNullOrEmpty(Search) && Search != "")
+                {
+                    
+                    if (StatusId != 0)
+                    {
+                        PunchlistIds = DB.tblPunchlists.Where(x => (x.isDelete != true && x.StatusId == StatusId)&& x.tblUser.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser.LastName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser1.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser1.LastName.ToLower().Contains(Search.ToLower())
+                                                  || x.Title.ToString().ToLower().Contains(Search.ToLower())
+                                                  || x.tblPunchlistStatu.Status.ToLower().Contains(Search.ToLower())).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                    }
+                    else
+                    {
+                        PunchlistIds = DB.tblPunchlists.Where(x => (x.isDelete != true) && x.tblUser.FirstName.ToLower().Contains(Search.ToLower())
+                                                   || x.tblUser.LastName.ToLower().Contains(Search.ToLower())
+                                                   || x.tblUser1.FirstName.ToLower().Contains(Search.ToLower())
+                                                   || x.tblUser1.LastName.ToLower().Contains(Search.ToLower())
+                                                   || x.Title.ToString().ToLower().Contains(Search.ToLower())
+                                                   || x.tblPunchlistStatu.Status.ToLower().Contains(Search.ToLower())).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                    }
                 }
                 else
                 {
-                    PunchlistIds= DB.tblPunchlists.Where(x => !x.isDelete).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                    if (StatusId != 0)
+                    {
+                        PunchlistIds = DB.tblPunchlists.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                    }
+                    else
+                    {
+                        PunchlistIds = DB.tblPunchlists.Where(x => !x.isDelete).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                    }
                 }
+
+
+                
                 if (PunchlistIds == null || PunchlistIds.Count==0)
                 {
                     return NotFound();
@@ -511,14 +544,14 @@ namespace EarthCo.Controllers
                     {
                         string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Punchlist"), Path.GetFileName("PunchlistFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(Punchlist.Files.FileName)));
                         Punchlist.Files.SaveAs(path);
-                        path = Path.Combine("\\Uploading\\Punchlist", Path.GetFileName("Punchlist" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(Punchlist.Files.FileName)));
+                        path = Path.Combine("\\Uploading\\Punchlist", Path.GetFileName("PunchlistFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(Punchlist.Files.FileName)));
                         Data.PhotoPath = path;
                     }
                     if (Punchlist.AfterFiles != null)
                     {
                         string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Punchlist"), Path.GetFileName("PunchlistAfterFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(Punchlist.AfterFiles.FileName)));
                         Punchlist.AfterFiles.SaveAs(path);
-                        path = Path.Combine("\\Uploading\\Punchlist", Path.GetFileName("Punchlist" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(Punchlist.AfterFiles.FileName)));
+                        path = Path.Combine("\\Uploading\\Punchlist", Path.GetFileName("PunchlistAfterFile" + Data.PunchlistDetailId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(Punchlist.AfterFiles.FileName)));
                         Data.AfterPhotoPath = path;
                     }
 

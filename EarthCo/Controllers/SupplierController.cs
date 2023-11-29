@@ -1,5 +1,6 @@
 ﻿using EarthCo.Models;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -67,7 +68,7 @@ namespace EarthCo.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult GetSupplierServerSideList(int DisplayStart = 0, int DisplayLength = 10)
+        public IHttpActionResult GetSupplierServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10)
         {
             try
             {
@@ -77,7 +78,25 @@ namespace EarthCo.Controllers
 
                 var totalRecords = DB.tblUsers.Count(x => x.UserTypeId == 3 && x.isDelete != true);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
-                Data = DB.tblUsers.Where(x => x.UserTypeId == 3 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                if (Search == null)
+                {
+                    Search = "\"\"";
+                }
+                Search = JsonSerializer.Deserialize<string>(Search);
+                if (!string.IsNullOrEmpty(Search) && Search != "")
+                {
+                    Data = DB.tblUsers.Where(x => x.FirstName.ToLower().Contains(Search.ToLower())
+                                                || x.LastName.ToLower().Contains(Search.ToLower())
+                                                || x.username.ToString().ToLower().Contains(Search.ToLower())
+                                                || x.tblRole.Role.ToLower().Contains(Search.ToLower())).ToList();
+                    Data = Data.Where(x => x.UserTypeId == 3 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+                else
+                {
+                    Data = DB.tblUsers.Where(x => x.UserTypeId == 3 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+
+                
 
                 if (Data == null || Data.Count == 0)
                 {
@@ -195,7 +214,7 @@ namespace EarthCo.Controllers
                     Data = new tblUser();
                     //Data.tblContacts = null;
                     Data.tblServiceLocations = null;
-                    string userJson = JsonConvert.SerializeObject(Data);
+                    string userJson = Newtonsoft.Json.JsonConvert.SerializeObject(Data);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);

@@ -21,15 +21,35 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public IHttpActionResult GetBillServerSideList(int DisplayStart = 0, int DisplayLength = 10)
+        public IHttpActionResult GetBillServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10)
         {
             try
             {
+
                 List<tblBill> Data = new List<tblBill>();
                 List<BillList> Result = new List<BillList>();
                 var totalRecords = DB.tblBills.Count(x => !x.isDelete);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
-                Data = DB.tblBills.Where(x => !x.isDelete).OrderBy(o => o.BillId).Skip(DisplayStart).Take(DisplayLength).ToList();
+
+                if(Search==null)
+                {
+                    Search = "\"\"";
+                }
+                Search= JsonSerializer.Deserialize<string>(Search);
+                if (!string.IsNullOrEmpty(Search) && Search!="")
+                {
+                    Data = DB.tblBills.Where(x => x.tblUser.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser.LastName.ToLower().Contains(Search.ToLower())
+                                                  || x.Amount.ToString().ToLower().Contains(Search.ToLower())
+                                                  || x.Memo.ToLower().Contains(Search.ToLower())
+                                                  || x.Currency.ToLower().Contains(Search.ToLower())
+                                                  || x.Tags.ToLower().Contains(Search.ToLower())).ToList();
+                    Data = Data.Where(x => !x.isDelete).OrderBy(o => o.BillId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+                else
+                {
+                    Data = DB.tblBills.Where(x => !x.isDelete).OrderBy(o => o.BillId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
 
                 if (Data == null || Data.Count == 0)
                 {

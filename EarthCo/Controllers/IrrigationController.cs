@@ -22,7 +22,7 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public IHttpActionResult GetIrrigationServerSideList(int DisplayStart = 0, int DisplayLength = 10)
+        public IHttpActionResult GetIrrigationServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10)
         {
             try
             {
@@ -32,7 +32,23 @@ namespace EarthCo.Controllers
 
                 var totalRecords = DB.tblIrrigations.Count(x => !x.isDelete);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
-                Data = DB.tblIrrigations.Where(x => !x.isDelete).OrderBy(o => o.IrrigationId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                if (Search == null)
+                {
+                    Search = "\"\"";
+                }
+                Search = JsonSerializer.Deserialize<string>(Search);
+                if (!string.IsNullOrEmpty(Search) && Search != "")
+                {
+                    Data = DB.tblIrrigations.Where(x => x.tblUser.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser.LastName.ToLower().Contains(Search.ToLower())).ToList();
+                    Data = Data.Where(x => !x.isDelete).OrderBy(o => o.IrrigationId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+                else
+                {
+                    Data = DB.tblIrrigations.Where(x => !x.isDelete).OrderBy(o => o.IrrigationId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                }
+
+                
 
                 if (Data == null || Data.Count == 0)
                 {

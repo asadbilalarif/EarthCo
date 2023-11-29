@@ -20,7 +20,7 @@ namespace EarthCo.Controllers
     {
         earthcoEntities DB = new earthcoEntities();
         [HttpGet]
-        public IHttpActionResult GetInvoiceServerSideList(int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
+        public IHttpActionResult GetInvoiceServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
         {
             try
             {
@@ -33,14 +33,42 @@ namespace EarthCo.Controllers
                 var totalOverDueRecords = DB.tblInvoices.Where(x => x.StatusId == 3).Count(x => !x.isDelete);
                 var totalPaidRecords = DB.tblInvoices.Where(x => x.StatusId == 4).Count(x => !x.isDelete);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
-                if (StatusId != 0)
+                if (Search == null)
                 {
-                    Data = DB.tblInvoices.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    Search = "\"\"";
+                }
+                Search = JsonSerializer.Deserialize<string>(Search);
+                if (!string.IsNullOrEmpty(Search) && Search != "")
+                {
+                    Data = DB.tblInvoices.Where(x => x.tblUser.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser.LastName.ToLower().Contains(Search.ToLower())
+                                                  || x.InvoiceNumber.ToString().ToLower().Contains(Search.ToLower())
+                                                  || x.BalanceAmount.ToString().ToLower().Contains(Search.ToLower())
+                                                  || x.TotalAmount.ToString().ToLower().Contains(Search.ToLower())
+                                                  || x.tblInvoiceStatu.Status.ToLower().Contains(Search.ToLower())
+                                                  || x.Tags.ToLower().Contains(Search.ToLower())).ToList();
+                    if (StatusId != 0)
+                    {
+                        Data = Data.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
+                    else
+                    {
+                        Data = Data.Where(x => !x.isDelete).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
                 }
                 else
                 {
-                    Data = DB.tblInvoices.Where(x => !x.isDelete).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    if (StatusId != 0)
+                    {
+                        Data = DB.tblInvoices.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
+                    else
+                    {
+                        Data = DB.tblInvoices.Where(x => !x.isDelete).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    }
                 }
+
+                
 
                 if (Data == null || Data.Count == 0)
                 {
