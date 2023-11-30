@@ -646,6 +646,9 @@
     <Compile Include="Models\tblServiceRequest.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblServiceRequestLatLong.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tblSetting.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

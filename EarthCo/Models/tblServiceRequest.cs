@@ -19,6 +19,7 @@ namespace EarthCo.Models
         {
             this.tblSRItems = new HashSet<tblSRItem>();
             this.tblSRFiles = new HashSet<tblSRFile>();
+            this.tblServiceRequestLatLongs = new HashSet<tblServiceRequestLatLong>();
         }
     
         public int ServiceRequestId { get; set; }
@@ -50,5 +51,7 @@ namespace EarthCo.Models
         public virtual tblUser tblUser1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSRFile> tblSRFiles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblServiceRequestLatLong> tblServiceRequestLatLongs { get; set; }
     }
 }

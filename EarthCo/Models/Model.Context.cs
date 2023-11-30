@@ -72,6 +72,7 @@ namespace EarthCo.Models
         public virtual DbSet<tblPurchaseOrderFile> tblPurchaseOrderFiles { get; set; }
         public virtual DbSet<tblSRFile> tblSRFiles { get; set; }
         public virtual DbSet<tblController> tblControllers { get; set; }
+        public virtual DbSet<tblServiceRequestLatLong> tblServiceRequestLatLongs { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {

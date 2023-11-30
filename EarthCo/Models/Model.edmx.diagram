@@ -113,6 +113,8 @@
         <AssociationConnector Association="earthcoModel.FK__tblSRFile__SRId__4E88ABD4" />
         <EntityTypeShape EntityType="earthcoModel.tblController" Width="1.5" PointX="22.5" PointY="13.75" />
         <AssociationConnector Association="earthcoModel.FK__tblContro__Irrig__5441852A" />
+        <EntityTypeShape EntityType="earthcoModel.tblServiceRequestLatLong" Width="1.5" PointX="22.5" PointY="21.375" />
+        <AssociationConnector Association="earthcoModel.FK_tblServiceRequestLatLong_tblServiceRequest" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

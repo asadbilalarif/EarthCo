@@ -416,6 +416,20 @@ namespace EarthCo.Controllers
                         }
                     }
 
+                    if (ServiceRequest.ServiceRequestData.tblServiceRequestLatLongs != null && ServiceRequest.ServiceRequestData.tblServiceRequestLatLongs.Count != 0)
+                    {
+                        foreach (var item in ServiceRequest.ServiceRequestData.tblServiceRequestLatLongs)
+                        {
+                            item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.CreatedBy = UserId;
+                            item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
+                            item.isActive = true;
+                            item.isDelete = false;
+                            item.ServiceRequestId = Data.ServiceRequestId;
+                        }
+                    }
+
 
                     Data = ServiceRequest.ServiceRequestData;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
@@ -528,6 +542,27 @@ namespace EarthCo.Controllers
                         }
                     }
 
+                    List<tblServiceRequestLatLong> LongLatList = DB.tblServiceRequestLatLongs.Where(x => x.ServiceRequestId == ServiceRequest.ServiceRequestData.ServiceRequestId).ToList();
+                    if (LongLatList != null && LongLatList.Count != 0)
+                    {
+                        DB.tblServiceRequestLatLongs.RemoveRange(LongLatList);
+                        DB.SaveChanges();
+                    }
+
+                    if (ServiceRequest.ServiceRequestData.tblServiceRequestLatLongs != null && ServiceRequest.ServiceRequestData.tblServiceRequestLatLongs.Count != 0)
+                    {
+                        foreach (var item in ServiceRequest.ServiceRequestData.tblServiceRequestLatLongs)
+                        {
+                            item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.CreatedBy = UserId;
+                            item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            item.EditBy = UserId;
+                            item.isActive = true;
+                            item.isDelete = false;
+                            item.ServiceRequestId = Data.ServiceRequestId;
+                        }
+                    }
+
                     Data.ServiceRequestNumber = ServiceRequest.ServiceRequestData.ServiceRequestNumber;
                     Data.ServiceLocationId = ServiceRequest.ServiceRequestData.ServiceLocationId;
                     Data.ContactId = ServiceRequest.ServiceRequestData.ContactId;
@@ -576,6 +611,26 @@ namespace EarthCo.Controllers
                             ConData.isDelete = false;
                             ConData.SRId = Data.ServiceRequestId;
                             DB.tblSRItems.Add(ConData);
+                            DB.SaveChanges();
+                        }
+                    }
+
+                    if (ServiceRequest.ServiceRequestData.tblServiceRequestLatLongs != null && ServiceRequest.ServiceRequestData.tblServiceRequestLatLongs.Count != 0)
+                    {
+                        tblServiceRequestLatLong ConData = null;
+
+                        foreach (var item in ServiceRequest.ServiceRequestData.tblServiceRequestLatLongs)
+                        {
+                            ConData = new tblServiceRequestLatLong();
+                            ConData = item;
+                            ConData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.CreatedBy = UserId;
+                            ConData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            ConData.EditBy = UserId;
+                            ConData.isActive = true;
+                            ConData.isDelete = false;
+                            ConData.ServiceRequestId = Data.ServiceRequestId;
+                            DB.tblServiceRequestLatLongs.Add(ConData);
                             DB.SaveChanges();
                         }
                     }

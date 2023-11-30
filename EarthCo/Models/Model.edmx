@@ -661,6 +661,21 @@
           <Property Name="isActive" Type="bit" Nullable="false" />
           <Property Name="isDelete" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="tblServiceRequestLatLong">
+          <Key>
+            <PropertyRef Name="ServiceRequestLatLongId" />
+          </Key>
+          <Property Name="ServiceRequestLatLongId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Lat" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Long" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ServiceRequestId" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="isDelete" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="tblSetting">
           <Key>
             <PropertyRef Name="SettingId" />
@@ -1507,6 +1522,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_tblServiceRequestLatLong_tblServiceRequest">
+          <End Role="tblServiceRequest" Type="Self.tblServiceRequest" Multiplicity="1" />
+          <End Role="tblServiceRequestLatLong" Type="Self.tblServiceRequestLatLong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceRequest">
+              <PropertyRef Name="ServiceRequestId" />
+            </Principal>
+            <Dependent Role="tblServiceRequestLatLong">
+              <PropertyRef Name="ServiceRequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_tblSetting_tblUser">
           <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
           <End Role="tblSetting" Type="Self.tblSetting" Multiplicity="*" />
@@ -1692,6 +1719,7 @@
           <EntitySet Name="tblRole" EntityType="Self.tblRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblServiceLocation" EntityType="Self.tblServiceLocation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblServiceRequest" EntityType="Self.tblServiceRequest" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblServiceRequestLatLong" EntityType="Self.tblServiceRequestLatLong" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblSetting" EntityType="Self.tblSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblSRFile" EntityType="Self.tblSRFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblSRItem" EntityType="Self.tblSRItem" Schema="dbo" store:Type="Tables" />
@@ -1930,6 +1958,10 @@
           <AssociationSet Name="FK_tblServiceRequest_tblUser" Association="Self.FK_tblServiceRequest_tblUser">
             <End Role="tblUser" EntitySet="tblUser" />
             <End Role="tblServiceRequest" EntitySet="tblServiceRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblServiceRequestLatLong_tblServiceRequest" Association="Self.FK_tblServiceRequestLatLong_tblServiceRequest">
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequest" />
+            <End Role="tblServiceRequestLatLong" EntitySet="tblServiceRequestLatLong" />
           </AssociationSet>
           <AssociationSet Name="FK_tblSetting_tblUser" Association="Self.FK_tblSetting_tblUser">
             <End Role="tblUser" EntitySet="tblUser" />
@@ -2477,8 +2509,13 @@
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SPGetIrrigationData" ReturnType="Collection(earthcoModel.SPGetIrrigationData_Result)">
-            <Parameter Name="ID" Mode="In" Type="Int32" />
+          <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="tblServiceRequestLatLongs" EntityType="earthcoModel.tblServiceRequestLatLong" />
+          <AssociationSet Name="FK_tblServiceRequestLatLong_tblServiceRequest" Association="earthcoModel.FK_tblServiceRequestLatLong_tblServiceRequest">
+            <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
+            <End Role="tblServiceRequestLatLong" EntitySet="tblServiceRequestLatLongs" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="tblSetting">
           <Key>
@@ -3671,6 +3708,7 @@
           <NavigationProperty Name="tblSRItems" Relationship="earthcoModel.FK__tblSRItem__SRId__4BAC3F29" FromRole="tblServiceRequest" ToRole="tblSRItem" />
           <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblServiceRequest_tblUser" FromRole="tblServiceRequest" ToRole="tblUser" />
           <NavigationProperty Name="tblSRFiles" Relationship="earthcoModel.FK__tblSRFile__SRId__4E88ABD4" FromRole="tblServiceRequest" ToRole="tblSRFile" />
+          <NavigationProperty Name="tblServiceRequestLatLongs" Relationship="earthcoModel.FK_tblServiceRequestLatLong_tblServiceRequest" FromRole="tblServiceRequest" ToRole="tblServiceRequestLatLong" />
         </EntityType>
         <Association Name="FK_tblInvoice_tblContact">
           <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="0..1" />
@@ -4543,6 +4581,34 @@
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
           <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="500" />
         </ComplexType>
+        <EntityType Name="tblServiceRequestLatLong">
+          <Key>
+            <PropertyRef Name="ServiceRequestLatLongId" />
+          </Key>
+          <Property Name="ServiceRequestLatLongId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Lat" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Long" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ServiceRequestId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblServiceRequest" Relationship="earthcoModel.FK_tblServiceRequestLatLong_tblServiceRequest" FromRole="tblServiceRequestLatLong" ToRole="tblServiceRequest" />
+        </EntityType>
+        <Association Name="FK_tblServiceRequestLatLong_tblServiceRequest">
+          <End Type="earthcoModel.tblServiceRequest" Role="tblServiceRequest" Multiplicity="1" />
+          <End Type="earthcoModel.tblServiceRequestLatLong" Role="tblServiceRequestLatLong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceRequest">
+              <PropertyRef Name="ServiceRequestId" />
+            </Principal>
+            <Dependent Role="tblServiceRequestLatLong">
+              <PropertyRef Name="ServiceRequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6019,6 +6085,22 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="tblServiceRequestLatLongs">
+            <EntityTypeMapping TypeName="earthcoModel.tblServiceRequestLatLong">
+              <MappingFragment StoreEntitySet="tblServiceRequestLatLong">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
+                <ScalarProperty Name="Long" ColumnName="Long" />
+                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="ServiceRequestLatLongId" ColumnName="ServiceRequestLatLongId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
