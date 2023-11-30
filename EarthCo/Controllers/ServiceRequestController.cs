@@ -265,9 +265,11 @@ namespace EarthCo.Controllers
                 SPGetServiceRequestData_Result Data = new SPGetServiceRequestData_Result();
                 List<SPGetServiceRequestItemData_Result> ItemData = new List<SPGetServiceRequestItemData_Result>();
                 List<SPGetServiceRequestFileData_Result> FileData = new List<SPGetServiceRequestFileData_Result>();
+                List<SPGetServiceRequestLatLongData_Result> LatLongData = new List<SPGetServiceRequestLatLongData_Result>();
                 Data = DB.SPGetServiceRequestData(id).FirstOrDefault();
                 ItemData = DB.SPGetServiceRequestItemData(id).ToList();
                 FileData = DB.SPGetServiceRequestFileData(id).ToList();
+                LatLongData = DB.SPGetServiceRequestLatLongData(id).ToList();
 
                 GetServiceRequestData GetData = new GetServiceRequestData();
                 if (Data == null)
@@ -279,6 +281,7 @@ namespace EarthCo.Controllers
                     GetData.Data = Data;
                     GetData.ItemData = ItemData;
                     GetData.FileData = FileData;
+                    GetData.LatLongData = LatLongData;
 
                 }
 

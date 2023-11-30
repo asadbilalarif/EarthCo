@@ -40,8 +40,8 @@ namespace EarthCo.Models
         public Nullable<int> CustomerTypeId { get; set; }
         public Nullable<bool> isLoginAllow { get; set; }
     
+        public virtual tblCustomerType tblCustomerType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
-        public virtual tblCustomerType tblCustomerType { get; set; }
     }
 }

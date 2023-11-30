@@ -404,12 +404,14 @@
     <Compile Include="Controllers\IrrigationController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\MonthlyLandsacpeController.cs" />
+    <Compile Include="Models\MonthlyLanscapeClass.cs" />
     <Compile Include="Controllers\PunchListController.cs" />
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ServiceRequestController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\SyncQBController.cs" />
     <Compile Include="Controllers\UserManagementController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Controllers\WeeklyReportController.cs" />
@@ -495,6 +497,9 @@
     <Compile Include="Models\SPGetEstimateItemData_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SPGetEstimateReportList_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SPGetInvoiceData_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -508,6 +513,12 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SPGetIrrigationData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetMonthlyLandsacpeDataWithCustomer_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetMonthlyLandsacpeData_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SPGetPunchlistData_Result.cs">
@@ -540,10 +551,17 @@
     <Compile Include="Models\SPGetServiceRequestItemData_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SPGetServiceRequestLatLongData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetServiceRequestReportList_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SPGetStaffData_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\StaffList.cs" />
+    <Compile Include="Models\SyncQB.cs" />
     <Compile Include="Models\tblAccessLevel.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -664,6 +682,9 @@
     <Compile Include="Models\tblSRType.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblSyncLog.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tblTag.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -683,6 +704,7 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UpdateStatus.cs" />
+    <Compile Include="Models\VerifySignature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

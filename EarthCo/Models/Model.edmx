@@ -438,14 +438,16 @@
             <PropertyRef Name="MonthlyLandsacpeId" />
           </Key>
           <Property Name="MonthlyLandsacpeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CustomerId" Type="int" />
-          <Property Name="ContactId" Type="int" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="ContactId" Type="int" Nullable="false" />
+          <Property Name="ServiceLocationId" Type="int" Nullable="false" />
+          <Property Name="RequestBy" Type="int" Nullable="false" />
           <Property Name="SupervisorVisitedthejobweekly" Type="bit" />
           <Property Name="CompletedLitterpickupofgroundareas" Type="bit" />
           <Property Name="Completedsweepingorblowingofwalkways" Type="bit" />
           <Property Name="HighpriorityareaswereVisitedweekly" Type="bit" />
           <Property Name="VDitcheswerecleanedandinspected" Type="bit" />
-          <Property Name="WeepscreeninspectedandcleanedinrotationsectionId" Type="int" />
+          <Property Name="WeepscreeninspectedandcleanedinrotationsectionId" Type="nvarchar" MaxLength="50" />
           <Property Name="Fertilizationoftrufoccoured" Type="nvarchar" MaxLength="500" />
           <Property Name="Trufwasmovedandedgedweekly" Type="bit" />
           <Property Name="Shrubstrimmedaccordingtorotationschedule" Type="bit" />
@@ -458,11 +460,12 @@
           <Property Name="Valvewasrepaired" Type="bit" />
           <Property Name="Thismonthexpectedrotationschedule" Type="nvarchar" MaxLength="500" />
           <Property Name="Notes" Type="nvarchar" MaxLength="500" />
-          <Property Name="CreatedBy" Type="int" />
-          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="EditBy" Type="int" />
           <Property Name="EditDate" Type="datetime" />
-          <Property Name="isActive" Type="bit" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="isDelete" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="tblPunchlist">
           <Key>
@@ -666,8 +669,8 @@
             <PropertyRef Name="ServiceRequestLatLongId" />
           </Key>
           <Property Name="ServiceRequestLatLongId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Lat" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Long" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="lat" Type="float" Nullable="false" />
+          <Property Name="lng" Type="float" Nullable="false" />
           <Property Name="ServiceRequestId" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -741,6 +744,23 @@
           </Key>
           <Property Name="SRTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Type" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="tblSyncLog">
+          <Key>
+            <PropertyRef Name="SyncLogId" />
+          </Key>
+          <Property Name="SyncLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Id" Type="int" />
+          <Property Name="QBId" Type="int" />
+          <Property Name="Operation" Type="nvarchar" MaxLength="150" />
+          <Property Name="Message" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isSync" Type="bit" />
+          <Property Name="isQB" Type="bit" />
         </EntityType>
         <EntityType Name="tblTag">
           <Key>
@@ -1306,18 +1326,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_tblMonthlyLandsacpe_tblCustomer">
-          <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
-          <End Role="tblMonthlyLandsacpe" Type="Self.tblMonthlyLandsacpe" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="tblMonthlyLandsacpe">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_tblPunchlist_tblContact">
           <End Role="tblContact" Type="Self.tblContact" Multiplicity="1" />
           <End Role="tblPunchlist" Type="Self.tblPunchlist" Multiplicity="*" />
@@ -1633,6 +1641,11 @@
         <Function Name="SPGetEstimateItemData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
         </Function>
+        <Function Name="SPGetEstimateReportList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CustomerId" Type="int" Mode="In" />
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="Month" Type="int" Mode="In" />
+        </Function>
         <Function Name="SPGetInvoiceData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
         </Function>
@@ -1647,6 +1660,17 @@
         </Function>
         <Function Name="SPGetIrrigationData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SPGetMonthlyLandsacpeData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+          <Parameter Name="CustomerId" Type="int" Mode="In" />
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="Month" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SPGetMonthlyLandsacpeDataWithCustomer" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CustomerId" Type="int" Mode="In" />
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="Month" Type="int" Mode="In" />
         </Function>
         <Function Name="SPGetNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Type" Type="nvarchar" Mode="In" />
@@ -1680,6 +1704,14 @@
         </Function>
         <Function Name="SPGetServiceRequestItemData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SPGetServiceRequestLatLongData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SPGetServiceRequestReportList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CustomerId" Type="int" Mode="In" />
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="Month" Type="int" Mode="In" />
         </Function>
         <Function Name="SPGetStaffData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
@@ -1725,6 +1757,7 @@
           <EntitySet Name="tblSRItem" EntityType="Self.tblSRItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblSRStatus" EntityType="Self.tblSRStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblSRType" EntityType="Self.tblSRType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSyncLog" EntityType="Self.tblSyncLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblTag" EntityType="Self.tblTag" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblTerm" EntityType="Self.tblTerm" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblUser" EntityType="Self.tblUser" Schema="dbo" store:Type="Tables" />
@@ -1887,10 +1920,6 @@
             <End Role="tblAccount" EntitySet="tblAccount" />
             <End Role="tblItem" EntitySet="tblItem" />
           </AssociationSet>
-          <AssociationSet Name="FK_tblMonthlyLandsacpe_tblCustomer" Association="Self.FK_tblMonthlyLandsacpe_tblCustomer">
-            <End Role="tblCustomer" EntitySet="tblCustomer" />
-            <End Role="tblMonthlyLandsacpe" EntitySet="tblMonthlyLandsacpe" />
-          </AssociationSet>
           <AssociationSet Name="FK_tblPunchlist_tblContact" Association="Self.FK_tblPunchlist_tblContact">
             <End Role="tblContact" EntitySet="tblContact" />
             <End Role="tblPunchlist" EntitySet="tblPunchlist" />
@@ -2021,7 +2050,6 @@
           <Property Name="EditBy" Type="Int32" />
           <Property Name="EditDate" Type="DateTime" Precision="3" />
           <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblMonthlyLandsacpes" Relationship="earthcoModel.FK_tblMonthlyLandsacpe_tblCustomer" FromRole="tblCustomer" ToRole="tblMonthlyLandsacpe" />
           <Property Name="ContactFirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="ContactLastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
@@ -2035,6 +2063,7 @@
           <Property Name="CustomerTypeId" Type="Int32" />
           <Property Name="isLoginAllow" Type="Boolean" />
           <NavigationProperty Name="tblCustomerType" Relationship="earthcoModel.FK__tblCustom__Custo__17036CC0" FromRole="tblCustomer" ToRole="tblCustomerType" />
+          <NavigationProperty Name="tblMonthlyLandsacpes" Relationship="earthcoModel.FK_tblMonthlyLandsacpe_tblCustomer" FromRole="tblCustomer" ToRole="tblMonthlyLandsacpe" />
         </EntityType>
         <EntityType Name="tblEmployee">
           <Key>
@@ -2158,11 +2187,6 @@
           <AssociationSet Name="FK_tblWeeklyReportFile_tblWeeklyReport" Association="earthcoModel.FK_tblWeeklyReportFile_tblWeeklyReport">
             <End Role="tblWeeklyReport" EntitySet="tblWeeklyReports" />
             <End Role="tblWeeklyReportFile" EntitySet="tblWeeklyReportFiles" />
-          </AssociationSet>
-          <EntitySet Name="tblMonthlyLandsacpes" EntityType="earthcoModel.tblMonthlyLandsacpe" />
-          <AssociationSet Name="FK_tblMonthlyLandsacpe_tblCustomer" Association="earthcoModel.FK_tblMonthlyLandsacpe_tblCustomer">
-            <End Role="tblCustomer" EntitySet="tblCustomers" />
-            <End Role="tblMonthlyLandsacpe" EntitySet="tblMonthlyLandsacpes" />
           </AssociationSet>
           <EntitySet Name="tblCustomerTypes" EntityType="earthcoModel.tblCustomerType" />
           <AssociationSet Name="FK__tblCustom__Custo__17036CC0" Association="earthcoModel.FK__tblCustom__Custo__17036CC0">
@@ -2511,11 +2535,41 @@
           <FunctionImport Name="SPGetIrrigationData" ReturnType="Collection(earthcoModel.SPGetIrrigationData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="SPGetEstimateReportList" ReturnType="Collection(earthcoModel.SPGetEstimateReportList_Result)">
+            <Parameter Name="CustomerId" Mode="In" Type="Int32" />
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+            <Parameter Name="Month" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetServiceRequestReportList" ReturnType="Collection(earthcoModel.SPGetServiceRequestReportList_Result)">
+            <Parameter Name="CustomerId" Mode="In" Type="Int32" />
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+            <Parameter Name="Month" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="tblMonthlyLandsacpes" EntityType="earthcoModel.tblMonthlyLandsacpe" />
+          <AssociationSet Name="FK_tblMonthlyLandsacpe_tblCustomer" Association="earthcoModel.FK_tblMonthlyLandsacpe_tblCustomer">
+            <End Role="tblCustomer" EntitySet="tblCustomers" />
+            <End Role="tblMonthlyLandsacpe" EntitySet="tblMonthlyLandsacpes" />
+          </AssociationSet>
+          <EntitySet Name="tblSyncLogs" EntityType="earthcoModel.tblSyncLog" />
           <EntitySet Name="tblServiceRequestLatLongs" EntityType="earthcoModel.tblServiceRequestLatLong" />
           <AssociationSet Name="FK_tblServiceRequestLatLong_tblServiceRequest" Association="earthcoModel.FK_tblServiceRequestLatLong_tblServiceRequest">
             <End Role="tblServiceRequest" EntitySet="tblServiceRequests" />
             <End Role="tblServiceRequestLatLong" EntitySet="tblServiceRequestLatLongs" />
           </AssociationSet>
+          <FunctionImport Name="SPGetServiceRequestLatLongData" ReturnType="Collection(earthcoModel.SPGetServiceRequestLatLongData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetMonthlyLandsacpeDataWithCustomer" ReturnType="Collection(earthcoModel.SPGetMonthlyLandsacpeDataWithCustomer_Result)">
+            <Parameter Name="CustomerId" Mode="In" Type="Int32" />
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+            <Parameter Name="Month" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetMonthlyLandsacpeData" ReturnType="Collection(earthcoModel.SPGetMonthlyLandsacpeData_Result)">
+            <Parameter Name="ID" Mode="In" Type="Int32" />
+            <Parameter Name="CustomerId" Mode="In" Type="Int32" />
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+            <Parameter Name="Month" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="tblSetting">
           <Key>
@@ -2585,50 +2639,6 @@
             </Principal>
             <Dependent Role="tblWeeklyReportFile">
               <PropertyRef Name="WeeklyReportId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="tblMonthlyLandsacpe">
-          <Key>
-            <PropertyRef Name="MonthlyLandsacpeId" />
-          </Key>
-          <Property Name="MonthlyLandsacpeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustomerId" Type="Int32" />
-          <Property Name="ContactId" Type="Int32" />
-          <Property Name="SupervisorVisitedthejobweekly" Type="Boolean" />
-          <Property Name="CompletedLitterpickupofgroundareas" Type="Boolean" />
-          <Property Name="Completedsweepingorblowingofwalkways" Type="Boolean" />
-          <Property Name="HighpriorityareaswereVisitedweekly" Type="Boolean" />
-          <Property Name="VDitcheswerecleanedandinspected" Type="Boolean" />
-          <Property Name="WeepscreeninspectedandcleanedinrotationsectionId" Type="Int32" />
-          <Property Name="Fertilizationoftrufoccoured" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Trufwasmovedandedgedweekly" Type="Boolean" />
-          <Property Name="Shrubstrimmedaccordingtorotationschedule" Type="Boolean" />
-          <Property Name="FertilizationofShrubsoccoured" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="WateringofflowerbedsCompletedandchecked" Type="Boolean" />
-          <Property Name="Headswereadjustedformaximumcoverage" Type="Boolean" />
-          <Property Name="Repairsweremadetomaintainaneffectivesystem" Type="Boolean" />
-          <Property Name="Controllerswereinspectedandadjusted" Type="Boolean" />
-          <Property Name="Mainlinewasrepaired" Type="Boolean" />
-          <Property Name="Valvewasrepaired" Type="Boolean" />
-          <Property Name="Thismonthexpectedrotationschedule" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" />
-          <NavigationProperty Name="tblCustomer" Relationship="earthcoModel.FK_tblMonthlyLandsacpe_tblCustomer" FromRole="tblMonthlyLandsacpe" ToRole="tblCustomer" />
-        </EntityType>
-        <Association Name="FK_tblMonthlyLandsacpe_tblCustomer">
-          <End Type="earthcoModel.tblCustomer" Role="tblCustomer" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblMonthlyLandsacpe" Role="tblMonthlyLandsacpe" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblCustomer">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="tblMonthlyLandsacpe">
-              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4581,13 +4591,141 @@
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
           <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="500" />
         </ComplexType>
+        <ComplexType Name="SPGetEstimateReportList_Result">
+          <Property Type="Int32" Name="EstimateId" Nullable="false" />
+          <Property Type="String" Name="EstimateNumber" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="ServiceLocationId" Nullable="false" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="IssueDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="Int32" Name="ContactId" Nullable="false" />
+          <Property Type="Int32" Name="RegionalManagerId" Nullable="false" />
+          <Property Type="Int32" Name="AssignTo" Nullable="false" />
+          <Property Type="Int32" Name="RequestedBy" Nullable="false" />
+          <Property Type="Int32" Name="EstimateStatusId" Nullable="false" />
+          <Property Type="String" Name="QBStatus" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="EstimateNotes" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ServiceLocationNotes" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="PrivateNotes" Nullable="true" MaxLength="500" />
+          <Property Type="Double" Name="Tax" Nullable="true" />
+          <Property Type="Double" Name="Discount" Nullable="true" />
+          <Property Type="Double" Name="Shipping" Nullable="true" />
+          <Property Type="Double" Name="Profit" Nullable="true" />
+          <Property Type="Double" Name="ProfitPercentage" Nullable="false" />
+          <Property Type="String" Name="Tags" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="DocNumber" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="Double" Name="TotalAmount" Nullable="true" />
+          <Property Type="Double" Name="BalanceAmount" Nullable="true" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="FirstName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LastName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="SPGetServiceRequestReportList_Result">
+          <Property Type="Int32" Name="ServiceRequestId" Nullable="false" />
+          <Property Type="String" Name="ServiceRequestNumber" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="ServiceLocationId" Nullable="false" />
+          <Property Type="Int32" Name="ContactId" Nullable="false" />
+          <Property Type="String" Name="JobName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Assign" Nullable="true" />
+          <Property Type="String" Name="WorkRequest" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ActionTaken" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CompletedDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DueDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="Int32" Name="SRTypeId" Nullable="false" />
+          <Property Type="Int32" Name="SRStatusId" Nullable="false" />
+          <Property Type="String" Name="DocNumber" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="FirstName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LastName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <EntityType Name="tblMonthlyLandsacpe">
+          <Key>
+            <PropertyRef Name="MonthlyLandsacpeId" />
+          </Key>
+          <Property Name="MonthlyLandsacpeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="ContactId" Type="Int32" Nullable="false" />
+          <Property Name="ServiceLocationId" Type="Int32" Nullable="false" />
+          <Property Name="RequestBy" Type="Int32" Nullable="false" />
+          <Property Name="SupervisorVisitedthejobweekly" Type="Boolean" />
+          <Property Name="CompletedLitterpickupofgroundareas" Type="Boolean" />
+          <Property Name="Completedsweepingorblowingofwalkways" Type="Boolean" />
+          <Property Name="HighpriorityareaswereVisitedweekly" Type="Boolean" />
+          <Property Name="VDitcheswerecleanedandinspected" Type="Boolean" />
+          <Property Name="WeepscreeninspectedandcleanedinrotationsectionId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Fertilizationoftrufoccoured" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Trufwasmovedandedgedweekly" Type="Boolean" />
+          <Property Name="Shrubstrimmedaccordingtorotationschedule" Type="Boolean" />
+          <Property Name="FertilizationofShrubsoccoured" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="WateringofflowerbedsCompletedandchecked" Type="Boolean" />
+          <Property Name="Headswereadjustedformaximumcoverage" Type="Boolean" />
+          <Property Name="Repairsweremadetomaintainaneffectivesystem" Type="Boolean" />
+          <Property Name="Controllerswereinspectedandadjusted" Type="Boolean" />
+          <Property Name="Mainlinewasrepaired" Type="Boolean" />
+          <Property Name="Valvewasrepaired" Type="Boolean" />
+          <Property Name="Thismonthexpectedrotationschedule" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblCustomer" Relationship="earthcoModel.FK_tblMonthlyLandsacpe_tblCustomer" FromRole="tblMonthlyLandsacpe" ToRole="tblCustomer" />
+        </EntityType>
+        <Association Name="FK_tblMonthlyLandsacpe_tblCustomer">
+          <End Type="earthcoModel.tblCustomer" Role="tblCustomer" Multiplicity="1" />
+          <End Type="earthcoModel.tblMonthlyLandsacpe" Role="tblMonthlyLandsacpe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="tblMonthlyLandsacpe">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblSyncLog">
+          <Key>
+            <PropertyRef Name="SyncLogId" />
+          </Key>
+          <Property Name="SyncLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Id" Type="Int32" />
+          <Property Name="QBId" Type="Int32" />
+          <Property Name="Operation" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isSync" Type="Boolean" />
+          <Property Name="isQB" Type="Boolean" />
+        </EntityType>
         <EntityType Name="tblServiceRequestLatLong">
           <Key>
             <PropertyRef Name="ServiceRequestLatLongId" />
           </Key>
           <Property Name="ServiceRequestLatLongId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Lat" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Long" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="lat" Type="Double" Nullable="false" />
+          <Property Name="lng" Type="Double" Nullable="false" />
           <Property Name="ServiceRequestId" Type="Int32" Nullable="false" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
@@ -4609,6 +4747,90 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="SPGetServiceRequestLatLongData_Result">
+          <Property Type="Int32" Name="ServiceRequestLatLongId" Nullable="false" />
+          <Property Type="Double" Name="lat" Nullable="false" />
+          <Property Type="Double" Name="lng" Nullable="false" />
+          <Property Type="Int32" Name="ServiceRequestId" Nullable="false" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SPGetMonthlyLandsacpeDataWithCustomer_Result">
+          <Property Type="Int32" Name="MonthlyLandsacpeId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="Int32" Name="ContactId" Nullable="false" />
+          <Property Type="Int32" Name="ServiceLocationId" Nullable="false" />
+          <Property Type="Int32" Name="RequestBy" Nullable="false" />
+          <Property Type="Boolean" Name="SupervisorVisitedthejobweekly" Nullable="true" />
+          <Property Type="Boolean" Name="CompletedLitterpickupofgroundareas" Nullable="true" />
+          <Property Type="Boolean" Name="Completedsweepingorblowingofwalkways" Nullable="true" />
+          <Property Type="Boolean" Name="HighpriorityareaswereVisitedweekly" Nullable="true" />
+          <Property Type="Boolean" Name="VDitcheswerecleanedandinspected" Nullable="true" />
+          <Property Type="String" Name="WeepscreeninspectedandcleanedinrotationsectionId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Fertilizationoftrufoccoured" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="Trufwasmovedandedgedweekly" Nullable="true" />
+          <Property Type="Boolean" Name="Shrubstrimmedaccordingtorotationschedule" Nullable="true" />
+          <Property Type="String" Name="FertilizationofShrubsoccoured" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="WateringofflowerbedsCompletedandchecked" Nullable="true" />
+          <Property Type="Boolean" Name="Headswereadjustedformaximumcoverage" Nullable="true" />
+          <Property Type="Boolean" Name="Repairsweremadetomaintainaneffectivesystem" Nullable="true" />
+          <Property Type="Boolean" Name="Controllerswereinspectedandadjusted" Nullable="true" />
+          <Property Type="Boolean" Name="Mainlinewasrepaired" Nullable="true" />
+          <Property Type="Boolean" Name="Valvewasrepaired" Nullable="true" />
+          <Property Type="String" Name="Thismonthexpectedrotationschedule" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Notes" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Phone" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RequestByName" Nullable="false" MaxLength="101" />
+          <Property Type="String" Name="ServiceLocationName" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="SPGetMonthlyLandsacpeData_Result">
+          <Property Type="Int32" Name="MonthlyLandsacpeId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="Int32" Name="ContactId" Nullable="false" />
+          <Property Type="Int32" Name="ServiceLocationId" Nullable="false" />
+          <Property Type="Int32" Name="RequestBy" Nullable="false" />
+          <Property Type="Boolean" Name="SupervisorVisitedthejobweekly" Nullable="true" />
+          <Property Type="Boolean" Name="CompletedLitterpickupofgroundareas" Nullable="true" />
+          <Property Type="Boolean" Name="Completedsweepingorblowingofwalkways" Nullable="true" />
+          <Property Type="Boolean" Name="HighpriorityareaswereVisitedweekly" Nullable="true" />
+          <Property Type="Boolean" Name="VDitcheswerecleanedandinspected" Nullable="true" />
+          <Property Type="String" Name="WeepscreeninspectedandcleanedinrotationsectionId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Fertilizationoftrufoccoured" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="Trufwasmovedandedgedweekly" Nullable="true" />
+          <Property Type="Boolean" Name="Shrubstrimmedaccordingtorotationschedule" Nullable="true" />
+          <Property Type="String" Name="FertilizationofShrubsoccoured" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="WateringofflowerbedsCompletedandchecked" Nullable="true" />
+          <Property Type="Boolean" Name="Headswereadjustedformaximumcoverage" Nullable="true" />
+          <Property Type="Boolean" Name="Repairsweremadetomaintainaneffectivesystem" Nullable="true" />
+          <Property Type="Boolean" Name="Controllerswereinspectedandadjusted" Nullable="true" />
+          <Property Type="Boolean" Name="Mainlinewasrepaired" Nullable="true" />
+          <Property Type="Boolean" Name="Valvewasrepaired" Nullable="true" />
+          <Property Type="String" Name="Thismonthexpectedrotationschedule" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Notes" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Phone" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RequestByName" Nullable="false" MaxLength="101" />
+          <Property Type="String" Name="ServiceLocationName" Nullable="true" MaxLength="500" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4789,38 +5011,6 @@
                 <ScalarProperty Name="Caption" ColumnName="Caption" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="WeeklyReportFileId" ColumnName="WeeklyReportFileId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblMonthlyLandsacpes">
-            <EntityTypeMapping TypeName="earthcoModel.tblMonthlyLandsacpe">
-              <MappingFragment StoreEntitySet="tblMonthlyLandsacpe">
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="Thismonthexpectedrotationschedule" ColumnName="Thismonthexpectedrotationschedule" />
-                <ScalarProperty Name="Valvewasrepaired" ColumnName="Valvewasrepaired" />
-                <ScalarProperty Name="Mainlinewasrepaired" ColumnName="Mainlinewasrepaired" />
-                <ScalarProperty Name="Controllerswereinspectedandadjusted" ColumnName="Controllerswereinspectedandadjusted" />
-                <ScalarProperty Name="Repairsweremadetomaintainaneffectivesystem" ColumnName="Repairsweremadetomaintainaneffectivesystem" />
-                <ScalarProperty Name="Headswereadjustedformaximumcoverage" ColumnName="Headswereadjustedformaximumcoverage" />
-                <ScalarProperty Name="WateringofflowerbedsCompletedandchecked" ColumnName="WateringofflowerbedsCompletedandchecked" />
-                <ScalarProperty Name="FertilizationofShrubsoccoured" ColumnName="FertilizationofShrubsoccoured" />
-                <ScalarProperty Name="Shrubstrimmedaccordingtorotationschedule" ColumnName="Shrubstrimmedaccordingtorotationschedule" />
-                <ScalarProperty Name="Trufwasmovedandedgedweekly" ColumnName="Trufwasmovedandedgedweekly" />
-                <ScalarProperty Name="Fertilizationoftrufoccoured" ColumnName="Fertilizationoftrufoccoured" />
-                <ScalarProperty Name="WeepscreeninspectedandcleanedinrotationsectionId" ColumnName="WeepscreeninspectedandcleanedinrotationsectionId" />
-                <ScalarProperty Name="VDitcheswerecleanedandinspected" ColumnName="VDitcheswerecleanedandinspected" />
-                <ScalarProperty Name="HighpriorityareaswereVisitedweekly" ColumnName="HighpriorityareaswereVisitedweekly" />
-                <ScalarProperty Name="Completedsweepingorblowingofwalkways" ColumnName="Completedsweepingorblowingofwalkways" />
-                <ScalarProperty Name="CompletedLitterpickupofgroundareas" ColumnName="CompletedLitterpickupofgroundareas" />
-                <ScalarProperty Name="SupervisorVisitedthejobweekly" ColumnName="SupervisorVisitedthejobweekly" />
-                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="MonthlyLandsacpeId" ColumnName="MonthlyLandsacpeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -6085,6 +6275,131 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetEstimateReportList" FunctionName="earthcoModel.Store.SPGetEstimateReportList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetEstimateReportList_Result">
+                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
+                <ScalarProperty Name="EstimateNumber" ColumnName="EstimateNumber" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="RegionalManagerId" ColumnName="RegionalManagerId" />
+                <ScalarProperty Name="AssignTo" ColumnName="AssignTo" />
+                <ScalarProperty Name="RequestedBy" ColumnName="RequestedBy" />
+                <ScalarProperty Name="EstimateStatusId" ColumnName="EstimateStatusId" />
+                <ScalarProperty Name="QBStatus" ColumnName="QBStatus" />
+                <ScalarProperty Name="EstimateNotes" ColumnName="EstimateNotes" />
+                <ScalarProperty Name="ServiceLocationNotes" ColumnName="ServiceLocationNotes" />
+                <ScalarProperty Name="PrivateNotes" ColumnName="PrivateNotes" />
+                <ScalarProperty Name="Tax" ColumnName="Tax" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="Shipping" ColumnName="Shipping" />
+                <ScalarProperty Name="Profit" ColumnName="Profit" />
+                <ScalarProperty Name="ProfitPercentage" ColumnName="ProfitPercentage" />
+                <ScalarProperty Name="Tags" ColumnName="Tags" />
+                <ScalarProperty Name="DocNumber" ColumnName="DocNumber" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="BalanceAmount" ColumnName="BalanceAmount" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetServiceRequestReportList" FunctionName="earthcoModel.Store.SPGetServiceRequestReportList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetServiceRequestReportList_Result">
+                <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
+                <ScalarProperty Name="ServiceRequestNumber" ColumnName="ServiceRequestNumber" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="JobName" ColumnName="JobName" />
+                <ScalarProperty Name="Assign" ColumnName="Assign" />
+                <ScalarProperty Name="WorkRequest" ColumnName="WorkRequest" />
+                <ScalarProperty Name="ActionTaken" ColumnName="ActionTaken" />
+                <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="SRTypeId" ColumnName="SRTypeId" />
+                <ScalarProperty Name="SRStatusId" ColumnName="SRStatusId" />
+                <ScalarProperty Name="DocNumber" ColumnName="DocNumber" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tblMonthlyLandsacpes">
+            <EntityTypeMapping TypeName="earthcoModel.tblMonthlyLandsacpe">
+              <MappingFragment StoreEntitySet="tblMonthlyLandsacpe">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Thismonthexpectedrotationschedule" ColumnName="Thismonthexpectedrotationschedule" />
+                <ScalarProperty Name="Valvewasrepaired" ColumnName="Valvewasrepaired" />
+                <ScalarProperty Name="Mainlinewasrepaired" ColumnName="Mainlinewasrepaired" />
+                <ScalarProperty Name="Controllerswereinspectedandadjusted" ColumnName="Controllerswereinspectedandadjusted" />
+                <ScalarProperty Name="Repairsweremadetomaintainaneffectivesystem" ColumnName="Repairsweremadetomaintainaneffectivesystem" />
+                <ScalarProperty Name="Headswereadjustedformaximumcoverage" ColumnName="Headswereadjustedformaximumcoverage" />
+                <ScalarProperty Name="WateringofflowerbedsCompletedandchecked" ColumnName="WateringofflowerbedsCompletedandchecked" />
+                <ScalarProperty Name="FertilizationofShrubsoccoured" ColumnName="FertilizationofShrubsoccoured" />
+                <ScalarProperty Name="Shrubstrimmedaccordingtorotationschedule" ColumnName="Shrubstrimmedaccordingtorotationschedule" />
+                <ScalarProperty Name="Trufwasmovedandedgedweekly" ColumnName="Trufwasmovedandedgedweekly" />
+                <ScalarProperty Name="Fertilizationoftrufoccoured" ColumnName="Fertilizationoftrufoccoured" />
+                <ScalarProperty Name="WeepscreeninspectedandcleanedinrotationsectionId" ColumnName="WeepscreeninspectedandcleanedinrotationsectionId" />
+                <ScalarProperty Name="VDitcheswerecleanedandinspected" ColumnName="VDitcheswerecleanedandinspected" />
+                <ScalarProperty Name="HighpriorityareaswereVisitedweekly" ColumnName="HighpriorityareaswereVisitedweekly" />
+                <ScalarProperty Name="Completedsweepingorblowingofwalkways" ColumnName="Completedsweepingorblowingofwalkways" />
+                <ScalarProperty Name="CompletedLitterpickupofgroundareas" ColumnName="CompletedLitterpickupofgroundareas" />
+                <ScalarProperty Name="SupervisorVisitedthejobweekly" ColumnName="SupervisorVisitedthejobweekly" />
+                <ScalarProperty Name="RequestBy" ColumnName="RequestBy" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="MonthlyLandsacpeId" ColumnName="MonthlyLandsacpeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSyncLogs">
+            <EntityTypeMapping TypeName="earthcoModel.tblSyncLog">
+              <MappingFragment StoreEntitySet="tblSyncLog">
+                <ScalarProperty Name="isQB" ColumnName="isQB" />
+                <ScalarProperty Name="isSync" ColumnName="isSync" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Operation" ColumnName="Operation" />
+                <ScalarProperty Name="QBId" ColumnName="QBId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SyncLogId" ColumnName="SyncLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="tblServiceRequestLatLongs">
             <EntityTypeMapping TypeName="earthcoModel.tblServiceRequestLatLong">
               <MappingFragment StoreEntitySet="tblServiceRequestLatLong">
@@ -6095,12 +6410,108 @@
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
-                <ScalarProperty Name="Long" ColumnName="Long" />
-                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="lng" ColumnName="lng" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
                 <ScalarProperty Name="ServiceRequestLatLongId" ColumnName="ServiceRequestLatLongId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SPGetServiceRequestLatLongData" FunctionName="earthcoModel.Store.SPGetServiceRequestLatLongData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetServiceRequestLatLongData_Result">
+                <ScalarProperty Name="ServiceRequestLatLongId" ColumnName="ServiceRequestLatLongId" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="lng" ColumnName="lng" />
+                <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetMonthlyLandsacpeDataWithCustomer" FunctionName="earthcoModel.Store.SPGetMonthlyLandsacpeDataWithCustomer">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetMonthlyLandsacpeDataWithCustomer_Result">
+                <ScalarProperty Name="MonthlyLandsacpeId" ColumnName="MonthlyLandsacpeId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="RequestBy" ColumnName="RequestBy" />
+                <ScalarProperty Name="SupervisorVisitedthejobweekly" ColumnName="SupervisorVisitedthejobweekly" />
+                <ScalarProperty Name="CompletedLitterpickupofgroundareas" ColumnName="CompletedLitterpickupofgroundareas" />
+                <ScalarProperty Name="Completedsweepingorblowingofwalkways" ColumnName="Completedsweepingorblowingofwalkways" />
+                <ScalarProperty Name="HighpriorityareaswereVisitedweekly" ColumnName="HighpriorityareaswereVisitedweekly" />
+                <ScalarProperty Name="VDitcheswerecleanedandinspected" ColumnName="VDitcheswerecleanedandinspected" />
+                <ScalarProperty Name="WeepscreeninspectedandcleanedinrotationsectionId" ColumnName="WeepscreeninspectedandcleanedinrotationsectionId" />
+                <ScalarProperty Name="Fertilizationoftrufoccoured" ColumnName="Fertilizationoftrufoccoured" />
+                <ScalarProperty Name="Trufwasmovedandedgedweekly" ColumnName="Trufwasmovedandedgedweekly" />
+                <ScalarProperty Name="Shrubstrimmedaccordingtorotationschedule" ColumnName="Shrubstrimmedaccordingtorotationschedule" />
+                <ScalarProperty Name="FertilizationofShrubsoccoured" ColumnName="FertilizationofShrubsoccoured" />
+                <ScalarProperty Name="WateringofflowerbedsCompletedandchecked" ColumnName="WateringofflowerbedsCompletedandchecked" />
+                <ScalarProperty Name="Headswereadjustedformaximumcoverage" ColumnName="Headswereadjustedformaximumcoverage" />
+                <ScalarProperty Name="Repairsweremadetomaintainaneffectivesystem" ColumnName="Repairsweremadetomaintainaneffectivesystem" />
+                <ScalarProperty Name="Controllerswereinspectedandadjusted" ColumnName="Controllerswereinspectedandadjusted" />
+                <ScalarProperty Name="Mainlinewasrepaired" ColumnName="Mainlinewasrepaired" />
+                <ScalarProperty Name="Valvewasrepaired" ColumnName="Valvewasrepaired" />
+                <ScalarProperty Name="Thismonthexpectedrotationschedule" ColumnName="Thismonthexpectedrotationschedule" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="RequestByName" ColumnName="RequestByName" />
+                <ScalarProperty Name="ServiceLocationName" ColumnName="ServiceLocationName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetMonthlyLandsacpeData" FunctionName="earthcoModel.Store.SPGetMonthlyLandsacpeData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetMonthlyLandsacpeData_Result">
+                <ScalarProperty Name="MonthlyLandsacpeId" ColumnName="MonthlyLandsacpeId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="RequestBy" ColumnName="RequestBy" />
+                <ScalarProperty Name="SupervisorVisitedthejobweekly" ColumnName="SupervisorVisitedthejobweekly" />
+                <ScalarProperty Name="CompletedLitterpickupofgroundareas" ColumnName="CompletedLitterpickupofgroundareas" />
+                <ScalarProperty Name="Completedsweepingorblowingofwalkways" ColumnName="Completedsweepingorblowingofwalkways" />
+                <ScalarProperty Name="HighpriorityareaswereVisitedweekly" ColumnName="HighpriorityareaswereVisitedweekly" />
+                <ScalarProperty Name="VDitcheswerecleanedandinspected" ColumnName="VDitcheswerecleanedandinspected" />
+                <ScalarProperty Name="WeepscreeninspectedandcleanedinrotationsectionId" ColumnName="WeepscreeninspectedandcleanedinrotationsectionId" />
+                <ScalarProperty Name="Fertilizationoftrufoccoured" ColumnName="Fertilizationoftrufoccoured" />
+                <ScalarProperty Name="Trufwasmovedandedgedweekly" ColumnName="Trufwasmovedandedgedweekly" />
+                <ScalarProperty Name="Shrubstrimmedaccordingtorotationschedule" ColumnName="Shrubstrimmedaccordingtorotationschedule" />
+                <ScalarProperty Name="FertilizationofShrubsoccoured" ColumnName="FertilizationofShrubsoccoured" />
+                <ScalarProperty Name="WateringofflowerbedsCompletedandchecked" ColumnName="WateringofflowerbedsCompletedandchecked" />
+                <ScalarProperty Name="Headswereadjustedformaximumcoverage" ColumnName="Headswereadjustedformaximumcoverage" />
+                <ScalarProperty Name="Repairsweremadetomaintainaneffectivesystem" ColumnName="Repairsweremadetomaintainaneffectivesystem" />
+                <ScalarProperty Name="Controllerswereinspectedandadjusted" ColumnName="Controllerswereinspectedandadjusted" />
+                <ScalarProperty Name="Mainlinewasrepaired" ColumnName="Mainlinewasrepaired" />
+                <ScalarProperty Name="Valvewasrepaired" ColumnName="Valvewasrepaired" />
+                <ScalarProperty Name="Thismonthexpectedrotationschedule" ColumnName="Thismonthexpectedrotationschedule" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="RequestByName" ColumnName="RequestByName" />
+                <ScalarProperty Name="ServiceLocationName" ColumnName="ServiceLocationName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

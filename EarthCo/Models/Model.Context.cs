@@ -38,7 +38,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblSetting> tblSettings { get; set; }
         public virtual DbSet<tblWeeklyReport> tblWeeklyReports { get; set; }
         public virtual DbSet<tblWeeklyReportFile> tblWeeklyReportFiles { get; set; }
-        public virtual DbSet<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
         public virtual DbSet<tblCustomerType> tblCustomerTypes { get; set; }
         public virtual DbSet<tblContact> tblContacts { get; set; }
         public virtual DbSet<tblServiceLocation> tblServiceLocations { get; set; }
@@ -72,6 +71,8 @@ namespace EarthCo.Models
         public virtual DbSet<tblPurchaseOrderFile> tblPurchaseOrderFiles { get; set; }
         public virtual DbSet<tblSRFile> tblSRFiles { get; set; }
         public virtual DbSet<tblController> tblControllers { get; set; }
+        public virtual DbSet<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
+        public virtual DbSet<tblSyncLog> tblSyncLogs { get; set; }
         public virtual DbSet<tblServiceRequestLatLong> tblServiceRequestLatLongs { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
@@ -306,6 +307,87 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetIrrigationData_Result>("SPGetIrrigationData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetEstimateReportList_Result> SPGetEstimateReportList(Nullable<int> customerId, Nullable<int> year, Nullable<int> month)
+        {
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("CustomerId", customerId) :
+                new ObjectParameter("CustomerId", typeof(int));
+    
+            var yearParameter = year.HasValue ?
+                new ObjectParameter("Year", year) :
+                new ObjectParameter("Year", typeof(int));
+    
+            var monthParameter = month.HasValue ?
+                new ObjectParameter("Month", month) :
+                new ObjectParameter("Month", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateReportList_Result>("SPGetEstimateReportList", customerIdParameter, yearParameter, monthParameter);
+        }
+    
+        public virtual ObjectResult<SPGetServiceRequestReportList_Result> SPGetServiceRequestReportList(Nullable<int> customerId, Nullable<int> year, Nullable<int> month)
+        {
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("CustomerId", customerId) :
+                new ObjectParameter("CustomerId", typeof(int));
+    
+            var yearParameter = year.HasValue ?
+                new ObjectParameter("Year", year) :
+                new ObjectParameter("Year", typeof(int));
+    
+            var monthParameter = month.HasValue ?
+                new ObjectParameter("Month", month) :
+                new ObjectParameter("Month", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetServiceRequestReportList_Result>("SPGetServiceRequestReportList", customerIdParameter, yearParameter, monthParameter);
+        }
+    
+        public virtual ObjectResult<SPGetServiceRequestLatLongData_Result> SPGetServiceRequestLatLongData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetServiceRequestLatLongData_Result>("SPGetServiceRequestLatLongData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetMonthlyLandsacpeDataWithCustomer_Result> SPGetMonthlyLandsacpeDataWithCustomer(Nullable<int> customerId, Nullable<int> year, Nullable<int> month)
+        {
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("CustomerId", customerId) :
+                new ObjectParameter("CustomerId", typeof(int));
+    
+            var yearParameter = year.HasValue ?
+                new ObjectParameter("Year", year) :
+                new ObjectParameter("Year", typeof(int));
+    
+            var monthParameter = month.HasValue ?
+                new ObjectParameter("Month", month) :
+                new ObjectParameter("Month", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetMonthlyLandsacpeDataWithCustomer_Result>("SPGetMonthlyLandsacpeDataWithCustomer", customerIdParameter, yearParameter, monthParameter);
+        }
+    
+        public virtual ObjectResult<SPGetMonthlyLandsacpeData_Result> SPGetMonthlyLandsacpeData(Nullable<int> iD, Nullable<int> customerId, Nullable<int> year, Nullable<int> month)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("CustomerId", customerId) :
+                new ObjectParameter("CustomerId", typeof(int));
+    
+            var yearParameter = year.HasValue ?
+                new ObjectParameter("Year", year) :
+                new ObjectParameter("Year", typeof(int));
+    
+            var monthParameter = month.HasValue ?
+                new ObjectParameter("Month", month) :
+                new ObjectParameter("Month", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetMonthlyLandsacpeData_Result>("SPGetMonthlyLandsacpeData", iDParameter, customerIdParameter, yearParameter, monthParameter);
         }
     }
 }

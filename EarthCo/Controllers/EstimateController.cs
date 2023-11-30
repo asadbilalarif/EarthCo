@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -296,6 +297,95 @@ namespace EarthCo.Controllers
         }
 
         [HttpPost]
+        public async Task<IHttpActionResult> SyncEstimate()
+        {
+            try
+            {
+                tblSyncLog Result1 = new tblSyncLog();
+                Result1.Message = "SyncEstimate";
+                Result1.CreatedDate = DateTime.Now;
+                DB.tblSyncLogs.Add(Result1);
+                DB.SaveChanges();
+                if (!Request.Method.Equals(HttpMethod.Post))
+                {
+                    return (IHttpActionResult)Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Method Not Allowed");
+                }
+
+
+                VerifySignature Test = new VerifySignature();
+                Dictionary<string, string> headers = Request.Headers.ToDictionary(header => header.Key, header => header.Value.ToString());
+
+                // Replace "yourSecretKeyHere" with your actual secret key
+                string verifier = "b4f26f4f-72f2-435f-a00d-af9561b05494";
+
+                string payload = await Request.Content.ReadAsStringAsync();
+                // Call IsRequestValid function
+                bool isValid = Test.IsRequestValid(headers, payload, verifier);
+
+                if (isValid)
+                {
+
+                    tblSyncLog Result = new tblSyncLog();
+                    Result.Message = payload;
+                    Result.CreatedDate = DateTime.Now;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+                    // Process the valid webhook request...
+                    return Ok("Webhook request is valid.");
+                }
+                else
+                {
+                    tblSyncLog Result = new tblSyncLog();
+                    Result.Message = "Not Valid "+ payload;
+                    Result.CreatedDate = DateTime.Now;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+                    // Handle invalid request...
+                    return BadRequest("Invalid webhook request.");
+                }
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+                tblSyncLog Result = new tblSyncLog();
+                Result.Message = "Error: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblSyncLogs.Add(Result);
+                DB.SaveChanges();
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+                tblSyncLog Result = new tblSyncLog();
+                Result.Message = "Error1: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblSyncLogs.Add(Result);
+                DB.SaveChanges();
+                return ResponseMessage(responseMessage);
+            }
+
+        }
+
+        [HttpPost]
         public async System.Threading.Tasks.Task<IHttpActionResult> AddEstimate()
         {
             var Data1 = HttpContext.Current.Request.Params.Get("EstimateData");
@@ -411,6 +501,18 @@ namespace EarthCo.Controllers
                             NameCount++;
                         }
                     }
+
+                    tblSyncLog Result = new tblSyncLog();
+                    Result.Id = Data.EstimateId;
+                    Result.Name = "Estimate";
+                    Result.Operation = "Create";
+                    Result.CreatedDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+
+
 
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
@@ -563,9 +665,6 @@ namespace EarthCo.Controllers
                     //    }
                     //}
 
-
-
-
                     //return Ok("Estimate has been added successfully.");
                     return Ok(new { Id = Data.EstimateId, Message = "Estimate has been added successfully." });
                 }
@@ -707,6 +806,16 @@ namespace EarthCo.Controllers
                     }
 
 
+                    tblSyncLog Result = new tblSyncLog();
+                    Result.Id = Data.EstimateId;
+                    Result.Name = "Estimate";
+                    Result.Operation = "Update";
+                    Result.CreatedDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
                     LogData.Action = "Update Estimate";
@@ -794,6 +903,18 @@ namespace EarthCo.Controllers
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
+
+                tblSyncLog Result = new tblSyncLog();
+                Result.Id = Data.EstimateId;
+                Result.Name = "Estimate";
+                Result.Operation = "Delete";
+                Result.CreatedDate = DateTime.Now;
+                Result.isQB = false;
+                Result.isSync = false;
+                DB.tblSyncLogs.Add(Result);
+                DB.SaveChanges();
+
+
                 return Ok("Estimate has been deleted successfully.");
             }
             catch (DbEntityValidationException dbEx)

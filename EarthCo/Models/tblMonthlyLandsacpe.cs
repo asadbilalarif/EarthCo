@@ -15,14 +15,16 @@ namespace EarthCo.Models
     public partial class tblMonthlyLandsacpe
     {
         public int MonthlyLandsacpeId { get; set; }
-        public Nullable<int> CustomerId { get; set; }
-        public Nullable<int> ContactId { get; set; }
+        public int CustomerId { get; set; }
+        public int ContactId { get; set; }
+        public int ServiceLocationId { get; set; }
+        public int RequestBy { get; set; }
         public Nullable<bool> SupervisorVisitedthejobweekly { get; set; }
         public Nullable<bool> CompletedLitterpickupofgroundareas { get; set; }
         public Nullable<bool> Completedsweepingorblowingofwalkways { get; set; }
         public Nullable<bool> HighpriorityareaswereVisitedweekly { get; set; }
         public Nullable<bool> VDitcheswerecleanedandinspected { get; set; }
-        public Nullable<int> WeepscreeninspectedandcleanedinrotationsectionId { get; set; }
+        public string WeepscreeninspectedandcleanedinrotationsectionId { get; set; }
         public string Fertilizationoftrufoccoured { get; set; }
         public Nullable<bool> Trufwasmovedandedgedweekly { get; set; }
         public Nullable<bool> Shrubstrimmedaccordingtorotationschedule { get; set; }
@@ -35,11 +37,12 @@ namespace EarthCo.Models
         public Nullable<bool> Valvewasrepaired { get; set; }
         public string Thismonthexpectedrotationschedule { get; set; }
         public string Notes { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
-        public Nullable<bool> isActive { get; set; }
+        public bool isActive { get; set; }
+        public bool isDelete { get; set; }
     
         public virtual tblCustomer tblCustomer { get; set; }
     }

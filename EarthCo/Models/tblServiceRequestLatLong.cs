@@ -15,8 +15,8 @@ namespace EarthCo.Models
     public partial class tblServiceRequestLatLong
     {
         public int ServiceRequestLatLongId { get; set; }
-        public string Lat { get; set; }
-        public string Long { get; set; }
+        public double lat { get; set; }
+        public double lng { get; set; }
         public int ServiceRequestId { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }

@@ -10,5 +10,6 @@ namespace EarthCo.Models
         public SPGetServiceRequestData_Result Data { get; set; }
         public List<SPGetServiceRequestItemData_Result> ItemData { get; set; }
         public List<SPGetServiceRequestFileData_Result> FileData { get; set; }
+        public List<SPGetServiceRequestLatLongData_Result> LatLongData { get; set; }
     }
 }
