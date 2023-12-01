@@ -1011,6 +1011,8 @@ namespace EarthCo.Controllers
                     Data.Phone = ServiceLocation.Phone;
                     Data.AltPhone = ServiceLocation.AltPhone;
                     Data.Address = ServiceLocation.Address;
+                    Data.lat = ServiceLocation.lat;
+                    Data.lng = ServiceLocation.lng;
                     Data.CustomerId = ServiceLocation.CustomerId;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;

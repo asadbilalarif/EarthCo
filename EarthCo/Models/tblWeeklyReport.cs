@@ -22,8 +22,8 @@ namespace EarthCo.Models
     
         public int WeeklyReportId { get; set; }
         public Nullable<int> CustomerId { get; set; }
-        public Nullable<int> ServiceRequestId { get; set; }
         public Nullable<int> ContactId { get; set; }
+        public Nullable<int> ServiceLocationId { get; set; }
         public string JobName { get; set; }
         public string Notes { get; set; }
         public Nullable<int> AssignTo { get; set; }
@@ -33,11 +33,12 @@ namespace EarthCo.Models
         public string ProposalsCompleted { get; set; }
         public string ProposalsSubmitted { get; set; }
         public string ProposalsNotes { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
-        public Nullable<bool> isActive { get; set; }
+        public bool isActive { get; set; }
+        public bool isDelete { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblWeeklyReportFile> tblWeeklyReportFiles { get; set; }

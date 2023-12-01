@@ -91,8 +91,8 @@ namespace EarthCo.Controllers
             try
             {
                 DB.Configuration.ProxyCreationEnabled = false;
-                List<tblItem> Data = new List<tblItem>();
-                Data = DB.tblItems.Where(x => x.isDelete != true).ToList();
+                List<SPGetItemData_Result> Data = new List<SPGetItemData_Result>();
+                Data = DB.SPGetItemData().ToList();
                 if (Data == null || Data.Count == 0)
                 {
                     return NotFound(); // 404 - No data found

@@ -19,7 +19,6 @@ namespace EarthCo.Models
         {
             this.tblPunchlists = new HashSet<tblPunchlist>();
             this.tblPunchlists1 = new HashSet<tblPunchlist>();
-            this.tblServiceLocations = new HashSet<tblServiceLocation>();
             this.tblSettings = new HashSet<tblSetting>();
             this.tblInvoices = new HashSet<tblInvoice>();
             this.tblInvoices1 = new HashSet<tblInvoice>();
@@ -27,12 +26,13 @@ namespace EarthCo.Models
             this.tblPurchaseOrders = new HashSet<tblPurchaseOrder>();
             this.tblPurchaseOrders1 = new HashSet<tblPurchaseOrder>();
             this.tblPurchaseOrders2 = new HashSet<tblPurchaseOrder>();
-            this.tblServiceRequests = new HashSet<tblServiceRequest>();
-            this.tblServiceRequests1 = new HashSet<tblServiceRequest>();
             this.tblEstimates = new HashSet<tblEstimate>();
             this.tblEstimates1 = new HashSet<tblEstimate>();
             this.tblEstimates2 = new HashSet<tblEstimate>();
             this.tblBills = new HashSet<tblBill>();
+            this.tblServiceLocations = new HashSet<tblServiceLocation>();
+            this.tblServiceRequests = new HashSet<tblServiceRequest>();
+            this.tblServiceRequests1 = new HashSet<tblServiceRequest>();
         }
     
         public int UserId { get; set; }
@@ -72,8 +72,6 @@ namespace EarthCo.Models
         public virtual ICollection<tblPunchlist> tblPunchlists1 { get; set; }
         public virtual tblRole tblRole { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblServiceLocation> tblServiceLocations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSetting> tblSettings { get; set; }
         public virtual tblUserType tblUserType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -89,10 +87,6 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblServiceRequest> tblServiceRequests { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblServiceRequest> tblServiceRequests1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimate> tblEstimates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimate> tblEstimates1 { get; set; }
@@ -100,5 +94,11 @@ namespace EarthCo.Models
         public virtual ICollection<tblEstimate> tblEstimates2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBill> tblBills { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblServiceLocation> tblServiceLocations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblServiceRequest> tblServiceRequests { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblServiceRequest> tblServiceRequests1 { get; set; }
     }
 }

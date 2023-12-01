@@ -36,11 +36,8 @@ namespace EarthCo.Models
         public virtual DbSet<tblSRStatu> tblSRStatus { get; set; }
         public virtual DbSet<tblSRType> tblSRTypes { get; set; }
         public virtual DbSet<tblSetting> tblSettings { get; set; }
-        public virtual DbSet<tblWeeklyReport> tblWeeklyReports { get; set; }
-        public virtual DbSet<tblWeeklyReportFile> tblWeeklyReportFiles { get; set; }
         public virtual DbSet<tblCustomerType> tblCustomerTypes { get; set; }
         public virtual DbSet<tblContact> tblContacts { get; set; }
-        public virtual DbSet<tblServiceLocation> tblServiceLocations { get; set; }
         public virtual DbSet<tblUserType> tblUserTypes { get; set; }
         public virtual DbSet<tblPurchaseOrderStatu> tblPurchaseOrderStatus { get; set; }
         public virtual DbSet<tblAccount> tblAccounts { get; set; }
@@ -61,7 +58,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblInvoice> tblInvoices { get; set; }
         public virtual DbSet<tblIrrigation> tblIrrigations { get; set; }
         public virtual DbSet<tblPurchaseOrder> tblPurchaseOrders { get; set; }
-        public virtual DbSet<tblServiceRequest> tblServiceRequests { get; set; }
         public virtual DbSet<tblEstimate> tblEstimates { get; set; }
         public virtual DbSet<tblBill> tblBills { get; set; }
         public virtual DbSet<tblBillFile> tblBillFiles { get; set; }
@@ -74,6 +70,10 @@ namespace EarthCo.Models
         public virtual DbSet<tblMonthlyLandsacpe> tblMonthlyLandsacpes { get; set; }
         public virtual DbSet<tblSyncLog> tblSyncLogs { get; set; }
         public virtual DbSet<tblServiceRequestLatLong> tblServiceRequestLatLongs { get; set; }
+        public virtual DbSet<tblWeeklyReport> tblWeeklyReports { get; set; }
+        public virtual DbSet<tblWeeklyReportFile> tblWeeklyReportFiles { get; set; }
+        public virtual DbSet<tblServiceLocation> tblServiceLocations { get; set; }
+        public virtual DbSet<tblServiceRequest> tblServiceRequests { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {
@@ -388,6 +388,46 @@ namespace EarthCo.Models
                 new ObjectParameter("Month", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetMonthlyLandsacpeData_Result>("SPGetMonthlyLandsacpeData", iDParameter, customerIdParameter, yearParameter, monthParameter);
+        }
+    
+        public virtual ObjectResult<SPGetWeeklyReportData_Result> SPGetWeeklyReportData(Nullable<int> iD, Nullable<int> customerId, Nullable<int> year, Nullable<int> month)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("CustomerId", customerId) :
+                new ObjectParameter("CustomerId", typeof(int));
+    
+            var yearParameter = year.HasValue ?
+                new ObjectParameter("Year", year) :
+                new ObjectParameter("Year", typeof(int));
+    
+            var monthParameter = month.HasValue ?
+                new ObjectParameter("Month", month) :
+                new ObjectParameter("Month", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetWeeklyReportData_Result>("SPGetWeeklyReportData", iDParameter, customerIdParameter, yearParameter, monthParameter);
+        }
+    
+        public virtual ObjectResult<SPGetItemData_Result> SPGetItemData()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetItemData_Result>("SPGetItemData");
+        }
+    
+        public virtual ObjectResult<SPGetWeeklyReportListData_Result> SPGetWeeklyReportListData()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetWeeklyReportListData_Result>("SPGetWeeklyReportListData");
+        }
+    
+        public virtual ObjectResult<SPGetWeeklyReportFileData_Result> SPGetWeeklyReportFileData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetWeeklyReportFileData_Result>("SPGetWeeklyReportFileData", iDParameter);
         }
     }
 }

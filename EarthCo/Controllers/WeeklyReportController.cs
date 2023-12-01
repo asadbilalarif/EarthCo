@@ -1,5 +1,5 @@
 ﻿using EarthCo.Models;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Web;
 using System.Web.Http;
@@ -16,6 +17,7 @@ using System.Web.Http.Cors;
 namespace EarthCo.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [Authorize]
     public class WeeklyReportController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
@@ -25,8 +27,8 @@ namespace EarthCo.Controllers
         {
             try
             {
-                List<tblWeeklyReport> Data = new List<tblWeeklyReport>();
-                Data = DB.tblWeeklyReports.ToList();
+                List<SPGetWeeklyReportListData_Result> Data = new List<SPGetWeeklyReportListData_Result>();
+                Data = DB.SPGetWeeklyReportListData().ToList();
                 if (Data == null || Data.Count == 0)
                 {
                     return NotFound();
@@ -67,20 +69,26 @@ namespace EarthCo.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult GetWeeklyReport(int id)
+        public IHttpActionResult GetWeeklyReport(int id, int CustomerId = 0, int Year = 0, int Month = 0)
         {
             try
             {
-                tblWeeklyReport Data = new tblWeeklyReport();
-                Data = DB.tblWeeklyReports.Where(x => x.WeeklyReportId == id).FirstOrDefault();
+                SPGetWeeklyReportData_Result Data = new SPGetWeeklyReportData_Result();
+                List<SPGetWeeklyReportFileData_Result> FileData = new List<SPGetWeeklyReportFileData_Result>();
+                Data = DB.SPGetWeeklyReportData(id, CustomerId, Year, Month).FirstOrDefault();
+                FileData = DB.SPGetWeeklyReportFileData(Data.WeeklyReportId).ToList();
                 if (Data == null)
                 {
-                    Data = new tblWeeklyReport();;
-                    string userJson = JsonConvert.SerializeObject(Data);
+                    //Data = new tblMonthlyLandsacpe();
+                    //string userJson = JsonConvert.SerializeObject(Data);
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
-                    responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
+                    //responseMessage.Content = new StringContent(userJson, Encoding.UTF8, "application/json");
                     return ResponseMessage(responseMessage);
                 }
+
+                GetWeeklyReportFiles Result = new GetWeeklyReportFiles();
+                Result.Data = Data;
+                Result.FileData = FileData;
 
                 return Ok(Data);
             }
@@ -118,46 +126,67 @@ namespace EarthCo.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult AddWeeklyReport([FromBody] tblWeeklyReport WeeklyReport,List<HttpPostedFileBase> Files)
+        public IHttpActionResult AddWeeklyReport()
         {
-            tblWeeklyReport Data = new tblWeeklyReport();
+            
             try
             {
-                //var userIdClaim = User.Identity as ClaimsIdentity;
-                //int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
-                int userId = 2; // Replace with your authentication mechanism to get the user's ID.
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int userId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
 
-                if (WeeklyReport.WeeklyReportId == 0)
+                var Data1 = HttpContext.Current.Request.Params.Get("WeeklyReportData");
+                //HttpPostedFile file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+
+                WeeklyReportFile WeeklyReport = new WeeklyReportFile();
+                WeeklyReport.Files = new List<HttpPostedFile>();
+                for (int i = 0; i < HttpContext.Current.Request.Files.Count; i++)
                 {
-                    Data = WeeklyReport;
+                    WeeklyReport.Files.Add(HttpContext.Current.Request.Files[i]); ;
+                }
+
+                tblWeeklyReport Data = new tblWeeklyReport();
+
+                WeeklyReport.WeeklyReportData = JsonSerializer.Deserialize<tblWeeklyReport>(Data1);
+
+                if (WeeklyReport.WeeklyReportData.WeeklyReportId == 0)
+                {
+                    Data = WeeklyReport.WeeklyReportData;
                     Data.CreatedDate = DateTime.Now;
                     Data.CreatedBy = userId;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = WeeklyReport.isActive;
+                    Data.isActive = true;
+                    Data.isDelete = false;
 
                     DB.tblWeeklyReports.Add(Data);
                     DB.SaveChanges();
 
-                    if (Files != null && Files.Count != 0)
+
+                    if (WeeklyReport.Files != null && WeeklyReport.Files.Count != 0)
                     {
                         tblWeeklyReportFile FileData = null;
-                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/WeeklyReport"));
                         if (!Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
                         }
                         int NameCount = 1;
-                        foreach (var item in Files)
+                        foreach (var item in WeeklyReport.Files)
                         {
                             FileData = new tblWeeklyReportFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.WeeklyReportId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/WeeklyReport"), Path.GetFileName("WeeklyReport" + Data.WeeklyReportId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.WeeklyReportId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = Path.GetFileName(item.FileName);
+                            path = Path.Combine("\\Uploading\\WeeklyReport", Path.GetFileName("WeeklyReport" + Data.WeeklyReportId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "WeeklyReport" + Data.WeeklyReportId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
                             FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.WeeklyReportId = Data.WeeklyReportId;
+                            FileData.CreatedBy = userId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = userId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.isActive = true;
+                            FileData.isDelete = false;
                             DB.tblWeeklyReportFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -174,60 +203,68 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(logData);
                     DB.SaveChanges();
 
-                    return Ok("Weekly report has been added successfully.");
+                    //return Ok("Weekly report has been added successfully.");
+                    return Ok(new { Id = Data.WeeklyReportId, Message = "Weekly report has been added successfully." });
                 }
                 else
                 {
                     // Updating an existing customer.
-                    Data = DB.tblWeeklyReports.SingleOrDefault(c => c.WeeklyReportId == WeeklyReport.WeeklyReportId);
+                    Data = DB.tblWeeklyReports.SingleOrDefault(c => c.WeeklyReportId == WeeklyReport.WeeklyReportData.WeeklyReportId);
 
                     if (Data == null)
                     {
                         return NotFound(); // Customer not found.
                     }
 
-                    Data.CustomerId = WeeklyReport.CustomerId;
-                    Data.ServiceRequestId = WeeklyReport.ServiceRequestId;
-                    Data.ContactId = WeeklyReport.ContactId;
-                    Data.JobName = WeeklyReport.JobName;
-                    Data.Notes = WeeklyReport.Notes;
-                    Data.AssignTo = WeeklyReport.AssignTo;
-                    Data.ReportForWeekOf = WeeklyReport.ReportForWeekOf;
-                    Data.Thisweekrotation = WeeklyReport.Thisweekrotation;
-                    Data.Nextweekrotation = WeeklyReport.Nextweekrotation;
-                    Data.ProposalsCompleted = WeeklyReport.ProposalsCompleted;
-                    Data.ProposalsSubmitted = WeeklyReport.ProposalsSubmitted;
-                    Data.ProposalsNotes = WeeklyReport.ProposalsNotes;
+                    Data.CustomerId = WeeklyReport.WeeklyReportData.CustomerId;
+                    Data.ServiceLocationId = WeeklyReport.WeeklyReportData.ServiceLocationId;
+                    Data.ContactId = WeeklyReport.WeeklyReportData.ContactId;
+                    Data.JobName = WeeklyReport.WeeklyReportData.JobName;
+                    Data.Notes = WeeklyReport.WeeklyReportData.Notes;
+                    Data.AssignTo = WeeklyReport.WeeklyReportData.AssignTo;
+                    Data.ReportForWeekOf = WeeklyReport.WeeklyReportData.ReportForWeekOf;
+                    Data.Thisweekrotation = WeeklyReport.WeeklyReportData.Thisweekrotation;
+                    Data.Nextweekrotation = WeeklyReport.WeeklyReportData.Nextweekrotation;
+                    Data.ProposalsCompleted = WeeklyReport.WeeklyReportData.ProposalsCompleted;
+                    Data.ProposalsSubmitted = WeeklyReport.WeeklyReportData.ProposalsSubmitted;
+                    Data.ProposalsNotes = WeeklyReport.WeeklyReportData.ProposalsNotes;
                     Data.EditDate = DateTime.Now;
                     Data.EditBy = userId;
-                    Data.isActive = WeeklyReport.isActive;
+                    Data.isActive = true;
+                    Data.isDelete = false;
 
-                    List<tblWeeklyReportFile> ConFList = DB.tblWeeklyReportFiles.Where(x => x.WeeklyReportId == WeeklyReport.WeeklyReportId).ToList();
+                    List<tblWeeklyReportFile> ConFList = DB.tblWeeklyReportFiles.Where(x => x.WeeklyReportId == WeeklyReport.WeeklyReportData.WeeklyReportId).ToList();
                     if (ConFList != null && ConFList.Count != 0)
                     {
                         DB.tblWeeklyReportFiles.RemoveRange(ConFList);
                         DB.SaveChanges();
                     }
 
-                    if (Files != null && Files.Count != 0)
+                    if (WeeklyReport.Files != null && WeeklyReport.Files.Count != 0)
                     {
                         tblWeeklyReportFile FileData = null;
-                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading"));
+                        string folder = HttpContext.Current.Server.MapPath(string.Format("~/{0}/", "Uploading/WeeklyReport"));
                         if (!Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
                         }
                         int NameCount = 1;
-                        foreach (var item in Files)
+                        foreach (var item in WeeklyReport.Files)
                         {
                             FileData = new tblWeeklyReportFile();
-                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading"), Path.GetFileName("UploadFile" + Data.WeeklyReportId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
+                            string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/WeeklyReport"), Path.GetFileName("WeeklyReport" + Data.WeeklyReportId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             item.SaveAs(path);
-                            path = Path.Combine("\\Uploading", Path.GetFileName("UploadFile" + Data.WeeklyReportId.ToString() + NameCount + DateTime.Now.ToString("dd MM yyyy mm ss") + Path.GetExtension(item.FileName)));
-                            FileData.FileName = Path.GetFileName(item.FileName);
-                            FileData.Caption = "";
+                            path = Path.Combine("\\Uploading\\WeeklyReport", Path.GetFileName("WeeklyReport" + Data.WeeklyReportId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
+                            FileData.FileName = "WeeklyReport" + Data.WeeklyReportId.ToString() + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
+                            FileData.Caption = FileData.FileName;
                             FileData.FilePath = path;
                             FileData.WeeklyReportId = Data.WeeklyReportId;
+                            FileData.CreatedBy = userId;
+                            FileData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.EditBy = userId;
+                            FileData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            FileData.isActive = true;
+                            FileData.isDelete = false;
                             DB.tblWeeklyReportFiles.Add(FileData);
                             DB.SaveChanges();
                             NameCount++;
@@ -244,7 +281,8 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(logData);
                     DB.SaveChanges();
 
-                    return Ok("Weekly report has been updated successfully.");
+                    //return Ok("Weekly report has been updated successfully.");
+                    return Ok(new { Id = Data.WeeklyReportId, Message = "Weekly report has been updated successfully." });
                 }
             }
             catch (DbEntityValidationException dbEx)
@@ -283,9 +321,9 @@ namespace EarthCo.Controllers
         public IHttpActionResult DeleteWeeklyReport(int id)
         {
             tblWeeklyReport Data = new tblWeeklyReport();
-            //HttpCookie cookieObj = Request.Cookies["User"];
-            //int CUserId = Int32.Parse(cookieObj["UserId"]);
-            int CUserId = 2;
+            var userIdClaim = User.Identity as ClaimsIdentity;
+            int CUserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+            //int CUserId = 2;
             try
             {
                 Data = DB.tblWeeklyReports.Select(r => r).Where(x => x.WeeklyReportId == id).FirstOrDefault();
@@ -296,15 +334,17 @@ namespace EarthCo.Controllers
                 }
 
 
-                List<tblWeeklyReportFile> ConFList = DB.tblWeeklyReportFiles.Where(x => x.WeeklyReportId == id).ToList();
-                if (ConFList != null && ConFList.Count != 0)
-                {
-                    DB.tblWeeklyReportFiles.RemoveRange(ConFList);
-                    DB.SaveChanges();
-                }
+                //List<tblWeeklyReportFile> ConFList = DB.tblWeeklyReportFiles.Where(x => x.WeeklyReportId == id).ToList();
+                //if (ConFList != null && ConFList.Count != 0)
+                //{
+                //    DB.tblWeeklyReportFiles.RemoveRange(ConFList);
+                //    DB.SaveChanges();
+                //}
 
-
-                DB.Entry(Data).State = EntityState.Deleted;
+                Data.isDelete = true;
+                Data.EditBy = CUserId;
+                Data.EditDate = DateTime.Now;
+                DB.Entry(Data);
                 DB.SaveChanges();
 
                 tblLog LogData = new tblLog();

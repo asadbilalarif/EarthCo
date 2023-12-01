@@ -19,6 +19,7 @@ using System.Web.Http.Cors;
 namespace EarthCo.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [Authorize]
     public class EstimateController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
