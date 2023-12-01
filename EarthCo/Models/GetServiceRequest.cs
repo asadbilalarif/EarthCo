@@ -19,6 +19,7 @@ namespace EarthCo.Models
         public string WorkRequest { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public string Type { get; set; }
+        public List<SPGetServiceRequestLatLongData_Result> LatLngData { get; set; }
 
     }
 }

@@ -309,6 +309,11 @@ namespace EarthCo.Controllers
                     Temp.Status = item.tblSRStatu.Status;
                     Temp.WorkRequest = item.WorkRequest;
                     Temp.CreatedDate = (DateTime)item.CreatedDate;
+                    if(item.tblServiceRequestLatLongs != null && item.tblServiceRequestLatLongs.Count != 0)
+                    {
+                        Temp.LatLngData = DB.SPGetServiceRequestLatLongData(item.ServiceRequestId).ToList(); ;
+                    }
+                    
 
                     Data.Add(Temp);
                 }

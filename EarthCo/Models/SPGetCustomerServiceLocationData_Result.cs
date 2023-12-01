@@ -16,6 +16,8 @@ namespace EarthCo.Models
         public int ServiceLocationId { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
+        public Nullable<double> lat { get; set; }
+        public Nullable<double> lng { get; set; }
         public string Phone { get; set; }
         public string AltPhone { get; set; }
         public Nullable<bool> isBilltoCustomer { get; set; }

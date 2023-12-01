@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 //using System.Text.Json;
 using System.Web;
 using System.Web.Mvc;
+using static EarthCo.Models.EstimateQB;
 
 namespace EarthCo.Controllers
 {
@@ -233,38 +234,63 @@ namespace EarthCo.Controllers
                     //}
 
                     // API endpoint URL
-                    string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/vendor?minorversion=23";
+                    string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/estimate?minorversion=23";
 
                     // Request body data
-                    var requestData = new
-                    {
-                        TaxIdentifier = "99-5688293",
-                        AcctNum = "35372649",
-                        Title = "Ms.",
-                        GivenName = "Test",
-                        FamilyName = "Test",
-                        Suffix = "Sr.",
-                        CompanyName = "Dianne's Auto Shop6",
-                        DisplayName = "Dianne's Auto Shop6",
-                        PrintOnCheckName = "Dianne's Auto Shop1"
-                    };
+                    //var requestData = new
+                    //{
+                    //    TaxIdentifier = "99-5688293",
+                    //    AcctNum = "35372649",
+                    //    Title = "Ms.",
+                    //    GivenName = "Test",
+                    //    FamilyName = "Test",
+                    //    Suffix = "Sr.",
+                    //    CompanyName = "Dianne's Auto Shop6",
+                    //    DisplayName = "Dianne's Auto Shop6",
+                    //    PrintOnCheckName = "Dianne's Auto Shop1"
+                    //};
 
 
-                    Vendor billAddr = new Vendor
-                    {
-                        TaxIdentifier = "99-5688293",
-                        AcctNum = "35372649",
-                        Title = "Ms.",
-                        GivenName = "Dianne12",
-                        FamilyName = "Bradley12",
-                        Suffix = "Sr.",
-                        CompanyName = "Dianne's Auto Shop6",
-                        DisplayName = "Dianne's Auto Shop6",
-                        PrintOnCheckName = "Dianne's Auto Shop6"
-                    };
+                    //Vendor billAddr = new Vendor
+                    //{
+                    //    TaxIdentifier = "99-5688293",
+                    //    AcctNum = "35372649",
+                    //    Title = "Ms.",
+                    //    GivenName = "Dianne12",
+                    //    FamilyName = "Bradley12",
+                    //    Suffix = "Sr.",
+                    //    CompanyName = "Dianne's Auto Shop6",
+                    //    DisplayName = "Dianne's Auto Shop6",
+                    //    PrintOnCheckName = "Dianne's Auto Shop6"
+                    //};
+
+                    QBEstimateClass EsitimateData = new QBEstimateClass();
+                    Models.EstimateQB.Line LineData = new Models.EstimateQB.Line();
+                    EsitimateData.BillEmail = new BillEmail();
+                    EsitimateData.BillEmail.Address = "Cool_Cars@intuit.com";
+                    EsitimateData.TotalAmt = 35;
+                    EsitimateData.SyncToken = "0";
+                    EsitimateData.Id = "1103";
+                    EsitimateData.CustomerRef = new CustomerRef();
+                    EsitimateData.CustomerRef.value = "3";
+                    EsitimateData.CustomerRef.name = "Cool Cars";
+                    LineData.Id = "1";
+                    LineData.Description = "Pest Control Services";
+                    LineData.Amount = 35;
+                    LineData.DetailType = "SalesItemLineDetail";
+                    LineData.SalesItemLineDetail = new Models.EstimateQB.SalesItemLineDetail();
+                    LineData.SalesItemLineDetail.ItemRef = new ItemRef();
+                    LineData.SalesItemLineDetail.ItemRef.value = "10";
+                    LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
+                    LineData.SalesItemLineDetail.UnitPrice = 35;
+                    LineData.SalesItemLineDetail.Qty = 1;
+                    EsitimateData.Line = new List<Models.EstimateQB.Line>();
+                    EsitimateData.Line.Add(LineData);
+
+
 
                     // Convert the request body to JSON
-                    string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
+                    string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(EsitimateData);
 
                     // Create HttpClient
                     using (HttpClient client = new HttpClient())
@@ -273,7 +299,7 @@ namespace EarthCo.Controllers
                         //client.DefaultRequestHeaders.Add("Content-Type", "application/json");
                         //client.DefaultRequestHeaders.Add("Authorization", "Bearer eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..BpQ1lQxl8z4LjJ6oU40OHQ.BqrX891OtD-9dPReTlj4SsOWwF2d7YC_PxWcpV6XGXmKavq9oJrDaMVqfdbbdZJA7UlhZ-bmxRrNIjiV3MJZ_LVRt3HJI83zswBI9EFwOBF-rKFSbeHRKhgT7IJGqZiUZTY7LfuChVwKllXqVUihQSDqsd5aAsRTmsGgFCNyvYPXHZLMWkA-RXt42rfsGTWCYRUJuCnlC0SjSjdPEuwm9chat0NbC7TBhaZ0ZBS71XxKx9QqT3gg6PI1ldNRbXAIHvNEfW3A_vsXdttPcd7nPts8xa6Yp7i9a2FYDmSWrdn5cn0dWe-0ebKRoBxRUt98jUv4qF5P0zHgZeU-zJ_Qc8AK0aLr2k6ngoMkEwh-jgJNs3whIhmgaawlK3cW5_yM2E7Q3EUSXqh1x3MSy3m37uq_iUyTDSDbpeqRvQoGwoPX8fG_2G7BkUocr6WGKuoTgVEC6VHi8hSVjH9Ha6QNdalfGsfGp6uQaiyB1juzg47-wXdz2jnxJNsgJJg0c6wFMoBg18k6szJHv_Ir4R3mDPOE1wsl-v8rQpBTXE5Ei-kOdeMACsnZQuVj_WPV6orsd9dlMlAjDnNK9qyGyAJSOQ_K-jdJc37CWcliTs6PmqIYw-NdgSwtsjbv-ahxt7LU2vfYURJ49I-1QoE395EnWqy7Qv8zQARgMpA2O6RxtgFXmK-QFyLXonFOomTwJmFT1R3AAPtnFxLHtJGMs2bBuVkJkk5AVcKp8QVCYAUP7LYLfBQOXpdt3i8ib2uTB9v_.M6GZiSm2HcYA2IVQLaFniQ");
                         client.DefaultRequestHeaders.Add("Authorization", "Bearer "+ oauthValidator.AccessToken);
-
+                        client.DefaultRequestHeaders.Add("Accept", "application/json");
                         // Create the request content
                         var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
                         //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
@@ -294,7 +320,7 @@ namespace EarthCo.Controllers
                             // Handle error
                             string errorMessage = await response.Content.ReadAsStringAsync();
                             // Handle error message
-                            return View("Error");
+                            //return View("Error");
                         }
                     }
 

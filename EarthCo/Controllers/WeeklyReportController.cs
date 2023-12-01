@@ -90,7 +90,7 @@ namespace EarthCo.Controllers
                 Result.Data = Data;
                 Result.FileData = FileData;
 
-                return Ok(Data);
+                return Ok(Result);
             }
             catch (DbEntityValidationException dbEx)
             {

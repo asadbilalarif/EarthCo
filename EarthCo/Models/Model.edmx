@@ -2262,9 +2262,6 @@
           <FunctionImport Name="SPGetCustomerData" ReturnType="Collection(earthcoModel.SPGetCustomerData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="SPGetCustomerServiceLocationData" ReturnType="Collection(earthcoModel.SPGetCustomerServiceLocationData_Result)">
-          <Parameter Name="ID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="SPGetStaffData" ReturnType="Collection(earthcoModel.SPGetStaffData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -2614,6 +2611,9 @@
           </AssociationSet>
           <FunctionImport Name="SPGetWeeklyReportListData" ReturnType="Collection(earthcoModel.SPGetWeeklyReportListData_Result)" />
           <FunctionImport Name="SPGetWeeklyReportFileData" ReturnType="Collection(earthcoModel.SPGetWeeklyReportFileData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetCustomerServiceLocationData" ReturnType="Collection(earthcoModel.SPGetCustomerServiceLocationData_Result)">
             <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
@@ -2967,21 +2967,6 @@
           <Property Type="Int32" Name="EditBy" Nullable="true" />
           <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
           <Property Type="Boolean" Name="isLoginAllow" Nullable="true" />
-          <Property Type="Boolean" Name="isActive" Nullable="true" />
-          <Property Type="Boolean" Name="isDelete" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="SPGetCustomerServiceLocationData_Result">
-          <Property Type="Int32" Name="ServiceLocationId" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="Address" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="Phone" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="AltPhone" Nullable="true" MaxLength="500" />
-          <Property Type="Boolean" Name="isBilltoCustomer" Nullable="true" />
-          <Property Type="Int32" Name="CustomerId" Nullable="true" />
-          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
-          <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="EditBy" Nullable="true" />
-          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
           <Property Type="Boolean" Name="isActive" Nullable="true" />
           <Property Type="Boolean" Name="isDelete" Nullable="true" />
         </ComplexType>
@@ -4989,6 +4974,23 @@
           <Property Type="Boolean" Name="isActive" Nullable="false" />
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
         </ComplexType>
+        <ComplexType Name="SPGetCustomerServiceLocationData_Result">
+          <Property Type="Int32" Name="ServiceLocationId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="500" />
+          <Property Type="Double" Name="lat" Nullable="true" />
+          <Property Type="Double" Name="lng" Nullable="true" />
+          <Property Type="String" Name="Phone" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="AltPhone" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="isBilltoCustomer" Nullable="true" />
+          <Property Type="Int32" Name="CustomerId" Nullable="true" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="true" />
+          <Property Type="Boolean" Name="isDelete" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5432,25 +5434,6 @@
                 <ScalarProperty Name="EditBy" ColumnName="EditBy" />
                 <ScalarProperty Name="EditDate" ColumnName="EditDate" />
                 <ScalarProperty Name="isLoginAllow" ColumnName="isLoginAllow" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SPGetCustomerServiceLocationData" FunctionName="earthcoModel.Store.SPGetCustomerServiceLocationData">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="earthcoModel.SPGetCustomerServiceLocationData_Result">
-                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
-                <ScalarProperty Name="AltPhone" ColumnName="AltPhone" />
-                <ScalarProperty Name="isBilltoCustomer" ColumnName="isBilltoCustomer" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
                 <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="isDelete" ColumnName="isDelete" />
               </ComplexTypeMapping>
@@ -6775,6 +6758,27 @@
                 <ScalarProperty Name="FilePath" ColumnName="FilePath" />
                 <ScalarProperty Name="Share" ColumnName="Share" />
                 <ScalarProperty Name="WeeklyReportId" ColumnName="WeeklyReportId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetCustomerServiceLocationData" FunctionName="earthcoModel.Store.SPGetCustomerServiceLocationData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetCustomerServiceLocationData_Result">
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="lng" ColumnName="lng" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="AltPhone" ColumnName="AltPhone" />
+                <ScalarProperty Name="isBilltoCustomer" ColumnName="isBilltoCustomer" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="EditBy" ColumnName="EditBy" />

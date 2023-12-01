@@ -147,15 +147,6 @@ namespace EarthCo.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetCustomerData_Result>("SPGetCustomerData", iDParameter);
         }
     
-        public virtual ObjectResult<SPGetCustomerServiceLocationData_Result> SPGetCustomerServiceLocationData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetCustomerServiceLocationData_Result>("SPGetCustomerServiceLocationData", iDParameter);
-        }
-    
         public virtual ObjectResult<SPGetStaffData_Result> SPGetStaffData(Nullable<int> iD)
         {
             var iDParameter = iD.HasValue ?
@@ -428,6 +419,15 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetWeeklyReportFileData_Result>("SPGetWeeklyReportFileData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetCustomerServiceLocationData_Result> SPGetCustomerServiceLocationData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetCustomerServiceLocationData_Result>("SPGetCustomerServiceLocationData", iDParameter);
         }
     }
 }

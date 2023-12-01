@@ -57,10 +57,6 @@ namespace EarthCo.Controllers
                     }
                 }
 
-
-
-                
-                
                 //Result.CreatedDate = DateTime.Now;
                
                 
