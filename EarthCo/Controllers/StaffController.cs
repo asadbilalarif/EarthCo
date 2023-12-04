@@ -182,6 +182,7 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
+                    Data.Password = "";
                     GetData.Data = Data;
                     GetData.Data.Password = "";
                 }

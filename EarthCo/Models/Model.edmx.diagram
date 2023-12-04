@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="cfe06dde1b6b40be86ef9af57cc4d944" Name="Diagram1" ZoomLevel="57">
+      <Diagram DiagramId="cfe06dde1b6b40be86ef9af57cc4d944" Name="Diagram1" ZoomLevel="36">
         <EntityTypeShape EntityType="earthcoModel.tblAccessLevel" Width="1.5" PointX="13" PointY="5" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblCustomer" Width="1.5" PointX="0.75" PointY="13.125" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblEmployee" Width="1.5" PointX="0.75" PointY="2.875" IsExpanded="false" />
@@ -94,7 +94,7 @@
         <AssociationConnector Association="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" />
         <AssociationConnector Association="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" />
         <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrderFile_tblPurchaseOrder" />
-        <EntityTypeShape EntityType="earthcoModel.tblController" Width="1.5" PointX="22.5" PointY="13.75" />
+        <EntityTypeShape EntityType="earthcoModel.tblController" Width="1.5" PointX="22.5" PointY="13.75" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK__tblContro__Irrig__5441852A" />
         <EntityTypeShape EntityType="earthcoModel.tblMonthlyLandsacpe" Width="1.5" PointX="3" PointY="9.875" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK_tblMonthlyLandsacpe_tblCustomer" />
@@ -108,7 +108,7 @@
         <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblServiceLocation" />
         <AssociationConnector Association="earthcoModel.FK_tblPunchlist_tblServiceLocation" />
         <AssociationConnector Association="earthcoModel.FK_tblServiceLocation_tblCustomer" />
-        <EntityTypeShape EntityType="earthcoModel.tblServiceRequest" Width="1.5" PointX="25.5" PointY="11.625" />
+        <EntityTypeShape EntityType="earthcoModel.tblServiceRequest" Width="1.5" PointX="25.5" PointY="11.625" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK_tblServiceRequest_tblServiceLocation" />
         <AssociationConnector Association="earthcoModel.FK__tblServic__Custo__440B1D61" />
         <AssociationConnector Association="earthcoModel.FK__tblServic__SRSta__45F365D3" />
@@ -117,6 +117,7 @@
         <AssociationConnector Association="earthcoModel.FK__tblSRItem__SRId__4BAC3F29" />
         <AssociationConnector Association="earthcoModel.FK_tblServiceRequest_tblUser" />
         <AssociationConnector Association="earthcoModel.FK_tblServiceRequestLatLong_tblServiceRequest" />
+        <EntityTypeShape EntityType="earthcoModel.tblToken" Width="1.5" PointX="7.375" PointY="4.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

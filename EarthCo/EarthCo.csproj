@@ -705,6 +705,9 @@
     <Compile Include="Models\tblTerm.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblToken.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tblUser.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

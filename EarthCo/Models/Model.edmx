@@ -780,6 +780,19 @@
           <Property Name="Term" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="isActive" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="tblToken">
+          <Key>
+            <PropertyRef Name="TokenId" />
+          </Key>
+          <Property Name="TokenId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccessToken" Type="nvarchar(max)" />
+          <Property Name="RefreshToken" Type="nvarchar(max)" />
+          <Property Name="realmId" Type="nvarchar(max)" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="tblUser">
           <Key>
             <PropertyRef Name="UserId" />
@@ -1787,6 +1800,7 @@
           <EntitySet Name="tblSyncLog" EntityType="Self.tblSyncLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblTag" EntityType="Self.tblTag" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblTerm" EntityType="Self.tblTerm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblToken" EntityType="Self.tblToken" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblUser" EntityType="Self.tblUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblUserType" EntityType="Self.tblUserType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblWeeklyReport" EntityType="Self.tblWeeklyReport" Schema="dbo" store:Type="Tables" />
@@ -2614,8 +2628,9 @@
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SPGetCustomerServiceLocationData" ReturnType="Collection(earthcoModel.SPGetCustomerServiceLocationData_Result)">
-            <Parameter Name="ID" Mode="In" Type="Int32" />
+          <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="tblTokens" EntityType="earthcoModel.tblToken" />
           </EntityContainer>
         <EntityType Name="tblSetting">
           <Key>
@@ -4991,6 +5006,19 @@
           <Property Type="Boolean" Name="isActive" Nullable="true" />
           <Property Type="Boolean" Name="isDelete" Nullable="true" />
         </ComplexType>
+        <EntityType Name="tblToken">
+          <Key>
+            <PropertyRef Name="TokenId" />
+          </Key>
+          <Property Name="TokenId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccessToken" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RefreshToken" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="realmId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6788,6 +6816,20 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="tblTokens">
+            <EntityTypeMapping TypeName="earthcoModel.tblToken">
+              <MappingFragment StoreEntitySet="tblToken">
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="realmId" ColumnName="realmId" />
+                <ScalarProperty Name="RefreshToken" ColumnName="RefreshToken" />
+                <ScalarProperty Name="AccessToken" ColumnName="AccessToken" />
+                <ScalarProperty Name="TokenId" ColumnName="TokenId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -1,4 +1,5 @@
-﻿using Intuit.Ipp.Core;
+﻿using EarthCo.Models;
+using Intuit.Ipp.Core;
 using Intuit.Ipp.Data;
 using Intuit.Ipp.OAuth2PlatformClient;
 using Intuit.Ipp.QueryFilter;
@@ -23,6 +24,7 @@ namespace EarthCo.Controllers
 {
     public class HomeController : Controller
     {
+        earthcoEntities DB = new earthcoEntities();
         public static string clientid = ConfigurationManager.AppSettings["clientid"];
         public static string clientsecret = ConfigurationManager.AppSettings["clientsecret"];
         public static string redirectUrl = ConfigurationManager.AppSettings["redirectUrl"];
@@ -175,8 +177,60 @@ namespace EarthCo.Controllers
             return View("CallbackView"); // You can create a view for callback handling
         }
 
+        public async System.Threading.Tasks.Task GetAuthTokensUsingRefreshTokenAsync()
+        {
+            var claims = new List<Claim>();
+            tblToken TokenData = new tblToken();
+            string RFT = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
+            var tokenResponse = await auth2Client.RefreshTokenAsync(RFT);
+
+            if (!string.IsNullOrWhiteSpace(tokenResponse.AccessToken))
+            {
+                claims.Add(new Claim("access_token", tokenResponse.AccessToken));
+                Session["access_token"] = tokenResponse.AccessToken;
+                claims.Add(new Claim("access_token_expires_at", (DateTime.Now.AddSeconds(tokenResponse.AccessTokenExpiresIn)).ToString()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(tokenResponse.RefreshToken))
+            {
+                claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
+                claims.Add(new Claim("refresh_token_expires_at", (DateTime.Now.AddSeconds(tokenResponse.RefreshTokenExpiresIn)).ToString()));
+            }
+
+            TokenData = DB.tblTokens.FirstOrDefault();
+            if (TokenData == null)
+            {
+                TokenData = new tblToken();
+                TokenData.AccessToken = tokenResponse.AccessToken;
+                TokenData.RefreshToken = tokenResponse.RefreshToken;
+                TokenData.CreatedDate = DateTime.Now;
+                TokenData.EditDate = DateTime.Now;
+                DB.tblTokens.Add(TokenData);
+                DB.SaveChanges();
+            }
+            else
+            {
+                TokenData.AccessToken = tokenResponse.AccessToken;
+                TokenData.RefreshToken = tokenResponse.RefreshToken;
+                TokenData.EditDate = DateTime.Now;
+                DB.Entry(TokenData);
+                DB.SaveChanges();
+            }
+
+        }
+
+
         public ActionResult InitiateAuth(string submitButton)
         {
+
+            string RFT = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
+
+            if (RFT!=null && RFT!="")
+            {
+                var TokenResponse=GetAuthTokensUsingRefreshTokenAsync();
+            }
+
+
             switch (submitButton)
             {
                 case "Connect to QuickBooks":

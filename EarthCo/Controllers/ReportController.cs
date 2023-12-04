@@ -24,12 +24,20 @@ namespace EarthCo.Controllers
                 {
                     List<SPGetEstimateReportList_Result> Data = new List<SPGetEstimateReportList_Result>();
                     Data = DB.SPGetEstimateReportList(CustomerId,Year,Month).ToList();
+                    if (Data == null || Data.Count == 0)
+                    {
+                        return NotFound();
+                    }
                     return Ok(Data);
                 }
                 if(Type.ToLower()=="servicerequest" || Type.ToLower() == "service request")
                 {
                     List<SPGetServiceRequestReportList_Result> Data = new List<SPGetServiceRequestReportList_Result>();
                     Data = DB.SPGetServiceRequestReportList(CustomerId, Year, Month).ToList();
+                    if(Data==null || Data.Count==0)
+                    {
+                        return NotFound();
+                    }
                     return Ok(Data);
                 }
                 return NotFound();

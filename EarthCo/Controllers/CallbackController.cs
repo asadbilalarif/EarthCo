@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EarthCo.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,6 +14,7 @@ namespace EarthCo.Controllers
 {
     public class CallbackController : Controller
     {
+        earthcoEntities DB = new earthcoEntities();
         /// <summary>
         /// Code and realmid/company id recieved on Index page after redirect is complete from Authorization url
         /// </summary>
@@ -43,6 +45,7 @@ namespace EarthCo.Controllers
         /// </summary>
         private async Task GetAuthTokensAsync(string code, string realmId)
         {
+            tblToken TokenData = new tblToken();
             if (realmId != null)
             {
                  Session["realmId"] = realmId;
@@ -69,6 +72,27 @@ namespace EarthCo.Controllers
             {
                 claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
                 claims.Add(new Claim("refresh_token_expires_at", (DateTime.Now.AddSeconds(tokenResponse.RefreshTokenExpiresIn)).ToString()));
+            }
+            TokenData = DB.tblTokens.FirstOrDefault();
+            if (TokenData == null)
+            {
+                TokenData = new tblToken();
+                TokenData.realmId = realmId;
+                TokenData.AccessToken = tokenResponse.AccessToken;
+                TokenData.RefreshToken = tokenResponse.RefreshToken;
+                TokenData.CreatedDate = DateTime.Now;
+                TokenData.EditDate = DateTime.Now;
+                DB.tblTokens.Add(TokenData);
+                DB.SaveChanges();
+            }
+            else
+            {
+                TokenData.realmId = realmId.ToString();
+                TokenData.AccessToken = tokenResponse.AccessToken;
+                TokenData.RefreshToken = tokenResponse.RefreshToken;
+                TokenData.EditDate = DateTime.Now;
+                DB.Entry(TokenData);
+                DB.SaveChanges();
             }
 
             var id = new ClaimsIdentity(claims, "Cookies");
