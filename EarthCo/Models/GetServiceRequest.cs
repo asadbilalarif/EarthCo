@@ -16,6 +16,7 @@ namespace EarthCo.Models
         public string Assign { get; set; }
         public int? AssignToId { get; set; }
         public string Status { get; set; }
+        public string StatusColor { get; set; }
         public string WorkRequest { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public string Type { get; set; }

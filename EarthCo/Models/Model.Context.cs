@@ -33,28 +33,23 @@ namespace EarthCo.Models
         public virtual DbSet<tblLog> tblLogs { get; set; }
         public virtual DbSet<tblMenu> tblMenus { get; set; }
         public virtual DbSet<tblRole> tblRoles { get; set; }
-        public virtual DbSet<tblSRStatu> tblSRStatus { get; set; }
         public virtual DbSet<tblSRType> tblSRTypes { get; set; }
         public virtual DbSet<tblSetting> tblSettings { get; set; }
         public virtual DbSet<tblCustomerType> tblCustomerTypes { get; set; }
         public virtual DbSet<tblContact> tblContacts { get; set; }
         public virtual DbSet<tblUserType> tblUserTypes { get; set; }
-        public virtual DbSet<tblPurchaseOrderStatu> tblPurchaseOrderStatus { get; set; }
         public virtual DbSet<tblAccount> tblAccounts { get; set; }
         public virtual DbSet<tblItem> tblItems { get; set; }
         public virtual DbSet<tblEstimateItem> tblEstimateItems { get; set; }
         public virtual DbSet<tblTag> tblTags { get; set; }
         public virtual DbSet<tblTerm> tblTerms { get; set; }
-        public virtual DbSet<tblPunchlistStatu> tblPunchlistStatus { get; set; }
         public virtual DbSet<tblBillItem> tblBillItems { get; set; }
         public virtual DbSet<tblInvoiceItem> tblInvoiceItems { get; set; }
         public virtual DbSet<tblPunchlistItem> tblPunchlistItems { get; set; }
         public virtual DbSet<tblPurchaseOrderItem> tblPurchaseOrderItems { get; set; }
         public virtual DbSet<tblSRItem> tblSRItems { get; set; }
-        public virtual DbSet<tblEstimateStatu> tblEstimateStatus { get; set; }
         public virtual DbSet<tblPunchlist> tblPunchlists { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
-        public virtual DbSet<tblInvoiceStatu> tblInvoiceStatus { get; set; }
         public virtual DbSet<tblInvoice> tblInvoices { get; set; }
         public virtual DbSet<tblIrrigation> tblIrrigations { get; set; }
         public virtual DbSet<tblPurchaseOrder> tblPurchaseOrders { get; set; }
@@ -75,6 +70,11 @@ namespace EarthCo.Models
         public virtual DbSet<tblServiceLocation> tblServiceLocations { get; set; }
         public virtual DbSet<tblServiceRequest> tblServiceRequests { get; set; }
         public virtual DbSet<tblToken> tblTokens { get; set; }
+        public virtual DbSet<tblEstimateStatu> tblEstimateStatus { get; set; }
+        public virtual DbSet<tblInvoiceStatu> tblInvoiceStatus { get; set; }
+        public virtual DbSet<tblPunchlistStatu> tblPunchlistStatus { get; set; }
+        public virtual DbSet<tblPurchaseOrderStatu> tblPurchaseOrderStatus { get; set; }
+        public virtual DbSet<tblSRStatu> tblSRStatus { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {
@@ -238,51 +238,6 @@ namespace EarthCo.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("SPGetNumber", typeParameter);
         }
     
-        public virtual ObjectResult<SPGetBillData_Result> SPGetBillData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetBillData_Result>("SPGetBillData", iDParameter);
-        }
-    
-        public virtual ObjectResult<SPGetEstimateData_Result> SPGetEstimateData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateData_Result>("SPGetEstimateData", iDParameter);
-        }
-    
-        public virtual ObjectResult<SPGetInvoiceData_Result> SPGetInvoiceData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetInvoiceData_Result>("SPGetInvoiceData", iDParameter);
-        }
-    
-        public virtual ObjectResult<SPGetPurchaseOrderData_Result> SPGetPurchaseOrderData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPurchaseOrderData_Result>("SPGetPurchaseOrderData", iDParameter);
-        }
-    
-        public virtual ObjectResult<SPGetServiceRequestData_Result> SPGetServiceRequestData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetServiceRequestData_Result>("SPGetServiceRequestData", iDParameter);
-        }
-    
         public virtual ObjectResult<SPGetPunchlistData_Result> SPGetPunchlistData(Nullable<int> iD)
         {
             var iDParameter = iD.HasValue ?
@@ -429,6 +384,51 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetCustomerServiceLocationData_Result>("SPGetCustomerServiceLocationData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetBillData_Result> SPGetBillData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetBillData_Result>("SPGetBillData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetInvoiceData_Result> SPGetInvoiceData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetInvoiceData_Result>("SPGetInvoiceData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetPurchaseOrderData_Result> SPGetPurchaseOrderData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPurchaseOrderData_Result>("SPGetPurchaseOrderData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetEstimateData_Result> SPGetEstimateData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateData_Result>("SPGetEstimateData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetServiceRequestData_Result> SPGetServiceRequestData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetServiceRequestData_Result>("SPGetServiceRequestData", iDParameter);
         }
     }
 }

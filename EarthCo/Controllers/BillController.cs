@@ -21,7 +21,7 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public IHttpActionResult GetBillServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10)
+        public IHttpActionResult GetBillServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10,bool isAscending=false)
         {
             try
             {
@@ -30,8 +30,7 @@ namespace EarthCo.Controllers
                 List<BillList> Result = new List<BillList>();
                 var totalRecords = DB.tblBills.Count(x => !x.isDelete);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
-
-                if(Search==null)
+                if (Search==null)
                 {
                     Search = "\"\"";
                 }
@@ -44,11 +43,12 @@ namespace EarthCo.Controllers
                                                   || x.Memo.ToLower().Contains(Search.ToLower())
                                                   || x.Currency.ToLower().Contains(Search.ToLower())
                                                   || x.Tags.ToLower().Contains(Search.ToLower())).ToList();
-                    Data = Data.Where(x => !x.isDelete).OrderBy(o => o.BillId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    totalRecords = Data.Count(x => !x.isDelete);
+                    Data = Data.Where(x => !x.isDelete).OrderBy(o => isAscending ? o.BillId : -o.BillId).Skip(DisplayStart).Take(DisplayLength).ToList();
                 }
                 else
                 {
-                    Data = DB.tblBills.Where(x => !x.isDelete).OrderBy(o => o.BillId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    Data = DB.tblBills.Where(x => !x.isDelete).OrderBy(o => isAscending? o.BillId:-o.BillId).Skip(DisplayStart).Take(DisplayLength).ToList();
                 }
 
                 if (Data == null || Data.Count == 0)

@@ -13,6 +13,7 @@ namespace EarthCo.Models
         public string RegionalManager { get; set; }
         public DateTime Date { get; set; }
         public string Status { get; set; }
+        public string StatusColor { get; set; }
         public string EstimateNumber { get; set; }
         public string DescriptionofWork { get; set; }
         public string PurchaseOrderNumber { get; set; }

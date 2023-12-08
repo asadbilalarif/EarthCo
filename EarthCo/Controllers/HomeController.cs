@@ -180,29 +180,39 @@ namespace EarthCo.Controllers
         public async System.Threading.Tasks.Task GetAuthTokensUsingRefreshTokenAsync()
         {
             var claims = new List<Claim>();
-            tblToken TokenData = new tblToken();
-            string RFT = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
-            var tokenResponse = await auth2Client.RefreshTokenAsync(RFT);
+           
 
-            if (!string.IsNullOrWhiteSpace(tokenResponse.AccessToken))
+            tblToken TokenData = new tblToken();
+            string previousRefreshToken = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
+            //var tokenResponse = await auth2Client.RefreshTokenAsync(previousRefreshToken);
+
+
+            var tokenResponse = auth2Client.RefreshTokenAsync(previousRefreshToken);
+            tokenResponse.Wait();
+            var data = tokenResponse.Result;
+
+
+
+
+            if (!string.IsNullOrWhiteSpace(data.AccessToken))
             {
-                claims.Add(new Claim("access_token", tokenResponse.AccessToken));
-                Session["access_token"] = tokenResponse.AccessToken;
-                claims.Add(new Claim("access_token_expires_at", (DateTime.Now.AddSeconds(tokenResponse.AccessTokenExpiresIn)).ToString()));
+                claims.Add(new Claim("access_token", data.AccessToken));
+                Session["access_token"] = data.AccessToken;
+                claims.Add(new Claim("access_token_expires_at", (DateTime.Now.AddSeconds(data.AccessTokenExpiresIn)).ToString()));
             }
 
-            if (!string.IsNullOrWhiteSpace(tokenResponse.RefreshToken))
+            if (!string.IsNullOrWhiteSpace(data.RefreshToken))
             {
-                claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
-                claims.Add(new Claim("refresh_token_expires_at", (DateTime.Now.AddSeconds(tokenResponse.RefreshTokenExpiresIn)).ToString()));
+                claims.Add(new Claim("refresh_token", data.RefreshToken));
+                claims.Add(new Claim("refresh_token_expires_at", (DateTime.Now.AddSeconds(data.RefreshTokenExpiresIn)).ToString()));
             }
 
             TokenData = DB.tblTokens.FirstOrDefault();
             if (TokenData == null)
             {
                 TokenData = new tblToken();
-                TokenData.AccessToken = tokenResponse.AccessToken;
-                TokenData.RefreshToken = tokenResponse.RefreshToken;
+                TokenData.AccessToken = data.AccessToken;
+                TokenData.RefreshToken = data.RefreshToken;
                 TokenData.CreatedDate = DateTime.Now;
                 TokenData.EditDate = DateTime.Now;
                 DB.tblTokens.Add(TokenData);
@@ -210,8 +220,8 @@ namespace EarthCo.Controllers
             }
             else
             {
-                TokenData.AccessToken = tokenResponse.AccessToken;
-                TokenData.RefreshToken = tokenResponse.RefreshToken;
+                TokenData.AccessToken = data.AccessToken;
+                TokenData.RefreshToken = data.RefreshToken;
                 TokenData.EditDate = DateTime.Now;
                 DB.Entry(TokenData);
                 DB.SaveChanges();
@@ -228,6 +238,7 @@ namespace EarthCo.Controllers
             if (RFT!=null && RFT!="")
             {
                 var TokenResponse=GetAuthTokensUsingRefreshTokenAsync();
+                return RedirectToAction("Tokens");
             }
 
 

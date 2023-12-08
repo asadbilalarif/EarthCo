@@ -23,7 +23,7 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public IHttpActionResult GetServiceRequestServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
+        public IHttpActionResult GetServiceRequestServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0, bool isAscending = false)
         {
             try
             {
@@ -56,22 +56,26 @@ namespace EarthCo.Controllers
                                                       || x.WorkRequest.ToLower().Contains(Search.ToLower())).ToList();
                         if (StatusId != 0)
                         {
-                            SRData = SRData.Where(x => !x.isDelete && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                            totalRecords = SRData.Count(x => !x.isDelete && x.SRStatusId==StatusId);
+                            SRData = SRData.Where(x => !x.isDelete && x.SRStatusId == StatusId).OrderBy(o => isAscending? o.ServiceRequestId:-o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
                         }
                         else
                         {
-                            SRData = SRData.Where(x => !x.isDelete).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                            totalRecords = SRData.Count(x => !x.isDelete);
+                            SRData = SRData.Where(x => !x.isDelete).OrderBy(o => isAscending ? o.ServiceRequestId : -o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
                         }
                     }
                     else
                     {
                         if (StatusId != 0)
                         {
-                            SRData = DB.tblServiceRequests.Where(x => !x.isDelete && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                            totalRecords = DB.tblServiceRequests.Count(x => !x.isDelete && x.SRStatusId == StatusId);
+                            SRData = DB.tblServiceRequests.Where(x => !x.isDelete && x.SRStatusId == StatusId).OrderBy(o => isAscending ? o.ServiceRequestId : -o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
                         }
                         else
                         {
-                            SRData = DB.tblServiceRequests.Where(x => !x.isDelete).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                            totalRecords = DB.tblServiceRequests.Count(x => !x.isDelete);
+                            SRData = DB.tblServiceRequests.Where(x => !x.isDelete).OrderBy(o => isAscending ? o.ServiceRequestId : -o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
                         }
                     }
                 }
@@ -99,22 +103,26 @@ namespace EarthCo.Controllers
                                                       || x.WorkRequest.ToLower().Contains(Search.ToLower())).ToList();
                         if (StatusId != 0)
                         {
-                            SRData = SRData.Where(x => x.Assign == UserId && x.isDelete == false && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                            totalRecords = SRData.Count(x => x.Assign == UserId && x.isDelete == false && x.SRStatusId==StatusId);
+                            SRData = SRData.Where(x => x.Assign == UserId && x.isDelete == false && x.SRStatusId == StatusId).OrderBy(o => isAscending ? o.ServiceRequestId : -o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
                         }
                         else
                         {
-                            SRData = SRData.Where(x => x.Assign == UserId && x.isDelete == false).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                            totalRecords = SRData.Count(x => x.Assign == UserId && x.isDelete == false);
+                            SRData = SRData.Where(x => x.Assign == UserId && x.isDelete == false).OrderBy(o => isAscending ? o.ServiceRequestId : -o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
                         }
                     }
                     else
                     {
                         if (StatusId != 0)
                         {
-                            SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false && x.SRStatusId == StatusId).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                            totalRecords = DB.tblServiceRequests.Count(x => x.Assign == UserId && x.isDelete == false && x.SRStatusId == StatusId);
+                            SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false && x.SRStatusId == StatusId).OrderBy(o => isAscending ? o.ServiceRequestId : -o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
                         }
                         else
                         {
-                            SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false).OrderBy(o => o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                            totalRecords = DB.tblServiceRequests.Count(x => x.Assign == UserId && x.isDelete == false);
+                            SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false).OrderBy(o => isAscending ? o.ServiceRequestId : -o.ServiceRequestId).Skip(DisplayStart).Take(DisplayLength).ToList();
                         }
                     }
                 }
@@ -137,6 +145,7 @@ namespace EarthCo.Controllers
                     
                     Temp.ServiceRequestNumber = item.ServiceRequestNumber;
                     Temp.Status = item.tblSRStatu.Status;
+                    Temp.StatusColor = item.tblSRStatu.Color;
                     Temp.WorkRequest = item.WorkRequest;
                     Temp.CreatedDate = (DateTime)item.CreatedDate;
 

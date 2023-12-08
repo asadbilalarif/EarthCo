@@ -20,7 +20,7 @@ namespace EarthCo.Controllers
     {
         earthcoEntities DB = new earthcoEntities();
         [HttpGet]
-        public IHttpActionResult GetStaffServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10)
+        public IHttpActionResult GetStaffServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, bool isAscending = false)
         {
             try
             {
@@ -41,11 +41,12 @@ namespace EarthCo.Controllers
                                                   || x.LastName.ToLower().Contains(Search.ToLower())
                                                   || x.username.ToString().ToLower().Contains(Search.ToLower())
                                                   || x.tblRole.Role.ToLower().Contains(Search.ToLower())).ToList();
-                    Data = Data.Where(x => x.UserTypeId == 1 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    totalRecords = Data.Count(x => x.UserTypeId == 1 && x.isDelete != true);
+                    Data = Data.Where(x => x.UserTypeId == 1 && x.isDelete != true).OrderBy(o => isAscending? o.UserId:-o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
                 }
                 else
                 {
-                    Data = DB.tblUsers.Where(x => x.UserTypeId == 1 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    Data = DB.tblUsers.Where(x => x.UserTypeId == 1 && x.isDelete != true).OrderBy(o => isAscending ? o.UserId : -o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
                 }
 
                 

@@ -33,6 +33,12 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
-        public string Address { get; set; }
+        public string CustomerAddress { get; set; }
+        public string CustomerName { get; set; }
+        public string ContactName { get; set; }
+        public string ContactAddress { get; set; }
+        public string ContactCompanyName { get; set; }
+        public string ServiceLocationAddress { get; set; }
+        public string ServiceLocationName { get; set; }
     }
 }

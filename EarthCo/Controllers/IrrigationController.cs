@@ -22,7 +22,7 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public IHttpActionResult GetIrrigationServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10)
+        public IHttpActionResult GetIrrigationServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, bool isAscending = false)
         {
             try
             {
@@ -41,11 +41,12 @@ namespace EarthCo.Controllers
                 {
                     Data = DB.tblIrrigations.Where(x => x.tblUser.FirstName.ToLower().Contains(Search.ToLower())
                                                   || x.tblUser.LastName.ToLower().Contains(Search.ToLower())).ToList();
-                    Data = Data.Where(x => !x.isDelete).OrderBy(o => o.IrrigationId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    totalRecords = Data.Count(x => !x.isDelete);
+                    Data = Data.Where(x => !x.isDelete).OrderBy(o => isAscending? o.IrrigationId:-o.IrrigationId).Skip(DisplayStart).Take(DisplayLength).ToList();
                 }
                 else
                 {
-                    Data = DB.tblIrrigations.Where(x => !x.isDelete).OrderBy(o => o.IrrigationId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    Data = DB.tblIrrigations.Where(x => !x.isDelete).OrderBy(o => isAscending ? o.IrrigationId : -o.IrrigationId).Skip(DisplayStart).Take(DisplayLength).ToList();
                 }
 
                 

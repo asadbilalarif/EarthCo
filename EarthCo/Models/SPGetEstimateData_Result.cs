@@ -43,6 +43,12 @@ namespace EarthCo.Models
         public bool isDelete { get; set; }
         public Nullable<double> TotalAmount { get; set; }
         public Nullable<double> BalanceAmount { get; set; }
-        public string Address { get; set; }
+        public string CustomerAddress { get; set; }
+        public string CustomerName { get; set; }
+        public string ContactName { get; set; }
+        public string ContactAddress { get; set; }
+        public string ContactCompanyName { get; set; }
+        public string ServiceLocationAddress { get; set; }
+        public string ServiceLocationName { get; set; }
     }
 }

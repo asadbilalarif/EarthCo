@@ -20,7 +20,7 @@ namespace EarthCo.Controllers
     {
         earthcoEntities DB = new earthcoEntities();
         [HttpGet]
-        public IHttpActionResult GetInvoiceServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
+        public IHttpActionResult GetInvoiceServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0, bool isAscending = false)
         {
             try
             {
@@ -49,22 +49,26 @@ namespace EarthCo.Controllers
                                                   || x.Tags.ToLower().Contains(Search.ToLower())).ToList();
                     if (StatusId != 0)
                     {
-                        Data = Data.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        totalRecords = Data.Count(x => !x.isDelete && x.StatusId==StatusId);
+                        Data = Data.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => isAscending? o.InvoiceId:-o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
                     }
                     else
                     {
-                        Data = Data.Where(x => !x.isDelete).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        totalRecords = Data.Count(x => !x.isDelete);
+                        Data = Data.Where(x => !x.isDelete).OrderBy(o => isAscending ? o.InvoiceId : -o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
                     }
                 }
                 else
                 {
                     if (StatusId != 0)
                     {
-                        Data = DB.tblInvoices.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        totalRecords = DB.tblInvoices.Count(x => !x.isDelete && x.StatusId == StatusId);
+                        Data = DB.tblInvoices.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => isAscending ? o.InvoiceId : -o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
                     }
                     else
                     {
-                        Data = DB.tblInvoices.Where(x => !x.isDelete).OrderBy(o => o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        totalRecords = DB.tblInvoices.Count(x => !x.isDelete);
+                        Data = DB.tblInvoices.Where(x => !x.isDelete).OrderBy(o => isAscending ? o.InvoiceId : -o.InvoiceId).Skip(DisplayStart).Take(DisplayLength).ToList();
                     }
                 }
 

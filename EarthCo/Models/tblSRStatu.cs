@@ -22,6 +22,7 @@ namespace EarthCo.Models
     
         public int SRStatusId { get; set; }
         public string Status { get; set; }
+        public string Color { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblServiceRequest> tblServiceRequests { get; set; }

@@ -12,5 +12,6 @@ namespace EarthCo.Models
         public string CustomerName { get; set; }
         public string AssignToName { get; set; }
         public string Status { get; set; }
+        public string StatusColor { get; set; }
     }
 }

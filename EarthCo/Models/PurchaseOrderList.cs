@@ -12,6 +12,7 @@ namespace EarthCo.Models
         public string SupplierName { get; set; }
         public DateTime Date { get; set; }
         public string Status { get; set; }
+        public string StatusColor { get; set; }
         public string RegionalManager { get; set; }
         public string RequestedBy { get; set; }
         public string EstimateNumber { get; set; }

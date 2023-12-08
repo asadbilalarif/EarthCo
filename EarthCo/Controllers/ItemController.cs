@@ -20,7 +20,7 @@ namespace EarthCo.Controllers
     {
         earthcoEntities DB = new earthcoEntities();
         [HttpGet]
-        public IHttpActionResult GetItemServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10)
+        public IHttpActionResult GetItemServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, bool isAscending = false)
         {
             try
             {
@@ -38,11 +38,12 @@ namespace EarthCo.Controllers
                     Data = DB.tblItems.Where(x => x.ItemName.ToLower().Contains(Search.ToLower())
                                                   || x.SKU.ToLower().Contains(Search.ToLower())
                                                   || x.tblAccount.Code.ToString().ToLower().Contains(Search.ToLower())).ToList();
-                    Data = Data.Where(x => x.isDelete != true).OrderBy(o => o.ItemId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    totalRecords = Data.Where(x => x.isDelete != true).Count();
+                    Data = Data.Where(x => x.isDelete != true).OrderBy(o => isAscending? o.ItemId:-o.ItemId).Skip(DisplayStart).Take(DisplayLength).ToList();
                 }
                 else
                 {
-                    Data = DB.tblItems.Where(x => x.isDelete != true).OrderBy(o => o.ItemId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    Data = DB.tblItems.Where(x => x.isDelete != true).OrderBy(o => isAscending ? o.ItemId : -o.ItemId).Skip(DisplayStart).Take(DisplayLength).ToList();
                 }
 
                 

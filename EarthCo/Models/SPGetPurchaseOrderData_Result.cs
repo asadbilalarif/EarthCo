@@ -40,6 +40,7 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
-        public string Address { get; set; }
+        public string SupplierAddress { get; set; }
+        public string SupplierName { get; set; }
     }
 }

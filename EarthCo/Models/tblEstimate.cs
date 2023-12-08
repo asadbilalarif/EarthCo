@@ -55,7 +55,6 @@ namespace EarthCo.Models
         public Nullable<double> BalanceAmount { get; set; }
     
         public virtual tblContact tblContact { get; set; }
-        public virtual tblEstimateStatu tblEstimateStatu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimateItem> tblEstimateItems { get; set; }
         public virtual tblUser tblUser { get; set; }
@@ -68,5 +67,6 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimateFile> tblEstimateFiles { get; set; }
         public virtual tblServiceLocation tblServiceLocation { get; set; }
+        public virtual tblEstimateStatu tblEstimateStatu { get; set; }
     }
 }

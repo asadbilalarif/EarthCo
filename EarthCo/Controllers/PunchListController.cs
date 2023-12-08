@@ -22,7 +22,7 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public IHttpActionResult GetPunchlistServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
+        public IHttpActionResult GetPunchlistServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0, bool isAscending = false)
         {
             try
             {
@@ -50,7 +50,13 @@ namespace EarthCo.Controllers
                                                   || x.tblUser1.FirstName.ToLower().Contains(Search.ToLower())
                                                   || x.tblUser1.LastName.ToLower().Contains(Search.ToLower())
                                                   || x.Title.ToString().ToLower().Contains(Search.ToLower())
-                                                  || x.tblPunchlistStatu.Status.ToLower().Contains(Search.ToLower())).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                                                  || x.tblPunchlistStatu.Status.ToLower().Contains(Search.ToLower())).OrderBy(o => isAscending? o.PunchlistId:-o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                        totalRecords = DB.tblPunchlists.Where(x => (x.isDelete != true && x.StatusId == StatusId)&& x.tblUser.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser.LastName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser1.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser1.LastName.ToLower().Contains(Search.ToLower())
+                                                  || x.Title.ToString().ToLower().Contains(Search.ToLower())
+                                                  || x.tblPunchlistStatu.Status.ToLower().Contains(Search.ToLower())).OrderBy(o => isAscending? o.PunchlistId:-o.PunchlistId).Count();
                     }
                     else
                     {
@@ -59,18 +65,26 @@ namespace EarthCo.Controllers
                                                    || x.tblUser1.FirstName.ToLower().Contains(Search.ToLower())
                                                    || x.tblUser1.LastName.ToLower().Contains(Search.ToLower())
                                                    || x.Title.ToString().ToLower().Contains(Search.ToLower())
-                                                   || x.tblPunchlistStatu.Status.ToLower().Contains(Search.ToLower())).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                                                   || x.tblPunchlistStatu.Status.ToLower().Contains(Search.ToLower())).OrderBy(o => isAscending ? o.PunchlistId : -o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                        totalRecords = DB.tblPunchlists.Where(x => (x.isDelete != true) && x.tblUser.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser.LastName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser1.FirstName.ToLower().Contains(Search.ToLower())
+                                                  || x.tblUser1.LastName.ToLower().Contains(Search.ToLower())
+                                                  || x.Title.ToString().ToLower().Contains(Search.ToLower())
+                                                  || x.tblPunchlistStatu.Status.ToLower().Contains(Search.ToLower())).OrderBy(o => isAscending ? o.PunchlistId : -o.PunchlistId).Count();
                     }
                 }
                 else
                 {
                     if (StatusId != 0)
                     {
-                        PunchlistIds = DB.tblPunchlists.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                        totalRecords = DB.tblPunchlists.Count(x => !x.isDelete && x.StatusId==StatusId);
+                        PunchlistIds = DB.tblPunchlists.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => isAscending ? o.PunchlistId : -o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
                     }
                     else
                     {
-                        PunchlistIds = DB.tblPunchlists.Where(x => !x.isDelete).OrderBy(o => o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
+                        totalRecords = DB.tblPunchlists.Count(x => !x.isDelete);
+                        PunchlistIds = DB.tblPunchlists.Where(x => !x.isDelete).OrderBy(o => isAscending ? o.PunchlistId : -o.PunchlistId).Skip(DisplayStart).Take(DisplayLength).Select(s => s.PunchlistId).ToList();
                     }
                 }
 
@@ -105,6 +119,7 @@ namespace EarthCo.Controllers
                         Temp.CustomerName = PunchlistData.tblUser.FirstName + " " + PunchlistData.tblUser.LastName;
                         Temp.AssignToName = PunchlistData.tblUser1.FirstName + " " + PunchlistData.tblUser1.LastName;
                         Temp.Status = PunchlistData.tblPunchlistStatu.Status;
+                        Temp.StatusColor = PunchlistData.tblPunchlistStatu.Color;
                         Data.Add(Temp);
                     }
                 }

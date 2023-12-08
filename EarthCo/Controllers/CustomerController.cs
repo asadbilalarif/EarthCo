@@ -103,7 +103,7 @@ namespace EarthCo.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult GetCustomersServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10)
+        public IHttpActionResult GetCustomersServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, bool isAscending = false)
         {
             try
             {
@@ -126,11 +126,12 @@ namespace EarthCo.Controllers
                                                   || x.Address.ToLower().Contains(Search.ToLower())
                                                   || x.Email.ToLower().Contains(Search.ToLower())
                                                   || x.UserId.ToString().ToLower().Contains(Search.ToLower())).ToList();
-                    Data = Data.Where(x => x.UserTypeId == 2 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    totalRecords = Data.Count(x => x.UserTypeId == 2 && x.isDelete != true);
+                    Data = Data.Where(x => x.UserTypeId == 2 && x.isDelete != true).OrderBy(o =>isAscending? o.UserId:-o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
                 }
                 else
                 {
-                    Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).OrderBy(o => o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                    Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).OrderBy(o => isAscending ? o.UserId : -o.UserId).Skip(DisplayStart).Take(DisplayLength).ToList();
                 }
 
 

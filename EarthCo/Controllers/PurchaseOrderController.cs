@@ -21,7 +21,7 @@ namespace EarthCo.Controllers
     {
         earthcoEntities DB = new earthcoEntities();
         [HttpGet]
-        public IHttpActionResult GetPurchaseOrderServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0)
+        public IHttpActionResult GetPurchaseOrderServerSideList(string Search,int DisplayStart = 0, int DisplayLength = 10, int StatusId = 0, bool isAscending = false)
         {
             try
             {
@@ -49,22 +49,26 @@ namespace EarthCo.Controllers
                                                   || x.tblPurchaseOrderStatu.Status.ToLower().Contains(Search.ToLower())).ToList();
                     if (StatusId != 0)
                     {
-                        Data = Data.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.PurchaseOrderId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        totalRecords = Data.Count(x => !x.isDelete && x.StatusId == StatusId);
+                        Data = Data.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => isAscending? o.PurchaseOrderId:-o.PurchaseOrderId).Skip(DisplayStart).Take(DisplayLength).ToList();
                     }
                     else
                     {
-                        Data = Data.Where(x => !x.isDelete).OrderBy(o => o.PurchaseOrderId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        totalRecords = Data.Count(x => !x.isDelete);
+                        Data = Data.Where(x => !x.isDelete).OrderBy(o => isAscending ? o.PurchaseOrderId : -o.PurchaseOrderId).Skip(DisplayStart).Take(DisplayLength).ToList();
                     }
                 }
                 else
                 {
                     if (StatusId != 0)
                     {
-                        Data = DB.tblPurchaseOrders.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => o.PurchaseOrderId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        totalRecords = DB.tblPurchaseOrders.Count(x => !x.isDelete && x.StatusId==StatusId);
+                        Data = DB.tblPurchaseOrders.Where(x => !x.isDelete && x.StatusId == StatusId).OrderBy(o => isAscending ? o.PurchaseOrderId : -o.PurchaseOrderId).Skip(DisplayStart).Take(DisplayLength).ToList();
                     }
                     else
                     {
-                        Data = DB.tblPurchaseOrders.Where(x => !x.isDelete).OrderBy(o => o.PurchaseOrderId).Skip(DisplayStart).Take(DisplayLength).ToList();
+                        totalRecords = DB.tblPurchaseOrders.Count(x => !x.isDelete);
+                        Data = DB.tblPurchaseOrders.Where(x => !x.isDelete).OrderBy(o => isAscending ? o.PurchaseOrderId : -o.PurchaseOrderId).Skip(DisplayStart).Take(DisplayLength).ToList();
                     }
                 }
 
@@ -82,6 +86,7 @@ namespace EarthCo.Controllers
                         Temp.SupplierName = item.tblUser.FirstName + " " + item.tblUser.LastName;
                         Temp.Date =(DateTime) item.Date;
                         Temp.Status =item.tblPurchaseOrderStatu.Status;
+                        Temp.StatusColor =item.tblPurchaseOrderStatu.Color;
                         Temp.RegionalManager = item.tblUser1.FirstName + " " + item.tblUser1.LastName;
                         Temp.RequestedBy = item.tblUser2.FirstName + " " + item.tblUser2.LastName;
                         Temp.EstimateNumber = item.EstimateNumber;
