@@ -37,6 +37,7 @@ namespace EarthCo.Controllers
                         EstimateTemp.RegionalManager = item.tblUser1.FirstName + " " + item.tblUser1.LastName;
                         EstimateTemp.Date = item.CreatedDate;
                         EstimateTemp.Status = item.tblEstimateStatu.Status;
+                        EstimateTemp.StatusColor = item.tblEstimateStatu.Color;
                         EstimateTemp.EstimateNumber = item.EstimateNumber;
                         EstimateTemp.DescriptionofWork = item.EstimateNotes;
 
@@ -80,6 +81,7 @@ namespace EarthCo.Controllers
 
                     Temp.ServiceRequestNumber = item.ServiceRequestNumber;
                     Temp.Status = item.tblSRStatu.Status;
+                    Temp.StatusColor = item.tblSRStatu.Color;
                     Temp.WorkRequest = item.WorkRequest;
                     Temp.CreatedDate = (DateTime)item.CreatedDate;
                     Temp.Type = item.tblSRType.Type;

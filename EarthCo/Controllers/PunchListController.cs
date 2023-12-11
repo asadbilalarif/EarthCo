@@ -116,10 +116,10 @@ namespace EarthCo.Controllers
                             PDLT.ItemData = DB.SPGetPunchlistItemData(Detailitem.PunchlistDetailId).ToList();
                             Temp.DetailDataList.Add(PDLT);
                         }
-                        Temp.CustomerName = PunchlistData.tblUser.FirstName + " " + PunchlistData.tblUser.LastName;
-                        Temp.AssignToName = PunchlistData.tblUser1.FirstName + " " + PunchlistData.tblUser1.LastName;
-                        Temp.Status = PunchlistData.tblPunchlistStatu.Status;
-                        Temp.StatusColor = PunchlistData.tblPunchlistStatu.Color;
+                        //Temp.CustomerName = PunchlistData.tblUser.FirstName + " " + PunchlistData.tblUser.LastName;
+                        //Temp.AssignToName = PunchlistData.tblUser1.FirstName + " " + PunchlistData.tblUser1.LastName;
+                        //Temp.Status = PunchlistData.tblPunchlistStatu.Status;
+                        //Temp.StatusColor = PunchlistData.tblPunchlistStatu.Color;
                         Data.Add(Temp);
                     }
                 }
@@ -673,7 +673,7 @@ namespace EarthCo.Controllers
                         Data.AfterPhotoPath = path;
                     }
 
-                    DB.tblPunchlistDetails.Add(Data);
+                    DB.Entry(Data);
                     DB.SaveChanges();
 
 

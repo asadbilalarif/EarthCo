@@ -238,15 +238,6 @@ namespace EarthCo.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("SPGetNumber", typeParameter);
         }
     
-        public virtual ObjectResult<SPGetPunchlistData_Result> SPGetPunchlistData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPunchlistData_Result>("SPGetPunchlistData", iDParameter);
-        }
-    
         public virtual ObjectResult<SPGetIrrigationData_Result> SPGetIrrigationData(Nullable<int> iD)
         {
             var iDParameter = iD.HasValue ?
@@ -429,6 +420,15 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetServiceRequestData_Result>("SPGetServiceRequestData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetPunchlistData_Result> SPGetPunchlistData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPunchlistData_Result>("SPGetPunchlistData", iDParameter);
         }
     }
 }

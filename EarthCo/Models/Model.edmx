@@ -2484,9 +2484,6 @@
             <End Role="tblIrrigation" EntitySet="tblIrrigations" />
             <End Role="tblController" EntitySet="tblControllers" />
           </AssociationSet>
-          <FunctionImport Name="SPGetPunchlistData" ReturnType="Collection(earthcoModel.SPGetPunchlistData_Result)">
-          <Parameter Name="ID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="SPGetIrrigationData" ReturnType="Collection(earthcoModel.SPGetIrrigationData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -2623,9 +2620,12 @@
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SPGetEstimateData" ReturnType="Collection(earthcoModel.SPGetEstimateData_Result)">
-            <Parameter Name="ID" Mode="In" Type="Int32" />
+          <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SPGetServiceRequestData" ReturnType="Collection(earthcoModel.SPGetServiceRequestData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetPunchlistData" ReturnType="Collection(earthcoModel.SPGetPunchlistData_Result)">
             <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
@@ -4151,25 +4151,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="SPGetPunchlistData_Result">
-          <Property Type="Int32" Name="PunchlistId" Nullable="false" />
-          <Property Type="String" Name="Title" Nullable="true" MaxLength="50" />
-          <Property Type="Int32" Name="StatusId" Nullable="false" />
-          <Property Type="Int32" Name="CustomerId" Nullable="false" />
-          <Property Type="Int32" Name="ServiceLocationId" Nullable="true" />
-          <Property Type="Int32" Name="ContactId" Nullable="false" />
-          <Property Type="Int32" Name="AssignedTo" Nullable="false" />
-          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
-          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
-          <Property Type="Int32" Name="EditBy" Nullable="true" />
-          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
-          <Property Type="Boolean" Name="isActive" Nullable="false" />
-          <Property Type="Boolean" Name="isDelete" Nullable="false" />
-          <Property Type="String" Name="ContactName" Nullable="true" MaxLength="150" />
-          <Property Type="String" Name="ContactCompany" Nullable="true" MaxLength="150" />
-          <Property Type="String" Name="ContactEmail" Nullable="true" MaxLength="150" />
-          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="500" />
-        </ComplexType>
         <ComplexType Name="SPGetIrrigationData_Result">
           <Property Type="Int32" Name="IrrigationId" Nullable="false" />
           <Property Type="String" Name="IrrigationNumber" Nullable="true" MaxLength="500" />
@@ -5043,6 +5024,29 @@
           <Property Type="String" Name="ContactCompanyName" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="ServiceLocationAddress" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="ServiceLocationName" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="SPGetPunchlistData_Result">
+          <Property Type="Int32" Name="PunchlistId" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="StatusId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="Int32" Name="ServiceLocationId" Nullable="true" />
+          <Property Type="Int32" Name="ContactId" Nullable="false" />
+          <Property Type="Int32" Name="AssignedTo" Nullable="false" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="String" Name="ContactName" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="ContactCompany" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="ContactEmail" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="CustomerCompanyName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="CustomerName" Nullable="false" MaxLength="101" />
+          <Property Type="String" Name="AssignToName" Nullable="false" MaxLength="101" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="StatusColor" Nullable="true" MaxLength="150" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -6139,29 +6143,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SPGetPunchlistData" FunctionName="earthcoModel.Store.SPGetPunchlistData">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="earthcoModel.SPGetPunchlistData_Result">
-                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
-                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-                <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
-                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
-                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
-                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SPGetIrrigationData" FunctionName="earthcoModel.Store.SPGetIrrigationData">
             <ResultMapping>
               <ComplexTypeMapping TypeName="earthcoModel.SPGetIrrigationData_Result">
@@ -6872,6 +6853,33 @@
                 <ScalarProperty Name="ContactCompanyName" ColumnName="ContactCompanyName" />
                 <ScalarProperty Name="ServiceLocationAddress" ColumnName="ServiceLocationAddress" />
                 <ScalarProperty Name="ServiceLocationName" ColumnName="ServiceLocationName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetPunchlistData" FunctionName="earthcoModel.Store.SPGetPunchlistData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetPunchlistData_Result">
+                <ScalarProperty Name="PunchlistId" ColumnName="PunchlistId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
+                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
+                <ScalarProperty Name="CustomerCompanyName" ColumnName="CustomerCompanyName" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="AssignToName" ColumnName="AssignToName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="StatusColor" ColumnName="StatusColor" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
