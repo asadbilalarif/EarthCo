@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using static EarthCo.Models.EstimateQB;
 
 namespace EarthCo.Controllers
 {
@@ -97,8 +98,9 @@ namespace EarthCo.Controllers
                     GetEstimateItem Temp = new GetEstimateItem();
                     Temp.EstimateId = (int)item.EstimateId;
                     Temp.CustomerId = (int)item.CustomerId;
-                    Temp.CustomerName = item.tblUser.FirstName + " " + item.tblUser.LastName;
-                    Temp.RegionalManager = item.tblUser1.FirstName + " " + item.tblUser1.LastName;
+                    Temp.CustomerName = item.tblUser3.FirstName + " " + item.tblUser3.LastName;
+                    Temp.CustomerCompanyName = item.tblUser3.CompanyName ;
+                    Temp.RegionalManager = item.tblUser.FirstName + " " + item.tblUser.LastName;
                     Temp.Date = item.CreatedDate;
                     Temp.Status = item.tblEstimateStatu.Status;
                     Temp.StatusColor = item.tblEstimateStatu.Color;
@@ -116,7 +118,6 @@ namespace EarthCo.Controllers
                     //{
                     //    Temp.InvoiceNumber = item.tblInvoices.FirstOrDefault().InvoiceNumber;
                     //}
-
                     Temp.ProfitPercentage = item.ProfitPercentage;
                     Temp.EstimateAmount = (double)item.tblEstimateItems.Sum(s => s.Amount);
                     EstData.Add(Temp);
@@ -519,14 +520,87 @@ namespace EarthCo.Controllers
                     DB.tblSyncLogs.Add(Result);
                     DB.SaveChanges();
 
-
-
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
                     LogData.Action = "Add Estimate";
                     LogData.CreatedDate = DateTime.Now;
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
+
+                   // string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/estimate?minorversion=23";
+
+                   // QBEstimateClass EsitimateData = new QBEstimateClass();
+                   // Models.EstimateQB.Line LineData = new Models.EstimateQB.Line();
+                   // EsitimateData.BillEmail = new BillEmail();
+                   // EsitimateData.BillEmail.Address = "Cool_Cars@intuit.com";
+                   // EsitimateData.TotalAmt = 35;
+                   // //EsitimateData.SyncToken = "0";
+                   // //EsitimateData.Id = "1103";
+                   // EsitimateData.CustomerRef = new CustomerRef();
+                   // EsitimateData.CustomerRef.value = "3";
+                   // EsitimateData.CustomerRef.name = "Cool Cars";
+                   // LineData.Id = "1";
+                   // LineData.Description = "Pest Control Services";
+                   // LineData.Amount = 35;
+                   // LineData.DetailType = "SalesItemLineDetail";
+                   // LineData.SalesItemLineDetail = new Models.EstimateQB.SalesItemLineDetail();
+                   // LineData.SalesItemLineDetail.ItemRef = new ItemRef();
+                   // LineData.SalesItemLineDetail.ItemRef.value = "10";
+                   // LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
+                   // LineData.SalesItemLineDetail.UnitPrice = 35;
+                   // LineData.SalesItemLineDetail.Qty = 1;
+                   // EsitimateData.Line = new List<Models.EstimateQB.Line>();
+                   // EsitimateData.Line.Add(LineData);
+
+                   //string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(EsitimateData);
+
+                   // tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                   // string AccessToken = "";
+
+                   // var diffOfDates = DateTime.Now - TokenData.EditDate;
+                   // do
+                   // {
+                   //     TokenData = DB.tblTokens.FirstOrDefault();
+                   //     diffOfDates = DateTime.Now - TokenData.EditDate;
+                   //     if (diffOfDates.Value.Hours > 2)
+                   //     {
+                   //         HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                   //     }
+                   // } while (diffOfDates.Value.Hours < 2);
+
+                   // AccessToken = TokenData.AccessToken;
+
+
+
+                   // // Create HttpClient
+                   // using (HttpClient client = new HttpClient())
+                   // {
+                   //     client.DefaultRequestHeaders.Add("Authorization", "Bearer " + AccessToken);
+                   //     client.DefaultRequestHeaders.Add("Accept", "application/json");
+                   //     // Create the request content
+                   //     var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                   //     //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                   //     // Make the POST request
+                   //     HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                   //     // Check if the request was successful
+                   //     if (response.IsSuccessStatusCode)
+                   //     {
+                   //         // Parse and use the response data as needed
+                   //         string jsonResponse = await response.Content.ReadAsStringAsync();
+                   //         // Process jsonResponse
+                   //         //return View();
+                   //     }
+                   //     else
+                   //     {
+                   //         // Handle error
+                   //         string errorMessage = await response.Content.ReadAsStringAsync();
+                   //         // Handle error message
+                   //         //return View("Error");
+                   //     }
+                   // }
+
 
 
                     //var requestData = new
@@ -812,16 +886,34 @@ namespace EarthCo.Controllers
                         }
                     }
 
-
                     tblSyncLog Result = new tblSyncLog();
-                    Result.Id = Data.EstimateId;
-                    Result.Name = "Estimate";
-                    Result.Operation = "Update";
-                    Result.CreatedDate = DateTime.Now;
-                    Result.isQB = false;
-                    Result.isSync = false;
-                    DB.tblSyncLogs.Add(Result);
-                    DB.SaveChanges();
+                    Result = DB.tblSyncLogs.Where(x => x.Id == Data.EstimateId).FirstOrDefault();
+                    if (Result==null)
+                    {
+                        Result = new tblSyncLog();
+                        Result = new tblSyncLog();
+                        Result.Id = Data.EstimateId;
+                        Result.Name = "Estimate";
+                        Result.Operation = "Update";
+                        Result.EditDate = DateTime.Now;
+                        Result.isQB = false;
+                        Result.isSync = false;
+                        DB.tblSyncLogs.Add(Result);
+                        DB.SaveChanges();
+                    }
+                    else
+                    {
+                        Result.Id = Data.EstimateId;
+                        Result.Name = "Estimate";
+                        Result.Operation = "Update";
+                        Result.EditDate = DateTime.Now;
+                        Result.isQB = false;
+                        Result.isSync = false;
+                        DB.Entry(Result);
+                        DB.SaveChanges();
+                    }
+
+                    
 
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
@@ -1151,6 +1243,35 @@ namespace EarthCo.Controllers
                 Data.EditDate = DateTime.Now;
                 DB.Entry(Data);
                 DB.SaveChanges();
+
+
+                tblSyncLog Result = new tblSyncLog();
+                Result = DB.tblSyncLogs.Where(x => x.Id == Data.EstimateId).FirstOrDefault();
+                if (Result == null)
+                {
+                    Result = new tblSyncLog();
+                    Result.Id = Data.EstimateId;
+                    Result.Name = "Estimate";
+                    Result.Operation = "Update";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+                }
+                else
+                {
+                    Result.Id = Data.EstimateId;
+                    Result.Name = "Estimate";
+                    Result.Operation = "Update";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.Entry(Result);
+                    DB.SaveChanges();
+                }
+
+                
 
                 tblLog LogData = new tblLog();
                 LogData.UserId = UserId;

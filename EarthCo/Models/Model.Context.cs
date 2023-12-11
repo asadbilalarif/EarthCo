@@ -53,7 +53,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblInvoice> tblInvoices { get; set; }
         public virtual DbSet<tblIrrigation> tblIrrigations { get; set; }
         public virtual DbSet<tblPurchaseOrder> tblPurchaseOrders { get; set; }
-        public virtual DbSet<tblEstimate> tblEstimates { get; set; }
         public virtual DbSet<tblBill> tblBills { get; set; }
         public virtual DbSet<tblBillFile> tblBillFiles { get; set; }
         public virtual DbSet<tblEstimateFile> tblEstimateFiles { get; set; }
@@ -75,6 +74,7 @@ namespace EarthCo.Models
         public virtual DbSet<tblPunchlistStatu> tblPunchlistStatus { get; set; }
         public virtual DbSet<tblPurchaseOrderStatu> tblPurchaseOrderStatus { get; set; }
         public virtual DbSet<tblSRStatu> tblSRStatus { get; set; }
+        public virtual DbSet<tblEstimate> tblEstimates { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {

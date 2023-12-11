@@ -56,11 +56,11 @@ namespace EarthCo.Models
         public virtual tblUser tblUser2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPurchaseOrderItem> tblPurchaseOrderItems { get; set; }
-        public virtual tblEstimate tblEstimate { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBill> tblBills { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPurchaseOrderFile> tblPurchaseOrderFiles { get; set; }
         public virtual tblPurchaseOrderStatu tblPurchaseOrderStatu { get; set; }
+        public virtual tblEstimate tblEstimate { get; set; }
     }
 }

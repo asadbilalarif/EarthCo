@@ -17,6 +17,128 @@ namespace EarthCo.Controllers
     public class SyncQBController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
+
+        [HttpPost]
+        public IHttpActionResult SyncDataAPI()
+        {
+            try
+            {
+                List<tblSyncLog> SyncLogData = DB.tblSyncLogs.Where(x => x.isSync != true).ToList();
+
+                foreach (tblSyncLog item in SyncLogData)
+                {
+                    if(item.Name=="Estimate")
+                    {
+                        SyncEstimate(item);
+                    }
+                }
+                
+                return Ok("Webhook request is valid.");
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+                tblLog Result = new tblLog();
+                Result.Action = "Error: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(Result);
+                DB.SaveChanges();
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+                tblLog Result = new tblLog();
+                Result.Action = "Error: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(Result);
+                DB.SaveChanges();
+                return ResponseMessage(responseMessage);
+            }
+
+        }
+
+
+        [HttpPost]
+        public void SyncEstimate(tblSyncLog SyncLog)
+        {
+            try
+            {
+               if(SyncLog.Operation=="Create")
+                {
+
+                }
+                if (SyncLog.Operation == "Update")
+                {
+
+                }
+                if (SyncLog.Operation == "Delete")
+                {
+
+                }
+
+
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+                tblLog Result = new tblLog();
+                Result.Action = "Error: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(Result);
+                DB.SaveChanges();
+                //return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+                tblLog Result = new tblLog();
+                Result.Action = "Error: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(Result);
+                DB.SaveChanges();
+                //return ResponseMessage(responseMessage);
+            }
+
+        }
+
+
         [HttpPost]
         public async Task<IHttpActionResult> SyncData()
         {

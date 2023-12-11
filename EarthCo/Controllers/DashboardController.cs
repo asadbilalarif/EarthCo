@@ -63,10 +63,10 @@ namespace EarthCo.Controllers
                     SRData = DB.tblServiceRequests.Where(x => x.Assign == UserId && x.isDelete == false).OrderByDescending(o => o.ServiceRequestId).Take(5).ToList();
                 }
 
-                if (SRData == null || SRData.Count == 0)
-                {
-                    return NotFound();
-                }
+                //if (SRData == null || SRData.Count == 0)
+                //{
+                //    return NotFound();
+                //}
 
                 foreach (var item in SRData)
                 {

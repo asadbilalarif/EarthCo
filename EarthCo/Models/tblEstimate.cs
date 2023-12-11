@@ -18,9 +18,9 @@ namespace EarthCo.Models
         public tblEstimate()
         {
             this.tblEstimateItems = new HashSet<tblEstimateItem>();
+            this.tblEstimateFiles = new HashSet<tblEstimateFile>();
             this.tblInvoices = new HashSet<tblInvoice>();
             this.tblPurchaseOrders = new HashSet<tblPurchaseOrder>();
-            this.tblEstimateFiles = new HashSet<tblEstimateFile>();
         }
     
         public int EstimateId { get; set; }
@@ -53,20 +53,22 @@ namespace EarthCo.Models
         public bool isDelete { get; set; }
         public Nullable<double> TotalAmount { get; set; }
         public Nullable<double> BalanceAmount { get; set; }
+        public Nullable<int> QBId { get; set; }
     
         public virtual tblContact tblContact { get; set; }
+        public virtual tblEstimateStatu tblEstimateStatu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimateItem> tblEstimateItems { get; set; }
+        public virtual tblServiceLocation tblServiceLocation { get; set; }
         public virtual tblUser tblUser { get; set; }
         public virtual tblUser tblUser1 { get; set; }
         public virtual tblUser tblUser2 { get; set; }
+        public virtual tblUser tblUser3 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEstimateFile> tblEstimateFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoice> tblInvoices { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblEstimateFile> tblEstimateFiles { get; set; }
-        public virtual tblServiceLocation tblServiceLocation { get; set; }
-        public virtual tblEstimateStatu tblEstimateStatu { get; set; }
     }
 }

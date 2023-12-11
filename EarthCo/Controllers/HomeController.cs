@@ -177,13 +177,13 @@ namespace EarthCo.Controllers
             return View("CallbackView"); // You can create a view for callback handling
         }
 
-        public async System.Threading.Tasks.Task GetAuthTokensUsingRefreshTokenAsync()
+        public static async System.Threading.Tasks.Task GetAuthTokensUsingRefreshTokenAsync()
         {
             var claims = new List<Claim>();
-           
 
+            earthcoEntities db = new earthcoEntities();
             tblToken TokenData = new tblToken();
-            string previousRefreshToken = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
+            string previousRefreshToken = db.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
             //var tokenResponse = await auth2Client.RefreshTokenAsync(previousRefreshToken);
 
 
@@ -192,22 +192,7 @@ namespace EarthCo.Controllers
             var data = tokenResponse.Result;
 
 
-
-
-            if (!string.IsNullOrWhiteSpace(data.AccessToken))
-            {
-                claims.Add(new Claim("access_token", data.AccessToken));
-                Session["access_token"] = data.AccessToken;
-                claims.Add(new Claim("access_token_expires_at", (DateTime.Now.AddSeconds(data.AccessTokenExpiresIn)).ToString()));
-            }
-
-            if (!string.IsNullOrWhiteSpace(data.RefreshToken))
-            {
-                claims.Add(new Claim("refresh_token", data.RefreshToken));
-                claims.Add(new Claim("refresh_token_expires_at", (DateTime.Now.AddSeconds(data.RefreshTokenExpiresIn)).ToString()));
-            }
-
-            TokenData = DB.tblTokens.FirstOrDefault();
+            TokenData = db.tblTokens.FirstOrDefault();
             if (TokenData == null)
             {
                 TokenData = new tblToken();
@@ -215,16 +200,16 @@ namespace EarthCo.Controllers
                 TokenData.RefreshToken = data.RefreshToken;
                 TokenData.CreatedDate = DateTime.Now;
                 TokenData.EditDate = DateTime.Now;
-                DB.tblTokens.Add(TokenData);
-                DB.SaveChanges();
+                db.tblTokens.Add(TokenData);
+                db.SaveChanges();
             }
             else
             {
                 TokenData.AccessToken = data.AccessToken;
                 TokenData.RefreshToken = data.RefreshToken;
                 TokenData.EditDate = DateTime.Now;
-                DB.Entry(TokenData);
-                DB.SaveChanges();
+                db.Entry(TokenData);
+                db.SaveChanges();
             }
 
         }

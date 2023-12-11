@@ -10,6 +10,7 @@ namespace EarthCo.Models
         public int EstimateId { get; set; }
         public int CustomerId { get; set; }
         public string CustomerName { get; set; }
+        public string CustomerCompanyName { get; set; }
         public string RegionalManager { get; set; }
         public DateTime Date { get; set; }
         public string Status { get; set; }
