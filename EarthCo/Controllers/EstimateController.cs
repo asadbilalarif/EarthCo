@@ -887,7 +887,7 @@ namespace EarthCo.Controllers
                     }
 
                     tblSyncLog Result = new tblSyncLog();
-                    Result = DB.tblSyncLogs.Where(x => x.Id == Data.EstimateId).FirstOrDefault();
+                    Result = DB.tblSyncLogs.Where(x => x.Id == Data.EstimateId && x.Name=="Estimate").FirstOrDefault();
                     if (Result==null)
                     {
                         Result = new tblSyncLog();
@@ -1004,14 +1004,30 @@ namespace EarthCo.Controllers
                 DB.SaveChanges();
 
                 tblSyncLog Result = new tblSyncLog();
-                Result.Id = Data.EstimateId;
-                Result.Name = "Estimate";
-                Result.Operation = "Delete";
-                Result.CreatedDate = DateTime.Now;
-                Result.isQB = false;
-                Result.isSync = false;
-                DB.tblSyncLogs.Add(Result);
-                DB.SaveChanges();
+                Result = DB.tblSyncLogs.Where(x => x.Id == Data.EstimateId && x.Name == "Estimate").FirstOrDefault();
+                if (Result == null)
+                {
+                    Result = new tblSyncLog();
+                    Result.Id = Data.EstimateId;
+                    Result.Name = "Estimate";
+                    Result.Operation = "Delete";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+                }
+                else
+                {
+                    Result.Id = Data.EstimateId;
+                    Result.Name = "Estimate";
+                    Result.Operation = "Delete";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.Entry(Result);
+                    DB.SaveChanges();
+                }
 
 
                 return Ok("Estimate has been deleted successfully.");
@@ -1245,31 +1261,31 @@ namespace EarthCo.Controllers
                 DB.SaveChanges();
 
 
-                tblSyncLog Result = new tblSyncLog();
-                Result = DB.tblSyncLogs.Where(x => x.Id == Data.EstimateId).FirstOrDefault();
-                if (Result == null)
-                {
-                    Result = new tblSyncLog();
-                    Result.Id = Data.EstimateId;
-                    Result.Name = "Estimate";
-                    Result.Operation = "Update";
-                    Result.EditDate = DateTime.Now;
-                    Result.isQB = false;
-                    Result.isSync = false;
-                    DB.tblSyncLogs.Add(Result);
-                    DB.SaveChanges();
-                }
-                else
-                {
-                    Result.Id = Data.EstimateId;
-                    Result.Name = "Estimate";
-                    Result.Operation = "Update";
-                    Result.EditDate = DateTime.Now;
-                    Result.isQB = false;
-                    Result.isSync = false;
-                    DB.Entry(Result);
-                    DB.SaveChanges();
-                }
+                //tblSyncLog Result = new tblSyncLog();
+                //Result = DB.tblSyncLogs.Where(x => x.Id == Data.EstimateId && x.Name == "Estimate").FirstOrDefault();
+                //if (Result == null)
+                //{
+                //    Result = new tblSyncLog();
+                //    Result.Id = Data.EstimateId;
+                //    Result.Name = "Estimate";
+                //    Result.Operation = "Delete";
+                //    Result.EditDate = DateTime.Now;
+                //    Result.isQB = false;
+                //    Result.isSync = false;
+                //    DB.tblSyncLogs.Add(Result);
+                //    DB.SaveChanges();
+                //}
+                //else
+                //{
+                //    Result.Id = Data.EstimateId;
+                //    Result.Name = "Estimate";
+                //    Result.Operation = "Delete";
+                //    Result.EditDate = DateTime.Now;
+                //    Result.isQB = false;
+                //    Result.isSync = false;
+                //    DB.Entry(Result);
+                //    DB.SaveChanges();
+                //}
 
                 
 

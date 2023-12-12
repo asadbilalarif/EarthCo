@@ -31,7 +31,7 @@ namespace EarthCo.Models
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
     
-        public virtual tblItem tblItem { get; set; }
         public virtual tblInvoice tblInvoice { get; set; }
+        public virtual tblItem tblItem { get; set; }
     }
 }

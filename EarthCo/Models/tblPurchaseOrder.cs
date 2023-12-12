@@ -51,9 +51,6 @@ namespace EarthCo.Models
         public bool isDelete { get; set; }
     
         public virtual tblTerm tblTerm { get; set; }
-        public virtual tblUser tblUser { get; set; }
-        public virtual tblUser tblUser1 { get; set; }
-        public virtual tblUser tblUser2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPurchaseOrderItem> tblPurchaseOrderItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -62,5 +59,8 @@ namespace EarthCo.Models
         public virtual ICollection<tblPurchaseOrderFile> tblPurchaseOrderFiles { get; set; }
         public virtual tblPurchaseOrderStatu tblPurchaseOrderStatu { get; set; }
         public virtual tblEstimate tblEstimate { get; set; }
+        public virtual tblUser tblUser { get; set; }
+        public virtual tblUser tblUser1 { get; set; }
+        public virtual tblUser tblUser2 { get; set; }
     }
 }

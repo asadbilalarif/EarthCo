@@ -90,7 +90,7 @@ namespace EarthCo.Controllers
                 body += "</body>";
 
 
-                MailMessage mailMessage = new MailMessage(SenderEmail, Email, "Forget Password Email", body);
+                MailMessage mailMessage = new MailMessage(SenderEmail, Email, "Report preview", body);
                 mailMessage.IsBodyHtml = true;
                 mailMessage.BodyEncoding = System.Text.UTF8Encoding.UTF8;
 

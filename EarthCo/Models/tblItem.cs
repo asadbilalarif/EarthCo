@@ -17,8 +17,8 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tblItem()
         {
-            this.tblEstimateItems = new HashSet<tblEstimateItem>();
             this.tblBillItems = new HashSet<tblBillItem>();
+            this.tblEstimateItems = new HashSet<tblEstimateItem>();
             this.tblInvoiceItems = new HashSet<tblInvoiceItem>();
             this.tblPunchlistItems = new HashSet<tblPunchlistItem>();
             this.tblPurchaseOrderItems = new HashSet<tblPurchaseOrderItem>();
@@ -45,13 +45,14 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
         public Nullable<bool> isDelete { get; set; }
+        public Nullable<int> QBId { get; set; }
     
         public virtual tblAccount tblAccount { get; set; }
         public virtual tblAccount tblAccount1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblEstimateItem> tblEstimateItems { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBillItem> tblBillItems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEstimateItem> tblEstimateItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoiceItem> tblInvoiceItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

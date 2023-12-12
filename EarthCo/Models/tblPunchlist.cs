@@ -38,11 +38,11 @@ namespace EarthCo.Models
         public string ContactEmail { get; set; }
     
         public virtual tblContact tblContact { get; set; }
-        public virtual tblUser tblUser { get; set; }
-        public virtual tblUser tblUser1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPunchlistDetail> tblPunchlistDetails { get; set; }
         public virtual tblServiceLocation tblServiceLocation { get; set; }
         public virtual tblPunchlistStatu tblPunchlistStatu { get; set; }
+        public virtual tblUser tblUser { get; set; }
+        public virtual tblUser tblUser1 { get; set; }
     }
 }

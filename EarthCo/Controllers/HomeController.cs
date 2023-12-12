@@ -7,6 +7,7 @@ using Intuit.Ipp.Security;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -244,14 +245,18 @@ namespace EarthCo.Controllers
         /// </summary>
         public async Task<ActionResult> ApiCallService()
         {
-            if (Session["realmId"] != null)
-            {
-                string realmId = Session["realmId"].ToString();
+            //if (Session["realmId"] != null)
+            //{
+
+                tblToken TokenData = DB.tblTokens.FirstOrDefault();
+
+
+                string realmId = TokenData.realmId;
                 try
                 {
                     var principal = User as ClaimsPrincipal;
                     //OAuth2RequestValidator oauthValidator1 = new OAuth2RequestValidator(principal.FindFirst("access_token").Value);
-                    OAuth2RequestValidator oauthValidator = new OAuth2RequestValidator((string)Session["access_token"]);
+                    OAuth2RequestValidator oauthValidator = new OAuth2RequestValidator((string)TokenData.AccessToken);
                     ServiceContext serviceContext = new ServiceContext(realmId, IntuitServicesType.QBO, oauthValidator);
                     serviceContext.IppConfiguration.MinorVersion.Qbo = "23";
                     QueryService<Bill> querySvc = new QueryService<Bill>(serviceContext);
@@ -317,23 +322,23 @@ namespace EarthCo.Controllers
                     QBEstimateClass EsitimateData = new QBEstimateClass();
                     Models.EstimateQB.Line LineData = new Models.EstimateQB.Line();
                     EsitimateData.BillEmail = new BillEmail();
-                    EsitimateData.BillEmail.Address = "Cool_Cars@intuit.com";
-                    EsitimateData.TotalAmt = 35;
-                    EsitimateData.SyncToken = "0";
-                    EsitimateData.Id = "1103";
+                    //EsitimateData.BillEmail.Address = "Cool_Cars@intuit.com";
+                    EsitimateData.TotalAmt = 105;
+                    //EsitimateData.SyncToken = "0";
+                    //EsitimateData.Id = "1103";
                     EsitimateData.CustomerRef = new CustomerRef();
                     EsitimateData.CustomerRef.value = "3";
-                    EsitimateData.CustomerRef.name = "Cool Cars";
-                    LineData.Id = "1";
+                    //EsitimateData.CustomerRef.name = "Cool Cars";
+                    //LineData.Id = "1";
                     LineData.Description = "Pest Control Services";
-                    LineData.Amount = 35;
+                    LineData.Amount = 105;
                     LineData.DetailType = "SalesItemLineDetail";
                     LineData.SalesItemLineDetail = new Models.EstimateQB.SalesItemLineDetail();
                     LineData.SalesItemLineDetail.ItemRef = new ItemRef();
                     LineData.SalesItemLineDetail.ItemRef.value = "10";
-                    LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
+                    //LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
                     LineData.SalesItemLineDetail.UnitPrice = 35;
-                    LineData.SalesItemLineDetail.Qty = 1;
+                    LineData.SalesItemLineDetail.Qty = 3;
                     EsitimateData.Line = new List<Models.EstimateQB.Line>();
                     EsitimateData.Line.Add(LineData);
 
@@ -362,8 +367,13 @@ namespace EarthCo.Controllers
                         {
                             // Parse and use the response data as needed
                             string jsonResponse = await response.Content.ReadAsStringAsync();
-                            // Process jsonResponse
-                            return View();
+
+                        dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+
+                        // Now you can access the data using the model
+                        var estimateId = estimateModel["Estimate"]["Id"];
+                        // Process jsonResponse
+                        return View();
                         }
                         else
                         {
@@ -375,66 +385,166 @@ namespace EarthCo.Controllers
                     }
 
 
-                    //using (var client = new HttpClient())
-                    //{
-                    //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oauthValidator.AccessToken);
-                    //    //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenData.AccessToken);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                    //    Vendor billAddr = new Vendor
-                    //    {
-                    //        TaxIdentifier = "99-5688293",
-                    //        AcctNum = "35372649",
-                    //        Title = "Ms.",
-                    //        GivenName = "Dianne12",
-                    //        FamilyName = "Bradley12",
-                    //        Suffix = "Sr.",
-                    //        CompanyName = "Dianne's Auto Shop9",
-                    //        DisplayName = "Dianne's Auto Shop9",
-                    //        PrintOnCheckName = "Dianne's Auto Shop9"
-                    //    };
-                    //    //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oauthValidator.AccessToken);
-                    //    //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //    string message;
-                    //    var json = Newtonsoft.Json.JsonConvert.SerializeObject(billAddr);
-                    //    var content = new StringContent(json, Encoding.UTF8, "application/json");
-                    //    var visibilityresponse = await client.PostAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/vendor?minorversion=23", content);
-                    //    if (visibilityresponse.IsSuccessStatusCode)
-                    //    {
-                    //        var responseContent = await visibilityresponse.Content.ReadAsStringAsync();
-                    //        message = Convert.ToString(responseContent);
-                    //    }
+                    // Make the GET request
+                    HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/estimate/" + 1108 + "?minorversion=23");
+                    //HttpResponseMessage response = await client.GetAsync("http://103.73.231.56/clickcut/api/Login/recoverpassword?Email=abdulqadeerkhan070@gmail.com");
+                    //var responseTask = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/Estimate/" + 1108 + "?minorversion=23");
+                    //var visibilityresponse = await client.PostAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/vendor?minorversion=23", content);
+                    //responseTask.Wait();
+
+                    //var result = responseTask.Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        //var readTask = result.Content.ReadAsAsync<Bill>();
+                        //readTask.Wait();
+                        var readTask = response.Content.ReadAsStringAsync();
+                        readTask.Wait();
+                        string Test = readTask.Result;
+                        QBEstimateResponseClass.EstimateMain ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBEstimateResponseClass.EstimateMain>(Test);
+                        //BillInfo = JsonSerializer.Deserialize<Bill>(readTask.Result);
 
 
-                    //    ////client.BaseAddress = new Uri("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/purchaseorder/178?minorversion=23");
-                    //    ////HTTP GET
-                    //    var responseTask = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/bill/1?minorversion=23");
-                    //    responseTask.Wait();
-
-                    //    var result = responseTask.Result;
-                    //    if (result.IsSuccessStatusCode)
-                    //    {
-                    //        //var readTask = result.Content.ReadAsAsync<Bill>();
-                    //        //readTask.Wait();
-                    //        var readTask = result.Content.ReadAsStringAsync();
-                    //        readTask.Wait();
-                    //        string Test = readTask.Result;
-                    //        BillInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Bill>(Test);
-                    //        //BillInfo = JsonSerializer.Deserialize<Bill>(readTask.Result);
+                    }
+                    else
+                    {
+                        string errorMessage = await response.Content.ReadAsStringAsync();
+                    }
+                }
 
 
-                    //    }
-                    //    //else //web api sent error response 
-                    //    //{
-                    //    //    //log response status here..
-
-                    //    //    //purchaseorderInfo = Enumerable.Empty<PurchaseOrder>();
-
-                    //    //    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-                    //    //}
-                    //}
 
 
-                    string output = "Vendor Name: " + BillInfo.VendorRef.name+ " purchase order Number: " + BillInfo.VendorRef.name + ", " + BillInfo.VendorRef.name + ", " + BillInfo.VendorRef.name + " " + BillInfo.VendorRef.name;
+                string baseUrl = "https://sandbox-quickbooks.api.intuit.com";
+
+                // Endpoint
+                //string endpoint = "/v3/company/<realmID>/upload"; // Replace <realmID> with the actual realm ID
+
+                // Complete URL
+                //apiUrl = baseUrl + endpoint;
+
+                // Request body
+                var requestBody = new
+                {
+                    AttachableRef = new[]
+                    {
+                                new
+                                {
+                                    EntityRef = new
+                                    {
+                                        type = "Estimate",
+                                        value = "1108"
+                                    }
+                                }
+                            },
+                    //ContentType = "image/jpg",
+                    //FileName = "receipt_nov15.jpg"
+                };
+
+                // Serialize the request body to JSON
+                string jsonRequestBody = Newtonsoft.Json.JsonConvert.SerializeObject(requestBody);
+
+                using (var httpClient = new HttpClient())
+                using (var content = new MultipartFormDataContent())
+                {
+                    // Add AttachableRef as a JSON string
+                    //var attachableRefJson = "{\"AttachableRef\":[{\"EntityRef\":{\"type\":\"Invoice\",\"value\":\"95\"}}],\"ContentType\":\"image/jpg\",\"FileName\":\"receipt_nov15.jpg\"}";
+                    content.Add(new StringContent(jsonRequestBody), "application/json");
+
+                    // Load the file from a URL
+                    var fileUrl = "https://earthcoapi.yehtohoga.com/Uploading/Estimate/Estimate24108122023110150.png"; // Replace with the actual file URL
+                    //var fileUrl = src ={`https://earthcoapi.yehtohoga.com/${file.FilePath}`};
+                        var fileBytes = await httpClient.GetByteArrayAsync(fileUrl);
+                    var fileContent = new ByteArrayContent(fileBytes);
+                    content.Add(fileContent, "file", "receipt_nov15.jpg");
+
+                    // Make the POST request
+                    apiUrl = $"/v3/company/" + TokenData.realmId + "/upload";
+                    var requestUrl = $"{baseUrl}{apiUrl}";
+
+                    var response = await httpClient.PostAsync(requestUrl, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // Handle success
+                        Console.WriteLine("File uploaded successfully!");
+                    }
+                    else
+                    {
+                        // Handle failure
+                        Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+
+                        string errorMessage = await response.Content.ReadAsStringAsync();
+                    }
+                }
+
+
+
+                //using (var client = new HttpClient())
+                //{
+                //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oauthValidator.AccessToken);
+                //    //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //    Vendor billAddr = new Vendor
+                //    {
+                //        TaxIdentifier = "99-5688293",
+                //        AcctNum = "35372649",
+                //        Title = "Ms.",
+                //        GivenName = "Dianne12",
+                //        FamilyName = "Bradley12",
+                //        Suffix = "Sr.",
+                //        CompanyName = "Dianne's Auto Shop9",
+                //        DisplayName = "Dianne's Auto Shop9",
+                //        PrintOnCheckName = "Dianne's Auto Shop9"
+                //    };
+                //    //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oauthValidator.AccessToken);
+                //    //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //    string message;
+                //    var json = Newtonsoft.Json.JsonConvert.SerializeObject(billAddr);
+                //    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                //    var visibilityresponse = await client.PostAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/vendor?minorversion=23", content);
+                //    if (visibilityresponse.IsSuccessStatusCode)
+                //    {
+                //        var responseContent = await visibilityresponse.Content.ReadAsStringAsync();
+                //        message = Convert.ToString(responseContent);
+                //    }
+
+
+                //    ////client.BaseAddress = new Uri("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/purchaseorder/178?minorversion=23");
+                //    ////HTTP GET
+                //    var responseTask = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/bill/1?minorversion=23");
+                //    responseTask.Wait();
+
+                //    var result = responseTask.Result;
+                //    if (result.IsSuccessStatusCode)
+                //    {
+                //        //var readTask = result.Content.ReadAsAsync<Bill>();
+                //        //readTask.Wait();
+                //        var readTask = result.Content.ReadAsStringAsync();
+                //        readTask.Wait();
+                //        string Test = readTask.Result;
+                //        BillInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Bill>(Test);
+                //        //BillInfo = JsonSerializer.Deserialize<Bill>(readTask.Result);
+
+
+                //    }
+                //    //else //web api sent error response 
+                //    //{
+                //    //    //log response status here..
+
+                //    //    //purchaseorderInfo = Enumerable.Empty<PurchaseOrder>();
+
+                //    //    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+                //    //}
+                //}
+
+
+                string output = "Vendor Name: " + BillInfo.VendorRef.name+ " purchase order Number: " + BillInfo.VendorRef.name + ", " + BillInfo.VendorRef.name + ", " + BillInfo.VendorRef.name + " " + BillInfo.VendorRef.name;
                     //string output = "";
                     return View("ApiCallService", (object)("QBO API call Successful!! Response: " + output));
                 }
@@ -442,11 +552,108 @@ namespace EarthCo.Controllers
                 {
                     return View("ApiCallService", (object)("QBO API call Failed!" + " Error message: " + ex.Message));
                 }
-            }
-            else
-                return View("ApiCallService", (object)"QBO API call Failed!");
+            //}
+            //else
+            //    return View("ApiCallService", (object)"QBO API call Failed!");
         }
 
+
+
+        public async Task<ActionResult> GetItemsFromQB()
+        {
+            //if (Session["realmId"] != null)
+            //{
+
+            tblToken TokenData = DB.tblTokens.FirstOrDefault();
+
+
+            string realmId = TokenData.realmId;
+            try
+            {
+                var principal = User as ClaimsPrincipal;
+                //OAuth2RequestValidator oauthValidator1 = new OAuth2RequestValidator(principal.FindFirst("access_token").Value);
+                OAuth2RequestValidator oauthValidator = new OAuth2RequestValidator((string)TokenData.AccessToken);
+                ServiceContext serviceContext = new ServiceContext(realmId, IntuitServicesType.QBO, oauthValidator);
+                serviceContext.IppConfiguration.MinorVersion.Qbo = "23";
+                QueryService<Item> querySvc = new QueryService<Item>(serviceContext);
+                List<Item> ItemInfo = querySvc.ExecuteIdsQuery("select * from item").ToList();
+
+                tblItem ItemData = null;
+
+                foreach (Item item in ItemInfo)
+                {
+                    ItemData = new tblItem();
+                    ItemData.QBId = Convert.ToInt32(item.Id);
+                    ItemData.ItemName = item.Name;
+                    ItemData.SaleDescription = item.Description;
+                    ItemData.PurchaseDescription = item.Description;
+                    ItemData.Type = item.Type.ToString();
+                    ItemData.PurchasePrice =Convert.ToDouble(item.PurchaseCost);
+                    ItemData.SalePrice =Convert.ToDouble(item.UnitPrice);
+                    ItemData.isActive = true;
+                    ItemData.isDelete = false;
+                    ItemData.CreatedDate = DateTime.Now;
+                    ItemData.EditDate = DateTime.Now;
+                    DB.tblItems.Add(ItemData);
+                }
+                    DB.SaveChanges();
+
+
+                QueryService<Customer> CustomerquerySvc = new QueryService<Customer>(serviceContext);
+                List<Customer> CustomerInfo = CustomerquerySvc.ExecuteIdsQuery("select * from Customer").ToList();
+
+                tblUser CustomerData = null;
+
+                foreach (Customer item in CustomerInfo)
+                {
+                    CustomerData = new tblUser();
+                    CustomerData.QBId = Convert.ToInt32(item.Id);
+                    CustomerData.FirstName = item.GivenName!=null?item.GivenName:"";
+                    CustomerData.LastName = item.FamilyName != null ? item.FamilyName : "";
+                    CustomerData.CompanyName = item.CompanyName;
+                    CustomerData.Email = item.PrimaryEmailAddr!=null? item.PrimaryEmailAddr.Address:"";
+                    CustomerData.Phone = item.PrimaryPhone != null ? item.PrimaryPhone.FreeFormNumber:"";
+                    CustomerData.RoleId = 2;
+                    CustomerData.UserTypeId = 2;
+                    CustomerData.isLoginAllow = false;
+                    CustomerData.isActive = true;
+                    CustomerData.isDelete = false;
+                    CustomerData.CreatedDate = DateTime.Now;
+                    CustomerData.EditDate = DateTime.Now;
+                    DB.tblUsers.Add(CustomerData);
+                }
+                DB.SaveChanges();
+
+
+                return RedirectToAction("Tokens");
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return View("ApiCallService", (object)("QBO API call Failed!" + " Error message: " + dbEx.Message));
+            }
+            catch (Exception ex)
+            {
+                return View("ApiCallService", (object)("QBO API call Failed!" + " Error message: " + ex.Message));
+            }
+            //}
+            //else
+            //    return View("ApiCallService", (object)"QBO API call Failed!");
+        }
         /// <summary>
         /// Use the Index page of App controller to get all endpoints from discovery url
         /// </summary>

@@ -471,6 +471,8 @@
     <Compile Include="Models\PunchlistDetailItems.cs" />
     <Compile Include="Models\PurchaseOrderFile.cs" />
     <Compile Include="Models\PurchaseOrderList.cs" />
+    <Compile Include="Models\QBEstimateResponseClass.cs" />
+    <Compile Include="Models\QBItemResponseClass.cs" />
     <Compile Include="Models\ServerSideTableClass.cs" />
     <Compile Include="Models\ServiceRequestFile.cs" />
     <Compile Include="Models\SPGetBillData_Result.cs">

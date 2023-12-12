@@ -39,7 +39,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblContact> tblContacts { get; set; }
         public virtual DbSet<tblUserType> tblUserTypes { get; set; }
         public virtual DbSet<tblAccount> tblAccounts { get; set; }
-        public virtual DbSet<tblItem> tblItems { get; set; }
         public virtual DbSet<tblEstimateItem> tblEstimateItems { get; set; }
         public virtual DbSet<tblTag> tblTags { get; set; }
         public virtual DbSet<tblTerm> tblTerms { get; set; }
@@ -49,7 +48,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblPurchaseOrderItem> tblPurchaseOrderItems { get; set; }
         public virtual DbSet<tblSRItem> tblSRItems { get; set; }
         public virtual DbSet<tblPunchlist> tblPunchlists { get; set; }
-        public virtual DbSet<tblUser> tblUsers { get; set; }
         public virtual DbSet<tblInvoice> tblInvoices { get; set; }
         public virtual DbSet<tblIrrigation> tblIrrigations { get; set; }
         public virtual DbSet<tblPurchaseOrder> tblPurchaseOrders { get; set; }
@@ -75,6 +73,8 @@ namespace EarthCo.Models
         public virtual DbSet<tblPurchaseOrderStatu> tblPurchaseOrderStatus { get; set; }
         public virtual DbSet<tblSRStatu> tblSRStatus { get; set; }
         public virtual DbSet<tblEstimate> tblEstimates { get; set; }
+        public virtual DbSet<tblItem> tblItems { get; set; }
+        public virtual DbSet<tblUser> tblUsers { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {
