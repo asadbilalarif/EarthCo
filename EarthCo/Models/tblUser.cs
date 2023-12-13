@@ -18,10 +18,6 @@ namespace EarthCo.Models
         public tblUser()
         {
             this.tblBills = new HashSet<tblBill>();
-            this.tblEstimates = new HashSet<tblEstimate>();
-            this.tblEstimates1 = new HashSet<tblEstimate>();
-            this.tblEstimates2 = new HashSet<tblEstimate>();
-            this.tblEstimates3 = new HashSet<tblEstimate>();
             this.tblInvoices = new HashSet<tblInvoice>();
             this.tblInvoices1 = new HashSet<tblInvoice>();
             this.tblIrrigations = new HashSet<tblIrrigation>();
@@ -34,6 +30,10 @@ namespace EarthCo.Models
             this.tblServiceRequests = new HashSet<tblServiceRequest>();
             this.tblServiceRequests1 = new HashSet<tblServiceRequest>();
             this.tblSettings = new HashSet<tblSetting>();
+            this.tblEstimates = new HashSet<tblEstimate>();
+            this.tblEstimates1 = new HashSet<tblEstimate>();
+            this.tblEstimates2 = new HashSet<tblEstimate>();
+            this.tblEstimates3 = new HashSet<tblEstimate>();
         }
     
         public int UserId { get; set; }
@@ -71,14 +71,6 @@ namespace EarthCo.Models
         public virtual ICollection<tblBill> tblBills { get; set; }
         public virtual tblCustomerType tblCustomerType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblEstimate> tblEstimates { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblEstimate> tblEstimates1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblEstimate> tblEstimates2 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblEstimate> tblEstimates3 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoice> tblInvoices { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoice> tblInvoices1 { get; set; }
@@ -104,5 +96,13 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSetting> tblSettings { get; set; }
         public virtual tblUserType tblUserType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEstimate> tblEstimates { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEstimate> tblEstimates1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEstimate> tblEstimates2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEstimate> tblEstimates3 { get; set; }
     }
 }

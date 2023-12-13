@@ -248,12 +248,31 @@ namespace EarthCo.Controllers
             //if (Session["realmId"] != null)
             //{
 
-                tblToken TokenData = DB.tblTokens.FirstOrDefault();
+            tblToken TokenData = DB.tblTokens.FirstOrDefault();
+            string AccessToken = "";
+
+            var diffOfDates = DateTime.Now - TokenData.EditDate;
+            do
+            {
+                DB = new earthcoEntities();
+                TokenData = DB.tblTokens.FirstOrDefault();
+                diffOfDates = DateTime.Now - TokenData.EditDate;
+                if (diffOfDates.Value.Hours > 1)
+                {
+                    HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                }
+            } while (diffOfDates.Value.Hours > 1);
+
+            AccessToken = TokenData.AccessToken;
 
 
-                string realmId = TokenData.realmId;
+            string realmId = TokenData.realmId;
                 try
                 {
+
+
+
+
                     var principal = User as ClaimsPrincipal;
                     //OAuth2RequestValidator oauthValidator1 = new OAuth2RequestValidator(principal.FindFirst("access_token").Value);
                     OAuth2RequestValidator oauthValidator = new OAuth2RequestValidator((string)TokenData.AccessToken);
@@ -291,62 +310,64 @@ namespace EarthCo.Controllers
                     // API endpoint URL
                     string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/estimate?minorversion=23";
 
-                    // Request body data
-                    //var requestData = new
-                    //{
-                    //    TaxIdentifier = "99-5688293",
-                    //    AcctNum = "35372649",
-                    //    Title = "Ms.",
-                    //    GivenName = "Test",
-                    //    FamilyName = "Test",
-                    //    Suffix = "Sr.",
-                    //    CompanyName = "Dianne's Auto Shop6",
-                    //    DisplayName = "Dianne's Auto Shop6",
-                    //    PrintOnCheckName = "Dianne's Auto Shop1"
-                    //};
+                // Request body data
+                //var requestData = new
+                //{
+                //    TaxIdentifier = "99-5688293",
+                //    AcctNum = "35372649",
+                //    Title = "Ms.",
+                //    GivenName = "Test",
+                //    FamilyName = "Test",
+                //    Suffix = "Sr.",
+                //    CompanyName = "Dianne's Auto Shop6",
+                //    DisplayName = "Dianne's Auto Shop6",
+                //    PrintOnCheckName = "Dianne's Auto Shop1"
+                //};
 
 
-                    //Vendor billAddr = new Vendor
-                    //{
-                    //    TaxIdentifier = "99-5688293",
-                    //    AcctNum = "35372649",
-                    //    Title = "Ms.",
-                    //    GivenName = "Dianne12",
-                    //    FamilyName = "Bradley12",
-                    //    Suffix = "Sr.",
-                    //    CompanyName = "Dianne's Auto Shop6",
-                    //    DisplayName = "Dianne's Auto Shop6",
-                    //    PrintOnCheckName = "Dianne's Auto Shop6"
-                    //};
+                //Vendor billAddr = new Vendor
+                //{
+                //    TaxIdentifier = "99-5688293",
+                //    AcctNum = "35372649",
+                //    Title = "Ms.",
+                //    GivenName = "Dianne12",
+                //    FamilyName = "Bradley12",
+                //    Suffix = "Sr.",
+                //    CompanyName = "Dianne's Auto Shop6",
+                //    DisplayName = "Dianne's Auto Shop6",
+                //    PrintOnCheckName = "Dianne's Auto Shop6"
+                //};
 
-                    QBEstimateClass EsitimateData = new QBEstimateClass();
-                    Models.EstimateQB.Line LineData = new Models.EstimateQB.Line();
-                    EsitimateData.BillEmail = new BillEmail();
-                    //EsitimateData.BillEmail.Address = "Cool_Cars@intuit.com";
-                    EsitimateData.TotalAmt = 105;
-                    //EsitimateData.SyncToken = "0";
-                    //EsitimateData.Id = "1103";
-                    EsitimateData.CustomerRef = new CustomerRef();
-                    EsitimateData.CustomerRef.value = "3";
-                    //EsitimateData.CustomerRef.name = "Cool Cars";
-                    //LineData.Id = "1";
-                    LineData.Description = "Pest Control Services";
-                    LineData.Amount = 105;
-                    LineData.DetailType = "SalesItemLineDetail";
-                    LineData.SalesItemLineDetail = new Models.EstimateQB.SalesItemLineDetail();
-                    LineData.SalesItemLineDetail.ItemRef = new ItemRef();
-                    LineData.SalesItemLineDetail.ItemRef.value = "10";
-                    //LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
-                    LineData.SalesItemLineDetail.UnitPrice = 35;
-                    LineData.SalesItemLineDetail.Qty = 3;
-                    EsitimateData.Line = new List<Models.EstimateQB.Line>();
-                    EsitimateData.Line.Add(LineData);
+                QBEstimateClass EsitimateData = new QBEstimateClass();
+                Models.EstimateQB.Line LineData = new Models.EstimateQB.Line();
+                EsitimateData.BillEmail = new BillEmail();
+                //EsitimateData.BillEmail.Address = "Cool_Cars@intuit.com";
+                EsitimateData.TotalAmt = 105;
+                EsitimateData.SyncToken = "2";
+                EsitimateData.Id = "1103";
+                EsitimateData.CustomerRef = new CustomerRef();
+                EsitimateData.CustomerRef.value = "3";
+                //EsitimateData.CustomerRef.name = "Cool Cars";
+                //LineData.Id = "1";
+                LineData.Description = "Test";
+                LineData.Amount = 105;
+                LineData.DetailType = "SalesItemLineDetail";
+                LineData.SalesItemLineDetail = new Models.EstimateQB.SalesItemLineDetail();
+                LineData.SalesItemLineDetail.ItemRef = new ItemRef();
+                LineData.SalesItemLineDetail.ItemRef.value = "9";
+                //LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
+                LineData.SalesItemLineDetail.UnitPrice = 35;
+                LineData.SalesItemLineDetail.Qty = 3;
+                EsitimateData.Line = new List<Models.EstimateQB.Line>();
+                EsitimateData.Line.Add(LineData);
 
+                //QBDeleteClass DeleteData = new QBDeleteClass();
+                //Data = DB.tblEstimates.Where(x => x.EstimateId == SyncLog.Id).FirstOrDefault();
+                //DeleteData.Id = "1108";
+                //DeleteData.SyncToken = "0";
 
-
-                    // Convert the request body to JSON
-                    string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(EsitimateData);
-
+                // Convert the request body to JSON
+                string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(EsitimateData);
                     // Create HttpClient
                     using (HttpClient client = new HttpClient())
                     {
@@ -372,6 +393,7 @@ namespace EarthCo.Controllers
 
                         // Now you can access the data using the model
                         var estimateId = estimateModel["Estimate"]["Id"];
+                        var SyncToken = estimateModel["Estimate"]["SyncToken"];
                         // Process jsonResponse
                         return View();
                         }

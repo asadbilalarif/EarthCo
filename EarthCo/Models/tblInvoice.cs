@@ -61,8 +61,8 @@ namespace EarthCo.Models
         public virtual ICollection<tblInvoiceFile> tblInvoiceFiles { get; set; }
         public virtual tblServiceLocation tblServiceLocation { get; set; }
         public virtual tblInvoiceStatu tblInvoiceStatu { get; set; }
-        public virtual tblEstimate tblEstimate { get; set; }
         public virtual tblUser tblUser { get; set; }
         public virtual tblUser tblUser1 { get; set; }
+        public virtual tblEstimate tblEstimate { get; set; }
     }
 }

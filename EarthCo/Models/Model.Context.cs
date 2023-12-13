@@ -39,7 +39,6 @@ namespace EarthCo.Models
         public virtual DbSet<tblContact> tblContacts { get; set; }
         public virtual DbSet<tblUserType> tblUserTypes { get; set; }
         public virtual DbSet<tblAccount> tblAccounts { get; set; }
-        public virtual DbSet<tblEstimateItem> tblEstimateItems { get; set; }
         public virtual DbSet<tblTag> tblTags { get; set; }
         public virtual DbSet<tblTerm> tblTerms { get; set; }
         public virtual DbSet<tblBillItem> tblBillItems { get; set; }
@@ -72,9 +71,10 @@ namespace EarthCo.Models
         public virtual DbSet<tblPunchlistStatu> tblPunchlistStatus { get; set; }
         public virtual DbSet<tblPurchaseOrderStatu> tblPurchaseOrderStatus { get; set; }
         public virtual DbSet<tblSRStatu> tblSRStatus { get; set; }
-        public virtual DbSet<tblEstimate> tblEstimates { get; set; }
         public virtual DbSet<tblItem> tblItems { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
+        public virtual DbSet<tblEstimateItem> tblEstimateItems { get; set; }
+        public virtual DbSet<tblEstimate> tblEstimates { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {
@@ -83,15 +83,6 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateFileData_Result>("SPGetEstimateFileData", iDParameter);
-        }
-    
-        public virtual ObjectResult<SPGetEstimateItemData_Result> SPGetEstimateItemData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateItemData_Result>("SPGetEstimateItemData", iDParameter);
         }
     
         public virtual ObjectResult<SPGetPurchaseOrderFileData_Result> SPGetPurchaseOrderFileData(Nullable<int> iD)
@@ -404,15 +395,6 @@ namespace EarthCo.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPurchaseOrderData_Result>("SPGetPurchaseOrderData", iDParameter);
         }
     
-        public virtual ObjectResult<SPGetEstimateData_Result> SPGetEstimateData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateData_Result>("SPGetEstimateData", iDParameter);
-        }
-    
         public virtual ObjectResult<SPGetServiceRequestData_Result> SPGetServiceRequestData(Nullable<int> iD)
         {
             var iDParameter = iD.HasValue ?
@@ -429,6 +411,24 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPunchlistData_Result>("SPGetPunchlistData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetEstimateItemData_Result> SPGetEstimateItemData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateItemData_Result>("SPGetEstimateItemData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetEstimateData_Result> SPGetEstimateData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateData_Result>("SPGetEstimateData", iDParameter);
         }
     }
 }

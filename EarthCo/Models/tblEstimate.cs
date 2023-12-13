@@ -25,14 +25,14 @@ namespace EarthCo.Models
     
         public int EstimateId { get; set; }
         public string EstimateNumber { get; set; }
-        public int ServiceLocationId { get; set; }
+        public Nullable<int> ServiceLocationId { get; set; }
         public string Email { get; set; }
         public Nullable<System.DateTime> IssueDate { get; set; }
         public int CustomerId { get; set; }
-        public int ContactId { get; set; }
-        public int RegionalManagerId { get; set; }
-        public int AssignTo { get; set; }
-        public int RequestedBy { get; set; }
+        public Nullable<int> ContactId { get; set; }
+        public Nullable<int> RegionalManagerId { get; set; }
+        public Nullable<int> AssignTo { get; set; }
+        public Nullable<int> RequestedBy { get; set; }
         public int EstimateStatusId { get; set; }
         public string QBStatus { get; set; }
         public string EstimateNotes { get; set; }
@@ -42,10 +42,10 @@ namespace EarthCo.Models
         public Nullable<double> Discount { get; set; }
         public Nullable<double> Shipping { get; set; }
         public Nullable<double> Profit { get; set; }
-        public double ProfitPercentage { get; set; }
+        public Nullable<double> ProfitPercentage { get; set; }
         public string Tags { get; set; }
         public string DocNumber { get; set; }
-        public int CreatedBy { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
@@ -54,21 +54,22 @@ namespace EarthCo.Models
         public Nullable<double> TotalAmount { get; set; }
         public Nullable<double> BalanceAmount { get; set; }
         public Nullable<int> QBId { get; set; }
+        public string SyncToken { get; set; }
     
         public virtual tblContact tblContact { get; set; }
         public virtual tblEstimateStatu tblEstimateStatu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimateItem> tblEstimateItems { get; set; }
         public virtual tblServiceLocation tblServiceLocation { get; set; }
+        public virtual tblUser tblUser { get; set; }
+        public virtual tblUser tblUser1 { get; set; }
+        public virtual tblUser tblUser2 { get; set; }
+        public virtual tblUser tblUser3 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimateFile> tblEstimateFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoice> tblInvoices { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders { get; set; }
-        public virtual tblUser tblUser { get; set; }
-        public virtual tblUser tblUser1 { get; set; }
-        public virtual tblUser tblUser2 { get; set; }
-        public virtual tblUser tblUser3 { get; set; }
     }
 }

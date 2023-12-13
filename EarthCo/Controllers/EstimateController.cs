@@ -891,7 +891,6 @@ namespace EarthCo.Controllers
                     if (Result==null)
                     {
                         Result = new tblSyncLog();
-                        Result = new tblSyncLog();
                         Result.Id = Data.EstimateId;
                         Result.Name = "Estimate";
                         Result.Operation = "Update";

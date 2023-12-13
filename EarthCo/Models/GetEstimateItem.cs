@@ -20,7 +20,7 @@ namespace EarthCo.Models
         public string PurchaseOrderNumber { get; set; }
         public string BillNumber { get; set; }
         public string InvoiceNumber { get; set; }
-        public double ProfitPercentage { get; set; }
+        public double? ProfitPercentage { get; set; }
         public double EstimateAmount { get; set; }
     }
 }

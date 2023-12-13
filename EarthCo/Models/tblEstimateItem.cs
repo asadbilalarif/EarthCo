@@ -18,20 +18,20 @@ namespace EarthCo.Models
         public int ItemId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int Qty { get; set; }
-        public double Rate { get; set; }
-        public double Amount { get; set; }
+        public Nullable<int> Qty { get; set; }
+        public Nullable<double> Rate { get; set; }
+        public Nullable<double> Amount { get; set; }
         public Nullable<double> Tax { get; set; }
         public bool isCost { get; set; }
         public int EstimateId { get; set; }
-        public int CreatedBy { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
     
-        public virtual tblEstimate tblEstimate { get; set; }
         public virtual tblItem tblItem { get; set; }
+        public virtual tblEstimate tblEstimate { get; set; }
     }
 }
