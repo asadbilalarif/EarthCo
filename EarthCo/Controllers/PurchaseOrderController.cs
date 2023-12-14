@@ -436,6 +436,17 @@ namespace EarthCo.Controllers
                         }
                     }
 
+
+                    tblSyncLog Result = new tblSyncLog();
+                    Result.Id = Data.EstimateId;
+                    Result.Name = "PurchaseOrder";
+                    Result.Operation = "Create";
+                    Result.CreatedDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
                     LogData.Action = "Add Purchase Order";
@@ -574,7 +585,32 @@ namespace EarthCo.Controllers
                         }
                     }
 
-
+                    tblSyncLog Result = new tblSyncLog();
+                    Result = DB.tblSyncLogs.Where(x => x.Id == Data.EstimateId && x.Name == "PurchaseOrder").FirstOrDefault();
+                    if (Result == null)
+                    {
+                        Result = new tblSyncLog();
+                        Result.Id = Data.EstimateId;
+                        Result.Name = "PurchaseOrder";
+                        Result.Operation = "Update";
+                        Result.EditDate = DateTime.Now;
+                        Result.isQB = false;
+                        Result.isSync = false;
+                        DB.tblSyncLogs.Add(Result);
+                        DB.SaveChanges();
+                    }
+                    else
+                    {
+                        Result.QBId = 0;
+                        Result.Id = Data.EstimateId;
+                        Result.Name = "PurchaseOrder";
+                        Result.Operation = "Update";
+                        Result.EditDate = DateTime.Now;
+                        Result.isQB = false;
+                        Result.isSync = false;
+                        DB.Entry(Result);
+                        DB.SaveChanges();
+                    }
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
                     LogData.Action = "Update Purchase Order";
@@ -664,6 +700,34 @@ namespace EarthCo.Controllers
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
+
+                tblSyncLog Result = new tblSyncLog();
+                Result = DB.tblSyncLogs.Where(x => x.Id == Data.EstimateId && x.Name == "PurchaseOrder").FirstOrDefault();
+                if (Result == null)
+                {
+                    Result = new tblSyncLog();
+                    Result.Id = Data.EstimateId;
+                    Result.Name = "PurchaseOrder";
+                    Result.Operation = "Delete";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+                }
+                else
+                {
+                    Result.QBId = 0;
+                    Result.Id = Data.EstimateId;
+                    Result.Name = "PurchaseOrder";
+                    Result.Operation = "Delete";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.Entry(Result);
+                    DB.SaveChanges();
+                }
+
                 return Ok("Purchase Order has been deleted successfully.");
             }
             catch (DbEntityValidationException dbEx)

@@ -19,9 +19,9 @@ namespace EarthCo.Models
         public string Tags { get; set; }
         public System.DateTime Date { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
-        public int RegionalManager { get; set; }
+        public Nullable<int> RegionalManager { get; set; }
         public Nullable<int> TermId { get; set; }
-        public int Requestedby { get; set; }
+        public Nullable<int> Requestedby { get; set; }
         public int StatusId { get; set; }
         public string InvoiceNumber { get; set; }
         public Nullable<int> InvoiceId { get; set; }
@@ -34,12 +34,14 @@ namespace EarthCo.Models
         public string ShipTo { get; set; }
         public double Amount { get; set; }
         public string DocNumber { get; set; }
-        public int CreatedBy { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
+        public Nullable<int> QBId { get; set; }
+        public string SyncToken { get; set; }
         public string SupplierAddress { get; set; }
         public string SupplierName { get; set; }
     }

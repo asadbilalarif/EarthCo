@@ -25,18 +25,14 @@
         <EntityTypeShape EntityType="earthcoModel.tblBillItem" Width="1.5" PointX="32.625" PointY="10.625" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblInvoiceItem" Width="1.5" PointX="35.375" PointY="10.875" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblPunchlistItem" Width="1.5" PointX="32" PointY="15.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="earthcoModel.tblPurchaseOrderItem" Width="1.5" PointX="33.375" PointY="2.125" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblSRItem" Width="1.5" PointX="22.5" PointY="12.125" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblPunchlist" Width="1.5" PointX="27.5" PointY="9.875" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK_tblPunchlist_tblContact" />
         <EntityTypeShape EntityType="earthcoModel.tblInvoice" Width="1.5" PointX="31.125" PointY="2.75" IsExpanded="false" />
         <EntityTypeShape EntityType="earthcoModel.tblIrrigation" Width="1.5" PointX="20.25" PointY="15.375" IsExpanded="false" />
-        <EntityTypeShape EntityType="earthcoModel.tblPurchaseOrder" Width="1.5" PointX="28.125" PointY="0.75" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblContact" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblTerm" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoiceItem_tblInvoice" />
-        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblTerm" />
-        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrderItem_tblPurchaseOrder" />
         <EntityTypeShape EntityType="earthcoModel.tblBill" Width="1.5" PointX="30.375" PointY="0.75" />
         <EntityTypeShape EntityType="earthcoModel.tblBillFile" Width="1.5" PointX="32.625" PointY="21.875" />
         <EntityTypeShape EntityType="earthcoModel.tblEstimateFile" Width="1.5" PointX="24.875" PointY="5.875" IsExpanded="false" />
@@ -44,14 +40,12 @@
         <EntityTypeShape EntityType="earthcoModel.tblPunchlistDetail" Width="1.5" PointX="29.75" PointY="17.625" />
         <EntityTypeShape EntityType="earthcoModel.tblPurchaseOrderFile" Width="1.5" PointX="30.375" PointY="13.125" />
         <EntityTypeShape EntityType="earthcoModel.tblSRFile" Width="1.5" PointX="22.5" PointY="25.875" />
-        <AssociationConnector Association="earthcoModel.FK_tblBill_tblPurchaseOrder" />
         <AssociationConnector Association="earthcoModel.FK_tblBill_tblTerm" />
         <AssociationConnector Association="earthcoModel.FK_tblBillFile_tblBill" />
         <AssociationConnector Association="earthcoModel.FK_tblBillItem_tblBill" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoiceFile_tblInvoice" />
         <AssociationConnector Association="earthcoModel.FK_tblPunchlistDetail_tblPunchlist" />
         <AssociationConnector Association="earthcoModel.FK__tblPunchl__Punch__5AEE82B9" />
-        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrderFile_tblPurchaseOrder" />
         <EntityTypeShape EntityType="earthcoModel.tblController" Width="1.5" PointX="22.5" PointY="13.75" IsExpanded="false" />
         <AssociationConnector Association="earthcoModel.FK__tblContro__Irrig__5441852A" />
         <EntityTypeShape EntityType="earthcoModel.tblMonthlyLandsacpe" Width="1.5" PointX="3" PointY="9.875" IsExpanded="false" />
@@ -78,7 +72,6 @@
         <EntityTypeShape EntityType="earthcoModel.tblSRStatu" Width="1.5" PointX="0.75" PointY="6.875" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblInvoiceStatus" />
         <AssociationConnector Association="earthcoModel.FK_tblPunchlist_tblPunchlistStatus" />
-        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblPurchaseOrderStatus" />
         <AssociationConnector Association="earthcoModel.FK__tblServic__SRSta__45F365D3" />
         <EntityTypeShape EntityType="earthcoModel.tblItem" Width="1.5" PointX="15.625" PointY="14.875" />
         <AssociationConnector Association="earthcoModel.FK_tblItem_tblAccount" />
@@ -86,7 +79,6 @@
         <AssociationConnector Association="earthcoModel.FK_tblBillItem_tblItem" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoiceItem_tblItem" />
         <AssociationConnector Association="earthcoModel.FK_tblPunchlistItem_tblItem" />
-        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrderItem_tblItem" />
         <AssociationConnector Association="earthcoModel.FK_tblSRItem_tblItem" />
         <EntityTypeShape EntityType="earthcoModel.tblUser" Width="1.5" PointX="18" PointY="3.375" />
         <AssociationConnector Association="earthcoModel.FK_tblBill_tblUser" />
@@ -96,9 +88,6 @@
         <AssociationConnector Association="earthcoModel.FK_tblIrrigation_tblUser" />
         <AssociationConnector Association="earthcoModel.FK__tblPunchl__Custo__571DF1D5" />
         <AssociationConnector Association="earthcoModel.FK_tblPunchlist_tblUser" />
-        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser" />
-        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser1" />
-        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser2" />
         <AssociationConnector Association="earthcoModel.FK_tblUser_tblRole" />
         <AssociationConnector Association="earthcoModel.FK_tblServiceLocation_tblCustomer" />
         <AssociationConnector Association="earthcoModel.FK__tblServic__Custo__440B1D61" />
@@ -118,7 +107,18 @@
         <AssociationConnector Association="earthcoModel.FK_tblEstimate_tblUser3" />
         <AssociationConnector Association="earthcoModel.FK_tblEstimateFile_tblEstimate" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblPurchaseOrder" />
+        <EntityTypeShape EntityType="earthcoModel.tblPurchaseOrder" Width="1.5" PointX="35.125" PointY="13.875" />
+        <EntityTypeShape EntityType="earthcoModel.tblPurchaseOrderItem" Width="1.5" PointX="37.375" PointY="16" />
+        <AssociationConnector Association="earthcoModel.FK_tblBill_tblPurchaseOrder" />
         <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblEstimate" />
+        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrderItem_tblItem" />
+        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblPurchaseOrderStatus" />
+        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblTerm" />
+        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser1" />
+        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser2" />
+        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrderFile_tblPurchaseOrder" />
+        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrderItem_tblPurchaseOrder" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

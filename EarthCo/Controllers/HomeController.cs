@@ -20,6 +20,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using static EarthCo.Models.EstimateQB;
+using static EarthCo.Models.QBErrorClass;
+using static EarthCo.Models.PurchaseOrderQB;
+using static EarthCo.Models.QBPurchaseOrderCUClass;
 
 namespace EarthCo.Controllers
 {
@@ -257,11 +260,11 @@ namespace EarthCo.Controllers
                 DB = new earthcoEntities();
                 TokenData = DB.tblTokens.FirstOrDefault();
                 diffOfDates = DateTime.Now - TokenData.EditDate;
-                if (diffOfDates.Value.Hours > 1)
+                if (diffOfDates.Value.Hours >= 1)
                 {
                     HomeController.GetAuthTokensUsingRefreshTokenAsync();
                 }
-            } while (diffOfDates.Value.Hours > 1);
+            } while (diffOfDates.Value.Hours >= 1);
 
             AccessToken = TokenData.AccessToken;
 
@@ -280,35 +283,37 @@ namespace EarthCo.Controllers
                     serviceContext.IppConfiguration.MinorVersion.Qbo = "23";
                     QueryService<Bill> querySvc = new QueryService<Bill>(serviceContext);
                     Bill BillInfo = querySvc.ExecuteIdsQuery("Select * from Bill startposition 1 maxresults 5").FirstOrDefault();
-                    //OAuth2RequestValidator oauthValidator = new OAuth2RequestValidator("eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..mZ904VehGCHcCHFNgdNSTg.wwDmKFjYHJ33Wsp-1UBTEVYcv08rrOtpEuoVFT-lz5osH6tInjVg1Ba6QOCcBjvZrXs60aPazHc3_BnyYIHhtZgcVeBfx-2Lvxu6UijcA7Gu7zbzeYcuE3hOm45zA-IywTRWOtgMfMUmsHF2ba4RA48LeRMe90nyTuCamGlRAMm0W2FkDkdnStzmCkkDbzwAp9zPdHi9aMj-MtBkFMHZ-bTBZhKRoM0zIQqeMQduu7Cc-iHBn7NFOxVs2Y4zkSaT9s2uthz8nqI53U61V0MnxkgzMFKjAzscET0zlDFPx9oMDquHLJYVQYkZ1bSsqvdM8soEx4L3JAxfMbCE8PLOH-u008kCF_JRYAyo45wPrn8LzwLGaDkCE3tgs-lTxkXlpsx3IiF9fbBkY_UUWgf8N_PL8Hbz_VN71dJt5r1-4HM6P_7uvHAeWYACF4Wv7kX2MxFk2CBMbkNpxFWtVbu8N73UySNp2f6oxEwlE2N4-GOD4h-i3NTcawwyJvKkqxaaQZ_3bzYtEuwH24dyhYtfHXkxHMkppfOSG_CAsCB9vsmGAErWYweJQ8qVSZ_RYhtmUZP9LYr9L4vFIBsqVmtgt2VJPAmq0tmHSue1djjWIvmfPRx7meeBS6Wf-J2UDV59_KBQ1lwviWK0qlCQoqedtJj3HWQGIfggtJguYZZyIz6NjRO9C080T7u1mWqsjS0QeVDlQ7-mhOcC2BKHtbap42kNB9F0-A-uLEF9vVWAhPEsUNACclLCGxOpxJ-lzWSO.SzaObelYr0P4qdhZ4DUH0A");
+                //OAuth2RequestValidator oauthValidator = new OAuth2RequestValidator("eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..mZ904VehGCHcCHFNgdNSTg.wwDmKFjYHJ33Wsp-1UBTEVYcv08rrOtpEuoVFT-lz5osH6tInjVg1Ba6QOCcBjvZrXs60aPazHc3_BnyYIHhtZgcVeBfx-2Lvxu6UijcA7Gu7zbzeYcuE3hOm45zA-IywTRWOtgMfMUmsHF2ba4RA48LeRMe90nyTuCamGlRAMm0W2FkDkdnStzmCkkDbzwAp9zPdHi9aMj-MtBkFMHZ-bTBZhKRoM0zIQqeMQduu7Cc-iHBn7NFOxVs2Y4zkSaT9s2uthz8nqI53U61V0MnxkgzMFKjAzscET0zlDFPx9oMDquHLJYVQYkZ1bSsqvdM8soEx4L3JAxfMbCE8PLOH-u008kCF_JRYAyo45wPrn8LzwLGaDkCE3tgs-lTxkXlpsx3IiF9fbBkY_UUWgf8N_PL8Hbz_VN71dJt5r1-4HM6P_7uvHAeWYACF4Wv7kX2MxFk2CBMbkNpxFWtVbu8N73UySNp2f6oxEwlE2N4-GOD4h-i3NTcawwyJvKkqxaaQZ_3bzYtEuwH24dyhYtfHXkxHMkppfOSG_CAsCB9vsmGAErWYweJQ8qVSZ_RYhtmUZP9LYr9L4vFIBsqVmtgt2VJPAmq0tmHSue1djjWIvmfPRx7meeBS6Wf-J2UDV59_KBQ1lwviWK0qlCQoqedtJj3HWQGIfggtJguYZZyIz6NjRO9C080T7u1mWqsjS0QeVDlQ7-mhOcC2BKHtbap42kNB9F0-A-uLEF9vVWAhPEsUNACclLCGxOpxJ-lzWSO.SzaObelYr0P4qdhZ4DUH0A");
 
-                    // Create a ServiceContext with Auth tokens and realmId
+                // Create a ServiceContext with Auth tokens and realmId
 
-                    // Create a QuickBooks QueryService using ServiceContext
-                    //QueryService<CompanyInfo> querySvc = new QueryService<CompanyInfo>(serviceContext);
-                    //QueryService<PurchaseOrder> querySvc = new QueryService<PurchaseOrder>(serviceContext);
-                    //CompanyInfo companyInfo = querySvc.ExecuteIdsQuery("SELECT * FROM CompanyInfo").FirstOrDefault();
-                    //PurchaseOrder purchaseorderInfo = querySvc.ExecuteIdsQuery("select * from purchaseorder startposition 1 maxresults 5").FirstOrDefault();
-                    //Bill BillInfo = new Bill();
-                    //BillPayment BillInfo1 = new BillPayment();
+                // Create a QuickBooks QueryService using ServiceContext
+                //QueryService<CompanyInfo> querySvc = new QueryService<CompanyInfo>(serviceContext);
+                //QueryService<PurchaseOrder> querySvc = new QueryService<PurchaseOrder>(serviceContext);
+                //CompanyInfo companyInfo = querySvc.ExecuteIdsQuery("SELECT * FROM CompanyInfo").FirstOrDefault();
+                //PurchaseOrder purchaseorderInfo = querySvc.ExecuteIdsQuery("select * from purchaseorder startposition 1 maxresults 5").FirstOrDefault();
+                //Bill BillInfo = new Bill();
+                //BillPayment BillInfo1 = new BillPayment();
 
-                    //using (var client = new HttpClient())
-                    //{
-                    //    client.BaseAddress = new Uri("https://sandbox-quickbooks.api.intuit.com/");
+                //using (var client = new HttpClient())
+                //{
+                //    client.BaseAddress = new Uri("https://sandbox-quickbooks.api.intuit.com/");
 
-                    //    //HTTP POST
-                    //    var postTask = client.PostAsJsonAsync<PurchaseOrder>("student", student);
-                    //    postTask.Wait();
+                //    //HTTP POST
+                //    var postTask = client.PostAsJsonAsync<PurchaseOrder>("student", student);
+                //    postTask.Wait();
 
-                    //    var result = postTask.Result;
-                    //    if (result.IsSuccessStatusCode)
-                    //    {
-                    //        return RedirectToAction("Index");
-                    //    }
-                    //}
+                //    var result = postTask.Result;
+                //    if (result.IsSuccessStatusCode)
+                //    {
+                //        return RedirectToAction("Index");
+                //    }
+                //}
 
-                    // API endpoint URL
-                    string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/estimate?minorversion=23";
+                // API endpoint URL
+                //string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/estimate?minorversion=23";
+                string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/purchaseorder?minorversion=23";
+                //string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/estimate?operation=delete";
 
                 // Request body data
                 //var requestData = new
@@ -339,37 +344,62 @@ namespace EarthCo.Controllers
                 //};
 
                 QBEstimateClass EsitimateData = new QBEstimateClass();
-                Models.EstimateQB.Line LineData = new Models.EstimateQB.Line();
-                EsitimateData.BillEmail = new BillEmail();
-                //EsitimateData.BillEmail.Address = "Cool_Cars@intuit.com";
-                EsitimateData.TotalAmt = 105;
-                EsitimateData.SyncToken = "2";
-                EsitimateData.Id = "1103";
-                EsitimateData.CustomerRef = new CustomerRef();
-                EsitimateData.CustomerRef.value = "3";
-                //EsitimateData.CustomerRef.name = "Cool Cars";
-                //LineData.Id = "1";
-                LineData.Description = "Test";
-                LineData.Amount = 105;
-                LineData.DetailType = "SalesItemLineDetail";
-                LineData.SalesItemLineDetail = new Models.EstimateQB.SalesItemLineDetail();
-                LineData.SalesItemLineDetail.ItemRef = new ItemRef();
-                LineData.SalesItemLineDetail.ItemRef.value = "9";
-                //LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
-                LineData.SalesItemLineDetail.UnitPrice = 35;
-                LineData.SalesItemLineDetail.Qty = 3;
-                EsitimateData.Line = new List<Models.EstimateQB.Line>();
-                EsitimateData.Line.Add(LineData);
+                //Models.EstimateQB.Line LineData = new Models.EstimateQB.Line();
+                //EsitimateData.BillEmail = new BillEmail();
+                ////EsitimateData.BillEmail.Address = "Cool_Cars@intuit.com";
+                //EsitimateData.TotalAmt = 105;
+                //EsitimateData.SyncToken = "2";
+                //EsitimateData.Id = "1103";
+                //EsitimateData.CustomerRef = new CustomerRef();
+                //EsitimateData.CustomerRef.value = "3";
+                ////EsitimateData.CustomerRef.name = "Cool Cars";
+                ////LineData.Id = "1";
+                //LineData.Description = "Test";
+                //LineData.Amount = 105;
+                //LineData.DetailType = "SalesItemLineDetail";
+                //LineData.SalesItemLineDetail = new Models.EstimateQB.SalesItemLineDetail();
+                //LineData.SalesItemLineDetail.ItemRef = new ItemRef();
+                //LineData.SalesItemLineDetail.ItemRef.value = "9";
+                ////LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
+                //LineData.SalesItemLineDetail.UnitPrice = 35;
+                //LineData.SalesItemLineDetail.Qty = 3;
+                //EsitimateData.Line = new List<Models.EstimateQB.Line>();
+                //EsitimateData.Line.Add(LineData);
 
                 //QBDeleteClass DeleteData = new QBDeleteClass();
-                //Data = DB.tblEstimates.Where(x => x.EstimateId == SyncLog.Id).FirstOrDefault();
+                ////Data = DB.tblEstimates.Where(x => x.EstimateId == SyncLog.Id).FirstOrDefault();
                 //DeleteData.Id = "1108";
                 //DeleteData.SyncToken = "0";
 
+                QBPurchaseOrderClass PurchaseOrderData = new QBPurchaseOrderClass();
+                Models.QBPurchaseOrderCUClass.LineDetail LineData = new Models.QBPurchaseOrderCUClass.LineDetail();
+                PurchaseOrderData.APAccountRef = new QBPurchaseOrderCUClass.APAccountRef();
+                PurchaseOrderData.APAccountRef.value = "33";
+                PurchaseOrderData.TotalAmt =Convert.ToDecimal(100);
+                //PurchaseOrderData.TxnDate = DateTime.Now;
+                PurchaseOrderData.SyncToken = "0";
+                PurchaseOrderData.Id = "1110";
+                PurchaseOrderData.VendorRef = new QBPurchaseOrderCUClass.VendorRef();
+                PurchaseOrderData.VendorRef.value = "41";
+                PurchaseOrderData.POStatus = "Open";
+                LineData.Amount = 100;
+                LineData.DetailType = "ItemBasedExpenseLineDetail";
+                LineData.ItemBasedExpenseLineDetail = new Models.QBPurchaseOrderCUClass.ItemBasedExpenseLineDetail();
+                LineData.ItemBasedExpenseLineDetail.ItemRef = new QBPurchaseOrderCUClass.ItemRef();
+                LineData.ItemBasedExpenseLineDetail.ItemRef.value = "5";
+                //LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
+                LineData.ItemBasedExpenseLineDetail.UnitPrice = 50;
+                LineData.ItemBasedExpenseLineDetail.Qty = 2;
+                PurchaseOrderData.Line = new List<Models.QBPurchaseOrderCUClass.LineDetail>();
+                PurchaseOrderData.Line.Add(LineData);
+
+
                 // Convert the request body to JSON
-                string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(EsitimateData);
-                    // Create HttpClient
-                    using (HttpClient client = new HttpClient())
+                //string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(EsitimateData);
+                string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(PurchaseOrderData);
+                //string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(DeleteData);
+                // Create HttpClient
+                using (HttpClient client = new HttpClient())
                     {
                         // Set headers
                         //client.DefaultRequestHeaders.Add("Content-Type", "application/json");
@@ -392,8 +422,10 @@ namespace EarthCo.Controllers
                         dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
 
                         // Now you can access the data using the model
-                        var estimateId = estimateModel["Estimate"]["Id"];
-                        var SyncToken = estimateModel["Estimate"]["SyncToken"];
+                        //var estimateId = estimateModel["Estimate"]["Id"];
+                        //var SyncToken = estimateModel["Estimate"]["SyncToken"];
+                        var estimateId = estimateModel["PurchaseOrder"]["Id"];
+                        var SyncToken = estimateModel["PurchaseOrder"]["SyncToken"];
                         // Process jsonResponse
                         return View();
                         }
@@ -401,10 +433,12 @@ namespace EarthCo.Controllers
                         {
                             // Handle error
                             string errorMessage = await response.Content.ReadAsStringAsync();
-                            // Handle error message
-                            //return View("Error");
-                        }
+                        var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(errorMessage);
+
+                        // Handle error message
+                        //return View("Error");
                     }
+                }
 
 
                 using (HttpClient client = new HttpClient())
@@ -414,7 +448,7 @@ namespace EarthCo.Controllers
                     client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                     // Make the GET request
-                    HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/estimate/" + 1108 + "?minorversion=23");
+                    HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/purchaseorder/" + 1084 + "?minorversion=23");
                     //HttpResponseMessage response = await client.GetAsync("http://103.73.231.56/clickcut/api/Login/recoverpassword?Email=abdulqadeerkhan070@gmail.com");
                     //var responseTask = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/Estimate/" + 1108 + "?minorversion=23");
                     //var visibilityresponse = await client.PostAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/vendor?minorversion=23", content);
@@ -428,7 +462,7 @@ namespace EarthCo.Controllers
                         var readTask = response.Content.ReadAsStringAsync();
                         readTask.Wait();
                         string Test = readTask.Result;
-                        QBEstimateResponseClass.EstimateMain ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBEstimateResponseClass.EstimateMain>(Test);
+                        PurchaseOrderQB.PurchaseOrderResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<PurchaseOrderQB.PurchaseOrderResponse>(Test);
                         //BillInfo = JsonSerializer.Deserialize<Bill>(readTask.Result);
 
 

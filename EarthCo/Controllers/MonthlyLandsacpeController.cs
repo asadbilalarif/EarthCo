@@ -25,8 +25,8 @@ namespace EarthCo.Controllers
         {
             try
             {
-                List<tblMonthlyLandsacpe> Data = new List<tblMonthlyLandsacpe>();
-                Data = DB.tblMonthlyLandsacpes.ToList();
+                List<SPGetMonthlyLandsacpeReportList_Result> Data = new List<SPGetMonthlyLandsacpeReportList_Result>();
+                Data = DB.SPGetMonthlyLandsacpeReportList().ToList();
                 if (Data == null || Data.Count == 0)
                 {
                     return NotFound();

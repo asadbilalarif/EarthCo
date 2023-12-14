@@ -444,6 +444,55 @@ namespace EarthCo.Controllers
                         }
                     }
 
+                    if (Estimate.EstimateData.tblEstimateFiles != null && Estimate.EstimateData.tblEstimateFiles.Count != 0)
+                    {
+                        int NameCount = 1;
+                        foreach (var item in Estimate.EstimateData.tblEstimateFiles)
+                        {
+                            var fileUrl = Path.Combine(HttpContext.Current.Server.MapPath(item.FilePath.Replace("\\", "/"))); // Replace with the actual file URL
+                            //var fileUrl = "https://earthcoapi.yehtohoga.com" + item.FilePath.Replace("\\","/"); // Replace with the actual file URL
+                            //var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                            //responseMessage.Content = new StringContent(fileUrl);
+
+                            //return ResponseMessage(responseMessage);
+                             //fileUrl = "https://earthcoapi.yehtohoga.com/Uploading/Estimate/Estimate24108122023110150.png"; // Replace with the actual file URL
+                            //WebClient webClient = new WebClient();
+
+                            // Create a MemoryStream from the downloaded file data
+                            using (HttpClient httpClient = new HttpClient())
+                            {
+                                // Download the file
+                                //byte[] fileData = await httpClient.GetByteArrayAsync(fileUrl);
+
+                                byte[] fileData;
+                                using (WebClient webClient = new WebClient())
+                                {
+                                    fileData = webClient.DownloadData(fileUrl);
+                                }
+
+                                // Get the file name from the URL
+                                string fileName = Path.GetFileName(fileUrl);
+
+                                // Save the file to a local path
+                                //string savePath = Path.Combine("C:\\Your\\Save\\Path", fileName);
+                                string savePath = Path.Combine(HttpContext.Current.Server.MapPath("~/Uploading/Estimate"), Path.GetFileName("Estimate" + NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(fileName)));
+                                File.WriteAllBytes(savePath, fileData);
+                                var path = Path.Combine("\\Uploading\\Estimate", Path.GetFileName("Estimate" +  NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(fileName)));
+                                item.FileName = "Estimate" +  NameCount + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
+                                //FileData.FileName = Path.GetFileName(item.FileName);
+                                item.Caption = item.FileName;
+                                item.FilePath = path;
+                                item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                item.CreatedBy = UserId;
+                                item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                item.EditBy = UserId;
+                                item.isActive = true;
+                                item.isDelete = false;
+                                NameCount++;
+                            }
+                        }
+                    }
+
                     Data = Estimate.EstimateData;
                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                     Data.CreatedBy = UserId;
@@ -902,6 +951,7 @@ namespace EarthCo.Controllers
                     }
                     else
                     {
+                        Result.QBId = 0;
                         Result.Id = Data.EstimateId;
                         Result.Name = "Estimate";
                         Result.Operation = "Update";
@@ -1018,6 +1068,7 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
+                    Result.QBId = 0;
                     Result.Id = Data.EstimateId;
                     Result.Name = "Estimate";
                     Result.Operation = "Delete";

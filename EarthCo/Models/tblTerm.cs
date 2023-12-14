@@ -18,8 +18,8 @@ namespace EarthCo.Models
         public tblTerm()
         {
             this.tblInvoices = new HashSet<tblInvoice>();
-            this.tblPurchaseOrders = new HashSet<tblPurchaseOrder>();
             this.tblBills = new HashSet<tblBill>();
+            this.tblPurchaseOrders = new HashSet<tblPurchaseOrder>();
         }
     
         public int TermId { get; set; }
@@ -29,8 +29,8 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoice> tblInvoices { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBill> tblBills { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders { get; set; }
     }
 }
