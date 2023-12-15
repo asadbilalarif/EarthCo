@@ -307,6 +307,17 @@ namespace EarthCo.Controllers
                     DB.tblItems.Add(Data);
                     DB.SaveChanges();
 
+
+                    tblSyncLog Result = new tblSyncLog();
+                    Result.Id = Data.ItemId;
+                    Result.Name = "Item";
+                    Result.Operation = "Create";
+                    Result.CreatedDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+
                     var logData = new tblLog
                     {
                         UserId = userId,
@@ -350,6 +361,33 @@ namespace EarthCo.Controllers
                     DB.Entry(Data);
                     DB.SaveChanges();
 
+
+                    tblSyncLog Result = new tblSyncLog();
+                    Result = DB.tblSyncLogs.Where(x => x.Id == Data.ItemId && x.Name == "Item").FirstOrDefault();
+                    if (Result == null)
+                    {
+                        Result = new tblSyncLog();
+                        Result.Id = Data.ItemId;
+                        Result.Name = "Item";
+                        Result.Operation = "Update";
+                        Result.EditDate = DateTime.Now;
+                        Result.isQB = false;
+                        Result.isSync = false;
+                        DB.tblSyncLogs.Add(Result);
+                        DB.SaveChanges();
+                    }
+                    else
+                    {
+                        Result.QBId = 0;
+                        Result.Id = Data.ItemId;
+                        Result.Name = "Item";
+                        Result.Operation = "Update";
+                        Result.EditDate = DateTime.Now;
+                        Result.isQB = false;
+                        Result.isSync = false;
+                        DB.Entry(Result);
+                        DB.SaveChanges();
+                    }
 
                     var logData = new tblLog
                     {
@@ -421,6 +459,34 @@ namespace EarthCo.Controllers
                 Data.EditDate = DateTime.Now;
                 DB.Entry(Data);
                 DB.SaveChanges();
+
+
+                tblSyncLog Result = new tblSyncLog();
+                Result = DB.tblSyncLogs.Where(x => x.Id == Data.ItemId && x.Name == "Item").FirstOrDefault();
+                if (Result == null)
+                {
+                    Result = new tblSyncLog();
+                    Result.Id = Data.ItemId;
+                    Result.Name = "Item";
+                    Result.Operation = "Delete";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+                }
+                else
+                {
+                    Result.QBId = 0;
+                    Result.Id = Data.ItemId;
+                    Result.Name = "Item";
+                    Result.Operation = "Delete";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.Entry(Result);
+                    DB.SaveChanges();
+                }
 
                 // Log the action
                 var logData = new tblLog

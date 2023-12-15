@@ -17,9 +17,10 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tblPurchaseOrder()
         {
-            this.tblBills = new HashSet<tblBill>();
             this.tblPurchaseOrderFiles = new HashSet<tblPurchaseOrderFile>();
             this.tblPurchaseOrderItems = new HashSet<tblPurchaseOrderItem>();
+            this.tblBills = new HashSet<tblBill>();
+            this.tblEstimates = new HashSet<tblEstimate>();
         }
     
         public int PurchaseOrderId { get; set; }
@@ -52,9 +53,6 @@ namespace EarthCo.Models
         public Nullable<int> QBId { get; set; }
         public string SyncToken { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblBill> tblBills { get; set; }
-        public virtual tblEstimate tblEstimate { get; set; }
         public virtual tblPurchaseOrderStatu tblPurchaseOrderStatu { get; set; }
         public virtual tblTerm tblTerm { get; set; }
         public virtual tblUser tblUser { get; set; }
@@ -64,5 +62,10 @@ namespace EarthCo.Models
         public virtual ICollection<tblPurchaseOrderFile> tblPurchaseOrderFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblPurchaseOrderItem> tblPurchaseOrderItems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblBill> tblBills { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEstimate> tblEstimates { get; set; }
+        public virtual tblEstimate tblEstimate { get; set; }
     }
 }

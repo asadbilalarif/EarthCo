@@ -33,6 +33,8 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
         public Nullable<bool> isDelete { get; set; }
+        public Nullable<int> QBId { get; set; }
+        public string SyncToken { get; set; }
         public string ExpenseAccountName { get; set; }
         public string IncomeAccoun { get; set; }
     }

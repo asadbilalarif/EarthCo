@@ -23,13 +23,14 @@ namespace EarthCo.Models
         public Nullable<double> Tax { get; set; }
         public double Amount { get; set; }
         public int InvoiceId { get; set; }
-        public bool isCost { get; set; }
-        public int CreatedBy { get; set; }
+        public Nullable<bool> isCost { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
+        public Nullable<double> PurchasePrice { get; set; }
     
         public virtual tblInvoice tblInvoice { get; set; }
         public virtual tblItem tblItem { get; set; }

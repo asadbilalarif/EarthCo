@@ -394,6 +394,17 @@ namespace EarthCo.Controllers
                         }
                     }
 
+                    tblSyncLog Result = new tblSyncLog();
+                    Result.Id = Data.BillId;
+                    Result.Name = "Bill";
+                    Result.Operation = "Create";
+                    Result.CreatedDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+
+
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
                     LogData.Action = "Add Bill";
@@ -526,6 +537,33 @@ namespace EarthCo.Controllers
                     }
 
 
+                    tblSyncLog Result = new tblSyncLog();
+                    Result = DB.tblSyncLogs.Where(x => x.Id == Data.BillId && x.Name == "Bill").FirstOrDefault();
+                    if (Result == null)
+                    {
+                        Result = new tblSyncLog();
+                        Result.Id = Data.BillId;
+                        Result.Name = "Bill";
+                        Result.Operation = "Update";
+                        Result.EditDate = DateTime.Now;
+                        Result.isQB = false;
+                        Result.isSync = false;
+                        DB.tblSyncLogs.Add(Result);
+                        DB.SaveChanges();
+                    }
+                    else
+                    {
+                        Result.QBId = 0;
+                        Result.Id = Data.BillId;
+                        Result.Name = "Bill";
+                        Result.Operation = "Update";
+                        Result.EditDate = DateTime.Now;
+                        Result.isQB = false;
+                        Result.isSync = false;
+                        DB.Entry(Result);
+                        DB.SaveChanges();
+                    }
+
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
                     LogData.Action = "Update Bill";
@@ -608,6 +646,34 @@ namespace EarthCo.Controllers
                 Data.EditDate = DateTime.Now;
                 DB.Entry(Data);
                 DB.SaveChanges();
+
+
+                tblSyncLog Result = new tblSyncLog();
+                Result = DB.tblSyncLogs.Where(x => x.Id == Data.BillId && x.Name == "Bill").FirstOrDefault();
+                if (Result == null)
+                {
+                    Result = new tblSyncLog();
+                    Result.Id = Data.BillId;
+                    Result.Name = "Bill";
+                    Result.Operation = "Delete";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+                }
+                else
+                {
+                    Result.QBId = 0;
+                    Result.Id = Data.BillId;
+                    Result.Name = "Bill";
+                    Result.Operation = "Delete";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.Entry(Result);
+                    DB.SaveChanges();
+                }
 
                 tblLog LogData = new tblLog();
                 LogData.UserId = UserId;

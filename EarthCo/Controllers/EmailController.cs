@@ -23,27 +23,30 @@ namespace EarthCo.Controllers
             try
             {
                 string Email = null;
-                if (isVendor==false)
-                {
-                    tblContact ContactData = DB.tblContacts.Where(x => x.ContactId == ContactId).FirstOrDefault();
+                //if (isVendor==false)
+                //{
+                //    tblContact ContactData = DB.tblContacts.Where(x => x.ContactId == ContactId).FirstOrDefault();
                     
-                    if (ContactData == null)
-                    {
-                        ContactData = DB.tblContacts.Where(x => x.CustomerId == UserId).FirstOrDefault();
-                        Email = ContactData.Email;
-                    }
-                    else
-                    {
-                        Email = ContactData.Email;
-                    }
-                }
-                else
-                {
-                    tblUser ContactData = DB.tblUsers.Where(x => x.UserId == UserId).FirstOrDefault();
-                    Email = ContactData.Email;
-                }
-                
-                if(Email == null||Email == ""||Email == "--"||!Email.Contains("@"))
+                //    if (ContactData == null)
+                //    {
+                //        ContactData = DB.tblContacts.Where(x => x.CustomerId == UserId).FirstOrDefault();
+                //        Email = ContactData.Email;
+                //    }
+                //    else
+                //    {
+                //        Email = ContactData.Email;
+                //    }
+                //}
+                //else
+                //{
+                //    tblUser ContactData = DB.tblUsers.Where(x => x.UserId == UserId).FirstOrDefault();
+                //    Email = ContactData.Email;
+                //}
+
+                tblUser ContactData = DB.tblUsers.Where(x => x.UserId == UserId).FirstOrDefault();
+                Email = ContactData.Email;
+
+                if (Email == null||Email == ""||Email == "--"||!Email.Contains("@"))
                 {
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     responseMessage.Content = new StringContent("Email not found.");

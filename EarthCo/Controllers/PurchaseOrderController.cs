@@ -386,6 +386,15 @@ namespace EarthCo.Controllers
                     DB.tblPurchaseOrders.Add(Data);
                     DB.SaveChanges();
 
+                    if(Data.EstimateId!=null && Data.EstimateId!=0)
+                    {
+                        tblEstimate EstimateData = DB.tblEstimates.Where(x => x.EstimateId == Data.EstimateId).FirstOrDefault();
+                        EstimateData.PurchaseOrderId = Data.PurchaseOrderId;
+                        DB.Entry(EstimateData);
+                        DB.SaveChanges();
+                    }
+
+
                     //if (Estimate.EstimateData.tblEstimateItems!= null && Estimate.EstimateData.tblEstimateItems.Count != 0)
                     //{
                     //    tblEstimateItem ConData = null;
@@ -438,7 +447,7 @@ namespace EarthCo.Controllers
 
 
                     tblSyncLog Result = new tblSyncLog();
-                    Result.Id = Data.EstimateId;
+                    Result.Id = Data.PurchaseOrderId;
                     Result.Name = "PurchaseOrder";
                     Result.Operation = "Create";
                     Result.CreatedDate = DateTime.Now;
@@ -526,7 +535,13 @@ namespace EarthCo.Controllers
                     Data.isDelete = false;
                     DB.Entry(Data);
                     DB.SaveChanges();
-
+                    if (Data.EstimateId != null && Data.EstimateId != 0)
+                    {
+                        tblEstimate EstimateData = DB.tblEstimates.Where(x => x.EstimateId == Data.EstimateId).FirstOrDefault();
+                        EstimateData.PurchaseOrderId = Data.PurchaseOrderId;
+                        DB.Entry(EstimateData);
+                        DB.SaveChanges();
+                    }
                     if (PurchaseOrder.PurchaseOrderData.tblPurchaseOrderItems != null && PurchaseOrder.PurchaseOrderData.tblPurchaseOrderItems.Count != 0)
                     {
                         tblPurchaseOrderItem ConData = null;
@@ -586,11 +601,11 @@ namespace EarthCo.Controllers
                     }
 
                     tblSyncLog Result = new tblSyncLog();
-                    Result = DB.tblSyncLogs.Where(x => x.Id == Data.EstimateId && x.Name == "PurchaseOrder").FirstOrDefault();
+                    Result = DB.tblSyncLogs.Where(x => x.Id == Data.PurchaseOrderId && x.Name == "PurchaseOrder").FirstOrDefault();
                     if (Result == null)
                     {
                         Result = new tblSyncLog();
-                        Result.Id = Data.EstimateId;
+                        Result.Id = Data.PurchaseOrderId;
                         Result.Name = "PurchaseOrder";
                         Result.Operation = "Update";
                         Result.EditDate = DateTime.Now;
@@ -602,7 +617,7 @@ namespace EarthCo.Controllers
                     else
                     {
                         Result.QBId = 0;
-                        Result.Id = Data.EstimateId;
+                        Result.Id = Data.PurchaseOrderId;
                         Result.Name = "PurchaseOrder";
                         Result.Operation = "Update";
                         Result.EditDate = DateTime.Now;
@@ -702,11 +717,11 @@ namespace EarthCo.Controllers
                 DB.SaveChanges();
 
                 tblSyncLog Result = new tblSyncLog();
-                Result = DB.tblSyncLogs.Where(x => x.Id == Data.EstimateId && x.Name == "PurchaseOrder").FirstOrDefault();
+                Result = DB.tblSyncLogs.Where(x => x.Id == Data.PurchaseOrderId && x.Name == "PurchaseOrder").FirstOrDefault();
                 if (Result == null)
                 {
                     Result = new tblSyncLog();
-                    Result.Id = Data.EstimateId;
+                    Result.Id = Data.PurchaseOrderId;
                     Result.Name = "PurchaseOrder";
                     Result.Operation = "Delete";
                     Result.EditDate = DateTime.Now;
@@ -718,7 +733,7 @@ namespace EarthCo.Controllers
                 else
                 {
                     Result.QBId = 0;
-                    Result.Id = Data.EstimateId;
+                    Result.Id = Data.PurchaseOrderId;
                     Result.Name = "PurchaseOrder";
                     Result.Operation = "Delete";
                     Result.EditDate = DateTime.Now;

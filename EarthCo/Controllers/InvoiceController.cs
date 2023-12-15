@@ -90,6 +90,14 @@ namespace EarthCo.Controllers
                         Temp.TotalAmount = item.TotalAmount;
                         Temp.BalanceAmount = item.BalanceAmount;
                         Temp.ProfitPercentage = item.ProfitPercentage;
+                        if (item.tblBill != null)
+                        {
+                            Temp.BillNumber = item.tblBill.BillNumber;
+                        }
+                        if (item.tblEstimate != null)
+                        {
+                            Temp.EstimateNumber = item.tblEstimate.EstimateNumber;
+                        }
                         Result.Add(Temp);
                     }
                 }
@@ -479,6 +487,17 @@ namespace EarthCo.Controllers
                         }
                     }
 
+
+                    tblSyncLog Result = new tblSyncLog();
+                    Result.Id = Data.InvoiceId;
+                    Result.Name = "Invoice";
+                    Result.Operation = "Create";
+                    Result.CreatedDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
                     LogData.Action = "Add Invoice";
@@ -538,6 +557,7 @@ namespace EarthCo.Controllers
                     Data.DueDate = Invoice.InvoiceData.DueDate;
                     Data.EstimateId = Invoice.InvoiceData.EstimateId;
                     Data.EstimateNumber = Invoice.InvoiceData.EstimateNumber;
+                    Data.BillId = Invoice.InvoiceData.BillId;
                     Data.CustomerMessage = Invoice.InvoiceData.CustomerMessage;
                     Data.MemoInternal = Invoice.InvoiceData.MemoInternal;
                     Data.TotalAmount = Invoice.InvoiceData.TotalAmount;
@@ -618,7 +638,32 @@ namespace EarthCo.Controllers
                         }
                     }
 
-
+                    tblSyncLog Result = new tblSyncLog();
+                    Result = DB.tblSyncLogs.Where(x => x.Id == Data.InvoiceId && x.Name == "Invoice").FirstOrDefault();
+                    if (Result == null)
+                    {
+                        Result = new tblSyncLog();
+                        Result.Id = Data.InvoiceId;
+                        Result.Name = "Invoice";
+                        Result.Operation = "Update";
+                        Result.EditDate = DateTime.Now;
+                        Result.isQB = false;
+                        Result.isSync = false;
+                        DB.tblSyncLogs.Add(Result);
+                        DB.SaveChanges();
+                    }
+                    else
+                    {
+                        Result.QBId = 0;
+                        Result.Id = Data.InvoiceId;
+                        Result.Name = "Invoice";
+                        Result.Operation = "Update";
+                        Result.EditDate = DateTime.Now;
+                        Result.isQB = false;
+                        Result.isSync = false;
+                        DB.Entry(Result);
+                        DB.SaveChanges();
+                    }
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
                     LogData.Action = "Update Invoice";
@@ -708,6 +753,34 @@ namespace EarthCo.Controllers
                 LogData.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(LogData);
                 DB.SaveChanges();
+
+                tblSyncLog Result = new tblSyncLog();
+                Result = DB.tblSyncLogs.Where(x => x.Id == Data.InvoiceId && x.Name == "Invoice").FirstOrDefault();
+                if (Result == null)
+                {
+                    Result = new tblSyncLog();
+                    Result.Id = Data.InvoiceId;
+                    Result.Name = "Invoice";
+                    Result.Operation = "Delete";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.tblSyncLogs.Add(Result);
+                    DB.SaveChanges();
+                }
+                else
+                {
+                    Result.QBId = 0;
+                    Result.Id = Data.InvoiceId;
+                    Result.Name = "Invoice";
+                    Result.Operation = "Delete";
+                    Result.EditDate = DateTime.Now;
+                    Result.isQB = false;
+                    Result.isSync = false;
+                    DB.Entry(Result);
+                    DB.SaveChanges();
+                }
+
                 return Ok("Invoice has been deleted successfully.");
             }
             catch (DbEntityValidationException dbEx)

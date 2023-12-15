@@ -17,9 +17,9 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tblTerm()
         {
-            this.tblInvoices = new HashSet<tblInvoice>();
-            this.tblBills = new HashSet<tblBill>();
             this.tblPurchaseOrders = new HashSet<tblPurchaseOrder>();
+            this.tblBills = new HashSet<tblBill>();
+            this.tblInvoices = new HashSet<tblInvoice>();
         }
     
         public int TermId { get; set; }
@@ -27,10 +27,10 @@ namespace EarthCo.Models
         public bool isActive { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
+        public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBill> tblBills { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders { get; set; }
+        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
     }
 }

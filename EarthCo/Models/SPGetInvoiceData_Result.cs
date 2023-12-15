@@ -25,7 +25,7 @@ namespace EarthCo.Models
         public string Tags { get; set; }
         public Nullable<int> TermId { get; set; }
         public Nullable<int> AssignTo { get; set; }
-        public System.DateTime IssueDate { get; set; }
+        public Nullable<System.DateTime> IssueDate { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
         public string CustomerMessage { get; set; }
         public string MemoInternal { get; set; }
@@ -35,15 +35,17 @@ namespace EarthCo.Models
         public Nullable<double> Discount { get; set; }
         public Nullable<double> Shipping { get; set; }
         public Nullable<double> Profit { get; set; }
-        public double ProfitPercentage { get; set; }
+        public Nullable<int> ProfitPercentage { get; set; }
         public Nullable<int> StatusId { get; set; }
         public string DocNumber { get; set; }
-        public int CreatedBy { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
+        public Nullable<int> QBId { get; set; }
+        public string SyncToken { get; set; }
         public string CustomerAddress { get; set; }
         public string CustomerName { get; set; }
     }

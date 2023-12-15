@@ -23,6 +23,9 @@ using static EarthCo.Models.EstimateQB;
 using static EarthCo.Models.QBErrorClass;
 using static EarthCo.Models.PurchaseOrderQB;
 using static EarthCo.Models.QBPurchaseOrderCUClass;
+using static EarthCo.Models.QBInvoiceCUClass;
+using static EarthCo.Models.QBBillCUClass;
+using static EarthCo.Models.QBItemCUClass;
 
 namespace EarthCo.Controllers
 {
@@ -312,7 +315,8 @@ namespace EarthCo.Controllers
 
                 // API endpoint URL
                 //string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/estimate?minorversion=23";
-                string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/purchaseorder?minorversion=23";
+                //string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/purchaseorder?minorversion=23";
+                string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/item?minorversion=23";
                 //string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/estimate?operation=delete";
 
                 // Request body data
@@ -372,31 +376,92 @@ namespace EarthCo.Controllers
                 //DeleteData.SyncToken = "0";
 
                 QBPurchaseOrderClass PurchaseOrderData = new QBPurchaseOrderClass();
-                Models.QBPurchaseOrderCUClass.LineDetail LineData = new Models.QBPurchaseOrderCUClass.LineDetail();
-                PurchaseOrderData.APAccountRef = new QBPurchaseOrderCUClass.APAccountRef();
-                PurchaseOrderData.APAccountRef.value = "33";
-                PurchaseOrderData.TotalAmt =Convert.ToDecimal(100);
-                //PurchaseOrderData.TxnDate = DateTime.Now;
-                PurchaseOrderData.SyncToken = "0";
-                PurchaseOrderData.Id = "1110";
-                PurchaseOrderData.VendorRef = new QBPurchaseOrderCUClass.VendorRef();
-                PurchaseOrderData.VendorRef.value = "41";
-                PurchaseOrderData.POStatus = "Open";
-                LineData.Amount = 100;
-                LineData.DetailType = "ItemBasedExpenseLineDetail";
-                LineData.ItemBasedExpenseLineDetail = new Models.QBPurchaseOrderCUClass.ItemBasedExpenseLineDetail();
-                LineData.ItemBasedExpenseLineDetail.ItemRef = new QBPurchaseOrderCUClass.ItemRef();
-                LineData.ItemBasedExpenseLineDetail.ItemRef.value = "5";
-                //LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
-                LineData.ItemBasedExpenseLineDetail.UnitPrice = 50;
-                LineData.ItemBasedExpenseLineDetail.Qty = 2;
-                PurchaseOrderData.Line = new List<Models.QBPurchaseOrderCUClass.LineDetail>();
-                PurchaseOrderData.Line.Add(LineData);
+                //Models.QBPurchaseOrderCUClass.LineDetail LineData = new Models.QBPurchaseOrderCUClass.LineDetail();
+                //PurchaseOrderData.APAccountRef = new QBPurchaseOrderCUClass.APAccountRef();
+                //PurchaseOrderData.APAccountRef.value = "33";
+                //PurchaseOrderData.TotalAmt =Convert.ToDecimal(100);
+                ////PurchaseOrderData.TxnDate = DateTime.Now;
+                //PurchaseOrderData.SyncToken = "0";
+                //PurchaseOrderData.Id = "1110";
+                //PurchaseOrderData.VendorRef = new QBPurchaseOrderCUClass.VendorRef();
+                //PurchaseOrderData.VendorRef.value = "41";
+                //PurchaseOrderData.POStatus = "Open";
+                //LineData.Amount = 100;
+                //LineData.DetailType = "ItemBasedExpenseLineDetail";
+                //LineData.ItemBasedExpenseLineDetail = new Models.QBPurchaseOrderCUClass.ItemBasedExpenseLineDetail();
+                //LineData.ItemBasedExpenseLineDetail.ItemRef = new QBPurchaseOrderCUClass.ItemRef();
+                //LineData.ItemBasedExpenseLineDetail.ItemRef.value = "5";
+                ////LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
+                //LineData.ItemBasedExpenseLineDetail.UnitPrice = 50;
+                //LineData.ItemBasedExpenseLineDetail.Qty = 2;
+                //PurchaseOrderData.Line = new List<Models.QBPurchaseOrderCUClass.LineDetail>();
+                //PurchaseOrderData.Line.Add(LineData);
 
+
+                QBInvoiceClass InvoiceData = new QBInvoiceClass();
+                //Models.QBInvoiceCUClass.LineDetail LineData = new Models.QBInvoiceCUClass.LineDetail();
+                //InvoiceData.CustomerMemo = new QBInvoiceCUClass.CustomerMemo();
+                //InvoiceData.CustomerMemo.value = "Thank you for your business and have a great day!";
+                ////InvoiceData.TotalAmt = 150;
+                //InvoiceData.Balance = 50;
+                //InvoiceData.DocNumber = "9874";
+                //InvoiceData.DueDate = DateTime.Now.AddDays(20);
+
+                //InvoiceData.SyncToken = "1";
+                //InvoiceData.Id = "1115";
+                //InvoiceData.CustomerRef = new QBInvoiceCUClass.CustomerRef();
+                //InvoiceData.CustomerRef.value = "1";
+
+                //LineData.Amount = 275;
+                //LineData.Description = "Rock Fountain";
+                //LineData.DetailType = "SalesItemLineDetail";
+                //LineData.SalesItemLineDetail = new Models.QBInvoiceCUClass.SalesItemLineDetail();
+                //LineData.SalesItemLineDetail.ItemRef = new QBInvoiceCUClass.ItemRef();
+                //LineData.SalesItemLineDetail.ItemRef.value = "1";
+                //LineData.SalesItemLineDetail.UnitPrice = 275;
+                //LineData.SalesItemLineDetail.Qty = 1;
+                //InvoiceData.Line = new List<Models.QBInvoiceCUClass.LineDetail>();
+                //InvoiceData.Line.Add(LineData);
+
+
+                QBBillClass BillData = new QBBillClass();
+                //Models.QBBillCUClass.LineDetail LineData = new Models.QBBillCUClass.LineDetail();
+                //BillData.TotalAmt = (decimal)103.55;
+                //BillData.DocNumber = "9876";
+                //BillData.DueDate = DateTime.Now.AddDays(10);
+                //BillData.SyncToken = "0";
+                //BillData.Id = "1119";
+                //BillData.VendorRef = new QBBillCUClass.VendorRef();
+                //BillData.VendorRef.value = "56";
+                //LineData.Amount = Convert.ToDecimal(125);
+                //LineData.Description = "Lumber";
+                //LineData.DetailType = "ItemBasedExpenseLineDetail";
+                //LineData.ItemBasedExpenseLineDetail = new Models.QBBillCUClass.ItemBasedExpenseLineDetail();
+                //LineData.ItemBasedExpenseLineDetail.ItemRef = new QBBillCUClass.ItemRef();
+                //LineData.ItemBasedExpenseLineDetail.ItemRef.value = "7";
+                //LineData.ItemBasedExpenseLineDetail.UnitPrice = Convert.ToDecimal(125);
+                //LineData.ItemBasedExpenseLineDetail.Qty = (int)1;
+                //BillData.Line = new List<Models.QBBillCUClass.LineDetail>();
+                //BillData.Line.Add(LineData);
+
+
+                QBItemClass ItemData = new QBItemClass();
+                ItemData.Type = "NonInventory";
+                ItemData.Name = "Garden Supplies3";
+                ItemData.UnitPrice = (decimal)150;
+                ItemData.PurchaseCost = (decimal)110;
+
+                ItemData.SyncToken = "0";
+                ItemData.Id = "66";
+                ItemData.IncomeAccountRef = new IncomeAccountRef();
+                ItemData.IncomeAccountRef.value = "79";
+                ItemData.ExpenseAccountRef = new ExpenseAccountRef();
+                ItemData.ExpenseAccountRef.value = "80";
 
                 // Convert the request body to JSON
                 //string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(EsitimateData);
-                string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(PurchaseOrderData);
+                //string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(PurchaseOrderData);
+                string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(ItemData);
                 //string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(DeleteData);
                 // Create HttpClient
                 using (HttpClient client = new HttpClient())
@@ -424,8 +489,10 @@ namespace EarthCo.Controllers
                         // Now you can access the data using the model
                         //var estimateId = estimateModel["Estimate"]["Id"];
                         //var SyncToken = estimateModel["Estimate"]["SyncToken"];
-                        var estimateId = estimateModel["PurchaseOrder"]["Id"];
-                        var SyncToken = estimateModel["PurchaseOrder"]["SyncToken"];
+                        //var estimateId = estimateModel["PurchaseOrder"]["Id"];
+                        //var SyncToken = estimateModel["PurchaseOrder"]["SyncToken"];
+                        var estimateId = estimateModel["Item"]["Id"];
+                        var SyncToken = estimateModel["Item"]["SyncToken"];
                         // Process jsonResponse
                         return View();
                         }
@@ -448,7 +515,7 @@ namespace EarthCo.Controllers
                     client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                     // Make the GET request
-                    HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/purchaseorder/" + 1084 + "?minorversion=23");
+                    HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/item/" + 66 + "?minorversion=23");
                     //HttpResponseMessage response = await client.GetAsync("http://103.73.231.56/clickcut/api/Login/recoverpassword?Email=abdulqadeerkhan070@gmail.com");
                     //var responseTask = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/Estimate/" + 1108 + "?minorversion=23");
                     //var visibilityresponse = await client.PostAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/vendor?minorversion=23", content);
@@ -462,7 +529,7 @@ namespace EarthCo.Controllers
                         var readTask = response.Content.ReadAsStringAsync();
                         readTask.Wait();
                         string Test = readTask.Result;
-                        PurchaseOrderQB.PurchaseOrderResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<PurchaseOrderQB.PurchaseOrderResponse>(Test);
+                        QBItem.ItemResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBItem.ItemResponse>(Test);
                         //BillInfo = JsonSerializer.Deserialize<Bill>(readTask.Result);
 
 

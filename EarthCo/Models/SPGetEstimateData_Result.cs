@@ -45,6 +45,9 @@ namespace EarthCo.Models
         public Nullable<double> BalanceAmount { get; set; }
         public Nullable<int> QBId { get; set; }
         public string SyncToken { get; set; }
+        public Nullable<int> PurchaseOrderId { get; set; }
+        public Nullable<int> InvoiceId { get; set; }
+        public Nullable<int> BillId { get; set; }
         public string CustomerAddress { get; set; }
         public string CustomerName { get; set; }
         public string ContactName { get; set; }

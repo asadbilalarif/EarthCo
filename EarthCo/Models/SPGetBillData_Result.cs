@@ -26,12 +26,14 @@ namespace EarthCo.Models
         public double Amount { get; set; }
         public string Currency { get; set; }
         public string DocNumber { get; set; }
-        public int CreatedBy { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
+        public Nullable<int> QBId { get; set; }
+        public string SyncToken { get; set; }
         public string SupplierAddress { get; set; }
         public string SupplierName { get; set; }
     }

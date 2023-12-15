@@ -19,6 +19,8 @@ namespace EarthCo.Models
         {
             this.tblBillFiles = new HashSet<tblBillFile>();
             this.tblBillItems = new HashSet<tblBillItem>();
+            this.tblEstimates = new HashSet<tblEstimate>();
+            this.tblInvoices = new HashSet<tblInvoice>();
         }
     
         public int BillId { get; set; }
@@ -34,19 +36,25 @@ namespace EarthCo.Models
         public double Amount { get; set; }
         public string Currency { get; set; }
         public string DocNumber { get; set; }
-        public int CreatedBy { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
+        public Nullable<int> QBId { get; set; }
+        public string SyncToken { get; set; }
     
+        public virtual tblPurchaseOrder tblPurchaseOrder { get; set; }
         public virtual tblTerm tblTerm { get; set; }
+        public virtual tblUser tblUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBillFile> tblBillFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBillItem> tblBillItems { get; set; }
-        public virtual tblUser tblUser { get; set; }
-        public virtual tblPurchaseOrder tblPurchaseOrder { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEstimate> tblEstimates { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
     }
 }

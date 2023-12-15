@@ -31,6 +31,7 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public Nullable<bool> isActive { get; set; }
         public Nullable<bool> isDelete { get; set; }
+        public Nullable<int> QBId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblItem> tblItems { get; set; }

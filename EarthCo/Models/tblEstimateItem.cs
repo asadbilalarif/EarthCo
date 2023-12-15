@@ -30,8 +30,9 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
+        public Nullable<double> PurchasePrice { get; set; }
     
-        public virtual tblItem tblItem { get; set; }
         public virtual tblEstimate tblEstimate { get; set; }
+        public virtual tblItem tblItem { get; set; }
     }
 }

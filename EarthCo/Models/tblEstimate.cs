@@ -55,11 +55,17 @@ namespace EarthCo.Models
         public Nullable<double> BalanceAmount { get; set; }
         public Nullable<int> QBId { get; set; }
         public string SyncToken { get; set; }
+        public Nullable<int> PurchaseOrderId { get; set; }
+        public Nullable<int> InvoiceId { get; set; }
+        public Nullable<int> BillId { get; set; }
     
+        public virtual tblBill tblBill { get; set; }
         public virtual tblContact tblContact { get; set; }
         public virtual tblEstimateStatu tblEstimateStatu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimateItem> tblEstimateItems { get; set; }
+        public virtual tblInvoice tblInvoice { get; set; }
+        public virtual tblPurchaseOrder tblPurchaseOrder { get; set; }
         public virtual tblServiceLocation tblServiceLocation { get; set; }
         public virtual tblUser tblUser { get; set; }
         public virtual tblUser tblUser1 { get; set; }

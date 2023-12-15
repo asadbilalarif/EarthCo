@@ -106,18 +106,18 @@ namespace EarthCo.Controllers
                     Temp.StatusColor = item.tblEstimateStatu.Color;
                     Temp.EstimateNumber = item.EstimateNumber;
                     Temp.DescriptionofWork = item.EstimateNotes;
-                    //if(item.tblPurchaseOrders!=null && item.tblPurchaseOrders.Count != 0)
-                    //{
-                    //    Temp.PurchaseOrderNumber = item.tblPurchaseOrders.FirstOrDefault().PurchaseOrderNumber;
-                    //}
-                    //if(item.tblPurchaseOrders != null && item.tblPurchaseOrders.Count != 0)
-                    //{
-                    //    Temp.BillNumber = item.tblPurchaseOrders.FirstOrDefault().tblBills.FirstOrDefault().BillNumber;
-                    //}
-                    //if(item.tblInvoices != null && item.tblInvoices.Count != 0)
-                    //{
-                    //    Temp.InvoiceNumber = item.tblInvoices.FirstOrDefault().InvoiceNumber;
-                    //}
+                    if (item.tblPurchaseOrder != null)
+                    {
+                        Temp.PurchaseOrderNumber = item.tblPurchaseOrder.PurchaseOrderNumber;
+                    }
+                    if (item.tblBill != null)
+                    {
+                        Temp.BillNumber = item.tblBill.BillNumber;
+                    }
+                    if (item.tblInvoice != null)
+                    {
+                        Temp.InvoiceNumber = item.tblInvoice.InvoiceNumber;
+                    }
                     Temp.ProfitPercentage = item.ProfitPercentage;
                     Temp.EstimateAmount = (double)item.tblEstimateItems.Sum(s => s.Amount);
                     EstData.Add(Temp);
@@ -185,6 +185,21 @@ namespace EarthCo.Controllers
                     Temp.Date = item.CreatedDate;
                     Temp.Status =item.tblEstimateStatu.Status;
                     Temp.EstimateNumber = item.EstimateNumber;
+                    if(item.tblBill!=null)
+                    {
+                        Temp.BillNumber = item.tblBill.BillNumber;
+                    }
+                    if(item.tblPurchaseOrder != null)
+                    {
+                        Temp.PurchaseOrderNumber = item.tblPurchaseOrder.PurchaseOrderNumber;
+                    }
+                    if(item.tblInvoice != null)
+                    {
+                        Temp.InvoiceNumber = item.tblInvoice.InvoiceNumber;
+                    }
+                    
+                    
+                   
                     Temp.DescriptionofWork = item.EstimateNotes;
                     //if(item.tblPurchaseOrders!=null && item.tblPurchaseOrders.Count != 0)
                     //{
@@ -848,6 +863,9 @@ namespace EarthCo.Controllers
                     Data.IssueDate = DateTime.Now;
                     Data.CustomerId = Estimate.EstimateData.CustomerId;
                     Data.ContactId = Estimate.EstimateData.ContactId;
+                    Data.PurchaseOrderId = Estimate.EstimateData.PurchaseOrderId;
+                    Data.BillId = Estimate.EstimateData.BillId;
+                    Data.InvoiceId = Estimate.EstimateData.InvoiceId;
                     Data.RegionalManagerId = Estimate.EstimateData.RegionalManagerId;
                     Data.AssignTo = Estimate.EstimateData.AssignTo;
                     Data.RequestedBy = Estimate.EstimateData.RequestedBy;

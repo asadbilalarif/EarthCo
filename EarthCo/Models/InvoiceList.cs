@@ -9,6 +9,8 @@ namespace EarthCo.Models
     {
         public int? InvoiceId { get; set; }
         public string InvoiceNumber { get; set; }
+        public string BillNumber { get; set; }
+        public string EstimateNumber { get; set; }
         public DateTime IssueDate { get; set; }
         public string CustomerName { get; set; }
         public Double? BalanceAmount { get; set; }
