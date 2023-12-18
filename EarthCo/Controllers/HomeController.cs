@@ -704,7 +704,7 @@ namespace EarthCo.Controllers
 
 
 
-        public async Task<ActionResult> GetItemsFromQB()
+        public async Task<ActionResult> GetItemsFromQB(string Type)
         {
             //if (Session["realmId"] != null)
             //{
@@ -720,55 +720,249 @@ namespace EarthCo.Controllers
                 OAuth2RequestValidator oauthValidator = new OAuth2RequestValidator((string)TokenData.AccessToken);
                 ServiceContext serviceContext = new ServiceContext(realmId, IntuitServicesType.QBO, oauthValidator);
                 serviceContext.IppConfiguration.MinorVersion.Qbo = "23";
-                QueryService<Item> querySvc = new QueryService<Item>(serviceContext);
-                List<Item> ItemInfo = querySvc.ExecuteIdsQuery("select * from item").ToList();
 
-                tblItem ItemData = null;
-
-                foreach (Item item in ItemInfo)
+                if(Type.Contains("Item"))
                 {
-                    ItemData = new tblItem();
-                    ItemData.QBId = Convert.ToInt32(item.Id);
-                    ItemData.ItemName = item.Name;
-                    ItemData.SaleDescription = item.Description;
-                    ItemData.PurchaseDescription = item.Description;
-                    ItemData.Type = item.Type.ToString();
-                    ItemData.PurchasePrice =Convert.ToDouble(item.PurchaseCost);
-                    ItemData.SalePrice =Convert.ToDouble(item.UnitPrice);
-                    ItemData.isActive = true;
-                    ItemData.isDelete = false;
-                    ItemData.CreatedDate = DateTime.Now;
-                    ItemData.EditDate = DateTime.Now;
-                    DB.tblItems.Add(ItemData);
+                    QueryService<Item> querySvc = new QueryService<Item>(serviceContext);
+                    List<Item> ItemInfo = querySvc.ExecuteIdsQuery("select * from item").ToList();
+
+                    tblItem ItemData = null;
+
+                    foreach (Item item in ItemInfo)
+                    {
+                        ItemData = new tblItem();
+                        ItemData.QBId = Convert.ToInt32(item.Id);
+                        ItemData.SyncToken = item.SyncToken;
+                        ItemData.ItemName = item.Name;
+                        ItemData.SaleDescription = item.Description;
+                        ItemData.PurchaseDescription = item.Description;
+                        ItemData.Type = item.Type.ToString();
+                        ItemData.PurchasePrice = Convert.ToDouble(item.PurchaseCost);
+                        ItemData.SalePrice = Convert.ToDouble(item.UnitPrice);
+                        ItemData.isActive = true;
+                        ItemData.isDelete = false;
+                        ItemData.CreatedDate = DateTime.Now;
+                        ItemData.EditDate = DateTime.Now;
+                        DB.tblItems.Add(ItemData);
+                    }
+                    DB.SaveChanges();
                 }
+                
+
+                if(Type.Contains("Customer"))
+                {
+                    QueryService<Customer> CustomerquerySvc = new QueryService<Customer>(serviceContext);
+                    List<Customer> CustomerInfo = CustomerquerySvc.ExecuteIdsQuery("select * from Customer").ToList();
+
+                    tblUser CustomerData = null;
+
+                    foreach (Customer item in CustomerInfo)
+                    {
+                        CustomerData = new tblUser();
+                        CustomerData.QBId = Convert.ToInt32(item.Id);
+                        CustomerData.SyncToken = item.SyncToken;
+                        CustomerData.FirstName = item.GivenName != null ? item.GivenName : "";
+                        CustomerData.LastName = item.FamilyName != null ? item.FamilyName : "";
+                        CustomerData.CompanyName = item.CompanyName;
+                        CustomerData.Email = item.PrimaryEmailAddr != null ? item.PrimaryEmailAddr.Address : "";
+                        CustomerData.Phone = item.PrimaryPhone != null ? item.PrimaryPhone.FreeFormNumber : "";
+                        CustomerData.RoleId = 2;
+                        CustomerData.UserTypeId = 2;
+                        CustomerData.isLoginAllow = false;
+                        CustomerData.isActive = true;
+                        CustomerData.isDelete = false;
+                        CustomerData.CreatedDate = DateTime.Now;
+                        CustomerData.EditDate = DateTime.Now;
+                        DB.tblUsers.Add(CustomerData);
+                    }
+                    DB.SaveChanges();
+                }
+                
+
+                if(Type.Contains("Vendor"))
+                {
+                    QueryService<Vendor> VendorquerySvc = new QueryService<Vendor>(serviceContext);
+                    List<Vendor> VendorInfo = VendorquerySvc.ExecuteIdsQuery("select * from Vendor").ToList();
+
+                    tblUser VendorData = null;
+
+                    foreach (Vendor item in VendorInfo)
+                    {
+                        VendorData = new tblUser();
+                        VendorData.QBId = Convert.ToInt32(item.Id);
+                        VendorData.SyncToken = item.SyncToken;
+                        VendorData.FirstName = item.GivenName != null ? item.GivenName : "";
+                        VendorData.LastName = item.FamilyName != null ? item.FamilyName : "";
+                        VendorData.CompanyName = item.CompanyName;
+                        VendorData.Email = item.PrimaryEmailAddr != null ? item.PrimaryEmailAddr.Address : "";
+                        VendorData.Phone = item.PrimaryPhone != null ? item.PrimaryPhone.FreeFormNumber : "";
+                        VendorData.UserTypeId = 3;
+                        VendorData.isLoginAllow = false;
+                        VendorData.isActive = true;
+                        VendorData.isDelete = false;
+                        VendorData.CreatedDate = DateTime.Now;
+                        VendorData.EditDate = DateTime.Now;
+                        DB.tblUsers.Add(VendorData);
+                    }
+                    DB.SaveChanges();
+                }
+
+                if (Type.Contains("Employee"))
+                {
+                    QueryService<Employee> EmployeequerySvc = new QueryService<Employee>(serviceContext);
+                    List<Employee> EmployeeInfo = EmployeequerySvc.ExecuteIdsQuery("select * from Vendor").ToList();
+
+                    tblUser EmployeeData = null;
+
+                    foreach (Employee item in EmployeeInfo)
+                    {
+                        EmployeeData = new tblUser();
+                        EmployeeData.QBId = Convert.ToInt32(item.Id);
+                        EmployeeData.SyncToken = item.SyncToken;
+                        EmployeeData.FirstName = item.GivenName != null ? item.GivenName : "";
+                        EmployeeData.LastName = item.FamilyName != null ? item.FamilyName : "";
+                        EmployeeData.Email = item.PrimaryEmailAddr != null ? item.PrimaryEmailAddr.Address : "";
+                        EmployeeData.Phone = item.PrimaryPhone != null ? item.PrimaryPhone.FreeFormNumber : "";
+                        EmployeeData.UserTypeId = 1;
+                        EmployeeData.RoleId = 4;
+                        EmployeeData.CreatedDate = DateTime.Now;
+                        EmployeeData.isLoginAllow = false;
+                        EmployeeData.isActive = true;
+                        EmployeeData.isDelete = false;
+                        EmployeeData.CreatedDate = DateTime.Now;
+                        EmployeeData.EditDate = DateTime.Now;
+                        DB.tblUsers.Add(EmployeeData);
+                    }
+                    DB.SaveChanges();
+                }
+
+                if (Type.Contains("Estimate"))
+                {
+                    QueryService<Estimate> EstimatequerySvc = new QueryService<Estimate>(serviceContext);
+                    List<Estimate> EstimateInfo = EstimatequerySvc.ExecuteIdsQuery("select * from Estimate").ToList();
+
+                    tblEstimate EstimateData = null;
+
+                    foreach (Estimate item in EstimateInfo)
+                    {
+                        EstimateData = new tblEstimate();
+                        EstimateData.QBId = Convert.ToInt32(item.Id);
+                        EstimateData.SyncToken = item.SyncToken;
+                        EstimateData.EstimateNumber = item.DocNumber;
+                        int QBId = Convert.ToInt32(item.CustomerRef.Value);
+                        int CustomerId = DB.tblUsers.Where(x => x.QBId == QBId).Select(s => s.UserId).FirstOrDefault();
+                        EstimateData.CustomerId = CustomerId;
+                        if (item.TxnStatus.Contains("Pending"))
+                        {
+                            EstimateData.EstimateStatusId = 4;
+                        }
+                        else if (item.TxnStatus.Contains("Accepted"))
+                        {
+                            EstimateData.EstimateStatusId = 1;
+                        }
+                        else if (item.TxnStatus.Contains("Rejected"))
+                        {
+                            EstimateData.EstimateStatusId = 5;
+                        }
+                        else if (item.TxnStatus.Contains("Closed"))
+                        {
+                            EstimateData.EstimateStatusId = 2;
+                        }
+                        EstimateData.TotalAmount = (double?)item.TotalAmt;
+
+                        EstimateData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                        EstimateData.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                        EstimateData.DocNumber = Convert.ToString(DB.SPGetNumber("E").FirstOrDefault());
+                        EstimateData.isActive = true;
+                        EstimateData.isDelete = false;
+                        DB.tblEstimates.Add(EstimateData);
+
+                        foreach (var itemLine in item.Line)
+                        {
+                            tblEstimateItem Item = new tblEstimateItem();
+                            Item.Description = itemLine.Description;
+                            itemLine.AnyIntuitObject = new Intuit.Ipp.Data.SalesItemLineDetail();
+                            Intuit.Ipp.Data.SalesItemLineDetail LI =(Intuit.Ipp.Data.SalesItemLineDetail) itemLine.AnyIntuitObject;
+                            Item.Qty = Convert.ToInt32(LI.Qty);
+                            Item.Rate = Convert.ToDouble(LI.AnyIntuitObject);
+                            Item.Amount = Convert.ToDouble(itemLine.Amount);
+                            QBId = Convert.ToInt32(LI.ItemRef.Value);
+                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                            Item.ItemId = ItemId;
+                            Item.EstimateId = EstimateData.EstimateId;
+                            //Item.CreatedBy = UserId;
+                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            //Item.EditBy = UserId;
+                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            Item.isCost = false;
+                            Item.isActive = true;
+                            Item.isDelete = false;
+                            DB.tblEstimateItems.Add(Item);
+                            DB.SaveChanges();
+                        }
+
+                    }
                     DB.SaveChanges();
 
-
-                QueryService<Customer> CustomerquerySvc = new QueryService<Customer>(serviceContext);
-                List<Customer> CustomerInfo = CustomerquerySvc.ExecuteIdsQuery("select * from Customer").ToList();
-
-                tblUser CustomerData = null;
-
-                foreach (Customer item in CustomerInfo)
-                {
-                    CustomerData = new tblUser();
-                    CustomerData.QBId = Convert.ToInt32(item.Id);
-                    CustomerData.FirstName = item.GivenName!=null?item.GivenName:"";
-                    CustomerData.LastName = item.FamilyName != null ? item.FamilyName : "";
-                    CustomerData.CompanyName = item.CompanyName;
-                    CustomerData.Email = item.PrimaryEmailAddr!=null? item.PrimaryEmailAddr.Address:"";
-                    CustomerData.Phone = item.PrimaryPhone != null ? item.PrimaryPhone.FreeFormNumber:"";
-                    CustomerData.RoleId = 2;
-                    CustomerData.UserTypeId = 2;
-                    CustomerData.isLoginAllow = false;
-                    CustomerData.isActive = true;
-                    CustomerData.isDelete = false;
-                    CustomerData.CreatedDate = DateTime.Now;
-                    CustomerData.EditDate = DateTime.Now;
-                    DB.tblUsers.Add(CustomerData);
                 }
-                DB.SaveChanges();
 
+                if (Type.Contains("PurchaseOrder"))
+                {
+                    QueryService<PurchaseOrder> PurchaseOrderquerySvc = new QueryService<PurchaseOrder>(serviceContext);
+                    List<PurchaseOrder> PurchaseOrderInfo = PurchaseOrderquerySvc.ExecuteIdsQuery("select * from PurchaseOrder").ToList();
+
+                    tblPurchaseOrder PurchaseOrderData = null;
+
+                    foreach (PurchaseOrder item in PurchaseOrderInfo)
+                    {
+                        PurchaseOrderData = new tblPurchaseOrder();
+                        PurchaseOrderData.QBId = Convert.ToInt32(item.Id);
+                        PurchaseOrderData.SyncToken = item.SyncToken;
+                        PurchaseOrderData.PurchaseOrderNumber = item.DocNumber;
+                        int QBId = Convert.ToInt32(item.VendorRef.Value);
+                        int VendorId = DB.tblUsers.Where(x => x.QBId == QBId).Select(s => s.UserId).FirstOrDefault();
+                        PurchaseOrderData.SupplierId = VendorId;
+                        if (item.POStatus.ToString().Contains("Open"))
+                        {
+                            PurchaseOrderData.StatusId = 1;
+                        }
+                        else if (item.POStatus.ToString().Contains("Close"))
+                        {
+                            PurchaseOrderData.StatusId = 2;
+                        }
+                        PurchaseOrderData.Date = DateTime.Now;
+                        PurchaseOrderData.Amount = (double)item.TotalAmt;
+                        PurchaseOrderData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                        PurchaseOrderData.PurchaseOrderNumber = item.DocNumber;
+                        PurchaseOrderData.DocNumber = Convert.ToString(DB.SPGetNumber("P").FirstOrDefault());
+                        PurchaseOrderData.isActive = true;
+                        PurchaseOrderData.isDelete = false;
+                        DB.tblPurchaseOrders.Add(PurchaseOrderData);
+
+                        foreach (var itemLine in item.Line)
+                        {
+                            tblPurchaseOrderItem Item = new tblPurchaseOrderItem();
+                            //Item.Description = item.Description;
+                            Intuit.Ipp.Data.ItemBasedExpenseLineDetail LI = (Intuit.Ipp.Data.ItemBasedExpenseLineDetail)itemLine.AnyIntuitObject;
+                            Item.Qty = Convert.ToInt32(LI.Qty);
+                            Item.Rate = Convert.ToDouble(LI.AnyIntuitObject);
+                            Item.Amount = Convert.ToDouble(itemLine.Amount);
+                            QBId = Convert.ToInt32(LI.ItemRef.Value);
+                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                            Item.ItemId = ItemId;
+                            Item.PurchaseOrderId = PurchaseOrderData.PurchaseOrderId;
+                            //Item.CreatedBy = UserId;
+                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            //Item.EditBy = UserId;
+                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            Item.isActive = true;
+                            Item.isDelete = false;
+                            DB.tblPurchaseOrderItems.Add(Item);
+                            DB.SaveChanges();
+                        }
+                    }
+                    DB.SaveChanges();
+                }
 
                 return RedirectToAction("Tokens");
             }

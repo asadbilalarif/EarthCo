@@ -152,6 +152,7 @@ namespace EarthCo.Controllers
                         EsitimateData.BillEmail = new BillEmail();
                         EsitimateData.BillEmail.Address = Data.tblUser.Email;
                         EsitimateData.TotalAmt =(decimal) Data.TotalAmount;
+                        EsitimateData.DocNumber = Data.EstimateNumber;
                         //EsitimateData.SyncToken = "0";
                         //EsitimateData.Id = "1103";
                         EsitimateData.CustomerRef = new EstimateQB.CustomerRef();
@@ -383,8 +384,8 @@ namespace EarthCo.Controllers
                                     //Data.ProfitPercentage = Estimate.EstimateData.ProfitPercentage;
                                     Data.TotalAmount = (double?)ResponseData.Estimate.TotalAmt;
                                     //Data.BalanceAmount = Estimate.EstimateData.BalanceAmount;
-                                    Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                                     //Data.CreatedBy = UserId;
+                                    Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                                     Data.DocNumber = Convert.ToString(DB.SPGetNumber("E").FirstOrDefault());
                                     Data.isActive = true;
                                     Data.isDelete = false;
@@ -474,6 +475,7 @@ namespace EarthCo.Controllers
                         EsitimateData.BillEmail = new BillEmail();
                         EsitimateData.BillEmail.Address = Data.tblUser.Email;
                         EsitimateData.TotalAmt = (decimal)Data.TotalAmount;
+                        EsitimateData.DocNumber = Data.EstimateNumber;
                         EsitimateData.SyncToken = Data.SyncToken;
                         EsitimateData.Id = Data.QBId.ToString();
                         EsitimateData.CustomerRef = new EstimateQB.CustomerRef();
@@ -985,6 +987,7 @@ namespace EarthCo.Controllers
                         PurchaseOrderData.APAccountRef = new QBPurchaseOrderCUClass.APAccountRef();
                         PurchaseOrderData.APAccountRef.value = "33";
                         PurchaseOrderData.TotalAmt = (decimal)Data.Amount;
+                        PurchaseOrderData.DocNumber = Data.DocNumber;
                         //EsitimateData.SyncToken = "0";
                         //EsitimateData.Id = "1103";
                         PurchaseOrderData.VendorRef = new QBPurchaseOrderCUClass.VendorRef();
@@ -1184,7 +1187,7 @@ namespace EarthCo.Controllers
                                     PurchaseOrderQB.PurchaseOrderResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<PurchaseOrderQB.PurchaseOrderResponse>(Test);
 
                                     Data.QBId = Convert.ToInt32(ResponseData.PurchaseOrder.Id);
-                                    Data.EstimateNumber = ResponseData.PurchaseOrder.DocNumber;
+                                    Data.PurchaseOrderNumber = ResponseData.PurchaseOrder.DocNumber;
                                     int QBId = Convert.ToInt32(ResponseData.PurchaseOrder.VendorRef.value); ;
                                     int VendorId = DB.tblUsers.Where(x => x.QBId == QBId).Select(s => s.UserId).FirstOrDefault();
                                     Data.SupplierId = VendorId;
@@ -1211,11 +1214,11 @@ namespace EarthCo.Controllers
                                     //Data.Shipping = Estimate.EstimateData.Shipping;
                                     //Data.Profit = Estimate.EstimateData.Profit;
                                     //Data.ProfitPercentage = Estimate.EstimateData.ProfitPercentage;
+                                    //Data.BalanceAmount = Estimate.EstimateData.BalanceAmount;
+                                    //Data.CreatedBy = UserId;
                                     Data.Date = DateTime.Now;
                                     Data.Amount = (double)ResponseData.PurchaseOrder.TotalAmt;
-                                    //Data.BalanceAmount = Estimate.EstimateData.BalanceAmount;
                                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                    //Data.CreatedBy = UserId;
                                     Data.PurchaseOrderNumber = ResponseData.PurchaseOrder.DocNumber;
                                     Data.DocNumber = Convert.ToString(DB.SPGetNumber("P").FirstOrDefault());
                                     Data.isActive = true;
@@ -1307,6 +1310,7 @@ namespace EarthCo.Controllers
                         PurchaseOrderData.APAccountRef.value = "33";
                         PurchaseOrderData.TotalAmt = (decimal)Data.Amount;
                         PurchaseOrderData.SyncToken = Data.SyncToken;
+                        PurchaseOrderData.DocNumber = Data.PurchaseOrderNumber;
                         PurchaseOrderData.Id = Data.QBId.ToString();
                         PurchaseOrderData.VendorRef = new QBPurchaseOrderCUClass.VendorRef();
                         PurchaseOrderData.VendorRef.value = Data.tblUser.QBId.ToString();
@@ -1436,7 +1440,7 @@ namespace EarthCo.Controllers
                                 if (Data != null)
                                 {
                                     Data.QBId = Convert.ToInt32(ResponseData.PurchaseOrder.Id);
-                                    Data.EstimateNumber = ResponseData.PurchaseOrder.DocNumber;
+                                    Data.PurchaseOrderNumber = ResponseData.PurchaseOrder.DocNumber;
                                     QBId = Convert.ToInt32(ResponseData.PurchaseOrder.VendorRef.value); ;
                                     int VendorId = DB.tblUsers.Where(x => x.QBId == QBId).Select(s => s.UserId).FirstOrDefault();
                                     Data.SupplierId = VendorId;
@@ -1512,7 +1516,7 @@ namespace EarthCo.Controllers
                                 else
                                 {
                                     Data.QBId = Convert.ToInt32(ResponseData.PurchaseOrder.Id);
-                                    Data.EstimateNumber = ResponseData.PurchaseOrder.DocNumber;
+                                    Data.PurchaseOrderNumber = ResponseData.PurchaseOrder.DocNumber;
                                     QBId = Convert.ToInt32(ResponseData.PurchaseOrder.VendorRef.value); ;
                                     int VendorId = DB.tblUsers.Where(x => x.QBId == QBId).Select(s => s.UserId).FirstOrDefault();
                                     Data.SupplierId = VendorId;
@@ -4303,6 +4307,7 @@ namespace EarthCo.Controllers
                                     
                                     Data.UserTypeId = 1;
                                     Data.RoleId = 4;
+                                    Data.CreatedDate = DateTime.Now;
                                     Data.isLoginAllow = true;
                                     Data.isActive = true;
                                     Data.isDelete = false;
@@ -4484,6 +4489,7 @@ namespace EarthCo.Controllers
                                     
                                     Data.UserTypeId = 1;
                                     Data.RoleId = 4;
+                                    Data.CreatedDate = DateTime.Now;
                                     Data.isLoginAllow = true;
                                     Data.isActive = true;
                                     Data.isDelete = false;
@@ -4513,6 +4519,7 @@ namespace EarthCo.Controllers
                                    
                                     Data.UserTypeId = 1;
                                     Data.RoleId = 4;
+                                    Data.CreatedDate = DateTime.Now;
                                     Data.isLoginAllow = true;
                                     Data.isActive = true;
                                     Data.isDelete = false;

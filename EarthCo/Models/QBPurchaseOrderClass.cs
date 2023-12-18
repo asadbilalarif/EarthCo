@@ -16,6 +16,7 @@ namespace EarthCo.Models
             public string POStatus { get; set; }
             public string Id { get; set; }
             public string SyncToken { get; set; }
+            public string DocNumber { get; set; }
         }
 
         public class LineDetail

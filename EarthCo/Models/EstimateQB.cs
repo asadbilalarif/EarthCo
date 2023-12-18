@@ -41,6 +41,7 @@ namespace EarthCo.Models
             public CustomerRef CustomerRef { get; set; }
             public string SyncToken { get; set; }
             public string Id { get; set; }
+            public string DocNumber { get; set; }
             public decimal TotalAmt { get; set; }
             public BillEmail BillEmail { get; set; }
         }
