@@ -59,31 +59,16 @@
         <EntityTypeShape EntityType="earthcoModel.tblSRStatu" Width="1.5" PointX="0.75" PointY="6.875" />
         <AssociationConnector Association="earthcoModel.FK_tblPunchlist_tblPunchlistStatus" />
         <AssociationConnector Association="earthcoModel.FK__tblServic__SRSta__45F365D3" />
-        <EntityTypeShape EntityType="earthcoModel.tblUser" Width="1.5" PointX="18" PointY="3.375" />
-        <AssociationConnector Association="earthcoModel.FK_tblUser_tblCustomerType" />
-        <AssociationConnector Association="earthcoModel.FK_tblIrrigation_tblUser" />
-        <AssociationConnector Association="earthcoModel.FK__tblPunchl__Custo__571DF1D5" />
-        <AssociationConnector Association="earthcoModel.FK_tblPunchlist_tblUser" />
-        <AssociationConnector Association="earthcoModel.FK_tblUser_tblRole" />
-        <AssociationConnector Association="earthcoModel.FK_tblServiceLocation_tblCustomer" />
-        <AssociationConnector Association="earthcoModel.FK__tblServic__Custo__440B1D61" />
-        <AssociationConnector Association="earthcoModel.FK_tblServiceRequest_tblUser" />
-        <AssociationConnector Association="earthcoModel.FK_tblSetting_tblUser" />
-        <AssociationConnector Association="earthcoModel.FK_tblUser_tblUserType" />
         <EntityTypeShape EntityType="earthcoModel.tblPurchaseOrder" Width="1.5" PointX="35.125" PointY="13.875" />
         <EntityTypeShape EntityType="earthcoModel.tblPurchaseOrderItem" Width="1.5" PointX="37.375" PointY="16" />
         <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblPurchaseOrderStatus" />
         <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblTerm" />
-        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser" />
-        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser1" />
-        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser2" />
         <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrderFile_tblPurchaseOrder" />
         <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrderItem_tblPurchaseOrder" />
         <EntityTypeShape EntityType="earthcoModel.tblBill" Width="1.5" PointX="41.375" PointY="8.75" />
         <EntityTypeShape EntityType="earthcoModel.tblBillItem" Width="1.5" PointX="43.625" PointY="13" />
         <AssociationConnector Association="earthcoModel.FK_tblBill_tblPurchaseOrder" />
         <AssociationConnector Association="earthcoModel.FK_tblBill_tblTerm" />
-        <AssociationConnector Association="earthcoModel.FK_tblBill_tblUser" />
         <AssociationConnector Association="earthcoModel.FK_tblBillFile_tblBill" />
         <AssociationConnector Association="earthcoModel.FK_tblBillItem_tblBill" />
         <EntityTypeShape EntityType="earthcoModel.tblAccount" Width="1.5" PointX="10.375" PointY="13.75" />
@@ -107,10 +92,6 @@
         <AssociationConnector Association="earthcoModel.FK__tblEstima__Invoi__4321E620" />
         <AssociationConnector Association="earthcoModel.FK__tblEstima__Purch__422DC1E7" />
         <AssociationConnector Association="earthcoModel.FK_tblEstimate_tblServiceLocation" />
-        <AssociationConnector Association="earthcoModel.FK_tblEstimate_tblUser" />
-        <AssociationConnector Association="earthcoModel.FK_tblEstimate_tblUser1" />
-        <AssociationConnector Association="earthcoModel.FK_tblEstimate_tblUser2" />
-        <AssociationConnector Association="earthcoModel.FK_tblEstimate_tblUser3" />
         <AssociationConnector Association="earthcoModel.FK_tblEstimateFile_tblEstimate" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblPurchaseOrder" />
         <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblEstimate" />
@@ -118,11 +99,30 @@
         <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblInvoiceStatus" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblServiceLocation" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblTerm" />
-        <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblUser" />
-        <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblUser1" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoiceFile_tblInvoice" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoiceItem_tblInvoice" />
         <AssociationConnector Association="earthcoModel.FK_tblInvoiceItem_tblItem" />
+        <EntityTypeShape EntityType="earthcoModel.tblUser" Width="1.5" PointX="18" PointY="3.125" />
+        <AssociationConnector Association="earthcoModel.FK_tblBill_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK_tblUser_tblCustomerType" />
+        <AssociationConnector Association="earthcoModel.FK_tblEstimate_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK_tblEstimate_tblUser1" />
+        <AssociationConnector Association="earthcoModel.FK_tblEstimate_tblUser2" />
+        <AssociationConnector Association="earthcoModel.FK_tblEstimate_tblUser3" />
+        <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK_tblInvoice_tblUser1" />
+        <AssociationConnector Association="earthcoModel.FK_tblIrrigation_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK__tblPunchl__Custo__571DF1D5" />
+        <AssociationConnector Association="earthcoModel.FK_tblPunchlist_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser1" />
+        <AssociationConnector Association="earthcoModel.FK_tblPurchaseOrder_tblUser2" />
+        <AssociationConnector Association="earthcoModel.FK_tblUser_tblRole" />
+        <AssociationConnector Association="earthcoModel.FK_tblServiceLocation_tblCustomer" />
+        <AssociationConnector Association="earthcoModel.FK__tblServic__Custo__440B1D61" />
+        <AssociationConnector Association="earthcoModel.FK_tblServiceRequest_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK_tblSetting_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK_tblUser_tblUserType" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

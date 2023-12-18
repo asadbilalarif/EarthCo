@@ -17,16 +17,6 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tblUser()
         {
-            this.tblIrrigations = new HashSet<tblIrrigation>();
-            this.tblPunchlists = new HashSet<tblPunchlist>();
-            this.tblPunchlists1 = new HashSet<tblPunchlist>();
-            this.tblServiceLocations = new HashSet<tblServiceLocation>();
-            this.tblServiceRequests = new HashSet<tblServiceRequest>();
-            this.tblServiceRequests1 = new HashSet<tblServiceRequest>();
-            this.tblSettings = new HashSet<tblSetting>();
-            this.tblPurchaseOrders = new HashSet<tblPurchaseOrder>();
-            this.tblPurchaseOrders1 = new HashSet<tblPurchaseOrder>();
-            this.tblPurchaseOrders2 = new HashSet<tblPurchaseOrder>();
             this.tblBills = new HashSet<tblBill>();
             this.tblEstimates = new HashSet<tblEstimate>();
             this.tblEstimates1 = new HashSet<tblEstimate>();
@@ -34,6 +24,16 @@ namespace EarthCo.Models
             this.tblEstimates3 = new HashSet<tblEstimate>();
             this.tblInvoices = new HashSet<tblInvoice>();
             this.tblInvoices1 = new HashSet<tblInvoice>();
+            this.tblIrrigations = new HashSet<tblIrrigation>();
+            this.tblPunchlists = new HashSet<tblPunchlist>();
+            this.tblPunchlists1 = new HashSet<tblPunchlist>();
+            this.tblPurchaseOrders = new HashSet<tblPurchaseOrder>();
+            this.tblPurchaseOrders1 = new HashSet<tblPurchaseOrder>();
+            this.tblPurchaseOrders2 = new HashSet<tblPurchaseOrder>();
+            this.tblServiceLocations = new HashSet<tblServiceLocation>();
+            this.tblServiceRequests = new HashSet<tblServiceRequest>();
+            this.tblServiceRequests1 = new HashSet<tblServiceRequest>();
+            this.tblSettings = new HashSet<tblSetting>();
         }
     
         public int UserId { get; set; }
@@ -66,32 +66,11 @@ namespace EarthCo.Models
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
         public Nullable<int> QBId { get; set; }
+        public string SyncToken { get; set; }
     
-        public virtual tblCustomerType tblCustomerType { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblIrrigation> tblIrrigations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPunchlist> tblPunchlists1 { get; set; }
-        public virtual tblRole tblRole { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblServiceLocation> tblServiceLocations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblServiceRequest> tblServiceRequests { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblServiceRequest> tblServiceRequests1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblSetting> tblSettings { get; set; }
-        public virtual tblUserType tblUserType { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBill> tblBills { get; set; }
+        public virtual tblCustomerType tblCustomerType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimate> tblEstimates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -104,5 +83,27 @@ namespace EarthCo.Models
         public virtual ICollection<tblInvoice> tblInvoices { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoice> tblInvoices1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblIrrigation> tblIrrigations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPunchlist> tblPunchlists { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPunchlist> tblPunchlists1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPurchaseOrder> tblPurchaseOrders2 { get; set; }
+        public virtual tblRole tblRole { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblServiceLocation> tblServiceLocations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblServiceRequest> tblServiceRequests { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblServiceRequest> tblServiceRequests1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblSetting> tblSettings { get; set; }
+        public virtual tblUserType tblUserType { get; set; }
     }
 }

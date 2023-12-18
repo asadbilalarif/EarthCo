@@ -475,6 +475,8 @@
     <Compile Include="Models\PurchaseOrderQB.cs" />
     <Compile Include="Models\QBBill.cs" />
     <Compile Include="Models\QBBillCUClass.cs" />
+    <Compile Include="Models\QBCustomer.cs" />
+    <Compile Include="Models\QBCustomerCUClass.cs" />
     <Compile Include="Models\QBDeleteClass.cs" />
     <Compile Include="Models\QBErrorClass.cs" />
     <Compile Include="Models\QBEstimateResponseClass.cs" />
@@ -483,6 +485,9 @@
     <Compile Include="Models\QBItemCUClass.cs" />
     <Compile Include="Models\QBItemResponseClass.cs" />
     <Compile Include="Models\QBPurchaseOrderClass.cs" />
+    <Compile Include="Models\QBStaff.cs" />
+    <Compile Include="Models\QBStaffCUClass.cs" />
+    <Compile Include="Models\QBVendor.cs" />
     <Compile Include="Models\ServerSideTableClass.cs" />
     <Compile Include="Models\ServiceRequestFile.cs" />
     <Compile Include="Models\SPGetBillData_Result.cs">

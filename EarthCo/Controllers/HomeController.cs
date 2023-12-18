@@ -26,6 +26,8 @@ using static EarthCo.Models.QBPurchaseOrderCUClass;
 using static EarthCo.Models.QBInvoiceCUClass;
 using static EarthCo.Models.QBBillCUClass;
 using static EarthCo.Models.QBItemCUClass;
+using static EarthCo.Models.QBStaffCUClass;
+using static EarthCo.Models.QBCustomerCUClass;
 
 namespace EarthCo.Controllers
 {
@@ -316,7 +318,7 @@ namespace EarthCo.Controllers
                 // API endpoint URL
                 //string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/estimate?minorversion=23";
                 //string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/purchaseorder?minorversion=23";
-                string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/item?minorversion=23";
+                string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/customer?minorversion=23";
                 //string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/estimate?operation=delete";
 
                 // Request body data
@@ -446,22 +448,42 @@ namespace EarthCo.Controllers
 
 
                 QBItemClass ItemData = new QBItemClass();
-                ItemData.Type = "NonInventory";
-                ItemData.Name = "Garden Supplies3";
-                ItemData.UnitPrice = (decimal)150;
-                ItemData.PurchaseCost = (decimal)110;
+                //ItemData.Type = "NonInventory";
+                //ItemData.Name = "Garden Supplies3";
+                //ItemData.UnitPrice = (decimal)150;
+                //ItemData.PurchaseCost = (decimal)110;
 
-                ItemData.SyncToken = "0";
-                ItemData.Id = "66";
-                ItemData.IncomeAccountRef = new IncomeAccountRef();
-                ItemData.IncomeAccountRef.value = "79";
-                ItemData.ExpenseAccountRef = new ExpenseAccountRef();
-                ItemData.ExpenseAccountRef.value = "80";
+                //ItemData.SyncToken = "0";
+                //ItemData.Id = "66";
+                //ItemData.IncomeAccountRef = new IncomeAccountRef();
+                //ItemData.IncomeAccountRef.value = "79";
+                //ItemData.ExpenseAccountRef = new ExpenseAccountRef();
+                //ItemData.ExpenseAccountRef.value = "80";
+
+                QBStaffClass StaffData = new QBStaffClass();
+                //StaffData.GivenName = "John";
+                //StaffData.FamilyName = "Meuller";
+                //StaffData.PrimaryPhone = new QBStaffCUClass.PrimaryPhone();
+                //StaffData.PrimaryPhone.FreeFormNumber = "408-525-1234";
+                //StaffData.Title = "Manager2";
+                //StaffData.SyncToken = "0";
+                //StaffData.Id = "252";
+
+                QBCustomerClass CustomerData = new QBCustomerClass();
+                CustomerData.GivenName = "Bill1";
+                CustomerData.FamilyName = "Lucchini";
+                CustomerData.CompanyName = "Bill's Windsurf Shop";
+                CustomerData.PrimaryPhone = new QBCustomerCUClass.PrimaryPhone();
+                CustomerData.PrimaryPhone.FreeFormNumber = "(555) 555-5555";
+                CustomerData.PrimaryEmailAddr = new QBCustomerCUClass.PrimaryEmailAddr();
+                CustomerData.PrimaryEmailAddr.Address = "jdrew@myemail.com";
+                CustomerData.SyncToken = "0";
+                CustomerData.Id = "254";
 
                 // Convert the request body to JSON
                 //string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(EsitimateData);
                 //string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(PurchaseOrderData);
-                string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(ItemData);
+                string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(CustomerData);
                 //string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(DeleteData);
                 // Create HttpClient
                 using (HttpClient client = new HttpClient())
@@ -491,8 +513,8 @@ namespace EarthCo.Controllers
                         //var SyncToken = estimateModel["Estimate"]["SyncToken"];
                         //var estimateId = estimateModel["PurchaseOrder"]["Id"];
                         //var SyncToken = estimateModel["PurchaseOrder"]["SyncToken"];
-                        var estimateId = estimateModel["Item"]["Id"];
-                        var SyncToken = estimateModel["Item"]["SyncToken"];
+                        var estimateId = estimateModel["Customer"]["Id"];
+                        var SyncToken = estimateModel["Customer"]["SyncToken"];
                         // Process jsonResponse
                         return View();
                         }
@@ -515,7 +537,7 @@ namespace EarthCo.Controllers
                     client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                     // Make the GET request
-                    HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/item/" + 66 + "?minorversion=23");
+                    HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/customer/" + 254 + "?minorversion=23");
                     //HttpResponseMessage response = await client.GetAsync("http://103.73.231.56/clickcut/api/Login/recoverpassword?Email=abdulqadeerkhan070@gmail.com");
                     //var responseTask = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/Estimate/" + 1108 + "?minorversion=23");
                     //var visibilityresponse = await client.PostAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/vendor?minorversion=23", content);
@@ -529,7 +551,7 @@ namespace EarthCo.Controllers
                         var readTask = response.Content.ReadAsStringAsync();
                         readTask.Wait();
                         string Test = readTask.Result;
-                        QBItem.ItemResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBItem.ItemResponse>(Test);
+                        QBCustomer.CustomerResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBCustomer.CustomerResponse>(Test);
                         //BillInfo = JsonSerializer.Deserialize<Bill>(readTask.Result);
 
 

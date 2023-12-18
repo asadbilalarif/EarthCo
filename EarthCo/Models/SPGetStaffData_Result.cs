@@ -35,12 +35,14 @@ namespace EarthCo.Models
         public Nullable<int> CustomerTypeId { get; set; }
         public int UserTypeId { get; set; }
         public Nullable<System.DateTime> LastLogin { get; set; }
-        public int CreatedBy { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> EditBy { get; set; }
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isLoginAllow { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
+        public Nullable<int> QBId { get; set; }
+        public string SyncToken { get; set; }
     }
 }

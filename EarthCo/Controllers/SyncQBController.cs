@@ -14,10 +14,12 @@ using System.Web.Http.Cors;
 using static EarthCo.Models.EstimateQB;
 using static EarthCo.Models.PurchaseOrderQB;
 using static EarthCo.Models.QBBillCUClass;
+using static EarthCo.Models.QBCustomerCUClass;
 using static EarthCo.Models.QBErrorClass;
 using static EarthCo.Models.QBInvoiceCUClass;
 using static EarthCo.Models.QBItemCUClass;
 using static EarthCo.Models.QBPurchaseOrderCUClass;
+using static EarthCo.Models.QBStaffCUClass;
 using static EarthCo.Models.SyncQB;
 
 namespace EarthCo.Controllers
@@ -51,6 +53,18 @@ namespace EarthCo.Controllers
                     else if(item.Name == "Item")
                     {
                         SyncItemAsync(item);
+                    }
+                    else if(item.Name == "Vendor")
+                    {
+                        SyncVendorAsync(item);
+                    }
+                    else if(item.Name == "Employee")
+                    {
+                        SyncStaffAsync(item);
+                    }
+                    else if(item.Name == "Customer")
+                    {
+                        SyncCustomerAsync(item);
                     }
                 }
                 
@@ -3785,6 +3799,1437 @@ namespace EarthCo.Controllers
                             tblSyncLog SyncLogData = new tblSyncLog();
                             SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
                             SyncLogData.Id = Data.ItemId;
+                            SyncLogData.isSync = true;
+                            SyncLogData.EditDate = DateTime.Now;
+                            DB.Entry(SyncLogData);
+                            DB.SaveChanges();
+                        }
+                        else
+                        {
+                            tblSyncLog SyncLogData = new tblSyncLog();
+                            SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                            SyncLogData.Message = "Object Not Found";
+                            SyncLogData.isSync = true;
+                            SyncLogData.EditDate = DateTime.Now;
+                            DB.Entry(SyncLogData);
+                            DB.SaveChanges();
+                        }
+
+                    }
+                }
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+                tblLog Result = new tblLog();
+                Result.Action = "Error: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(Result);
+                DB.SaveChanges();
+                //return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+                tblLog Result = new tblLog();
+                Result.Action = "Error: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(Result);
+                DB.SaveChanges();
+                //return ResponseMessage(responseMessage);
+            }
+
+        }
+
+        [HttpPost]
+        public async Task SyncVendorAsync(tblSyncLog SyncLog)
+        {
+            try
+            {
+                tblUser Data = new tblUser();
+                if (SyncLog.Operation == "Create")
+                {
+                    Data = DB.tblUsers.Where(x => x.QBId == SyncLog.QBId).FirstOrDefault();
+                    if (Data != null)
+                    {
+                        tblSyncLog SyncLogData = new tblSyncLog();
+                        SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                        SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                        SyncLogData.isSync = true;
+                        SyncLogData.EditDate = DateTime.Now;
+                        DB.Entry(SyncLogData);
+                        DB.SaveChanges();
+                    }
+                    else
+                    {
+                        tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                        string AccessToken = "";
+
+                        var diffOfDates = DateTime.Now - TokenData.EditDate;
+                        do
+                        {
+                            TokenData = DB.tblTokens.FirstOrDefault();
+                            diffOfDates = DateTime.Now - TokenData.EditDate;
+                            if (diffOfDates.Value.Hours >= 1)
+                            {
+                                HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                            }
+                        } while (diffOfDates.Value.Hours >= 1);
+
+                        AccessToken = TokenData.AccessToken;
+
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenData.AccessToken);
+                            client.DefaultRequestHeaders.Accept.Clear();
+                            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                            // Make the GET request
+                            HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/vendor/" + SyncLog.QBId + "?minorversion=23");
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                var readTask = response.Content.ReadAsStringAsync();
+                                readTask.Wait();
+                                string Test = readTask.Result;
+                                QBVendor.VendorResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBVendor.VendorResponse>(Test);
+
+                                Data.QBId = Convert.ToInt32(ResponseData.Vendor.Id);
+                                Data.SyncToken = ResponseData.Vendor.SyncToken;
+
+                                Data.FirstName = ResponseData.Vendor.GivenName;
+                                Data.LastName = ResponseData.Vendor.FamilyName;
+                                Data.CompanyName = ResponseData.Vendor.CompanyName;
+                                if(ResponseData.Vendor.PrimaryEmailAddr!=null)
+                                {
+                                    Data.Email = ResponseData.Vendor.PrimaryEmailAddr.Address;
+                                }
+                                if(ResponseData.Vendor.PrimaryPhone != null)
+                                {
+                                    Data.Phone = ResponseData.Vendor.PrimaryPhone.FreeFormNumber;
+                                }
+                                
+                                
+                                Data.UserTypeId = 3;
+                                Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                Data.isLoginAllow = false;
+                                Data.isActive = true;
+                                Data.isDelete = false;
+                                DB.tblUsers.Add(Data);
+                                DB.SaveChanges();
+
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                                SyncLogData.isSync = true;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+
+                            }
+                            else
+                            {
+                                string errorMessage = await response.Content.ReadAsStringAsync();
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.Message = errorMessage;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+                            }
+                        }
+                    }
+                }
+                else if (SyncLog.Operation == "Update")
+                {
+                    tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                    string AccessToken = "";
+
+                    var diffOfDates = DateTime.Now - TokenData.EditDate;
+                    do
+                    {
+                        TokenData = DB.tblTokens.FirstOrDefault();
+                        diffOfDates = DateTime.Now - TokenData.EditDate;
+                        if (diffOfDates.Value.Hours >= 1)
+                        {
+                            HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                        }
+                    } while (diffOfDates.Value.Hours >= 1);
+
+                    AccessToken = TokenData.AccessToken;
+
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenData.AccessToken);
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                        // Make the GET request
+                        HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/vendor/" + SyncLog.QBId + "?minorversion=23");
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var readTask = response.Content.ReadAsStringAsync();
+                            readTask.Wait();
+                            string Test = readTask.Result;
+                            QBVendor.VendorResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBVendor.VendorResponse>(Test);
+
+
+                            int QBId = Convert.ToInt32(ResponseData.Vendor.Id);
+
+                            Data = DB.tblUsers.Where(x => x.QBId == QBId).FirstOrDefault();
+                            if (Data != null)
+                            {
+                                Data.QBId = Convert.ToInt32(ResponseData.Vendor.Id);
+                                Data.SyncToken = ResponseData.Vendor.SyncToken;
+
+                                Data.FirstName = ResponseData.Vendor.GivenName;
+                                Data.LastName = ResponseData.Vendor.FamilyName;
+                                Data.CompanyName = ResponseData.Vendor.CompanyName;
+
+                                if (ResponseData.Vendor.PrimaryEmailAddr != null)
+                                {
+                                    Data.Email = ResponseData.Vendor.PrimaryEmailAddr.Address;
+                                }
+                                if (ResponseData.Vendor.PrimaryPhone != null)
+                                {
+                                    Data.Phone = ResponseData.Vendor.PrimaryPhone.FreeFormNumber;
+                                }
+                                Data.UserTypeId = 3;
+                                Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                Data.isLoginAllow = false;
+                                Data.isActive = true;
+                                Data.isDelete = false;
+                                DB.Entry(Data);
+                                DB.SaveChanges();
+
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                                SyncLogData.isSync = true;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+                            }
+                            else
+                            {
+                                Data.QBId = Convert.ToInt32(ResponseData.Vendor.Id);
+                                Data.SyncToken = ResponseData.Vendor.SyncToken;
+
+                                Data.FirstName = ResponseData.Vendor.GivenName;
+                                Data.LastName = ResponseData.Vendor.FamilyName;
+                                Data.CompanyName = ResponseData.Vendor.CompanyName;
+                                if (ResponseData.Vendor.PrimaryEmailAddr != null)
+                                {
+                                    Data.Email = ResponseData.Vendor.PrimaryEmailAddr.Address;
+                                }
+                                if (ResponseData.Vendor.PrimaryPhone != null)
+                                {
+                                    Data.Phone = ResponseData.Vendor.PrimaryPhone.FreeFormNumber;
+                                }
+                                Data.UserTypeId = 3;
+                                Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                Data.isLoginAllow = false;
+                                Data.isActive = true;
+                                Data.isDelete = false;
+                                DB.tblUsers.Add(Data);
+                                DB.SaveChanges();
+
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                                SyncLogData.isSync = true;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+
+                            }
+                        }
+                        else
+                        {
+                            string errorMessage = await response.Content.ReadAsStringAsync();
+
+                            tblSyncLog SyncLogData = new tblSyncLog();
+                            SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                            SyncLogData.Message = errorMessage;
+                            SyncLogData.EditDate = DateTime.Now;
+                            DB.Entry(SyncLogData);
+                            DB.SaveChanges();
+                        }
+                    }
+                }
+                else if (SyncLog.Operation == "Delete")
+                {
+                    Data = DB.tblUsers.Select(r => r).Where(x => x.QBId == SyncLog.QBId).FirstOrDefault();
+                    if (Data != null)
+                    {
+                        Data.isDelete = true;
+                        Data.EditDate = DateTime.Now;
+                        DB.Entry(Data);
+                        DB.SaveChanges();
+
+                        tblSyncLog SyncLogData = new tblSyncLog();
+                        SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                        SyncLogData.Id = Data.UserId;
+                        SyncLogData.isSync = true;
+                        SyncLogData.EditDate = DateTime.Now;
+                        DB.Entry(SyncLogData);
+                        DB.SaveChanges();
+                    }
+                    else
+                    {
+                        tblSyncLog SyncLogData = new tblSyncLog();
+                        SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                        SyncLogData.Message = "Object Not Found";
+                        SyncLogData.isSync = true;
+                        SyncLogData.EditDate = DateTime.Now;
+                        DB.Entry(SyncLogData);
+                        DB.SaveChanges();
+                    }
+                }
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var Vendor in dbEx.EntityValidationErrors)
+                {
+                    foreach (var Vendor1 in Vendor.ValidationErrors)
+                    {
+                        ErrorString += Vendor1.ErrorMessage + " ,";
+                    }
+                }
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+                tblLog Result = new tblLog();
+                Result.Action = "Error: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(Result);
+                DB.SaveChanges();
+                //return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+                tblLog Result = new tblLog();
+                Result.Action = "Error: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(Result);
+                DB.SaveChanges();
+                //return ResponseMessage(responseMessage);
+            }
+
+        }
+
+        [HttpPost]
+        public async Task SyncStaffAsync(tblSyncLog SyncLog)
+        {
+            try
+            {
+                tblUser Data = new tblUser();
+                if (SyncLog.Operation == "Create")
+                {
+                    if (SyncLog.isQB != true)
+                    {
+                        Data = DB.tblUsers.Where(x => x.UserId == SyncLog.Id).FirstOrDefault();
+
+                        tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                        string AccessToken = "";
+
+                        var diffOfDates = DateTime.Now - TokenData.EditDate;
+                        do
+                        {
+                            DB = new earthcoEntities();
+                            TokenData = DB.tblTokens.FirstOrDefault();
+                            diffOfDates = DateTime.Now - TokenData.EditDate;
+                            if (diffOfDates.Value.Hours >= 1)
+                            {
+                                HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                            }
+                        } while (diffOfDates.Value.Hours >= 1);
+
+                        AccessToken = TokenData.AccessToken;
+
+
+                        string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/employee?minorversion=23";
+
+                        QBStaffClass StaffData = new QBStaffClass();
+                        StaffData.GivenName = Data.FirstName;
+                        StaffData.FamilyName = Data.LastName;
+                        StaffData.PrimaryPhone = new QBStaffCUClass.PrimaryPhone();
+                        StaffData.PrimaryPhone.FreeFormNumber = Data.Phone;
+                        StaffData.Title = Data.tblRole.Role;
+                        //EsitimateData.SyncToken = "0";
+                        //EsitimateData.Id = "1103";
+                        string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(StaffData);
+
+                        // Create HttpClient
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + AccessToken);
+                            client.DefaultRequestHeaders.Add("Accept", "application/json");
+                            // Create the request content
+                            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                            //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                            // Make the POST request
+                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                            // Check if the request was successful
+                            if (response.IsSuccessStatusCode)
+                            {
+                                // Parse and use the response data as needed
+                                string jsonResponse = await response.Content.ReadAsStringAsync();
+                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+
+                                // Now you can access the data using the model
+                                var QBId = estimateModel["Employee"]["Id"];
+                                var SyncToken = estimateModel["Employee"]["SyncToken"];
+
+                                Data.QBId = SyncToken;
+                                Data.SyncToken = SyncToken;
+                                DB.Entry(Data);
+                                DB.SaveChanges();
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.QBId = Convert.ToInt32(QBId);
+                                SyncLogData.isSync = true;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+
+                            }
+                            else
+                            {
+                                // Handle error
+                                string errorMessage = await response.Content.ReadAsStringAsync();
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.Message = errorMessage;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+                                // Handle error message
+                                //return View("Error");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Data = DB.tblUsers.Where(x => x.QBId == SyncLog.QBId).FirstOrDefault();
+                        if (Data != null)
+                        {
+                            tblSyncLog SyncLogData = new tblSyncLog();
+                            SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                            SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                            SyncLogData.isSync = true;
+                            SyncLogData.EditDate = DateTime.Now;
+                            DB.Entry(SyncLogData);
+                            DB.SaveChanges();
+                        }
+                        else
+                        {
+                            tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                            string AccessToken = "";
+
+                            var diffOfDates = DateTime.Now - TokenData.EditDate;
+                            do
+                            {
+                                TokenData = DB.tblTokens.FirstOrDefault();
+                                diffOfDates = DateTime.Now - TokenData.EditDate;
+                                if (diffOfDates.Value.Hours >= 1)
+                                {
+                                    HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                                }
+                            } while (diffOfDates.Value.Hours >= 1);
+
+                            AccessToken = TokenData.AccessToken;
+
+                            using (HttpClient client = new HttpClient())
+                            {
+                                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenData.AccessToken);
+                                client.DefaultRequestHeaders.Accept.Clear();
+                                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                                // Make the GET request
+                                HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/employee/" + SyncLog.QBId + "?minorversion=23");
+
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    var readTask = response.Content.ReadAsStringAsync();
+                                    readTask.Wait();
+                                    string Test = readTask.Result;
+                                    QBStaff.StaffResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBStaff.StaffResponse>(Test);
+
+                                    Data.QBId = Convert.ToInt32(ResponseData.Employee.Id);
+                                    Data.SyncToken = ResponseData.Employee.SyncToken;
+
+                                    Data.FirstName = ResponseData.Employee.GivenName;
+                                    Data.LastName = ResponseData.Employee.FamilyName;
+                                    if(ResponseData.Employee.PrimaryPhone!=null)
+                                    {
+                                        Data.Phone = ResponseData.Employee.PrimaryPhone.FreeFormNumber;
+                                    }
+                                    
+                                    Data.UserTypeId = 1;
+                                    Data.RoleId = 4;
+                                    Data.isLoginAllow = true;
+                                    Data.isActive = true;
+                                    Data.isDelete = false;
+                                    DB.tblUsers.Add(Data);
+                                    DB.SaveChanges();
+
+
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                                    SyncLogData.isSync = true;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+
+                                }
+                                else
+                                {
+                                    string errorMessage = await response.Content.ReadAsStringAsync();
+
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+                                }
+                            }
+                        }
+
+
+
+
+                    }
+                }
+                else if (SyncLog.Operation == "Update")
+                {
+                    if (SyncLog.isQB != true)
+                    {
+                        Data = DB.tblUsers.Where(x => x.UserId == SyncLog.Id).FirstOrDefault();
+
+                        tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                        string AccessToken = "";
+
+                        var diffOfDates = DateTime.Now - TokenData.EditDate;
+                        do
+                        {
+                            TokenData = DB.tblTokens.FirstOrDefault();
+                            diffOfDates = DateTime.Now - TokenData.EditDate;
+                            if (diffOfDates.Value.Hours >= 1)
+                            {
+                                HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                            }
+                        } while (diffOfDates.Value.Hours >= 1);
+
+                        AccessToken = TokenData.AccessToken;
+
+
+                        string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/employee?minorversion=23";
+
+
+                        QBStaffClass StaffData = new QBStaffClass();
+                        StaffData.GivenName = Data.FirstName;
+                        StaffData.FamilyName = Data.LastName;
+                        StaffData.PrimaryPhone = new QBStaffCUClass.PrimaryPhone();
+                        StaffData.PrimaryPhone.FreeFormNumber = Data.Phone;
+                        StaffData.Title = Data.tblRole.Role;
+
+                        StaffData.SyncToken = Data.SyncToken;
+                        StaffData.Id = Data.QBId.ToString();
+
+                        string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(StaffData);
+
+                        // Create HttpClient
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + AccessToken);
+                            client.DefaultRequestHeaders.Add("Accept", "application/json");
+                            // Create the request content
+                            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                            //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                            // Make the POST request
+                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                            // Check if the request was successful
+                            if (response.IsSuccessStatusCode)
+                            {
+                                // Parse and use the response data as needed
+                                string jsonResponse = await response.Content.ReadAsStringAsync();
+                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+
+                                // Now you can access the data using the model
+
+                                var QBId = estimateModel["Employee"]["Id"];
+                                var SyncToken = estimateModel["Employee"]["SyncToken"];
+
+                                Data.QBId = QBId;
+                                Data.SyncToken = SyncToken;
+                                DB.Entry(Data);
+                                DB.SaveChanges();
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.QBId = Convert.ToInt32(QBId);
+                                SyncLogData.isSync = true;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+
+                                // Process jsonResponse
+                                //return View();
+                            }
+                            else
+                            {
+                                // Handle error
+                                string errorMessage = await response.Content.ReadAsStringAsync();
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.Message = errorMessage;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+                                // Handle error message
+                                //return View("Error");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                        string AccessToken = "";
+
+                        var diffOfDates = DateTime.Now - TokenData.EditDate;
+                        do
+                        {
+                            TokenData = DB.tblTokens.FirstOrDefault();
+                            diffOfDates = DateTime.Now - TokenData.EditDate;
+                            if (diffOfDates.Value.Hours >= 1)
+                            {
+                                HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                            }
+                        } while (diffOfDates.Value.Hours >= 1);
+
+                        AccessToken = TokenData.AccessToken;
+
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenData.AccessToken);
+                            client.DefaultRequestHeaders.Accept.Clear();
+                            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                            // Make the GET request
+                            HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/employee/" + SyncLog.QBId + "?minorversion=23");
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                var readTask = response.Content.ReadAsStringAsync();
+                                readTask.Wait();
+                                string Test = readTask.Result;
+                                QBStaff.StaffResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBStaff.StaffResponse>(Test);
+
+
+                                int QBId = Convert.ToInt32(ResponseData.Employee.Id);
+
+                                Data = DB.tblUsers.Where(x => x.QBId == QBId).FirstOrDefault();
+                                if (Data != null)
+                                {
+                                    Data.QBId = Convert.ToInt32(ResponseData.Employee.Id);
+                                    Data.SyncToken = ResponseData.Employee.SyncToken;
+
+                                    Data.FirstName = ResponseData.Employee.GivenName;
+                                    Data.LastName = ResponseData.Employee.FamilyName;
+                                    if(ResponseData.Employee.PrimaryPhone!=null)
+                                    {
+                                        Data.Phone = ResponseData.Employee.PrimaryPhone.FreeFormNumber;
+                                    }
+                                    
+                                    Data.UserTypeId = 1;
+                                    Data.RoleId = 4;
+                                    Data.isLoginAllow = true;
+                                    Data.isActive = true;
+                                    Data.isDelete = false;
+                                    DB.Entry(Data);
+                                    DB.SaveChanges();
+
+
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                                    SyncLogData.isSync = true;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+                                }
+                                else
+                                {
+                                    Data.QBId = Convert.ToInt32(ResponseData.Employee.Id);
+                                    Data.SyncToken = ResponseData.Employee.SyncToken;
+
+                                    Data.FirstName = ResponseData.Employee.GivenName;
+                                    Data.LastName = ResponseData.Employee.FamilyName;
+                                    if(ResponseData.Employee.PrimaryPhone!=null)
+                                    {
+                                        Data.Phone = ResponseData.Employee.PrimaryPhone.FreeFormNumber;
+                                    }
+                                   
+                                    Data.UserTypeId = 1;
+                                    Data.RoleId = 4;
+                                    Data.isLoginAllow = true;
+                                    Data.isActive = true;
+                                    Data.isDelete = false;
+                                    DB.tblUsers.Add(Data);
+                                    DB.SaveChanges();
+
+
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                                    SyncLogData.isSync = true;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+                                }
+                            }
+                            else
+                            {
+                                string errorMessage = await response.Content.ReadAsStringAsync();
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.Message = errorMessage;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+                            }
+                        }
+                    }
+                }
+                else if (SyncLog.Operation == "Delete")
+                {
+                    if (SyncLog.isQB != true)
+                    {
+                        tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                        string AccessToken = "";
+
+                        var diffOfDates = DateTime.Now - TokenData.EditDate;
+                        do
+                        {
+                            TokenData = DB.tblTokens.FirstOrDefault();
+                            diffOfDates = DateTime.Now - TokenData.EditDate;
+                            if (diffOfDates.Value.Hours >= 1)
+                            {
+                                HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                            }
+                        } while (diffOfDates.Value.Hours >= 1);
+
+                        AccessToken = TokenData.AccessToken;
+
+
+                        string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/employee?operation=delete";
+
+                        QBDeleteClass DeleteData = new QBDeleteClass();
+                        Data = DB.tblUsers.Where(x => x.UserId == SyncLog.Id).FirstOrDefault();
+                        DeleteData.Id = Data.QBId.ToString();
+                        DeleteData.SyncToken = Data.SyncToken;
+
+
+
+                        string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(DeleteData);
+
+                        // Create HttpClient
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + AccessToken);
+                            client.DefaultRequestHeaders.Add("Accept", "application/json");
+                            // Create the request content
+                            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                            //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                            // Make the POST request
+                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                            // Check if the request was successful
+                            if (response.IsSuccessStatusCode)
+                            {
+                                // Parse and use the response data as needed
+                                string jsonResponse = await response.Content.ReadAsStringAsync();
+                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+
+                                // Now you can access the data using the model
+                                var QBId = estimateModel["Employee"]["Id"];
+
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.QBId = Convert.ToInt32(QBId);
+                                SyncLogData.isSync = true;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+
+                                // Process jsonResponse
+                                //return View();
+                            }
+                            else
+                            {
+                                // Handle error
+                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(errorMessage);
+                                if (errorResponse.Fault.Error.FirstOrDefault().Message.Contains("Object Not Found"))
+                                {
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Message = errorResponse.Fault.Error.FirstOrDefault().Message;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    SyncLogData.isSync = true;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+                                }
+                                else
+                                {
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+                                }
+
+                                // Handle error message
+                                //return View("Error");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Data = DB.tblUsers.Select(r => r).Where(x => x.QBId == SyncLog.QBId).FirstOrDefault();
+                        if (Data != null)
+                        {
+                            Data.isDelete = true;
+                            Data.EditDate = DateTime.Now;
+                            DB.Entry(Data);
+                            DB.SaveChanges();
+
+                            tblSyncLog SyncLogData = new tblSyncLog();
+                            SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                            SyncLogData.Id = Data.UserId;
+                            SyncLogData.isSync = true;
+                            SyncLogData.EditDate = DateTime.Now;
+                            DB.Entry(SyncLogData);
+                            DB.SaveChanges();
+                        }
+                        else
+                        {
+                            tblSyncLog SyncLogData = new tblSyncLog();
+                            SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                            SyncLogData.Message = "Object Not Found";
+                            SyncLogData.isSync = true;
+                            SyncLogData.EditDate = DateTime.Now;
+                            DB.Entry(SyncLogData);
+                            DB.SaveChanges();
+                        }
+
+                    }
+                }
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+                tblLog Result = new tblLog();
+                Result.Action = "Error: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(Result);
+                DB.SaveChanges();
+                //return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+                tblLog Result = new tblLog();
+                Result.Action = "Error: " + responseMessage;
+                Result.CreatedDate = DateTime.Now;
+                DB.tblLogs.Add(Result);
+                DB.SaveChanges();
+                //return ResponseMessage(responseMessage);
+            }
+
+        }
+
+        [HttpPost]
+        public async Task SyncCustomerAsync(tblSyncLog SyncLog)
+        {
+            try
+            {
+                tblUser Data = new tblUser();
+                if (SyncLog.Operation == "Create")
+                {
+                    if (SyncLog.isQB != true)
+                    {
+                        Data = DB.tblUsers.Where(x => x.UserId == SyncLog.Id).FirstOrDefault();
+
+                        tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                        string AccessToken = "";
+
+                        var diffOfDates = DateTime.Now - TokenData.EditDate;
+                        do
+                        {
+                            DB = new earthcoEntities();
+                            TokenData = DB.tblTokens.FirstOrDefault();
+                            diffOfDates = DateTime.Now - TokenData.EditDate;
+                            if (diffOfDates.Value.Hours >= 1)
+                            {
+                                HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                            }
+                        } while (diffOfDates.Value.Hours >= 1);
+
+                        AccessToken = TokenData.AccessToken;
+
+
+                        string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/customer?minorversion=23";
+
+                        QBCustomerClass CustomerData = new QBCustomerClass();
+                        CustomerData.GivenName = Data.FirstName;
+                        CustomerData.FamilyName = Data.LastName;
+                        CustomerData.CompanyName = Data.CompanyName;
+                        CustomerData.PrimaryPhone = new QBCustomerCUClass.PrimaryPhone();
+                        CustomerData.PrimaryPhone.FreeFormNumber = Data.Phone;
+                        CustomerData.PrimaryEmailAddr = new QBCustomerCUClass.PrimaryEmailAddr();
+                        CustomerData.PrimaryEmailAddr.Address= Data.Email;
+                        //EsitimateData.SyncToken = "0";
+                        //EsitimateData.Id = "1103";
+                        string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(CustomerData);
+
+                        // Create HttpClient
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + AccessToken);
+                            client.DefaultRequestHeaders.Add("Accept", "application/json");
+                            // Create the request content
+                            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                            //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                            // Make the POST request
+                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                            // Check if the request was successful
+                            if (response.IsSuccessStatusCode)
+                            {
+                                // Parse and use the response data as needed
+                                string jsonResponse = await response.Content.ReadAsStringAsync();
+                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+
+                                // Now you can access the data using the model
+                                var QBId = estimateModel["Customer"]["Id"];
+                                var SyncToken = estimateModel["Customer"]["SyncToken"];
+
+                                Data.QBId = SyncToken;
+                                Data.SyncToken = SyncToken;
+                                DB.Entry(Data);
+                                DB.SaveChanges();
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.QBId = Convert.ToInt32(QBId);
+                                SyncLogData.isSync = true;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+
+                            }
+                            else
+                            {
+                                // Handle error
+                                string errorMessage = await response.Content.ReadAsStringAsync();
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.Message = errorMessage;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+                                // Handle error message
+                                //return View("Error");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Data = DB.tblUsers.Where(x => x.QBId == SyncLog.QBId).FirstOrDefault();
+                        if (Data != null)
+                        {
+                            tblSyncLog SyncLogData = new tblSyncLog();
+                            SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                            SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                            SyncLogData.isSync = true;
+                            SyncLogData.EditDate = DateTime.Now;
+                            DB.Entry(SyncLogData);
+                            DB.SaveChanges();
+                        }
+                        else
+                        {
+                            tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                            string AccessToken = "";
+
+                            var diffOfDates = DateTime.Now - TokenData.EditDate;
+                            do
+                            {
+                                TokenData = DB.tblTokens.FirstOrDefault();
+                                diffOfDates = DateTime.Now - TokenData.EditDate;
+                                if (diffOfDates.Value.Hours >= 1)
+                                {
+                                    HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                                }
+                            } while (diffOfDates.Value.Hours >= 1);
+
+                            AccessToken = TokenData.AccessToken;
+
+                            using (HttpClient client = new HttpClient())
+                            {
+                                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenData.AccessToken);
+                                client.DefaultRequestHeaders.Accept.Clear();
+                                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                                // Make the GET request
+                                HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/customer/" + SyncLog.QBId + "?minorversion=23");
+
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    var readTask = response.Content.ReadAsStringAsync();
+                                    readTask.Wait();
+                                    string Test = readTask.Result;
+                                    QBCustomer.CustomerResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBCustomer.CustomerResponse>(Test);
+
+                                    Data.QBId = Convert.ToInt32(ResponseData.Customer.Id);
+                                    Data.SyncToken = ResponseData.Customer.SyncToken;
+
+                                    Data.FirstName = ResponseData.Customer.GivenName;
+                                    Data.LastName = ResponseData.Customer.FamilyName;
+                                    if(ResponseData.Customer.PrimaryPhone!=null)
+                                    {
+                                        Data.Phone = ResponseData.Customer.PrimaryPhone.FreeFormNumber;
+                                    }
+                                    if(ResponseData.Customer.PrimaryEmailAddr!=null)
+                                    {
+                                        Data.Email = ResponseData.Customer.PrimaryEmailAddr.Address;
+                                    }
+                                    
+                                    Data.CompanyName = ResponseData.Customer.CompanyName;
+                                    Data.UserTypeId = 2;
+                                    Data.RoleId = 2;
+                                    Data.isLoginAllow = false;
+                                    Data.isActive = true;
+                                    Data.isDelete = false;
+                                    DB.tblUsers.Add(Data);
+                                    DB.SaveChanges();
+
+
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                                    SyncLogData.isSync = true;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+
+                                }
+                                else
+                                {
+                                    string errorMessage = await response.Content.ReadAsStringAsync();
+
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+                                }
+                            }
+                        }
+
+
+
+
+                    }
+                }
+                else if (SyncLog.Operation == "Update")
+                {
+                    if (SyncLog.isQB != true)
+                    {
+                        Data = DB.tblUsers.Where(x => x.UserId == SyncLog.Id).FirstOrDefault();
+
+                        tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                        string AccessToken = "";
+
+                        var diffOfDates = DateTime.Now - TokenData.EditDate;
+                        do
+                        {
+                            TokenData = DB.tblTokens.FirstOrDefault();
+                            diffOfDates = DateTime.Now - TokenData.EditDate;
+                            if (diffOfDates.Value.Hours >= 1)
+                            {
+                                HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                            }
+                        } while (diffOfDates.Value.Hours >= 1);
+
+                        AccessToken = TokenData.AccessToken;
+
+
+                        string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/customer?minorversion=23";
+
+
+                        QBCustomerClass CustomerData = new QBCustomerClass();
+                        CustomerData.GivenName = Data.FirstName;
+                        CustomerData.FamilyName = Data.LastName;
+                        CustomerData.CompanyName = Data.CompanyName;
+                        CustomerData.PrimaryPhone = new QBCustomerCUClass.PrimaryPhone();
+                        CustomerData.PrimaryPhone.FreeFormNumber = Data.Phone;
+                        CustomerData.PrimaryEmailAddr = new QBCustomerCUClass.PrimaryEmailAddr();
+                        CustomerData.PrimaryEmailAddr.Address = Data.Email;
+                        CustomerData.SyncToken = Data.SyncToken;
+                        CustomerData.Id = Data.QBId.ToString();
+
+                        string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(CustomerData);
+
+                        // Create HttpClient
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + AccessToken);
+                            client.DefaultRequestHeaders.Add("Accept", "application/json");
+                            // Create the request content
+                            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                            //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                            // Make the POST request
+                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                            // Check if the request was successful
+                            if (response.IsSuccessStatusCode)
+                            {
+                                // Parse and use the response data as needed
+                                string jsonResponse = await response.Content.ReadAsStringAsync();
+                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+
+                                // Now you can access the data using the model
+
+                                var QBId = estimateModel["Customer"]["Id"];
+                                var SyncToken = estimateModel["Customer"]["SyncToken"];
+
+                                Data.QBId = QBId;
+                                Data.SyncToken = SyncToken;
+                                DB.Entry(Data);
+                                DB.SaveChanges();
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.QBId = Convert.ToInt32(QBId);
+                                SyncLogData.isSync = true;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+
+                                // Process jsonResponse
+                                //return View();
+                            }
+                            else
+                            {
+                                // Handle error
+                                string errorMessage = await response.Content.ReadAsStringAsync();
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.Message = errorMessage;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+                                // Handle error message
+                                //return View("Error");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                        string AccessToken = "";
+
+                        var diffOfDates = DateTime.Now - TokenData.EditDate;
+                        do
+                        {
+                            TokenData = DB.tblTokens.FirstOrDefault();
+                            diffOfDates = DateTime.Now - TokenData.EditDate;
+                            if (diffOfDates.Value.Hours >= 1)
+                            {
+                                HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                            }
+                        } while (diffOfDates.Value.Hours >= 1);
+
+                        AccessToken = TokenData.AccessToken;
+
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenData.AccessToken);
+                            client.DefaultRequestHeaders.Accept.Clear();
+                            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                            // Make the GET request
+                            HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/customer/" + SyncLog.QBId + "?minorversion=23");
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                var readTask = response.Content.ReadAsStringAsync();
+                                readTask.Wait();
+                                string Test = readTask.Result;
+                                QBCustomer.CustomerResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBCustomer.CustomerResponse>(Test);
+
+
+                                int QBId = Convert.ToInt32(ResponseData.Customer.Id);
+
+                                Data = DB.tblUsers.Where(x => x.QBId == QBId).FirstOrDefault();
+                                if (Data != null)
+                                {
+                                    Data.QBId = Convert.ToInt32(ResponseData.Customer.Id);
+                                    Data.SyncToken = ResponseData.Customer.SyncToken;
+
+                                    Data.FirstName = ResponseData.Customer.GivenName;
+                                    Data.LastName = ResponseData.Customer.FamilyName;
+                                    if (ResponseData.Customer.PrimaryPhone != null)
+                                    {
+                                        Data.Phone = ResponseData.Customer.PrimaryPhone.FreeFormNumber;
+                                    }
+                                    if (ResponseData.Customer.PrimaryEmailAddr != null)
+                                    {
+                                        Data.Email = ResponseData.Customer.PrimaryEmailAddr.Address;
+                                    }
+                                    Data.CompanyName = ResponseData.Customer.CompanyName;
+                                    Data.UserTypeId = 2;
+                                    Data.RoleId = 2;
+                                    Data.isLoginAllow = false;
+                                    Data.isActive = true;
+                                    Data.isDelete = false;
+                                    DB.Entry(Data);
+                                    DB.SaveChanges();
+
+
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                                    SyncLogData.isSync = true;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+                                }
+                                else
+                                {
+                                    Data.QBId = Convert.ToInt32(ResponseData.Customer.Id);
+                                    Data.SyncToken = ResponseData.Customer.SyncToken;
+
+                                    Data.FirstName = ResponseData.Customer.GivenName;
+                                    Data.LastName = ResponseData.Customer.FamilyName;
+                                    if (ResponseData.Customer.PrimaryPhone != null)
+                                    {
+                                        Data.Phone = ResponseData.Customer.PrimaryPhone.FreeFormNumber;
+                                    }
+                                    if (ResponseData.Customer.PrimaryEmailAddr != null)
+                                    {
+                                        Data.Email = ResponseData.Customer.PrimaryEmailAddr.Address;
+                                    }
+                                    Data.CompanyName = ResponseData.Customer.CompanyName;
+                                    Data.UserTypeId = 2;
+                                    Data.RoleId = 2;
+                                    Data.isLoginAllow = false;
+                                    Data.isActive = true;
+                                    Data.isDelete = false;
+                                    DB.tblUsers.Add(Data);
+                                    DB.SaveChanges();
+
+
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Id = Convert.ToInt32(Data.UserId);
+                                    SyncLogData.isSync = true;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+                                }
+                            }
+                            else
+                            {
+                                string errorMessage = await response.Content.ReadAsStringAsync();
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.Message = errorMessage;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+                            }
+                        }
+                    }
+                }
+                else if (SyncLog.Operation == "Delete")
+                {
+                    if (SyncLog.isQB != true)
+                    {
+                        tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                        string AccessToken = "";
+
+                        var diffOfDates = DateTime.Now - TokenData.EditDate;
+                        do
+                        {
+                            TokenData = DB.tblTokens.FirstOrDefault();
+                            diffOfDates = DateTime.Now - TokenData.EditDate;
+                            if (diffOfDates.Value.Hours >= 1)
+                            {
+                                HomeController.GetAuthTokensUsingRefreshTokenAsync();
+                            }
+                        } while (diffOfDates.Value.Hours >= 1);
+
+                        AccessToken = TokenData.AccessToken;
+
+
+                        string apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/customer?operation=delete";
+
+                        QBDeleteClass DeleteData = new QBDeleteClass();
+                        Data = DB.tblUsers.Where(x => x.UserId == SyncLog.Id).FirstOrDefault();
+                        DeleteData.Id = Data.QBId.ToString();
+                        DeleteData.SyncToken = Data.SyncToken;
+
+
+
+                        string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(DeleteData);
+
+                        // Create HttpClient
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + AccessToken);
+                            client.DefaultRequestHeaders.Add("Accept", "application/json");
+                            // Create the request content
+                            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                            //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                            // Make the POST request
+                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                            // Check if the request was successful
+                            if (response.IsSuccessStatusCode)
+                            {
+                                // Parse and use the response data as needed
+                                string jsonResponse = await response.Content.ReadAsStringAsync();
+                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+
+                                // Now you can access the data using the model
+                                var QBId = estimateModel["Customer"]["Id"];
+
+
+                                tblSyncLog SyncLogData = new tblSyncLog();
+                                SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                SyncLogData.QBId = Convert.ToInt32(QBId);
+                                SyncLogData.isSync = true;
+                                SyncLogData.EditDate = DateTime.Now;
+                                DB.Entry(SyncLogData);
+                                DB.SaveChanges();
+
+                                // Process jsonResponse
+                                //return View();
+                            }
+                            else
+                            {
+                                // Handle error
+                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(errorMessage);
+                                if (errorResponse.Fault.Error.FirstOrDefault().Message.Contains("Object Not Found"))
+                                {
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Message = errorResponse.Fault.Error.FirstOrDefault().Message;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    SyncLogData.isSync = true;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+                                }
+                                else
+                                {
+                                    tblSyncLog SyncLogData = new tblSyncLog();
+                                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.EditDate = DateTime.Now;
+                                    DB.Entry(SyncLogData);
+                                    DB.SaveChanges();
+                                }
+
+                                // Handle error message
+                                //return View("Error");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Data = DB.tblUsers.Select(r => r).Where(x => x.QBId == SyncLog.QBId).FirstOrDefault();
+                        if (Data != null)
+                        {
+                            Data.isDelete = true;
+                            Data.EditDate = DateTime.Now;
+                            DB.Entry(Data);
+                            DB.SaveChanges();
+
+                            tblSyncLog SyncLogData = new tblSyncLog();
+                            SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
+                            SyncLogData.Id = Data.UserId;
                             SyncLogData.isSync = true;
                             SyncLogData.EditDate = DateTime.Now;
                             DB.Entry(SyncLogData);
