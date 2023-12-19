@@ -29,7 +29,7 @@ namespace EarthCo.Controllers
     {
         earthcoEntities DB = new earthcoEntities();
 
-        [HttpPost]
+        [HttpGet]
         public IHttpActionResult SyncDataAPI()
         {
             try
@@ -68,7 +68,7 @@ namespace EarthCo.Controllers
                     }
                 }
                 
-                return Ok("Webhook request is valid.");
+                return Ok("Sync successfull.");
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -111,9 +111,7 @@ namespace EarthCo.Controllers
 
         }
 
-
-        [HttpPost]
-        public async Task SyncEstimateAsync(tblSyncLog SyncLog)
+        public string SyncEstimateAsync(tblSyncLog SyncLog)
         {
             try
             {
@@ -151,7 +149,7 @@ namespace EarthCo.Controllers
                         Models.EstimateQB.Line LineData = new Models.EstimateQB.Line();
                         EsitimateData.BillEmail = new BillEmail();
                         EsitimateData.BillEmail.Address = Data.tblUser.Email;
-                        EsitimateData.TotalAmt =(decimal) Data.TotalAmount;
+                        EsitimateData.TotalAmt = (decimal)Data.TotalAmount;
                         EsitimateData.DocNumber = Data.EstimateNumber;
                         //EsitimateData.SyncToken = "0";
                         //EsitimateData.Id = "1103";
@@ -159,20 +157,49 @@ namespace EarthCo.Controllers
                         EsitimateData.CustomerRef.value = Data.tblUser.QBId.ToString();
                         //EsitimateData.CustomerRef.name = "Cool Cars";
 
+                        //Models.EstimateQB.Line LineData = new Models.EstimateQB.Line();
+                        //EsitimateData.BillEmail = new BillEmail();
+                        ////EsitimateData.BillEmail.Address = "Cool_Cars@intuit.com";
+                        //EsitimateData.TotalAmt = 105;
+                        ////EsitimateData.SyncToken = "2";
+                        ////EsitimateData.Id = "1103";
+                        //EsitimateData.CustomerRef = new EstimateQB.CustomerRef();
+                        //EsitimateData.CustomerRef.value = "3";
+                        ////EsitimateData.CustomerRef.name = "Cool Cars";
+                        ////LineData.Id = "1";
+                        ////LineData.Description = "Test";
+                        ////LineData.Amount = 105;
+                        EsitimateData.Line = new List<Models.EstimateQB.Line>();
+
                         foreach (var item in ItemData)
                         {
                             //LineData.Id = "1";
                             LineData.Description = item.Description;
-                            LineData.Amount =Convert.ToDecimal(item.Amount);
-                            LineData.DetailType = item.tblItem.Type;
+                            LineData.Amount = Convert.ToDecimal(item.Amount);
+                            //LineData.DetailType = item.tblItem.Type;
+                            LineData.DetailType = "SalesItemLineDetail";
                             LineData.SalesItemLineDetail = new Models.EstimateQB.SalesItemLineDetail();
                             LineData.SalesItemLineDetail.ItemRef = new EstimateQB.ItemRef();
                             LineData.SalesItemLineDetail.ItemRef.value = item.tblItem.QBId.ToString();
                             //LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
-                            LineData.SalesItemLineDetail.UnitPrice =Convert.ToDecimal(item.Rate);
+                            LineData.SalesItemLineDetail.UnitPrice = Convert.ToDecimal(item.Rate);
                             LineData.SalesItemLineDetail.Qty = (int)item.Qty;
-                            EsitimateData.Line = new List<Models.EstimateQB.Line>();
+                            
                             EsitimateData.Line.Add(LineData);
+
+                            //LineData.Description = "Test";
+                            //LineData.Amount = 105;
+                            //LineData.DetailType = "SalesItemLineDetail";
+                            //LineData.SalesItemLineDetail = new Models.EstimateQB.SalesItemLineDetail();
+                            //LineData.SalesItemLineDetail.ItemRef = new EstimateQB.ItemRef();
+                            //LineData.SalesItemLineDetail.ItemRef.value = "9";
+                            ////LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
+                            //LineData.SalesItemLineDetail.UnitPrice = 35;
+                            //LineData.SalesItemLineDetail.Qty = 3;
+                            //EsitimateData.Line = new List<Models.EstimateQB.Line>();
+                            //EsitimateData.Line.Add(LineData);
+
+
                         }
                         string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(EsitimateData);
 
@@ -186,20 +213,27 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
+                            //HttpResponseMessage response = await client.PostAsync(apiUrl, content);
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                //string jsonResponse = await response.Content.ReadAsStringAsync();
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var ResultResponse = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(ResultResponse);
+                                QBEstimateResponseClass.EstimateMain ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBEstimateResponseClass.EstimateMain>(ResultResponse);
 
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Estimate"]["Id"];
-                                var SyncToken = estimateModel["Estimate"]["SyncToken"];
-
-                                Data.QBId = SyncToken;
+                                //var QBId = estimateModel["Estimate"]["Id"];
+                                var QBId = Convert.ToInt32(ResponseData.Estimate.Id);
+                                var SyncToken = ResponseData.Estimate.SyncToken;
+                                Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
                                 DB.Entry(Data);
                                 DB.SaveChanges();
@@ -218,11 +252,14 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                //string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var ResultResponse = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = ResultResponse;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -301,7 +338,7 @@ namespace EarthCo.Controllers
                     else
                     {
                         Data = DB.tblEstimates.Where(x => x.QBId == SyncLog.QBId).FirstOrDefault();
-                        if(Data!=null)
+                        if (Data != null)
                         {
                             tblSyncLog SyncLogData = new tblSyncLog();
                             SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
@@ -328,7 +365,7 @@ namespace EarthCo.Controllers
                             } while (diffOfDates.Value.Hours >= 1);
 
                             AccessToken = TokenData.AccessToken;
-
+                            Data = new tblEstimate();
                             using (HttpClient client = new HttpClient())
                             {
                                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenData.AccessToken);
@@ -336,7 +373,11 @@ namespace EarthCo.Controllers
                                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                                 // Make the GET request
-                                HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/estimate/" + SyncLog.QBId + "?minorversion=23");
+                                //HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/estimate/" + SyncLog.QBId + "?minorversion=23");
+                                var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/estimate/" + SyncLog.QBId + "?minorversion=23");
+                                Response.Wait();
+                                var response = Response.Result;
+
 
                                 if (response.IsSuccessStatusCode)
                                 {
@@ -427,18 +468,21 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
-                                    string errorMessage = await response.Content.ReadAsStringAsync();
+                                    var errorMessage = response.Content.ReadAsStringAsync();
+                                    errorMessage.Wait();
+                                    string ResultReponse = errorMessage.Result;
+
 
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = ResultReponse;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
                                 }
                             }
                         }
-                        
+
 
 
 
@@ -446,7 +490,7 @@ namespace EarthCo.Controllers
                 }
                 else if (SyncLog.Operation == "Update")
                 {
-                    if(SyncLog.isQB!=true)
+                    if (SyncLog.isQB != true)
                     {
                         Data = DB.tblEstimates.Where(x => x.EstimateId == SyncLog.Id).FirstOrDefault();
                         ItemData = DB.tblEstimateItems.Where(x => x.EstimateId == SyncLog.Id).ToList();
@@ -482,19 +526,21 @@ namespace EarthCo.Controllers
                         EsitimateData.CustomerRef.value = Data.tblUser.QBId.ToString();
                         //EsitimateData.CustomerRef.name = "Cool Cars";
 
+                        EsitimateData.Line = new List<Models.EstimateQB.Line>();
                         foreach (var item in ItemData)
                         {
                             //LineData.Id = "1";
                             LineData.Description = item.Description;
                             LineData.Amount = Convert.ToDecimal(item.Amount);
                             LineData.DetailType = item.tblItem.Type;
+                            LineData.DetailType = "SalesItemLineDetail";
                             LineData.SalesItemLineDetail = new Models.EstimateQB.SalesItemLineDetail();
                             LineData.SalesItemLineDetail.ItemRef = new EstimateQB.ItemRef();
                             LineData.SalesItemLineDetail.ItemRef.value = item.tblItem.QBId.ToString();
                             //LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
                             LineData.SalesItemLineDetail.UnitPrice = Convert.ToDecimal(item.Rate);
                             LineData.SalesItemLineDetail.Qty = (int)item.Qty;
-                            EsitimateData.Line = new List<Models.EstimateQB.Line>();
+                            
                             EsitimateData.Line.Add(LineData);
                         }
                         string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(EsitimateData);
@@ -509,20 +555,26 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var ResultResponse = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(ResultResponse);
+                                QBEstimateResponseClass.EstimateMain ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBEstimateResponseClass.EstimateMain>(ResultResponse);
 
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Estimate"]["Id"];
-                                var SyncToken = estimateModel["Estimate"]["SyncToken"];
+                                //var QBId = estimateModel["Estimate"]["Id"];
+                                var QBId = Convert.ToInt32(ResponseData.Estimate.Id);
+                                var SyncToken = ResponseData.Estimate.SyncToken;
 
-                                Data.QBId = QBId;
+                                Data.QBId = Convert.ToInt32(QBId);
                                 Data.SyncToken = SyncToken;
                                 DB.Entry(Data);
                                 DB.SaveChanges();
@@ -541,11 +593,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var ResultResponse = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = ResultResponse;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -571,7 +625,7 @@ namespace EarthCo.Controllers
                         } while (diffOfDates.Value.Hours >= 1);
 
                         AccessToken = TokenData.AccessToken;
-
+                        
                         using (HttpClient client = new HttpClient())
                         {
                             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenData.AccessToken);
@@ -579,7 +633,9 @@ namespace EarthCo.Controllers
                             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                             // Make the GET request
-                            HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/estimate/" + SyncLog.QBId + "?minorversion=23");
+                            var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/estimate/" + SyncLog.QBId + "?minorversion=23");
+                            Response.Wait();
+                            var response = Response.Result;
 
                             if (response.IsSuccessStatusCode)
                             {
@@ -589,10 +645,10 @@ namespace EarthCo.Controllers
                                 QBEstimateResponseClass.EstimateMain ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBEstimateResponseClass.EstimateMain>(Test);
 
 
-                                int QBId= Convert.ToInt32(ResponseData.Estimate.Id);
+                                int QBId = Convert.ToInt32(ResponseData.Estimate.Id);
 
                                 Data = DB.tblEstimates.Where(x => x.QBId == QBId).FirstOrDefault();
-                                if(Data!=null)
+                                if (Data != null)
                                 {
                                     Data.QBId = Convert.ToInt32(ResponseData.Estimate.Id);
                                     Data.EstimateNumber = ResponseData.Estimate.DocNumber;
@@ -634,8 +690,7 @@ namespace EarthCo.Controllers
                                     Data.TotalAmount = (double?)ResponseData.Estimate.TotalAmt;
                                     //Data.BalanceAmount = Estimate.EstimateData.BalanceAmount;
                                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                    //Data.CreatedBy = UserId;
-                                    Data.DocNumber = Convert.ToString(DB.SPGetNumber("E").FirstOrDefault());
+                                    //Data.CreatedBy = UserId;s
                                     Data.isActive = true;
                                     Data.isDelete = false;
                                     DB.Entry(Data);
@@ -680,6 +735,7 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
+                                    Data = new tblEstimate();
                                     Data.QBId = Convert.ToInt32(ResponseData.Estimate.Id);
                                     Data.EstimateNumber = ResponseData.Estimate.DocNumber;
                                     QBId = Convert.ToInt32(ResponseData.Estimate.CustomerRef.value); ;
@@ -767,11 +823,13 @@ namespace EarthCo.Controllers
                             }
                             else
                             {
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var ResultResponse = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = ResultResponse;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -821,17 +879,26 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var  Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
+
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var ResultResponse = jsonResponse.Result;
+
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(ResultResponse);
+                                QBEstimateResponseClass.EstimateMain ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBEstimateResponseClass.EstimateMain>(ResultResponse);
 
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Estimate"]["Id"];
+                                //var QBId = estimateModel["Estimate"]["Id"];
+                                var QBId = Convert.ToInt32(ResponseData.Estimate.Id);
+                                var SyncToken = ResponseData.Estimate.SyncToken;
 
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
@@ -848,9 +915,12 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
-                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(errorMessage);
-                                if(errorResponse.Fault.Error.FirstOrDefault().Message.Contains("Object Not Found"))
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var ResultResponse= errorMessage.Result;
+
+                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(ResultResponse);
+                                if (errorResponse.Fault.Error.FirstOrDefault().Message.Contains("Object Not Found"))
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
@@ -864,12 +934,12 @@ namespace EarthCo.Controllers
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = ResultResponse;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
                                 }
-                                
+
                                 // Handle error message
                                 //return View("Error");
                             }
@@ -878,7 +948,7 @@ namespace EarthCo.Controllers
                     else
                     {
                         Data = DB.tblEstimates.Select(r => r).Where(x => x.QBId == SyncLog.QBId).FirstOrDefault();
-                       if(Data!=null)
+                        if (Data != null)
                         {
                             Data.isDelete = true;
                             Data.EditDate = DateTime.Now;
@@ -903,9 +973,11 @@ namespace EarthCo.Controllers
                             DB.Entry(SyncLogData);
                             DB.SaveChanges();
                         }
-                        
+
                     }
                 }
+
+                return "Success";
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -927,6 +999,7 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
             catch (Exception ex)
@@ -942,13 +1015,14 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
 
         }
 
         [HttpPost]
-        public async Task SyncPurchaseOrderAsync(tblSyncLog SyncLog)
+        public string SyncPurchaseOrderAsync(tblSyncLog SyncLog)
         {
             try
             {
@@ -1000,21 +1074,22 @@ namespace EarthCo.Controllers
                         {
                             PurchaseOrderData.POStatus = "Closed";
                         }
-                        
 
+                        PurchaseOrderData.Line = new List<Models.QBPurchaseOrderCUClass.LineDetail>();
                         foreach (var item in ItemData)
                         {
                             //LineData.Id = "1";
                             //LineData.Description = item.Description;
                             LineData.Amount = Convert.ToDecimal(item.Amount);
-                            LineData.DetailType = item.tblItem.Type;
+                            //LineData.DetailType = item.tblItem.Type;
+                            LineData.DetailType = "ItemBasedExpenseLineDetail";
                             LineData.ItemBasedExpenseLineDetail = new Models.QBPurchaseOrderCUClass.ItemBasedExpenseLineDetail();
                             LineData.ItemBasedExpenseLineDetail.ItemRef = new QBPurchaseOrderCUClass.ItemRef();
                             LineData.ItemBasedExpenseLineDetail.ItemRef.value = item.tblItem.QBId.ToString();
                             //LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
                             LineData.ItemBasedExpenseLineDetail.UnitPrice = Convert.ToDecimal(item.Rate);
                             LineData.ItemBasedExpenseLineDetail.Qty = (int)item.Qty;
-                            PurchaseOrderData.Line = new List<Models.QBPurchaseOrderCUClass.LineDetail>();
+                            
                             PurchaseOrderData.Line.Add(LineData);
                         }
                         string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(PurchaseOrderData);
@@ -1029,20 +1104,28 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var ResultResponse = jsonResponse.Result;
 
-                                // Now you can access the data using the model
-                                var QBId = estimateModel["PurchaseOrder"]["Id"];
-                                var SyncToken = estimateModel["PurchaseOrder"]["SyncToken"];
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(ResultResponse);
+                                PurchaseOrderQB.PurchaseOrderResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<PurchaseOrderQB.PurchaseOrderResponse>(ResultResponse);
+                                //// Now you can access the data using the model
+                                //var QBId = estimateModel["PurchaseOrder"]["Id"];
+                                //var SyncToken = estimateModel["PurchaseOrder"]["SyncToken"];
+                                var QBId = Convert.ToInt32(ResponseData.PurchaseOrder.Id);
+                                var SyncToken = ResponseData.PurchaseOrder.SyncToken;
+                               
 
-                                Data.QBId = SyncToken;
+                                Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
                                 DB.Entry(Data);
                                 DB.SaveChanges();
@@ -1059,11 +1142,14 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var ResultResponse = errorMessage.Result;
+
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = ResultResponse;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -1071,72 +1157,6 @@ namespace EarthCo.Controllers
                                 //return View("Error");
                             }
                         }
-
-
-                        //foreach (tblEstimateFile item in FileData)
-                        //{
-                        //    string baseUrl = "https://sandbox-quickbooks.api.intuit.com";
-
-                        //    // Endpoint
-                        //    //string endpoint = "/v3/company/<realmID>/upload"; // Replace <realmID> with the actual realm ID
-
-                        //    // Complete URL
-                        //    //apiUrl = baseUrl + endpoint;
-
-                        //    // Request body
-                        //    var requestBody = new
-                        //    {
-                        //        AttachableRef = new[]
-                        //        {
-                        //        new
-                        //        {
-                        //            EntityRef = new
-                        //            {
-                        //                type = "Estimate",
-                        //                value = "95"
-                        //            }
-                        //        }
-                        //    },
-                        //        //ContentType = "image/jpg",
-                        //        //FileName = "receipt_nov15.jpg"
-                        //    };
-
-                        //    // Serialize the request body to JSON
-                        //    string jsonRequestBody = Newtonsoft.Json.JsonConvert.SerializeObject(requestBody);
-
-                        //    using (var httpClient = new HttpClient())
-                        //    using (var content = new MultipartFormDataContent())
-                        //    {
-                        //        // Add AttachableRef as a JSON string
-                        //        //var attachableRefJson = "{\"AttachableRef\":[{\"EntityRef\":{\"type\":\"Invoice\",\"value\":\"95\"}}],\"ContentType\":\"image/jpg\",\"FileName\":\"receipt_nov15.jpg\"}";
-                        //        content.Add(new StringContent(jsonRequestBody), "application/json");
-
-                        //        // Load the file from a URL
-                        //        var fileUrl = "https://earthcoapi.yehtohoga.com/"+item.FilePath+""; // Replace with the actual file URL
-                        //        var fileBytes = await httpClient.GetByteArrayAsync(fileUrl);
-                        //        var fileContent = new ByteArrayContent(fileBytes);
-                        //        content.Add(fileContent, "file", "receipt_nov15.jpg");
-
-                        //        // Make the POST request
-                        //        apiUrl = $"/v3/company/" + TokenData.realmId + "/upload";
-                        //        var requestUrl = $"{baseUrl}{apiUrl}";
-
-                        //        var response = await httpClient.PostAsync(requestUrl, content);
-
-                        //        if (response.IsSuccessStatusCode)
-                        //        {
-                        //            // Handle success
-                        //            Console.WriteLine("File uploaded successfully!");
-                        //        }
-                        //        else
-                        //        {
-                        //            // Handle failure
-                        //            Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-                        //        }
-                        //    }
-                        //}
-
-
 
                     }
                     else
@@ -1169,7 +1189,7 @@ namespace EarthCo.Controllers
                             } while (diffOfDates.Value.Hours >= 1);
 
                             AccessToken = TokenData.AccessToken;
-
+                            Data = new tblPurchaseOrder();
                             using (HttpClient client = new HttpClient())
                             {
                                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenData.AccessToken);
@@ -1177,7 +1197,9 @@ namespace EarthCo.Controllers
                                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                                 // Make the GET request
-                                HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/purchaseorder/" + SyncLog.QBId + "?minorversion=23");
+                                var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/purchaseorder/" + SyncLog.QBId + "?minorversion=23");
+                                Response.Wait();
+                                var response = Response.Result;
 
                                 if (response.IsSuccessStatusCode)
                                 {
@@ -1187,6 +1209,7 @@ namespace EarthCo.Controllers
                                     PurchaseOrderQB.PurchaseOrderResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<PurchaseOrderQB.PurchaseOrderResponse>(Test);
 
                                     Data.QBId = Convert.ToInt32(ResponseData.PurchaseOrder.Id);
+                                    Data.SyncToken = ResponseData.PurchaseOrder.SyncToken;
                                     Data.PurchaseOrderNumber = ResponseData.PurchaseOrder.DocNumber;
                                     int QBId = Convert.ToInt32(ResponseData.PurchaseOrder.VendorRef.value); ;
                                     int VendorId = DB.tblUsers.Where(x => x.QBId == QBId).Select(s => s.UserId).FirstOrDefault();
@@ -1207,7 +1230,6 @@ namespace EarthCo.Controllers
                                         Data.StatusId = 2;
                                     }
 
-                                    Data.SyncToken = ResponseData.PurchaseOrder.SyncToken;
                                     //Data.Tax = Estimate.EstimateData.Tax;
                                     //Data.Tags = Estimate.EstimateData.Tags;
                                     //Data.Discount = Estimate.EstimateData.Discount;
@@ -1260,11 +1282,13 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
-                                    string errorMessage = await response.Content.ReadAsStringAsync();
+                                    var errorMessage = response.Content.ReadAsStringAsync();
+                                    errorMessage.Wait();
+                                    var ResultResponse = errorMessage.Result;
 
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = ResultResponse;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -1323,20 +1347,21 @@ namespace EarthCo.Controllers
                             PurchaseOrderData.POStatus = "Closed";
                         }
 
-
+                        PurchaseOrderData.Line = new List<Models.QBPurchaseOrderCUClass.LineDetail>();
                         foreach (var item in ItemData)
                         {
                             //LineData.Id = "1";
                             //LineData.Description = item.Description;
                             LineData.Amount = Convert.ToDecimal(item.Amount);
-                            LineData.DetailType = item.tblItem.Type;
+                            //LineData.DetailType = item.tblItem.Type;
+                            LineData.DetailType = "ItemBasedExpenseLineDetail";
                             LineData.ItemBasedExpenseLineDetail = new Models.QBPurchaseOrderCUClass.ItemBasedExpenseLineDetail();
                             LineData.ItemBasedExpenseLineDetail.ItemRef = new QBPurchaseOrderCUClass.ItemRef();
                             LineData.ItemBasedExpenseLineDetail.ItemRef.value = item.tblItem.QBId.ToString();
                             //LineData.SalesItemLineDetail.ItemRef.name = "Pest Control";
                             LineData.ItemBasedExpenseLineDetail.UnitPrice = Convert.ToDecimal(item.Rate);
                             LineData.ItemBasedExpenseLineDetail.Qty = (int)item.Qty;
-                            PurchaseOrderData.Line = new List<Models.QBPurchaseOrderCUClass.LineDetail>();
+                            
                             PurchaseOrderData.Line.Add(LineData);
                         }
 
@@ -1353,19 +1378,25 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var ResultResponse = jsonResponse.Result;
 
-                                // Now you can access the data using the model
-                               
-                                var QBId = estimateModel["PurchaseOrder"]["Id"];
-                                var SyncToken = estimateModel["PurchaseOrder"]["SyncToken"];
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(ResultResponse);
+                                PurchaseOrderQB.PurchaseOrderResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<PurchaseOrderQB.PurchaseOrderResponse>(ResultResponse);
+                                //// Now you can access the data using the model
+                                //var QBId = estimateModel["PurchaseOrder"]["Id"];
+                                //var SyncToken = estimateModel["PurchaseOrder"]["SyncToken"];
+                                var QBId = Convert.ToInt32(ResponseData.PurchaseOrder.Id);
+                                var SyncToken = ResponseData.PurchaseOrder.SyncToken;
 
                                 Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
@@ -1386,11 +1417,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var ResultResponse = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = ResultResponse;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -1424,7 +1457,9 @@ namespace EarthCo.Controllers
                             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                             // Make the GET request
-                            HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/purchaseorder/" + SyncLog.QBId + "?minorversion=23");
+                            var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/purchaseorder/" + SyncLog.QBId + "?minorversion=23");
+                            Response.Wait();
+                            var response = Response.Result;
 
                             if (response.IsSuccessStatusCode)
                             {
@@ -1471,7 +1506,7 @@ namespace EarthCo.Controllers
                                     //Data.BalanceAmount = Estimate.EstimateData.BalanceAmount;
                                     Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                                     //Data.CreatedBy = UserId;
-                                    Data.DocNumber = Convert.ToString(DB.SPGetNumber("P").FirstOrDefault());
+                                    
                                     Data.isActive = true;
                                     Data.isDelete = false;
                                     DB.Entry(Data);
@@ -1515,6 +1550,7 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
+                                    Data = new tblPurchaseOrder();
                                     Data.QBId = Convert.ToInt32(ResponseData.PurchaseOrder.Id);
                                     Data.PurchaseOrderNumber = ResponseData.PurchaseOrder.DocNumber;
                                     QBId = Convert.ToInt32(ResponseData.PurchaseOrder.VendorRef.value); ;
@@ -1592,11 +1628,13 @@ namespace EarthCo.Controllers
                             }
                             else
                             {
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var ResultResponse = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = ResultResponse;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -1646,17 +1684,24 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var ResultResponse = jsonResponse.Result;
 
-                                // Now you can access the data using the model
-                                var QBId = estimateModel["PurchaseOrder"]["Id"];
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(ResultResponse);
+                                PurchaseOrderQB.PurchaseOrderResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<PurchaseOrderQB.PurchaseOrderResponse>(ResultResponse);
+                                //// Now you can access the data using the model
+                                //var QBId = estimateModel["PurchaseOrder"]["Id"];
+                                //var SyncToken = estimateModel["PurchaseOrder"]["SyncToken"];
+                                var QBId = Convert.ToInt32(ResponseData.PurchaseOrder.Id);
+                                var SyncToken = ResponseData.PurchaseOrder.SyncToken;
 
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
@@ -1673,8 +1718,11 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
-                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(errorMessage);
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
+
+                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(RR);
                                 if (errorResponse.Fault.Error.FirstOrDefault().Message.Contains("Object Not Found"))
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
@@ -1689,7 +1737,7 @@ namespace EarthCo.Controllers
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = RR;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -1731,6 +1779,7 @@ namespace EarthCo.Controllers
 
                     }
                 }
+                return "Success";
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -1752,6 +1801,7 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
             catch (Exception ex)
@@ -1767,13 +1817,14 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
 
         }
 
         [HttpPost]
-        public async Task SyncInvoiceAsync(tblSyncLog SyncLog)
+        public string SyncInvoiceAsync(tblSyncLog SyncLog)
         {
             try
             {
@@ -1824,18 +1875,19 @@ namespace EarthCo.Controllers
                         InvoiceData.CustomerRef = new QBInvoiceCUClass.CustomerRef();
                         InvoiceData.CustomerRef.value = Data.tblUser.QBId.ToString();
 
-
+                        InvoiceData.Line = new List<Models.QBInvoiceCUClass.LineDetail>();
                         foreach (var item in ItemData)
                         {
                             LineData.Amount = Convert.ToDecimal(item.Amount);
                             LineData.Description = item.Description;
-                            LineData.DetailType = item.tblItem.Type;
+                            //LineData.DetailType = item.tblItem.Type;
+                            LineData.DetailType = "SalesItemLineDetail";
                             LineData.SalesItemLineDetail = new Models.QBInvoiceCUClass.SalesItemLineDetail();
                             LineData.SalesItemLineDetail.ItemRef = new QBInvoiceCUClass.ItemRef();
                             LineData.SalesItemLineDetail.ItemRef.value = item.tblItem.QBId.ToString();
                             LineData.SalesItemLineDetail.UnitPrice = Convert.ToDecimal(item.Rate);
                             LineData.SalesItemLineDetail.Qty = (int)item.Qty;
-                            InvoiceData.Line = new List<Models.QBInvoiceCUClass.LineDetail>();
+                           
                             InvoiceData.Line.Add(LineData);
                         }
                         string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(InvoiceData);
@@ -1850,20 +1902,28 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
 
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(RR);
+                                InvoiceQB.InvoiceResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<InvoiceQB.InvoiceResponse>(RR);
+
+                                var QBId = Convert.ToInt32(ResponseData.Invoice.Id);
+                                var SyncToken = ResponseData.Invoice.SyncToken;
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Invoice"]["Id"];
-                                var SyncToken = estimateModel["Invoice"]["SyncToken"];
+                                //var QBId = estimateModel["Invoice"]["Id"];
+                                //var SyncToken = estimateModel["Invoice"]["SyncToken"];
 
-                                Data.QBId = SyncToken;
+                                Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
                                 DB.Entry(Data);
                                 DB.SaveChanges();
@@ -1880,11 +1940,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -1998,7 +2060,9 @@ namespace EarthCo.Controllers
                                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                                 // Make the GET request
-                                HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/invoice/" + SyncLog.QBId + "?minorversion=23");
+                                var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/invoice/" + SyncLog.QBId + "?minorversion=23");
+                                Response.Wait();
+                                var response = Response.Result;
 
                                 if (response.IsSuccessStatusCode)
                                 {
@@ -2062,11 +2126,13 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
-                                    string errorMessage = await response.Content.ReadAsStringAsync();
+                                    var errorMessage = response.Content.ReadAsStringAsync();
+                                    errorMessage.Wait();
+                                    var RR = errorMessage.Result;
 
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = RR;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -2123,18 +2189,18 @@ namespace EarthCo.Controllers
                         InvoiceData.CustomerRef = new QBInvoiceCUClass.CustomerRef();
                         InvoiceData.CustomerRef.value = Data.tblUser.QBId.ToString();
 
-
+                        InvoiceData.Line = new List<Models.QBInvoiceCUClass.LineDetail>();
                         foreach (var item in ItemData)
                         {
                             LineData.Amount = Convert.ToDecimal(item.Amount);
                             LineData.Description = item.Description;
-                            LineData.DetailType = item.tblItem.Type;
+                            LineData.DetailType = "SalesItemLineDetail";
                             LineData.SalesItemLineDetail = new Models.QBInvoiceCUClass.SalesItemLineDetail();
                             LineData.SalesItemLineDetail.ItemRef = new QBInvoiceCUClass.ItemRef();
                             LineData.SalesItemLineDetail.ItemRef.value = item.tblItem.QBId.ToString();
                             LineData.SalesItemLineDetail.UnitPrice = Convert.ToDecimal(item.Rate);
                             LineData.SalesItemLineDetail.Qty = (int)item.Qty;
-                            InvoiceData.Line = new List<Models.QBInvoiceCUClass.LineDetail>();
+                            
                             InvoiceData.Line.Add(LineData);
                         }
 
@@ -2151,19 +2217,25 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(RR);
+                                InvoiceQB.InvoiceResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<InvoiceQB.InvoiceResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Invoice.Id);
+                                var SyncToken = ResponseData.Invoice.SyncToken;
                                 // Now you can access the data using the model
 
-                                var QBId = estimateModel["Invoice"]["Id"];
-                                var SyncToken = estimateModel["Invoice"]["SyncToken"];
+                                //var QBId = estimateModel["Invoice"]["Id"];
+                                //var SyncToken = estimateModel["Invoice"]["SyncToken"];
 
                                 Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
@@ -2184,11 +2256,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -2222,7 +2296,9 @@ namespace EarthCo.Controllers
                             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                             // Make the GET request
-                            HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/invoice/" + SyncLog.QBId + "?minorversion=23");
+                            var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/invoice/" + SyncLog.QBId + "?minorversion=23");
+                            Response.Wait();
+                            var response = Response.Result;
 
                             if (response.IsSuccessStatusCode)
                             {
@@ -2250,7 +2326,6 @@ namespace EarthCo.Controllers
                                     //Data.BalanceAmount = Estimate.EstimateData.BalanceAmount;
                                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                                     //Data.CreatedBy = UserId;
-                                    Data.DocNumber = Convert.ToString(DB.SPGetNumber("I").FirstOrDefault());
                                     Data.isActive = true;
                                     Data.isDelete = false;
                                     DB.Entry(Data);
@@ -2295,6 +2370,7 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
+                                    Data = new tblInvoice();
                                     Data.QBId = Convert.ToInt32(ResponseData.Invoice.Id);
                                     Data.SyncToken = ResponseData.Invoice.SyncToken;
                                     Data.InvoiceNumber = ResponseData.Invoice.DocNumber;
@@ -2355,11 +2431,13 @@ namespace EarthCo.Controllers
                             }
                             else
                             {
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -2409,17 +2487,24 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
 
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(RR);
+                                InvoiceQB.InvoiceResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<InvoiceQB.InvoiceResponse>(RR);
+
+                                var QBId = Convert.ToInt32(ResponseData.Invoice.Id);
+                                var SyncToken = ResponseData.Invoice.SyncToken;
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Invoice"]["Id"];
+                                //var QBId = estimateModel["Invoice"]["Id"];
 
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
@@ -2436,8 +2521,10 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
-                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(errorMessage);
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
+                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(RR);
                                 if (errorResponse.Fault.Error.FirstOrDefault().Message.Contains("Object Not Found"))
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
@@ -2452,7 +2539,7 @@ namespace EarthCo.Controllers
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = RR;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -2494,6 +2581,7 @@ namespace EarthCo.Controllers
 
                     }
                 }
+                return "Success";
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -2515,6 +2603,7 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
             catch (Exception ex)
@@ -2530,13 +2619,14 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
 
         }
 
         [HttpPost]
-        public async Task SyncBillAsync(tblSyncLog SyncLog)
+        public string SyncBillAsync(tblSyncLog SyncLog)
         {
             try
             {
@@ -2584,18 +2674,19 @@ namespace EarthCo.Controllers
                         BillData.VendorRef = new QBBillCUClass.VendorRef();
                         BillData.VendorRef.value = Data.tblUser.QBId.ToString();
 
-
+                        BillData.Line = new List<Models.QBBillCUClass.LineDetail>();
                         foreach (var item in ItemData)
                         {
                             LineData.Amount = Convert.ToDecimal(item.Amount);
                             LineData.Description = item.Description;
-                            LineData.DetailType = item.tblItem.Type;
+                            //LineData.DetailType = item.tblItem.Type;
+                            LineData.DetailType = "ItemBasedExpenseLineDetail";
                             LineData.ItemBasedExpenseLineDetail = new Models.QBBillCUClass.ItemBasedExpenseLineDetail();
                             LineData.ItemBasedExpenseLineDetail.ItemRef = new QBBillCUClass.ItemRef();
                             LineData.ItemBasedExpenseLineDetail.ItemRef.value = item.tblItem.QBId.ToString();
                             LineData.ItemBasedExpenseLineDetail.UnitPrice = Convert.ToDecimal(item.Rate);
                             LineData.ItemBasedExpenseLineDetail.Qty = (int)item.Qty;
-                            BillData.Line = new List<Models.QBBillCUClass.LineDetail>();
+                            
                             BillData.Line.Add(LineData);
                         }
                         string jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(BillData);
@@ -2610,20 +2701,27 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBBill.BillResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBBill.BillResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Bill.Id);
+                                var SyncToken = ResponseData.Bill.SyncToken;
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Bill"]["Id"];
-                                var SyncToken = estimateModel["Bill"]["SyncToken"];
+                                //var QBId = estimateModel["Bill"]["Id"];
+                                //var SyncToken = estimateModel["Bill"]["SyncToken"];
 
-                                Data.QBId = SyncToken;
+                                Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
                                 DB.Entry(Data);
                                 DB.SaveChanges();
@@ -2640,11 +2738,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -2758,7 +2858,9 @@ namespace EarthCo.Controllers
                                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                                 // Make the GET request
-                                HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/bill/" + SyncLog.QBId + "?minorversion=23");
+                                var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/bill/" + SyncLog.QBId + "?minorversion=23");
+                                Response.Wait();
+                                var response = Response.Result;
 
                                 if (response.IsSuccessStatusCode)
                                 {
@@ -2822,11 +2924,13 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
-                                    string errorMessage = await response.Content.ReadAsStringAsync();
+                                    var errorMessage = response.Content.ReadAsStringAsync();
+                                    errorMessage.Wait();
+                                    var RR = errorMessage.Result;
 
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = RR;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -2880,18 +2984,19 @@ namespace EarthCo.Controllers
                         BillData.VendorRef = new QBBillCUClass.VendorRef();
                         BillData.VendorRef.value = Data.tblUser.QBId.ToString();
 
-
+                        BillData.Line = new List<Models.QBBillCUClass.LineDetail>();
                         foreach (var item in ItemData)
                         {
                             LineData.Amount = Convert.ToDecimal(item.Amount);
                             LineData.Description = item.Description;
-                            LineData.DetailType = item.tblItem.Type;
+                            //LineData.DetailType = item.tblItem.Type;
+                            LineData.DetailType = "ItemBasedExpenseLineDetail";
                             LineData.ItemBasedExpenseLineDetail = new Models.QBBillCUClass.ItemBasedExpenseLineDetail();
                             LineData.ItemBasedExpenseLineDetail.ItemRef = new QBBillCUClass.ItemRef();
                             LineData.ItemBasedExpenseLineDetail.ItemRef.value = item.tblItem.QBId.ToString();
                             LineData.ItemBasedExpenseLineDetail.UnitPrice = Convert.ToDecimal(item.Rate);
                             LineData.ItemBasedExpenseLineDetail.Qty = (int)item.Qty;
-                            BillData.Line = new List<Models.QBBillCUClass.LineDetail>();
+                            
                             BillData.Line.Add(LineData);
                         }
 
@@ -2908,19 +3013,26 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBBill.BillResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBBill.BillResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Bill.Id);
+                                var SyncToken = ResponseData.Bill.SyncToken;
                                 // Now you can access the data using the model
 
-                                var QBId = estimateModel["Bill"]["Id"];
-                                var SyncToken = estimateModel["Bill"]["SyncToken"];
+                                //var QBId = estimateModel["Bill"]["Id"];
+                                //var SyncToken = estimateModel["Bill"]["SyncToken"];
 
                                 Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
@@ -2941,11 +3053,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -2979,7 +3093,9 @@ namespace EarthCo.Controllers
                             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                             // Make the GET request
-                            HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/bill/" + SyncLog.QBId + "?minorversion=23");
+                            var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/bill/" + SyncLog.QBId + "?minorversion=23");
+                            Response.Wait();
+                            var response=Response.Result;
 
                             if (response.IsSuccessStatusCode)
                             {
@@ -3008,10 +3124,9 @@ namespace EarthCo.Controllers
                                     //Data.BalanceAmount = Estimate.EstimateData.BalanceAmount;
                                     Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                                     //Data.CreatedBy = UserId;
-                                    Data.DocNumber = Convert.ToString(DB.SPGetNumber("B").FirstOrDefault());
                                     Data.isActive = true;
                                     Data.isDelete = false;
-                                    DB.tblBills.Add(Data);
+                                    DB.Entry(Data);
                                     DB.SaveChanges();
 
                                     ItemData = DB.tblBillItems.Where(x => x.BillId == Data.BillId).ToList();
@@ -3053,6 +3168,7 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
+                                    Data =new tblBill();
                                     Data.QBId = Convert.ToInt32(ResponseData.Bill.Id);
                                     Data.SyncToken = ResponseData.Bill.SyncToken;
                                     Data.BillNumber = ResponseData.Bill.DocNumber;
@@ -3113,11 +3229,13 @@ namespace EarthCo.Controllers
                             }
                             else
                             {
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -3167,17 +3285,24 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBBill.BillResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBBill.BillResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Bill.Id);
+                                var SyncToken = ResponseData.Bill.SyncToken;
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Bill"]["Id"];
+                                //var QBId = estimateModel["Bill"]["Id"];
 
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
@@ -3194,8 +3319,10 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
-                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(errorMessage);
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
+                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(RR);
                                 if (errorResponse.Fault.Error.FirstOrDefault().Message.Contains("Object Not Found"))
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
@@ -3210,7 +3337,7 @@ namespace EarthCo.Controllers
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = RR;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -3252,6 +3379,7 @@ namespace EarthCo.Controllers
 
                     }
                 }
+                return "Success";
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -3273,6 +3401,7 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
             catch (Exception ex)
@@ -3288,13 +3417,14 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
 
         }
 
         [HttpPost]
-        public async Task SyncItemAsync(tblSyncLog SyncLog)
+        public string SyncItemAsync(tblSyncLog SyncLog)
         {
             try
             {
@@ -3350,20 +3480,27 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBItem.ItemResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBItem.ItemResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Item.Id);
+                                var SyncToken = ResponseData.Item.SyncToken;
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Item"]["Id"];
-                                var SyncToken = estimateModel["Item"]["SyncToken"];
+                                //var QBId = estimateModel["Item"]["Id"];
+                                //var SyncToken = estimateModel["Item"]["SyncToken"];
 
-                                Data.QBId = SyncToken;
+                                Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
                                 DB.Entry(Data);
                                 DB.SaveChanges();
@@ -3380,11 +3517,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -3431,7 +3570,9 @@ namespace EarthCo.Controllers
                                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                                 // Make the GET request
-                                HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/item/" + SyncLog.QBId + "?minorversion=23");
+                                var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/item/" + SyncLog.QBId + "?minorversion=23");
+                                Response.Wait();
+                                var response = Response.Result;
 
                                 if (response.IsSuccessStatusCode)
                                 {
@@ -3469,11 +3610,13 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
-                                    string errorMessage = await response.Content.ReadAsStringAsync();
+                                    var errorMessage = response.Content.ReadAsStringAsync();
+                                    errorMessage.Wait();
+                                    var RR = errorMessage.Result;
 
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = RR;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -3539,19 +3682,26 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBItem.ItemResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBItem.ItemResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Item.Id);
+                                var SyncToken = ResponseData.Item.SyncToken;
                                 // Now you can access the data using the model
 
-                                var QBId = estimateModel["Item"]["Id"];
-                                var SyncToken = estimateModel["Item"]["SyncToken"];
+                                //var QBId = estimateModel["Item"]["Id"];
+                                //var SyncToken = estimateModel["Item"]["SyncToken"];
 
                                 Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
@@ -3572,11 +3722,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -3610,7 +3762,9 @@ namespace EarthCo.Controllers
                             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                             // Make the GET request
-                            HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/item/" + SyncLog.QBId + "?minorversion=23");
+                            var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/item/" + SyncLog.QBId + "?minorversion=23");
+                            Response.Wait();
+                            var response = Response.Result;
 
                             if (response.IsSuccessStatusCode)
                             {
@@ -3653,6 +3807,7 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
+                                    Data = new tblItem();
                                     Data.QBId = Convert.ToInt32(ResponseData.Item.Id);
                                     Data.SyncToken = ResponseData.Item.SyncToken;
 
@@ -3682,11 +3837,13 @@ namespace EarthCo.Controllers
                             }
                             else
                             {
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -3736,17 +3893,24 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBItem.ItemResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBItem.ItemResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Item.Id);
+                                var SyncToken = ResponseData.Item.SyncToken;
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Item"]["Id"];
+                                //var QBId = estimateModel["Item"]["Id"];
 
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
@@ -3763,8 +3927,10 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
-                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(errorMessage);
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
+                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(RR);
                                 if (errorResponse.Fault.Error.FirstOrDefault().Message.Contains("Object Not Found"))
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
@@ -3779,7 +3945,7 @@ namespace EarthCo.Controllers
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = RR;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -3821,6 +3987,7 @@ namespace EarthCo.Controllers
 
                     }
                 }
+                return "Success";
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -3842,6 +4009,7 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
             catch (Exception ex)
@@ -3857,13 +4025,14 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
 
         }
 
         [HttpPost]
-        public async Task SyncVendorAsync(tblSyncLog SyncLog)
+        public string SyncVendorAsync(tblSyncLog SyncLog)
         {
             try
             {
@@ -3906,7 +4075,9 @@ namespace EarthCo.Controllers
                             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                             // Make the GET request
-                            HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/vendor/" + SyncLog.QBId + "?minorversion=23");
+                            var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/vendor/" + SyncLog.QBId + "?minorversion=23");
+                            Response.Wait();
+                            var response = Response.Result;
 
                             if (response.IsSuccessStatusCode)
                             {
@@ -3951,11 +4122,13 @@ namespace EarthCo.Controllers
                             }
                             else
                             {
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -3988,7 +4161,9 @@ namespace EarthCo.Controllers
                         client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                         // Make the GET request
-                        HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/vendor/" + SyncLog.QBId + "?minorversion=23");
+                        var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/vendor/" + SyncLog.QBId + "?minorversion=23");
+                        Response.Wait();
+                        var response = Response.Result;
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -4037,6 +4212,7 @@ namespace EarthCo.Controllers
                             }
                             else
                             {
+                                Data = new tblUser();
                                 Data.QBId = Convert.ToInt32(ResponseData.Vendor.Id);
                                 Data.SyncToken = ResponseData.Vendor.SyncToken;
 
@@ -4072,11 +4248,13 @@ namespace EarthCo.Controllers
                         }
                         else
                         {
-                            string errorMessage = await response.Content.ReadAsStringAsync();
+                            var errorMessage = response.Content.ReadAsStringAsync();
+                            errorMessage.Wait();
+                            var RR = errorMessage.Result;
 
                             tblSyncLog SyncLogData = new tblSyncLog();
                             SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                            SyncLogData.Message = errorMessage;
+                            SyncLogData.Message = RR;
                             SyncLogData.EditDate = DateTime.Now;
                             DB.Entry(SyncLogData);
                             DB.SaveChanges();
@@ -4112,6 +4290,7 @@ namespace EarthCo.Controllers
                         DB.SaveChanges();
                     }
                 }
+                return "Success";
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -4133,6 +4312,7 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
             catch (Exception ex)
@@ -4148,13 +4328,14 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
 
         }
 
         [HttpPost]
-        public async Task SyncStaffAsync(tblSyncLog SyncLog)
+        public string SyncStaffAsync(tblSyncLog SyncLog)
         {
             try
             {
@@ -4205,20 +4386,27 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBStaff.StaffResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBStaff.StaffResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Employee.Id);
+                                var SyncToken = ResponseData.Employee.SyncToken;
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Employee"]["Id"];
-                                var SyncToken = estimateModel["Employee"]["SyncToken"];
+                                //var QBId = estimateModel["Employee"]["Id"];
+                                //var SyncToken = estimateModel["Employee"]["SyncToken"];
 
-                                Data.QBId = SyncToken;
+                                Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
                                 DB.Entry(Data);
                                 DB.SaveChanges();
@@ -4235,11 +4423,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -4286,7 +4476,9 @@ namespace EarthCo.Controllers
                                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                                 // Make the GET request
-                                HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/employee/" + SyncLog.QBId + "?minorversion=23");
+                                var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/employee/" + SyncLog.QBId + "?minorversion=23");
+                                Response.Wait();
+                                var response = Response.Result;
 
                                 if (response.IsSuccessStatusCode)
                                 {
@@ -4326,11 +4518,13 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
-                                    string errorMessage = await response.Content.ReadAsStringAsync();
+                                    var errorMessage = response.Content.ReadAsStringAsync();
+                                    errorMessage.Wait();
+                                    var RR = errorMessage.Result;
 
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = RR;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -4391,19 +4585,26 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBStaff.StaffResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBStaff.StaffResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Employee.Id);
+                                var SyncToken = ResponseData.Employee.SyncToken;
                                 // Now you can access the data using the model
 
-                                var QBId = estimateModel["Employee"]["Id"];
-                                var SyncToken = estimateModel["Employee"]["SyncToken"];
+                                //var QBId = estimateModel["Employee"]["Id"];
+                                //var SyncToken = estimateModel["Employee"]["SyncToken"];
 
                                 Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
@@ -4424,11 +4625,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -4462,7 +4665,9 @@ namespace EarthCo.Controllers
                             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                             // Make the GET request
-                            HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/employee/" + SyncLog.QBId + "?minorversion=23");
+                            var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/employee/" + SyncLog.QBId + "?minorversion=23");
+                            Response.Wait();
+                            var response = Response.Result;
 
                             if (response.IsSuccessStatusCode)
                             {
@@ -4507,6 +4712,7 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
+                                    Data = new tblUser();
                                     Data.QBId = Convert.ToInt32(ResponseData.Employee.Id);
                                     Data.SyncToken = ResponseData.Employee.SyncToken;
 
@@ -4538,11 +4744,13 @@ namespace EarthCo.Controllers
                             }
                             else
                             {
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -4592,17 +4800,24 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBStaff.StaffResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBStaff.StaffResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Employee.Id);
+                                var SyncToken = ResponseData.Employee.SyncToken;
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Employee"]["Id"];
+                                //var QBId = estimateModel["Employee"]["Id"];
 
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
@@ -4619,8 +4834,10 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
-                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(errorMessage);
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
+                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(RR);
                                 if (errorResponse.Fault.Error.FirstOrDefault().Message.Contains("Object Not Found"))
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
@@ -4635,7 +4852,7 @@ namespace EarthCo.Controllers
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = RR;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -4677,6 +4894,7 @@ namespace EarthCo.Controllers
 
                     }
                 }
+                return "Success";
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -4698,6 +4916,7 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
             catch (Exception ex)
@@ -4713,13 +4932,15 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
+
                 //return ResponseMessage(responseMessage);
             }
 
         }
 
         [HttpPost]
-        public async Task SyncCustomerAsync(tblSyncLog SyncLog)
+        public string SyncCustomerAsync(tblSyncLog SyncLog)
         {
             try
             {
@@ -4772,20 +4993,27 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBCustomer.CustomerResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBCustomer.CustomerResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Customer.Id);
+                                var SyncToken = ResponseData.Customer.SyncToken;
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Customer"]["Id"];
-                                var SyncToken = estimateModel["Customer"]["SyncToken"];
+                                //var QBId = estimateModel["Customer"]["Id"];
+                                //var SyncToken = estimateModel["Customer"]["SyncToken"];
 
-                                Data.QBId = SyncToken;
+                                Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
                                 DB.Entry(Data);
                                 DB.SaveChanges();
@@ -4802,11 +5030,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -4853,7 +5083,9 @@ namespace EarthCo.Controllers
                                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                                 // Make the GET request
-                                HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/customer/" + SyncLog.QBId + "?minorversion=23");
+                                var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/customer/" + SyncLog.QBId + "?minorversion=23");
+                                Response.Wait();
+                                var response = Response.Result;
 
                                 if (response.IsSuccessStatusCode)
                                 {
@@ -4897,11 +5129,13 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
-                                    string errorMessage = await response.Content.ReadAsStringAsync();
+                                    var errorMessage = response.Content.ReadAsStringAsync();
+                                    errorMessage.Wait();
+                                    var RR = errorMessage.Result;
 
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = RR;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -4963,19 +5197,26 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBCustomer.CustomerResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBCustomer.CustomerResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Customer.Id);
+                                var SyncToken = ResponseData.Customer.SyncToken;
                                 // Now you can access the data using the model
 
-                                var QBId = estimateModel["Customer"]["Id"];
-                                var SyncToken = estimateModel["Customer"]["SyncToken"];
+                                //var QBId = estimateModel["Customer"]["Id"];
+                                //var SyncToken = estimateModel["Customer"]["SyncToken"];
 
                                 Data.QBId = QBId;
                                 Data.SyncToken = SyncToken;
@@ -4996,11 +5237,13 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -5034,7 +5277,9 @@ namespace EarthCo.Controllers
                             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
                             // Make the GET request
-                            HttpResponseMessage response = await client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/customer/" + SyncLog.QBId + "?minorversion=23");
+                            var Response = client.GetAsync("https://sandbox-quickbooks.api.intuit.com/v3/company/" + TokenData.realmId + "/customer/" + SyncLog.QBId + "?minorversion=23");
+                            Response.Wait();
+                            var response = Response.Result;
 
                             if (response.IsSuccessStatusCode)
                             {
@@ -5082,6 +5327,7 @@ namespace EarthCo.Controllers
                                 }
                                 else
                                 {
+                                    Data = new tblUser();
                                     Data.QBId = Convert.ToInt32(ResponseData.Customer.Id);
                                     Data.SyncToken = ResponseData.Customer.SyncToken;
 
@@ -5116,11 +5362,13 @@ namespace EarthCo.Controllers
                             }
                             else
                             {
-                                string errorMessage = await response.Content.ReadAsStringAsync();
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
                                 SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                SyncLogData.Message = errorMessage;
+                                SyncLogData.Message = RR;
                                 SyncLogData.EditDate = DateTime.Now;
                                 DB.Entry(SyncLogData);
                                 DB.SaveChanges();
@@ -5170,17 +5418,24 @@ namespace EarthCo.Controllers
                             //var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
                             // Make the POST request
-                            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                            var Response = client.PostAsync(apiUrl, content);
+                            Response.Wait();
+                            var response = Response.Result;
 
                             // Check if the request was successful
                             if (response.IsSuccessStatusCode)
                             {
                                 // Parse and use the response data as needed
-                                string jsonResponse = await response.Content.ReadAsStringAsync();
-                                dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                var jsonResponse = response.Content.ReadAsStringAsync();
+                                jsonResponse.Wait();
+                                var RR = jsonResponse.Result;
+                                //dynamic estimateModel = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                                QBCustomer.CustomerResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBCustomer.CustomerResponse>(RR);
 
+                                var QBId = Convert.ToInt32(ResponseData.Customer.Id);
+                                var SyncToken = ResponseData.Customer.SyncToken;
                                 // Now you can access the data using the model
-                                var QBId = estimateModel["Customer"]["Id"];
+                                //var QBId = estimateModel["Customer"]["Id"];
 
 
                                 tblSyncLog SyncLogData = new tblSyncLog();
@@ -5197,8 +5452,10 @@ namespace EarthCo.Controllers
                             else
                             {
                                 // Handle error
-                                string errorMessage = await response.Content.ReadAsStringAsync();
-                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(errorMessage);
+                                var errorMessage = response.Content.ReadAsStringAsync();
+                                errorMessage.Wait();
+                                var RR = errorMessage.Result;
+                                var errorResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorResponse>(RR);
                                 if (errorResponse.Fault.Error.FirstOrDefault().Message.Contains("Object Not Found"))
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
@@ -5213,7 +5470,7 @@ namespace EarthCo.Controllers
                                 {
                                     tblSyncLog SyncLogData = new tblSyncLog();
                                     SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId == SyncLog.SyncLogId).FirstOrDefault();
-                                    SyncLogData.Message = errorMessage;
+                                    SyncLogData.Message = RR;
                                     SyncLogData.EditDate = DateTime.Now;
                                     DB.Entry(SyncLogData);
                                     DB.SaveChanges();
@@ -5255,6 +5512,7 @@ namespace EarthCo.Controllers
 
                     }
                 }
+                return "Success";
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -5276,6 +5534,7 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
             catch (Exception ex)
@@ -5291,6 +5550,7 @@ namespace EarthCo.Controllers
                 Result.CreatedDate = DateTime.Now;
                 DB.tblLogs.Add(Result);
                 DB.SaveChanges();
+                return "Error";
                 //return ResponseMessage(responseMessage);
             }
 
