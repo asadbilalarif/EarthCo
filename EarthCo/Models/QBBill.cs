@@ -66,6 +66,7 @@ namespace EarthCo.Models
             public TaxCodeRef TaxCodeRef { get; set; }
         }
 
+
         public class TaxCodeRef
         {
             public string value { get; set; }

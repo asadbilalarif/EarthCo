@@ -87,8 +87,8 @@ namespace EarthCo.Controllers
                         Temp.Date =(DateTime) item.Date;
                         Temp.Status =item.tblPurchaseOrderStatu.Status;
                         Temp.StatusColor =item.tblPurchaseOrderStatu.Color;
-                        Temp.RegionalManager = item.tblUser1.FirstName + " " + item.tblUser1.LastName;
-                        Temp.RequestedBy = item.tblUser2.FirstName + " " + item.tblUser2.LastName;
+                        Temp.RegionalManager = item.tblUser1!=null? item.tblUser1.FirstName + " " + item.tblUser1.LastName:"";
+                        Temp.RequestedBy = item.tblUser2 != null ? item.tblUser2.FirstName + " " + item.tblUser2.LastName:"";
                         Temp.EstimateNumber = item.EstimateNumber;
                         Temp.BillNumber = item.BillNumber;
                         Temp.InvoiceNumber = item.InvoiceNumber;
@@ -608,6 +608,7 @@ namespace EarthCo.Controllers
                         Result.Id = Data.PurchaseOrderId;
                         Result.Name = "PurchaseOrder";
                         Result.Operation = "Update";
+                        Result.CreatedDate = DateTime.Now;
                         Result.EditDate = DateTime.Now;
                         Result.isQB = false;
                         Result.isSync = false;

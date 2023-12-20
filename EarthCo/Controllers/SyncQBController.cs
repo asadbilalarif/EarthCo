@@ -30,11 +30,22 @@ namespace EarthCo.Controllers
         earthcoEntities DB = new earthcoEntities();
 
         [HttpGet]
-        public IHttpActionResult SyncDataAPI()
+        public IHttpActionResult SyncDataAPI(int synclogId=0)   
         {
             try
             {
-                List<tblSyncLog> SyncLogData = DB.tblSyncLogs.Where(x => x.isSync != true).ToList();
+                List<tblSyncLog> SyncLogData = null;
+                if (synclogId == 0)
+                {
+                     SyncLogData = new List<tblSyncLog>();
+                     SyncLogData = DB.tblSyncLogs.Where(x => x.isSync != true).ToList();
+                }
+                else
+                {
+                    SyncLogData = new List<tblSyncLog>();
+                    SyncLogData = DB.tblSyncLogs.Where(x => x.SyncLogId ==synclogId ).ToList();
+                }
+
 
                 foreach (tblSyncLog item in SyncLogData)
                 {
@@ -49,6 +60,10 @@ namespace EarthCo.Controllers
                     else if(item.Name == "Invoice")
                     {
                         SyncInvoiceAsync(item);
+                    }
+                    else if(item.Name == "Bill")
+                    {
+                        SyncBillAsync(item);
                     }
                     else if(item.Name == "Item")
                     {
@@ -118,7 +133,7 @@ namespace EarthCo.Controllers
                 tblEstimate Data = new tblEstimate();
                 List<tblEstimateItem> ItemData = new List<tblEstimateItem>();
                 List<tblEstimateFile> FileData = new List<tblEstimateFile>();
-                if(SyncLog.Operation=="Create")
+                if(SyncLog.Operation == "Create")
                 {
                     if (SyncLog.isQB != true)
                     {
@@ -385,7 +400,7 @@ namespace EarthCo.Controllers
                                     readTask.Wait();
                                     string Test = readTask.Result;
                                     QBEstimateResponseClass.EstimateMain ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBEstimateResponseClass.EstimateMain>(Test);
-
+                                    Data = new tblEstimate();
                                     Data.QBId = Convert.ToInt32(ResponseData.Estimate.Id);
                                     Data.EstimateNumber = ResponseData.Estimate.DocNumber;
                                     int QBId = Convert.ToInt32(ResponseData.Estimate.CustomerRef.value); ;
@@ -436,24 +451,28 @@ namespace EarthCo.Controllers
 
                                     foreach (QBEstimateResponseClass.Line item in ResponseData.Estimate.Line)
                                     {
-                                        tblEstimateItem Item = new tblEstimateItem();
-                                        Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
-                                        Item.EstimateId = Data.EstimateId;
-                                        //Item.CreatedBy = UserId;
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        //Item.EditBy = UserId;
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isCost = false;
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblEstimateItems.Add(Item);
-                                        DB.SaveChanges();
+                                        if(item.Id!=null)
+                                        {
+                                            tblEstimateItem Item = new tblEstimateItem();
+                                            Item.Description = item.Description;
+                                            Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
+                                            Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.ItemId = ItemId;
+                                            Item.EstimateId = Data.EstimateId;
+                                            //Item.CreatedBy = UserId;
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            //Item.EditBy = UserId;
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isCost = false;
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblEstimateItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
 
@@ -522,6 +541,10 @@ namespace EarthCo.Controllers
                         EsitimateData.DocNumber = Data.EstimateNumber;
                         EsitimateData.SyncToken = Data.SyncToken;
                         EsitimateData.Id = Data.QBId.ToString();
+                        if(EsitimateData.Id=="")
+                        {
+                            EsitimateData.Id = null;
+                        }
                         EsitimateData.CustomerRef = new EstimateQB.CustomerRef();
                         EsitimateData.CustomerRef.value = Data.tblUser.QBId.ToString();
                         //EsitimateData.CustomerRef.name = "Cool Cars";
@@ -704,24 +727,28 @@ namespace EarthCo.Controllers
 
                                     foreach (QBEstimateResponseClass.Line item in ResponseData.Estimate.Line)
                                     {
-                                        tblEstimateItem Item = new tblEstimateItem();
-                                        Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
-                                        Item.EstimateId = Data.EstimateId;
-                                        //Item.CreatedBy = UserId;
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        //Item.EditBy = UserId;
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isCost = false;
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblEstimateItems.Add(Item);
-                                        DB.SaveChanges();
+                                        if(item.Id!=null)
+                                        {
+                                            tblEstimateItem Item = new tblEstimateItem();
+                                            Item.Description = item.Description;
+                                            Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
+                                            Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.ItemId = ItemId;
+                                            Item.EstimateId = Data.EstimateId;
+                                            //Item.CreatedBy = UserId;
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            //Item.EditBy = UserId;
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isCost = false;
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblEstimateItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
 
@@ -791,24 +818,28 @@ namespace EarthCo.Controllers
 
                                     foreach (QBEstimateResponseClass.Line item in ResponseData.Estimate.Line)
                                     {
-                                        tblEstimateItem Item = new tblEstimateItem();
-                                        Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
-                                        Item.EstimateId = Data.EstimateId;
-                                        //Item.CreatedBy = UserId;
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        //Item.EditBy = UserId;
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isCost = false;
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblEstimateItems.Add(Item);
-                                        DB.SaveChanges();
+                                        if (item.Id != null && item.SalesItemLineDetail != null)
+                                        {
+                                            tblEstimateItem Item = new tblEstimateItem();
+                                            Item.Description = item.Description;
+                                            Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
+                                            Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.ItemId = ItemId;
+                                            Item.EstimateId = Data.EstimateId;
+                                            //Item.CreatedBy = UserId;
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            //Item.EditBy = UserId;
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isCost = false;
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblEstimateItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
 
@@ -1207,7 +1238,7 @@ namespace EarthCo.Controllers
                                     readTask.Wait();
                                     string Test = readTask.Result;
                                     PurchaseOrderQB.PurchaseOrderResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<PurchaseOrderQB.PurchaseOrderResponse>(Test);
-
+                                    Data = new tblPurchaseOrder();
                                     Data.QBId = Convert.ToInt32(ResponseData.PurchaseOrder.Id);
                                     Data.SyncToken = ResponseData.PurchaseOrder.SyncToken;
                                     Data.PurchaseOrderNumber = ResponseData.PurchaseOrder.DocNumber;
@@ -1251,23 +1282,27 @@ namespace EarthCo.Controllers
 
                                     foreach (PurchaseOrderQB.Line item in ResponseData.PurchaseOrder.Line)
                                     {
-                                        tblPurchaseOrderItem Item = new tblPurchaseOrderItem();
-                                        //Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
-                                        Item.PurchaseOrderId = Data.PurchaseOrderId;
-                                        //Item.CreatedBy = UserId;
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        //Item.EditBy = UserId;
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblPurchaseOrderItems.Add(Item);
-                                        DB.SaveChanges();
+                                        if (item.Id != null && item.ItemBasedExpenseLineDetail != null)
+                                        {
+                                            tblPurchaseOrderItem Item = new tblPurchaseOrderItem();
+                                            //Item.Description = item.Description;
+                                            Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
+                                            Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.ItemId = ItemId;
+                                            Item.PurchaseOrderId = Data.PurchaseOrderId;
+                                            //Item.CreatedBy = UserId;
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            //Item.EditBy = UserId;
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblPurchaseOrderItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
 
@@ -1336,6 +1371,10 @@ namespace EarthCo.Controllers
                         PurchaseOrderData.SyncToken = Data.SyncToken;
                         PurchaseOrderData.DocNumber = Data.PurchaseOrderNumber;
                         PurchaseOrderData.Id = Data.QBId.ToString();
+                        if(PurchaseOrderData.Id=="")
+                        {
+                            PurchaseOrderData.Id = null;
+                        }
                         PurchaseOrderData.VendorRef = new QBPurchaseOrderCUClass.VendorRef();
                         PurchaseOrderData.VendorRef.value = Data.tblUser.QBId.ToString();
                         if (Data.StatusId == 1)
@@ -1520,23 +1559,27 @@ namespace EarthCo.Controllers
 
                                     foreach (PurchaseOrderQB.Line item in ResponseData.PurchaseOrder.Line)
                                     {
-                                        tblPurchaseOrderItem Item = new tblPurchaseOrderItem();
-                                        //Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
-                                        Item.PurchaseOrderId = Data.PurchaseOrderId;
-                                        //Item.CreatedBy = UserId;
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        //Item.EditBy = UserId;
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblPurchaseOrderItems.Add(Item);
-                                        DB.SaveChanges();
+                                        if (item.Id != null && item.ItemBasedExpenseLineDetail != null)
+                                        {
+                                            tblPurchaseOrderItem Item = new tblPurchaseOrderItem();
+                                            //Item.Description = item.Description;
+                                            Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
+                                            Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.ItemId = ItemId;
+                                            Item.PurchaseOrderId = Data.PurchaseOrderId;
+                                            //Item.CreatedBy = UserId;
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            //Item.EditBy = UserId;
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblPurchaseOrderItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
 
@@ -1597,23 +1640,27 @@ namespace EarthCo.Controllers
 
                                     foreach (PurchaseOrderQB.Line item in ResponseData.PurchaseOrder.Line)
                                     {
-                                        tblPurchaseOrderItem Item = new tblPurchaseOrderItem();
-                                        //Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
-                                        Item.PurchaseOrderId = Data.PurchaseOrderId;
-                                        //Item.CreatedBy = UserId;
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        //Item.EditBy = UserId;
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblPurchaseOrderItems.Add(Item);
-                                        DB.SaveChanges();
+                                        if (item.Id != null && item.ItemBasedExpenseLineDetail != null)
+                                        {
+                                            tblPurchaseOrderItem Item = new tblPurchaseOrderItem();
+                                            //Item.Description = item.Description;
+                                            Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
+                                            Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.ItemId = ItemId;
+                                            Item.PurchaseOrderId = Data.PurchaseOrderId;
+                                            //Item.CreatedBy = UserId;
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            //Item.EditBy = UserId;
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblPurchaseOrderItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
 
@@ -2070,11 +2117,13 @@ namespace EarthCo.Controllers
                                     readTask.Wait();
                                     string Test = readTask.Result;
                                     InvoiceQB.InvoiceResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<InvoiceQB.InvoiceResponse>(Test);
+                                    Data = new tblInvoice();
+
 
                                     Data.QBId = Convert.ToInt32(ResponseData.Invoice.Id);
                                     Data.SyncToken = ResponseData.Invoice.SyncToken;
                                     Data.InvoiceNumber = ResponseData.Invoice.DocNumber;
-                                    int QBId = Convert.ToInt32(ResponseData.Invoice.CustomerRef.value); ;
+                                    int QBId = Convert.ToInt32(ResponseData.Invoice.CustomerRef.value);
                                     int CustomerId = DB.tblUsers.Where(x => x.QBId == QBId).Select(s => s.UserId).FirstOrDefault();
                                     Data.CustomerId = CustomerId;
 
@@ -2093,25 +2142,29 @@ namespace EarthCo.Controllers
 
                                     foreach (InvoiceQB.Line item in ResponseData.Invoice.Line)
                                     {
-                                        tblInvoiceItem Item = new tblInvoiceItem();
-                                        Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
-                                        Item.Name = item.SalesItemLineDetail.ItemRef.name;
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
+                                        if(item.Id!=null)
+                                        {
+                                            tblInvoiceItem Item = new tblInvoiceItem();
+                                            Item.Description = item.Description;
+                                            Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
+                                            Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
+                                            Item.Name = item.SalesItemLineDetail.ItemRef.name;
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.ItemId = ItemId;
 
-                                        Item.InvoiceId = Data.InvoiceId;
+                                            Item.InvoiceId = Data.InvoiceId;
 
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isCost = false;
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblInvoiceItems.Add(Item);
-                                        DB.SaveChanges();
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isCost = false;
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblInvoiceItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
 
@@ -2339,25 +2392,29 @@ namespace EarthCo.Controllers
 
                                     foreach (InvoiceQB.Line item in ResponseData.Invoice.Line)
                                     {
-                                        tblInvoiceItem Item = new tblInvoiceItem();
-                                        Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
-                                        Item.Name = item.SalesItemLineDetail.ItemRef.name;
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
+                                        if (item.Id != null && item.SalesItemLineDetail != null)
+                                        {
+                                            tblInvoiceItem Item = new tblInvoiceItem();
+                                            Item.Description = item.Description;
+                                            Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
+                                            Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
+                                            Item.Name = item.SalesItemLineDetail.ItemRef.name;
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.ItemId = ItemId;
 
-                                        Item.InvoiceId = Data.InvoiceId;
+                                            Item.InvoiceId = Data.InvoiceId;
 
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isCost = false;
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblInvoiceItems.Add(Item);
-                                        DB.SaveChanges();
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isCost = false;
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblInvoiceItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
                                     tblSyncLog SyncLogData = new tblSyncLog();
@@ -2398,25 +2455,29 @@ namespace EarthCo.Controllers
 
                                     foreach (InvoiceQB.Line item in ResponseData.Invoice.Line)
                                     {
-                                        tblInvoiceItem Item = new tblInvoiceItem();
-                                        Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
-                                        Item.Name = item.SalesItemLineDetail.ItemRef.name;
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
+                                        if (item.Id != null && item.SalesItemLineDetail != null)
+                                        {
+                                            tblInvoiceItem Item = new tblInvoiceItem();
+                                            Item.Description = item.Description;
+                                            Item.Qty = Convert.ToInt32(item.SalesItemLineDetail.Qty);
+                                            Item.Rate = Convert.ToDouble(item.SalesItemLineDetail.UnitPrice);
+                                            Item.Name = item.SalesItemLineDetail.ItemRef.name;
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            QBId = Convert.ToInt32(item.SalesItemLineDetail.ItemRef.value);
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.ItemId = ItemId;
 
-                                        Item.InvoiceId = Data.InvoiceId;
+                                            Item.InvoiceId = Data.InvoiceId;
 
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isCost = false;
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblInvoiceItems.Add(Item);
-                                        DB.SaveChanges();
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isCost = false;
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblInvoiceItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
 
@@ -2868,7 +2929,7 @@ namespace EarthCo.Controllers
                                     readTask.Wait();
                                     string Test = readTask.Result;
                                     QBBill.BillResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBBill.BillResponse>(Test);
-
+                                    Data = new tblBill();
                                     Data.QBId = Convert.ToInt32(ResponseData.Bill.Id);
                                     Data.SyncToken = ResponseData.Bill.SyncToken;
                                     Data.BillNumber = ResponseData.Bill.DocNumber;
@@ -2892,24 +2953,32 @@ namespace EarthCo.Controllers
 
                                     foreach (QBBill.Line item in ResponseData.Bill.Line)
                                     {
-                                        tblBillItem Item = new tblBillItem();
-                                        Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
-                                        Item.Name = item.ItemBasedExpenseLineDetail.ItemRef.name;
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
+                                        if (item.Id != null && item.ItemBasedExpenseLineDetail!=null)
+                                        {
+                                            tblBillItem Item = new tblBillItem();
+                                            Item.Description = item.Description;
+                                            if(item.ItemBasedExpenseLineDetail!=null)
+                                            {
+                                                Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
+                                                Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
+                                                Item.Name = item.ItemBasedExpenseLineDetail.ItemRef.name;
+                                                QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
+                                            }
 
-                                        Item.BillId = Data.BillId;
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            Item.ItemId = ItemId;
 
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblBillItems.Add(Item);
-                                        DB.SaveChanges();
+                                            Item.BillId = Data.BillId;
+
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblBillItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
 
@@ -3137,24 +3206,28 @@ namespace EarthCo.Controllers
 
                                     foreach (QBBill.Line item in ResponseData.Bill.Line)
                                     {
-                                        tblBillItem Item = new tblBillItem();
-                                        Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
-                                        Item.Name = item.ItemBasedExpenseLineDetail.ItemRef.name;
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
+                                        if (item.Id != null && item.ItemBasedExpenseLineDetail != null)
+                                        {
+                                            tblBillItem Item = new tblBillItem();
+                                            Item.Description = item.Description;
+                                            Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
+                                            Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
+                                            Item.Name = item.ItemBasedExpenseLineDetail.ItemRef.name;
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.ItemId = ItemId;
 
-                                        Item.BillId = Data.BillId;
+                                            Item.BillId = Data.BillId;
 
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblBillItems.Add(Item);
-                                        DB.SaveChanges();
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblBillItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
 
@@ -3197,24 +3270,28 @@ namespace EarthCo.Controllers
 
                                     foreach (QBBill.Line item in ResponseData.Bill.Line)
                                     {
-                                        tblBillItem Item = new tblBillItem();
-                                        Item.Description = item.Description;
-                                        Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
-                                        Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
-                                        Item.Name = item.ItemBasedExpenseLineDetail.ItemRef.name;
-                                        Item.Amount = Convert.ToDouble(item.Amount);
-                                        QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
-                                        int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
-                                        Item.ItemId = ItemId;
+                                        if (item.Id != null && item.ItemBasedExpenseLineDetail != null)
+                                        {
+                                            tblBillItem Item = new tblBillItem();
+                                            Item.Description = item.Description;
+                                            Item.Qty = Convert.ToInt32(item.ItemBasedExpenseLineDetail.Qty);
+                                            Item.Rate = Convert.ToDouble(item.ItemBasedExpenseLineDetail.UnitPrice);
+                                            Item.Name = item.ItemBasedExpenseLineDetail.ItemRef.name;
+                                            Item.Amount = Convert.ToDouble(item.Amount);
+                                            QBId = Convert.ToInt32(item.ItemBasedExpenseLineDetail.ItemRef.value);
+                                            int ItemId = DB.tblItems.Where(x => x.QBId == QBId).Select(s => s.ItemId).FirstOrDefault();
+                                            Item.ItemId = ItemId;
 
-                                        Item.BillId = Data.BillId;
+                                            Item.BillId = Data.BillId;
 
-                                        Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-                                        Item.isActive = true;
-                                        Item.isDelete = false;
-                                        DB.tblBillItems.Add(Item);
-                                        DB.SaveChanges();
+                                            Item.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                                            Item.isActive = true;
+                                            Item.isDelete = false;
+                                            DB.tblBillItems.Add(Item);
+                                            DB.SaveChanges();
+                                        }
+                                        
                                     }
 
 
@@ -3580,7 +3657,7 @@ namespace EarthCo.Controllers
                                     readTask.Wait();
                                     string Test = readTask.Result;
                                     QBItem.ItemResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBItem.ItemResponse>(Test);
-
+                                    Data = new tblItem();
                                     Data.QBId = Convert.ToInt32(ResponseData.Item.Id);
                                     Data.SyncToken = ResponseData.Item.SyncToken;
 
@@ -4085,7 +4162,7 @@ namespace EarthCo.Controllers
                                 readTask.Wait();
                                 string Test = readTask.Result;
                                 QBVendor.VendorResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBVendor.VendorResponse>(Test);
-
+                                Data = new tblUser();
                                 Data.QBId = Convert.ToInt32(ResponseData.Vendor.Id);
                                 Data.SyncToken = ResponseData.Vendor.SyncToken;
 
@@ -4486,7 +4563,7 @@ namespace EarthCo.Controllers
                                     readTask.Wait();
                                     string Test = readTask.Result;
                                     QBStaff.StaffResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBStaff.StaffResponse>(Test);
-
+                                    Data = new tblUser();
                                     Data.QBId = Convert.ToInt32(ResponseData.Employee.Id);
                                     Data.SyncToken = ResponseData.Employee.SyncToken;
 
@@ -5093,7 +5170,7 @@ namespace EarthCo.Controllers
                                     readTask.Wait();
                                     string Test = readTask.Result;
                                     QBCustomer.CustomerResponse ResponseData = Newtonsoft.Json.JsonConvert.DeserializeObject<QBCustomer.CustomerResponse>(Test);
-
+                                    Data = new tblUser();
                                     Data.QBId = Convert.ToInt32(ResponseData.Customer.Id);
                                     Data.SyncToken = ResponseData.Customer.SyncToken;
 
@@ -5585,9 +5662,10 @@ namespace EarthCo.Controllers
                 {
                     foreach (var entity in eventNotification.DataChangeEvent.Entities)
                     {
-                        int ID= Convert.ToInt32(entity.Id); ;
-                        Result = DB.tblSyncLogs.Where(x => x.QBId == ID && x.Name== entity.Name).FirstOrDefault();
-                        if(Result==null)
+                        int ID= Convert.ToInt32(entity.Id);
+                        
+                        Result = DB.tblSyncLogs.Where(x => x.QBId == ID && x.Name == entity.Name).FirstOrDefault();
+                        if (Result == null)
                         {
                             Result = new tblSyncLog();
                             Result.QBId = Convert.ToInt32(entity.Id);
@@ -5613,7 +5691,7 @@ namespace EarthCo.Controllers
                             DB.Entry(Result);
                             DB.SaveChanges();
                         }
-                        
+                        SyncDataAPI(Result.SyncLogId);
                     }
                 }
 
@@ -5685,5 +5763,6 @@ namespace EarthCo.Controllers
             }
 
         }
+
     }
 }
