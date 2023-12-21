@@ -639,6 +639,9 @@
     <Compile Include="Models\tblEstimateStatu.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblGoolgeCalendar.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tblInvoice.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -816,6 +819,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Tokens.cshtml" />
     <Content Include="Views\Home\ApiCallService.cshtml" />
+    <Content Include="Views\Home\ConnectSuccessfull.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

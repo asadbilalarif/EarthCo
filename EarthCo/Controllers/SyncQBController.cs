@@ -1,5 +1,6 @@
 ﻿using EarthCo.Models;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -80,14 +81,17 @@ namespace EarthCo.Controllers
 
         }
         [HttpGet]
-        public async Task<IHttpActionResult> GenerateToken(string code,string realmId)
+        public async Task<IHttpActionResult> GenerateToken(string code,string realmId,string state)
         {
             try
             {
+                code = JsonSerializer.Deserialize<string>(code);
+                realmId = JsonSerializer.Deserialize<string>(realmId);
+                state = JsonSerializer.Deserialize<string>(state);
                 CallbackController CC = new CallbackController();
-                var task = await CC.Index(code,realmId);
+                //var task = await CC.Index(state,code, realmId);
 
-                return Ok(task);
+                return Ok();
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -5754,7 +5758,7 @@ namespace EarthCo.Controllers
                 // Call IsRequestValid function
                 //bool isValid = Test.IsRequestValid(headers, payload, verifier);
 
-                RootObject rootObject = JsonConvert.DeserializeObject<RootObject>(payload);
+                RootObject rootObject = Newtonsoft.Json.JsonConvert.DeserializeObject<RootObject>(payload);
                 tblSyncLog Result = null;
                 // Access the data
                 

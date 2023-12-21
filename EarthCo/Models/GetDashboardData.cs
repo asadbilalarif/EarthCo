@@ -16,6 +16,8 @@ namespace EarthCo.Models
         public int OpenPunchlistCount { get; set; }
         public int OpenLandscapeCount { get; set; }
         public int BilledInvoiceCount { get; set; }
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
         public bool isQBToken { get; set; }
     }
 }

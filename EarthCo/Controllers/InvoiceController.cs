@@ -86,7 +86,11 @@ namespace EarthCo.Controllers
                         Temp.InvoiceId = item.InvoiceId;
                         Temp.InvoiceNumber = item.InvoiceNumber;
                         Temp.CustomerName = item.tblUser.FirstName + " " + item.tblUser.LastName;
-                        Temp.IssueDate = (DateTime)item.IssueDate;
+                        if(item.IssueDate!=null)
+                        {
+                            Temp.IssueDate = (DateTime)item.IssueDate;
+                        }
+                        
                         Temp.TotalAmount = item.TotalAmount;
                         Temp.BalanceAmount = item.BalanceAmount;
                         Temp.ProfitPercentage = item.ProfitPercentage;

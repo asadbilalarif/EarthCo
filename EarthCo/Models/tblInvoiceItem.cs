@@ -32,7 +32,7 @@ namespace EarthCo.Models
         public bool isDelete { get; set; }
         public Nullable<double> PurchasePrice { get; set; }
     
-        public virtual tblInvoice tblInvoice { get; set; }
         public virtual tblItem tblItem { get; set; }
+        public virtual tblInvoice tblInvoice { get; set; }
     }
 }

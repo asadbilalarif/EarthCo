@@ -25,7 +25,7 @@ namespace EarthCo.Controllers
                 List<GetEstimateItem> EstData = new List<GetEstimateItem>();
 
                 List<tblEstimate> Data = new List<tblEstimate>();
-                Data = DB.tblEstimates.Where(x => x.isDelete == false).OrderByDescending(o=>o.EstimateId).Take(5).ToList();
+                Data = DB.tblEstimates.Where(x => x.isDelete == false).OrderByDescending(o => o.EstimateId).Take(5).ToList();
                 if (Data != null && Data.Count != 0)
                 {
                     foreach (tblEstimate item in Data)
@@ -89,8 +89,8 @@ namespace EarthCo.Controllers
                     ServiceData.Add(Temp);
                 }
 
-                tblToken TokenData=DB.tblTokens.FirstOrDefault();
-                if(TokenData.AccessToken==null || TokenData.RefreshToken==null)
+                tblToken TokenData = DB.tblTokens.FirstOrDefault();
+                if (TokenData.AccessToken == null || TokenData.RefreshToken == null)
                 {
                     DashboardData.isQBToken = false;
                 }
@@ -98,18 +98,101 @@ namespace EarthCo.Controllers
                 {
                     DashboardData.isQBToken = true;
                 }
-
+                tblGoolgeCalendar CalendarData = DB.tblGoolgeCalendars.Where(x=>x.UserId==UserId).FirstOrDefault();
+                if(CalendarData != null)
+                {
+                    DashboardData.AccessToken = CalendarData.AccessToken;
+                    DashboardData.RefreshToken = CalendarData.RefreshToken;
+                }
+                
                 DashboardData.EstimateData = EstData;
                 DashboardData.ServiceRequestData = ServiceData;
-                DashboardData.OpenServiceRequestCount = DB.tblServiceRequests.Where(x=>x.SRStatusId==1).Count();
-                DashboardData.OpenEstimateCount = DB.tblEstimates.Where(x=>x.EstimateStatusId==4).Count();
-                DashboardData.ApprovedEstimateCount = DB.tblEstimates.Where(x=>x.EstimateStatusId==1).Count();
-                DashboardData.ClosedBillCount = DB.tblEstimates.Where(x=>x.EstimateStatusId==2).Count();
-                DashboardData.OpenPunchlistCount = DB.tblPunchlists.Where(x=>x.StatusId==2).Count();
-                DashboardData.BilledInvoiceCount = DB.tblInvoices.Where(x=>x.BillId!=null).Count();
+                DashboardData.OpenServiceRequestCount = DB.tblServiceRequests.Where(x => x.SRStatusId == 1).Count();
+                DashboardData.OpenEstimateCount = DB.tblEstimates.Where(x => x.EstimateStatusId == 4).Count();
+                DashboardData.ApprovedEstimateCount = DB.tblEstimates.Where(x => x.EstimateStatusId == 1).Count();
+                DashboardData.ClosedBillCount = DB.tblEstimates.Where(x => x.EstimateStatusId == 2).Count();
+                DashboardData.OpenPunchlistCount = DB.tblPunchlists.Where(x => x.StatusId == 2).Count();
+                DashboardData.BilledInvoiceCount = DB.tblInvoices.Where(x => x.BillId != null).Count();
 
 
                 return Ok(DashboardData); // 200 - Successful response with data
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult AddGoogleCalendarToken(tblGoolgeCalendar GoolgeCalendar)
+        {
+            try
+            {
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                tblGoolgeCalendar Data = new tblGoolgeCalendar();
+
+                if(GoolgeCalendar.GoolgeCalendarId==0)
+                {
+                    Data = GoolgeCalendar;
+                    Data.CreatedBy = UserId;
+                    Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    Data.EditBy = UserId;
+                    Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    Data.isActive = true;
+                    Data.isDelete = false;
+                    DB.tblGoolgeCalendars.Add(Data);
+                    DB.SaveChanges();
+
+                    return Ok(new { Id = Data.GoolgeCalendarId, Message = "Calendar token has been added successfully." });
+                }
+                else
+                {
+                    Data.AccessToken = GoolgeCalendar.AccessToken;
+                    Data.RefreshToken = GoolgeCalendar.RefreshToken;
+                    Data.TokenType = GoolgeCalendar.TokenType;
+                    Data.UserEmail = GoolgeCalendar.UserEmail;
+                    Data.UserId = GoolgeCalendar.UserId;
+                    Data.CreatedBy = UserId;
+                    Data.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    Data.EditBy = UserId;
+                    Data.EditDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                    Data.isActive = true;
+                    Data.isDelete = false;
+                    DB.Entry(Data);
+                    DB.SaveChanges();
+
+                    return Ok(new { Id = Data.GoolgeCalendarId, Message = "Calendar token has been updated successfully." });
+                }
+
+
+                return Ok(); // 200 - Successful response with data
             }
             catch (DbEntityValidationException dbEx)
             {

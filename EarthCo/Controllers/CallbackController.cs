@@ -20,22 +20,11 @@ namespace EarthCo.Controllers
         /// </summary>
         /// 
 
-        public async Task<string> Index(string code= "none", string realmId = "none")
-        {
-            
-            //code = Request.QueryString["code"] ?? "none";
-            //realmId = Request.QueryString["realmId"] ?? "none";
-            await GetAuthTokensAsync(code, realmId);
-
-            ViewBag.Error = Request.QueryString["error"] ?? "none";
-
-            return "Token successfully generated."; 
-        }
-
-        //public async Task<ActionResult> Index()
+        //public async Task<string> Index(string state, string code= "none", string realmId = "none")
         //{
-        //    //Sync the state info and update if it is not the same
-        //    var state = Request.QueryString["state"];
+
+        //    //code = Request.QueryString["code"] ?? "none";
+        //    //realmId = Request.QueryString["realmId"] ?? "none";
         //    if (state.Equals(HomeController.auth2Client.CSRFToken, StringComparison.Ordinal))
         //    {
         //        ViewBag.State = state + " (valid)";
@@ -45,14 +34,34 @@ namespace EarthCo.Controllers
         //        ViewBag.State = state + " (invalid)";
         //    }
 
-        //    string code = Request.QueryString["code"] ?? "none";
-        //    string realmId = Request.QueryString["realmId"] ?? "none";
         //    await GetAuthTokensAsync(code, realmId);
 
         //    ViewBag.Error = Request.QueryString["error"] ?? "none";
 
-        //    return RedirectToAction("Tokens", "Home");
+        //    return "Token successfully generated."; 
         //}
+
+        public async Task<ActionResult> Index()
+        {
+            //Sync the state info and update if it is not the same
+            var state = Request.QueryString["state"];
+            if (state.Equals(HomeController.auth2Client.CSRFToken, StringComparison.Ordinal))
+            {
+                ViewBag.State = state + " (valid)";
+            }
+            else
+            {
+                ViewBag.State = state + " (invalid)";
+            }
+
+            string code = Request.QueryString["code"] ?? "none";
+            string realmId = Request.QueryString["realmId"] ?? "none";
+            await GetAuthTokensAsync(code, realmId);
+
+            ViewBag.Error = Request.QueryString["error"] ?? "none";
+
+            return RedirectToAction("ConnectSuccessfull", "Home");
+        }
 
         /// <summary>
         /// Exchange Auth code with Auth Access and Refresh tokens and add them to Claim list

@@ -33,6 +33,8 @@ namespace EarthCo.Controllers
 {
     public class HomeController : Controller
     {
+
+
         earthcoEntities DB = new earthcoEntities();
         public static string clientid = ConfigurationManager.AppSettings["clientid"];
         public static string clientsecret = ConfigurationManager.AppSettings["clientsecret"];
@@ -225,50 +227,21 @@ namespace EarthCo.Controllers
             }
             return true;
         }
-        public async Task<string> InitiateAuth(string submitButton)
-        {
-
-            //string RFT = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
-
-            //if (RFT != null && RFT != "")
-            //{
-            //    Task<bool> TokenResponse = GetAuthTokensUsingRefreshTokenAsync();
-            //    bool result = await TokenResponse;
-            //    if (result == true)
-            //    {
-            //        return "Tokens";
-            //    }
-
-            //}
-
-
-            switch (submitButton)
-            {
-                case "Connect to QuickBooks":
-                    List<OidcScopes> scopes = new List<OidcScopes>();
-                    scopes.Add(OidcScopes.Accounting);
-                    string authorizeUrl = auth2Client.GetAuthorizationURL(scopes);
-                    return authorizeUrl;
-                default:
-                    return "Error";
-            }
-        }
-
-        //public async Task<ActionResult> InitiateAuth(string submitButton)
+        //public async Task<string> InitiateAuth(string submitButton)
         //{
 
-        //    string RFT = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
+        //    //string RFT = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
 
-        //    if (RFT!=null && RFT!="")
-        //    {
-        //        Task<bool> TokenResponse=GetAuthTokensUsingRefreshTokenAsync();
-        //        bool result = await TokenResponse;
-        //        if (result == true)
-        //        {
-        //            return RedirectToAction("Tokens");
-        //        }
+        //    //if (RFT != null && RFT != "")
+        //    //{
+        //    //    Task<bool> TokenResponse = GetAuthTokensUsingRefreshTokenAsync();
+        //    //    bool result = await TokenResponse;
+        //    //    if (result == true)
+        //    //    {
+        //    //        return "Tokens";
+        //    //    }
 
-        //    }
+        //    //}
 
 
         //    switch (submitButton)
@@ -277,11 +250,44 @@ namespace EarthCo.Controllers
         //            List<OidcScopes> scopes = new List<OidcScopes>();
         //            scopes.Add(OidcScopes.Accounting);
         //            string authorizeUrl = auth2Client.GetAuthorizationURL(scopes);
-        //            return Redirect(authorizeUrl);
+        //            return authorizeUrl;
         //        default:
-        //            return (View());
+        //            return "Error";
         //    }
         //}
+
+        public async Task<ActionResult> InitiateAuth(string submitButton)
+        {
+
+            string RFT = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
+
+            if (RFT != null && RFT != "")
+            {
+                Task<bool> TokenResponse = GetAuthTokensUsingRefreshTokenAsync();
+                bool result = await TokenResponse;
+                if (result == true)
+                {
+                    return RedirectToAction("ConnectSuccessfull", "Home");
+                }
+
+            }
+
+
+            switch (submitButton)
+            {
+                case "Connect to QuickBooks":
+                    List<OidcScopes> scopes = new List<OidcScopes>();
+                    scopes.Add(OidcScopes.Accounting);
+                    string authorizeUrl = auth2Client.GetAuthorizationURL(scopes);
+
+                    // Use JavaScript to open the URL in a new window or tab
+                    string script = $"window.open('{authorizeUrl}', '_blank');";
+                    return Content("<script type='text/javascript'>" + script + "</script>");
+                //return Redirect(authorizeUrl);
+                default:
+                    return (View());
+            }
+        }
 
         /// <summary>
         /// QBO API Request
@@ -1494,6 +1500,10 @@ namespace EarthCo.Controllers
         public ActionResult Tokens()
         {
             return View("Tokens");
+        }
+        public ActionResult ConnectSuccessfull()
+        {
+            return View();
         }
     }
 }

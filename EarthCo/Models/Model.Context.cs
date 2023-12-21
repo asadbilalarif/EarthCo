@@ -72,9 +72,10 @@ namespace EarthCo.Models
         public virtual DbSet<tblItem> tblItems { get; set; }
         public virtual DbSet<tblEstimate> tblEstimates { get; set; }
         public virtual DbSet<tblEstimateItem> tblEstimateItems { get; set; }
-        public virtual DbSet<tblInvoice> tblInvoices { get; set; }
         public virtual DbSet<tblInvoiceItem> tblInvoiceItems { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
+        public virtual DbSet<tblGoolgeCalendar> tblGoolgeCalendars { get; set; }
+        public virtual DbSet<tblInvoice> tblInvoices { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {
@@ -191,40 +192,6 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetIrrigationData_Result>("SPGetIrrigationData", iDParameter);
-        }
-    
-        public virtual ObjectResult<SPGetEstimateReportList_Result> SPGetEstimateReportList(Nullable<int> customerId, Nullable<int> year, Nullable<int> month)
-        {
-            var customerIdParameter = customerId.HasValue ?
-                new ObjectParameter("CustomerId", customerId) :
-                new ObjectParameter("CustomerId", typeof(int));
-    
-            var yearParameter = year.HasValue ?
-                new ObjectParameter("Year", year) :
-                new ObjectParameter("Year", typeof(int));
-    
-            var monthParameter = month.HasValue ?
-                new ObjectParameter("Month", month) :
-                new ObjectParameter("Month", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateReportList_Result>("SPGetEstimateReportList", customerIdParameter, yearParameter, monthParameter);
-        }
-    
-        public virtual ObjectResult<SPGetServiceRequestReportList_Result> SPGetServiceRequestReportList(Nullable<int> customerId, Nullable<int> year, Nullable<int> month)
-        {
-            var customerIdParameter = customerId.HasValue ?
-                new ObjectParameter("CustomerId", customerId) :
-                new ObjectParameter("CustomerId", typeof(int));
-    
-            var yearParameter = year.HasValue ?
-                new ObjectParameter("Year", year) :
-                new ObjectParameter("Year", typeof(int));
-    
-            var monthParameter = month.HasValue ?
-                new ObjectParameter("Month", month) :
-                new ObjectParameter("Month", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetServiceRequestReportList_Result>("SPGetServiceRequestReportList", customerIdParameter, yearParameter, monthParameter);
         }
     
         public virtual ObjectResult<SPGetServiceRequestLatLongData_Result> SPGetServiceRequestLatLongData(Nullable<int> iD)
@@ -400,15 +367,6 @@ namespace EarthCo.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateItemData_Result>("SPGetEstimateItemData", iDParameter);
         }
     
-        public virtual ObjectResult<SPGetInvoiceData_Result> SPGetInvoiceData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetInvoiceData_Result>("SPGetInvoiceData", iDParameter);
-        }
-    
         public virtual ObjectResult<SPGetInvoiceItemData_Result> SPGetInvoiceItemData(Nullable<int> iD)
         {
             var iDParameter = iD.HasValue ?
@@ -434,6 +392,49 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetStaffData_Result>("SPGetStaffData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetEstimateReportList_Result> SPGetEstimateReportList(Nullable<int> customerId, Nullable<int> year, Nullable<int> month)
+        {
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("CustomerId", customerId) :
+                new ObjectParameter("CustomerId", typeof(int));
+    
+            var yearParameter = year.HasValue ?
+                new ObjectParameter("Year", year) :
+                new ObjectParameter("Year", typeof(int));
+    
+            var monthParameter = month.HasValue ?
+                new ObjectParameter("Month", month) :
+                new ObjectParameter("Month", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetEstimateReportList_Result>("SPGetEstimateReportList", customerIdParameter, yearParameter, monthParameter);
+        }
+    
+        public virtual ObjectResult<SPGetServiceRequestReportList_Result> SPGetServiceRequestReportList(Nullable<int> customerId, Nullable<int> year, Nullable<int> month)
+        {
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("CustomerId", customerId) :
+                new ObjectParameter("CustomerId", typeof(int));
+    
+            var yearParameter = year.HasValue ?
+                new ObjectParameter("Year", year) :
+                new ObjectParameter("Year", typeof(int));
+    
+            var monthParameter = month.HasValue ?
+                new ObjectParameter("Month", month) :
+                new ObjectParameter("Month", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetServiceRequestReportList_Result>("SPGetServiceRequestReportList", customerIdParameter, yearParameter, monthParameter);
+        }
+    
+        public virtual ObjectResult<SPGetInvoiceData_Result> SPGetInvoiceData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetInvoiceData_Result>("SPGetInvoiceData", iDParameter);
         }
     }
 }

@@ -1,12 +1,52 @@
-﻿
-
+﻿@{ 
+    Layout = null;
+}
+<style>
+    body {
+        background-color: #000000 !important;
+    }
+    .container {
+        background-color: #000000 !important;
+        color: #000000 !important;
+    }
+    li a {
+        
+        color: #000000 !important;
+    }
+    a {
+        
+        color: #000000 !important;
+    }
+    .navbar {
+        background-color: #000000 !important;
+    }
+    .btn {
+        display: inline-block;
+        margin-bottom: 0;
+        font-weight: 400;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        background-image: none;
+        border: 1px solid transparent;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        border-radius: 4px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+</style>
 @using (Html.BeginForm("InitiateAuth", "Home", FormMethod.Post))
 {
 
-    <div style="margin-top:2%;"><input type="submit" name="submitButton" value="Connect to QuickBooks" /></div>
-    <br />
-
-    <br />
+    <div ><input type="submit" class="btn" style="background-color: #789A3D; color: white;" name="submitButton" value="Connect to QuickBooks" /></div>
+    
 }
 
 
