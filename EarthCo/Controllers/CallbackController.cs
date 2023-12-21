@@ -18,27 +18,41 @@ namespace EarthCo.Controllers
         /// <summary>
         /// Code and realmid/company id recieved on Index page after redirect is complete from Authorization url
         /// </summary>
-        public async Task<ActionResult> Index()
-        {
-            //Sync the state info and update if it is not the same
-            var state = Request.QueryString["state"];
-            if (state.Equals(HomeController.auth2Client.CSRFToken, StringComparison.Ordinal))
-            {
-                ViewBag.State = state + " (valid)";
-            }
-            else
-            {
-                ViewBag.State = state + " (invalid)";
-            }
+        /// 
 
-            string code = Request.QueryString["code"] ?? "none";
-            string realmId = Request.QueryString["realmId"] ?? "none";
+        public async Task<string> Index(string code= "none", string realmId = "none")
+        {
+            
+            //code = Request.QueryString["code"] ?? "none";
+            //realmId = Request.QueryString["realmId"] ?? "none";
             await GetAuthTokensAsync(code, realmId);
 
             ViewBag.Error = Request.QueryString["error"] ?? "none";
 
-            return RedirectToAction("Tokens", "Home");
+            return "Token successfully generated."; 
         }
+
+        //public async Task<ActionResult> Index()
+        //{
+        //    //Sync the state info and update if it is not the same
+        //    var state = Request.QueryString["state"];
+        //    if (state.Equals(HomeController.auth2Client.CSRFToken, StringComparison.Ordinal))
+        //    {
+        //        ViewBag.State = state + " (valid)";
+        //    }
+        //    else
+        //    {
+        //        ViewBag.State = state + " (invalid)";
+        //    }
+
+        //    string code = Request.QueryString["code"] ?? "none";
+        //    string realmId = Request.QueryString["realmId"] ?? "none";
+        //    await GetAuthTokensAsync(code, realmId);
+
+        //    ViewBag.Error = Request.QueryString["error"] ?? "none";
+
+        //    return RedirectToAction("Tokens", "Home");
+        //}
 
         /// <summary>
         /// Exchange Auth code with Auth Access and Refresh tokens and add them to Claim list

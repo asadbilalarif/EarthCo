@@ -6,7 +6,11 @@
 
 
 @{ ViewBag.Title = "Tokens"; }
-
+<style>
+    .mt-2 {
+        margin-top: 1rem;
+    }
+</style>
 <br />
 
 @foreach (var claim in System.Security.Claims.ClaimsPrincipal.Current.Claims)
@@ -24,66 +28,95 @@
 @*@using (Html.BeginForm("ApiCallService", "Home", FormMethod.Post))
 {
 
-    <div><input type="submit" name="submitButton" value="API Call service" /></div>
+    <div><input type="submit" class="btn btn-primary" name="submitButton" value="API Call service" /></div>
     <br />
 
     <br />
 }*@
+<div class="row">
+    <div class="col-md-3 mt-2">
+        @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
+        {
+            <input type="text" name="Type" value="Item" hidden />
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Item From QB" /></div>
 
-@using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
-{
-    <input type="text" name="Type" value="Item" hidden />
-    <div><input type="submit" name="submitButton" value="Get Item From QB" /></div>
-    <br />
-}
-@using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
-{
-    <input type="text" name="Type" value="Customer" hidden />
-    <div><input type="submit" name="submitButton" value="Get Customer From QB" /></div>
-    <br />
-}
-@using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
-{
-    <input type="text" name="Type" value="Employee" hidden />
-    <div><input type="submit" name="submitButton" value="Get Staff From QB" /></div>
-    <br />
-}
-@using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
-{
-    <input type="text" name="Type" value="Vendor" hidden />
-    <div><input type="submit" name="submitButton" value="Get Vendor From QB" /></div>
-    <br />
-}
-@using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
-{
-    <input type="text" name="Type" value="PurchaseOrder" hidden />
-    <div><input type="submit" name="submitButton" value="Get PurchaseOrder From QB" /></div>
-    <br />
-}
-@using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
-{
-    <input type="text" name="Type" value="Estimate" hidden />
-    <div><input type="submit" name="submitButton" value="Get Estimates From QB" /></div>
-    <br />
-}
-@using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
-{
-    <input type="text" name="Type" value="Bill" hidden />
-    <div><input type="submit" name="submitButton" value="Get Bill From QB" /></div>
-    <br />
-}
-@using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
-{
-    <input type="text" name="Type" value="Invoice" hidden />
-    <div><input type="submit" name="submitButton" value="Get Invoice From QB" /></div>
-    <br />
-}
-@using (Html.BeginForm("SyncDataAPI", "api/SyncQB", FormMethod.Get))
-{
-    <div>
-        @*<a href="https://localhost:44363/api/SyncQB/SyncDataAPI">content</a>*@
-    <input type="submit" name="submitButton" value="Sync Data" /></div>
-    <br />
-}
+        }
+    </div>
+    <div class="col-md-3 mt-2">
+        @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
+        {
+            <input type="text" name="Type" value="Customer" hidden />
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Customer From QB" /></div>
+
+        }
+    </div>
+    <div class="col-md-3 mt-2">
+        @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
+        {
+            <input type="text" name="Type" value="Employee" hidden />
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Staff From QB" /></div>
+
+        }
+    </div>
+    <div class="col-md-3 mt-2">
+        @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
+        {
+            <input type="text" name="Type" value="Vendor" hidden />
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Vendor From QB" /></div>
+
+        }
+    </div>
+    <div class="col-md-3 mt-2">
+        @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
+        {
+            <input type="text" name="Type" value="PurchaseOrder" hidden />
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get PurchaseOrder From QB" /></div>
+
+        }
+    </div>
+    <div class="col-md-3 mt-2">
+        @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
+        {
+            <input type="text" name="Type" value="Estimate" hidden />
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Estimates From QB" /></div>
+
+        }
+    </div>
+    <div class="col-md-3 mt-2">
+        @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
+        {
+            <input type="text" name="Type" value="Bill" hidden />
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Bill From QB" /></div>
+
+        }
+    </div>
+    <div class="col-md-3 mt-2">
+        @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
+        {
+            <input type="text" name="Type" value="Invoice" hidden />
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Invoice From QB" /></div>
+
+        }
+    </div>
+    <div class="col-md-3 mt-2">
+        @using (Html.BeginForm("SyncDataAPI", "api/SyncQB", FormMethod.Get))
+        {
+            <div>
+                @*<a href="https://localhost:44363/api/SyncQB/SyncDataAPI">content</a>*@
+                <input type="submit" class="btn btn-primary" name="submitButton" value="Sync Data" />
+            </div>
+
+        }
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
 
 

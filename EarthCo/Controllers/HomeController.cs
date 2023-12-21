@@ -186,7 +186,7 @@ namespace EarthCo.Controllers
             return View("CallbackView"); // You can create a view for callback handling
         }
 
-        public static async System.Threading.Tasks.Task GetAuthTokensUsingRefreshTokenAsync()
+        public  static async System.Threading.Tasks.Task<bool> GetAuthTokensUsingRefreshTokenAsync()
         {
             var claims = new List<Claim>();
 
@@ -200,7 +200,10 @@ namespace EarthCo.Controllers
             tokenResponse.Wait();
             var data = tokenResponse.Result;
 
-
+            if(data.AccessToken==null)
+            {
+                return false;
+            }
             TokenData = db.tblTokens.FirstOrDefault();
             if (TokenData == null)
             {
@@ -220,20 +223,23 @@ namespace EarthCo.Controllers
                 db.Entry(TokenData);
                 db.SaveChanges();
             }
-
+            return true;
         }
-
-
-        public ActionResult InitiateAuth(string submitButton)
+        public async Task<string> InitiateAuth(string submitButton)
         {
 
-            string RFT = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
+            //string RFT = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
 
-            if (RFT!=null && RFT!="")
-            {
-                var TokenResponse=GetAuthTokensUsingRefreshTokenAsync();
-                return RedirectToAction("Tokens");
-            }
+            //if (RFT != null && RFT != "")
+            //{
+            //    Task<bool> TokenResponse = GetAuthTokensUsingRefreshTokenAsync();
+            //    bool result = await TokenResponse;
+            //    if (result == true)
+            //    {
+            //        return "Tokens";
+            //    }
+
+            //}
 
 
             switch (submitButton)
@@ -242,11 +248,40 @@ namespace EarthCo.Controllers
                     List<OidcScopes> scopes = new List<OidcScopes>();
                     scopes.Add(OidcScopes.Accounting);
                     string authorizeUrl = auth2Client.GetAuthorizationURL(scopes);
-                    return Redirect(authorizeUrl);
+                    return authorizeUrl;
                 default:
-                    return (View());
+                    return "Error";
             }
         }
+
+        //public async Task<ActionResult> InitiateAuth(string submitButton)
+        //{
+
+        //    string RFT = DB.tblTokens.Select(s => s.RefreshToken).FirstOrDefault();
+
+        //    if (RFT!=null && RFT!="")
+        //    {
+        //        Task<bool> TokenResponse=GetAuthTokensUsingRefreshTokenAsync();
+        //        bool result = await TokenResponse;
+        //        if (result == true)
+        //        {
+        //            return RedirectToAction("Tokens");
+        //        }
+
+        //    }
+
+
+        //    switch (submitButton)
+        //    {
+        //        case "Connect to QuickBooks":
+        //            List<OidcScopes> scopes = new List<OidcScopes>();
+        //            scopes.Add(OidcScopes.Accounting);
+        //            string authorizeUrl = auth2Client.GetAuthorizationURL(scopes);
+        //            return Redirect(authorizeUrl);
+        //        default:
+        //            return (View());
+        //    }
+        //}
 
         /// <summary>
         /// QBO API Request

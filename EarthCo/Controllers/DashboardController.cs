@@ -89,6 +89,16 @@ namespace EarthCo.Controllers
                     ServiceData.Add(Temp);
                 }
 
+                tblToken TokenData=DB.tblTokens.FirstOrDefault();
+                if(TokenData.AccessToken==null || TokenData.RefreshToken==null)
+                {
+                    DashboardData.isQBToken = false;
+                }
+                else
+                {
+                    DashboardData.isQBToken = true;
+                }
+
                 DashboardData.EstimateData = EstData;
                 DashboardData.ServiceRequestData = ServiceData;
                 DashboardData.OpenServiceRequestCount = DB.tblServiceRequests.Where(x=>x.SRStatusId==1).Count();
