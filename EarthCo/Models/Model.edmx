@@ -2783,10 +2783,10 @@
             <End Role="tblUserType" EntitySet="tblUserTypes" />
             <End Role="tblUser" EntitySet="tblUsers" />
           </AssociationSet>
-          <FunctionImport Name="SPGetCustomerData" ReturnType="Collection(earthcoModel.SPGetCustomerData_Result)">
-            <Parameter Name="ID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="SPGetStaffData" ReturnType="Collection(earthcoModel.SPGetStaffData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetCustomerData" ReturnType="Collection(earthcoModel.SPGetCustomerData_Result)">
             <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
@@ -5324,7 +5324,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="SPGetCustomerData_Result">
+        <ComplexType Name="SPGetStaffData_Result">
           <Property Type="Int32" Name="UserId" Nullable="false" />
           <Property Type="String" Name="username" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="LastName" Nullable="false" MaxLength="50" />
@@ -5358,7 +5358,7 @@
           <Property Type="String" Name="SyncToken" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="ContactName" Nullable="true" MaxLength="500" />
         </ComplexType>
-        <ComplexType Name="SPGetStaffData_Result">
+        <ComplexType Name="SPGetCustomerData_Result">
           <Property Type="Int32" Name="UserId" Nullable="false" />
           <Property Type="String" Name="username" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="LastName" Nullable="false" MaxLength="50" />
@@ -7255,9 +7255,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SPGetCustomerData" FunctionName="earthcoModel.Store.SPGetCustomerData">
+          <FunctionImportMapping FunctionImportName="SPGetStaffData" FunctionName="earthcoModel.Store.SPGetStaffData">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="earthcoModel.SPGetCustomerData_Result">
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetStaffData_Result">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
@@ -7293,9 +7293,9 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SPGetStaffData" FunctionName="earthcoModel.Store.SPGetStaffData">
+          <FunctionImportMapping FunctionImportName="SPGetCustomerData" FunctionName="earthcoModel.Store.SPGetCustomerData">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="earthcoModel.SPGetStaffData_Result">
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetCustomerData_Result">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />

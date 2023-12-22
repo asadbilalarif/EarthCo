@@ -148,6 +148,7 @@ namespace EarthCo.Controllers
                         GetCustomerList Temp = new GetCustomerList();
                         Temp.CustomerId = item.UserId;
                         Temp.CompanyName = item.CompanyName;
+                        Temp.ContactName = item.ContactName;
                         Temp.CustomerName = item.FirstName + " " + item.LastName;
                         Temp.Address = item.Address;
                         Temp.Email = item.Email;
@@ -724,7 +725,7 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(logData);
                     DB.SaveChanges();
 
-                    return Ok(new { Id = Data.UserId, Message = "Customer has been added successfully." });
+                    return Ok(new { Id = Data.UserId, SyncId = Result.SyncLogId, Message = "Customer has been added successfully." });
                 }
                 else
                 {
@@ -824,7 +825,7 @@ namespace EarthCo.Controllers
                     DB.SaveChanges();
 
 
-                    return Ok(new { Id = Data.UserId, Message = "Customer has been updated successfully." });
+                    return Ok(new { Id = Data.UserId, SyncId = Result.SyncLogId, Message = "Customer has been updated successfully." });
                     //return Ok("Customer has been updated successfully.");
                 }
             }

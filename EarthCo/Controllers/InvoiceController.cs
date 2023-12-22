@@ -509,7 +509,7 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(LogData);
                     DB.SaveChanges();
                     //return Ok("Estimate has been added successfully.");
-                    return Ok(new { Id = Data.InvoiceId, Message = "Invoice has been added successfully." });
+                    return Ok(new { Id = Data.InvoiceId, SyncId = Result.SyncLogId, Message = "Invoice has been added successfully." });
                 }
                 else
                 {
@@ -676,7 +676,7 @@ namespace EarthCo.Controllers
                     DB.SaveChanges();
 
                     //return Ok("Purchase Order has been Update successfully.");
-                    return Ok(new { Id = Data.InvoiceId, Message = "Invoice has been Update successfully." });
+                    return Ok(new { Id = Data.InvoiceId, SyncId = Result.SyncLogId, Message = "Invoice has been Update successfully." });
                 }
             }
             catch (DbEntityValidationException dbEx)

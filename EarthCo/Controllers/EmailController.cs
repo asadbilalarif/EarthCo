@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Text.Json;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -100,6 +101,117 @@ namespace EarthCo.Controllers
                 Client.Send(mailMessage);
 
                 return Ok("Email has been sent successfully."); 
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult SendEmailWithFile()
+        {
+            try
+            {
+                var Data1 = HttpContext.Current.Request.Params.Get("EmailData");
+                //HttpPostedFile file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+
+                EmailFile Email = new EmailFile();
+                Email.Files = new List<HttpPostedFile>();
+                for (int i = 0; i < HttpContext.Current.Request.Files.Count; i++)
+                {
+                    Email.Files.Add(HttpContext.Current.Request.Files[i]); ;
+                }
+
+                Email.EmailData = JsonSerializer.Deserialize<EmailClass>(Data1);
+
+
+                string[] AllEmail = Email.EmailData.Email.Split(',');
+                string[] CCEmail = Email.EmailData.CCEmail.Split(',');
+
+                tblSetting setting = DB.tblSettings.Find(1);
+                string SenderEmail = setting.Email;
+                string SenderPassword = setting.Password;
+                //SmtpClient Client = new SmtpClient(setting.SMTP, Convert.ToInt32(setting.Port));
+                ////Client.EnableSsl = false;
+                //Client.EnableSsl = Convert.ToBoolean(setting.isActive); ;
+                //Client.Timeout = 100000;
+                //Client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                //Client.UseDefaultCredentials = false;
+                //Client.Credentials = new System.Net.NetworkCredential(SenderEmail, SenderPassword);
+
+                //Iterate through each of the letters
+                foreach (var letter in AllEmail)
+                {
+                    using (MailMessage mm = new MailMessage(SenderEmail, letter))
+                    {
+                        //string link = Request.Url.ToString();
+                        //link = link.Replace("ForgetPassword", "ChangePassword");
+                        mm.Subject = Email.EmailData.Subject;
+
+                        foreach (var item in CCEmail)
+                        {
+                            mm.CC.Add(new MailAddress(item));
+                        }
+                       
+                        //mm.Headers.Add("In-Reply-To", ccemail);
+                        string body = Email.EmailData.Body;
+
+
+                        
+                        mm.Body = body;
+                        //mm.Attachments.Add(new Attachment(new MemoryStream(pdfBuffer), LoadNumber + ".pdf"));
+
+                        mm.BodyEncoding = System.Text.Encoding.UTF8;
+                        mm.SubjectEncoding = System.Text.Encoding.Default;
+
+                        foreach (HttpPostedFile file in Email.Files)
+                        {
+                            // Assuming LoadNumber is unique for each file, adjust accordingly
+                            mm.Attachments.Add(new Attachment(file.InputStream, file.FileName));
+                        }
+
+                        mm.IsBodyHtml = true;
+                        SmtpClient Client = new SmtpClient(setting.SMTP, Convert.ToInt32(setting.Port));
+                        //Client.EnableSsl = false;
+                        Client.EnableSsl = Convert.ToBoolean(setting.isActive); ;
+                        Client.Timeout = 100000;
+                        Client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        Client.UseDefaultCredentials = false;
+                        Client.Credentials = new System.Net.NetworkCredential(SenderEmail, SenderPassword);
+                        Client.Send(mm);
+                    }
+                }
+
+
+
+
+                return Ok("Email has been sent successfully.");
             }
             catch (DbEntityValidationException dbEx)
             {

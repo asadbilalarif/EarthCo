@@ -283,7 +283,7 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(logData);
                     DB.SaveChanges();
 
-                    return Ok(new { Id = Data.UserId, Message = "Staff has been added successfully." });
+                    return Ok(new { Id = Data.UserId, SyncId = Result.SyncLogId, Message = "Staff has been added successfully." });
                 }
                 else
                 {
@@ -373,7 +373,7 @@ namespace EarthCo.Controllers
                     DB.SaveChanges();
 
 
-                    return Ok(new { Id = Data.UserId, Message = "Staff has been updated successfully." });
+                    return Ok(new { Id = Data.UserId, SyncId = Result.SyncLogId, Message = "Staff has been updated successfully." });
                     //return Ok("Customer has been updated successfully.");
                 }
             }

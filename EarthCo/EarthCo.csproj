@@ -405,6 +405,8 @@
     <Compile Include="Controllers\IrrigationController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\MonthlyLandsacpeController.cs" />
+    <Compile Include="Models\EmailClass.cs" />
+    <Compile Include="Models\EmailFile.cs" />
     <Compile Include="Models\EstimateQB.cs" />
     <Compile Include="Models\GetWeeklyReportFiles.cs" />
     <Compile Include="Models\InvoiceQB.cs" />

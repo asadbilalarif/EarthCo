@@ -186,7 +186,15 @@ namespace EarthCo.Controllers
             {
                 DB.Configuration.ProxyCreationEnabled = false;
                 List<tblItem> Data = new List<tblItem>();
-                Data = DB.tblItems.Where(x =>x.isDelete!=true && x.ItemName.ToLower().Contains(Search.ToLower())).Take(10).ToList();
+                if(Search!=null && Search!="")
+                {
+                    Data = DB.tblItems.Where(x => x.isDelete != true && x.ItemName.ToLower().Contains(Search.ToLower())).Take(10).ToList();
+                }
+                else
+                {
+                    Data = DB.tblItems.Take(10).ToList();
+                }
+                
                 //Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).ToList();
                 if (Data == null || Data.Count == 0)
                 {
@@ -328,7 +336,7 @@ namespace EarthCo.Controllers
                     DB.tblLogs.Add(logData);
                     DB.SaveChanges();
 
-                    return Ok(new { Id = Data.ItemId, Message = "Item has been added successfully." });
+                    return Ok(new { Id = Data.ItemId, SyncId = Result.SyncLogId, Message = "Item has been added successfully." });
                 }
                 else
                 {
@@ -400,7 +408,7 @@ namespace EarthCo.Controllers
                     DB.SaveChanges();
 
 
-                    return Ok(new { Id = Data.ItemId, Message = "Item has been updated successfully." });
+                    return Ok(new { Id = Data.ItemId, SyncId = Result.SyncLogId, Message = "Item has been updated successfully." });
                     //return Ok("Customer has been updated successfully.");
                 }
             }

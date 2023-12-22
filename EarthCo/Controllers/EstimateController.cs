@@ -24,7 +24,7 @@ namespace EarthCo.Controllers
     public class EstimateController : ApiController
     {
         earthcoEntities DB = new earthcoEntities();
-
+        SyncQBController SC = new SyncQBController();
         [HttpGet]
         public IHttpActionResult GetEstimateServerSideList(string Search,int DisplayStart=0,int DisplayLength=10,int StatusId=0, bool isAscending = false)
         {
@@ -584,6 +584,8 @@ namespace EarthCo.Controllers
                     DB.tblSyncLogs.Add(Result);
                     DB.SaveChanges();
 
+                    SC.SyncDataAPI(Result.SyncLogId);
+
                     tblLog LogData = new tblLog();
                     LogData.UserId = UserId;
                     LogData.Action = "Add Estimate";
@@ -811,7 +813,7 @@ namespace EarthCo.Controllers
                     //}
 
                     //return Ok("Estimate has been added successfully.");
-                    return Ok(new { Id = Data.EstimateId, Message = "Estimate has been added successfully." });
+                    return Ok(new { Id = Data.EstimateId, SyncId = Result.SyncLogId, Message = "Estimate has been added successfully." });
                 }
                 else
                 {
@@ -990,7 +992,7 @@ namespace EarthCo.Controllers
                     DB.SaveChanges();
 
                     //return Ok("Estimate has been Update successfully.");
-                    return Ok(new { Id = Data.EstimateId, Message = "Estimate has been Update successfully." });
+                    return Ok(new { Id = Data.EstimateId, SyncId = Result.SyncLogId, Message = "Estimate has been Update successfully." });
                 }
             }
             catch (DbEntityValidationException dbEx)
