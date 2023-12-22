@@ -68,14 +68,14 @@ namespace EarthCo.Models
         public virtual DbSet<tblPurchaseOrderItem> tblPurchaseOrderItems { get; set; }
         public virtual DbSet<tblBill> tblBills { get; set; }
         public virtual DbSet<tblBillItem> tblBillItems { get; set; }
-        public virtual DbSet<tblAccount> tblAccounts { get; set; }
         public virtual DbSet<tblItem> tblItems { get; set; }
         public virtual DbSet<tblEstimate> tblEstimates { get; set; }
         public virtual DbSet<tblEstimateItem> tblEstimateItems { get; set; }
         public virtual DbSet<tblInvoiceItem> tblInvoiceItems { get; set; }
-        public virtual DbSet<tblUser> tblUsers { get; set; }
         public virtual DbSet<tblGoolgeCalendar> tblGoolgeCalendars { get; set; }
         public virtual DbSet<tblInvoice> tblInvoices { get; set; }
+        public virtual DbSet<tblAccount> tblAccounts { get; set; }
+        public virtual DbSet<tblUser> tblUsers { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {
@@ -376,24 +376,6 @@ namespace EarthCo.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetInvoiceItemData_Result>("SPGetInvoiceItemData", iDParameter);
         }
     
-        public virtual ObjectResult<SPGetCustomerData_Result> SPGetCustomerData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetCustomerData_Result>("SPGetCustomerData", iDParameter);
-        }
-    
-        public virtual ObjectResult<SPGetStaffData_Result> SPGetStaffData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetStaffData_Result>("SPGetStaffData", iDParameter);
-        }
-    
         public virtual ObjectResult<SPGetEstimateReportList_Result> SPGetEstimateReportList(Nullable<int> customerId, Nullable<int> year, Nullable<int> month)
         {
             var customerIdParameter = customerId.HasValue ?
@@ -435,6 +417,24 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetInvoiceData_Result>("SPGetInvoiceData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetCustomerData_Result> SPGetCustomerData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetCustomerData_Result>("SPGetCustomerData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetStaffData_Result> SPGetStaffData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetStaffData_Result>("SPGetStaffData", iDParameter);
         }
     }
 }

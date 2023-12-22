@@ -1457,6 +1457,67 @@ namespace EarthCo.Controllers
                     }
                 }
 
+                if (Type.Contains("Account"))
+                {
+                    QueryService<Account> AccountquerySvc = new QueryService<Account>(serviceContext);
+                    List<Account> AccountInfo = AccountquerySvc.ExecuteIdsQuery("select * from Account where AccountType IN ('Expense', 'Income')").ToList();
+
+                    tblAccount AccountData = null;
+
+                    foreach (Account item in AccountInfo)
+                    {
+                        int ID = Convert.ToInt32(item.Id);
+                        AccountData = DB.tblAccounts.Where(x => x.QBId == ID).FirstOrDefault();
+                        if (AccountData == null)
+                        {
+                            AccountData = new tblAccount();
+                            AccountData.QBId = Convert.ToInt32(item.Id);
+                            AccountData.SyncToken = item.SyncToken;
+                            //AccountData.Code = item.AcctNum;
+
+                            AccountData.Name = item.Name;
+                            if(item.AccountType!=null && item.AccountType.ToString().ToLower()== "expense")
+                            {
+                                AccountData.Type = "Expense Account";
+                            }
+                            if (item.AccountType != null && item.AccountType.ToString().ToLower() == "income")
+                            {
+                                AccountData.Type = "Income Account";
+                            }
+
+                            AccountData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            AccountData.isActive = true;
+                            AccountData.isDelete = false;
+                            DB.tblAccounts.Add(AccountData);
+                            DB.SaveChanges();
+
+                        }
+                        else
+                        {
+                            AccountData = new tblAccount();
+                            AccountData.QBId = Convert.ToInt32(item.Id);
+                            AccountData.SyncToken = item.SyncToken;
+                            //AccountData.Code = item.AcctNum;
+
+                            AccountData.Name = item.Name;
+                            if (item.AccountType != null && item.AccountType.ToString().ToLower() == "expense")
+                            {
+                                AccountData.Type = "Expense Account";
+                            }
+                            if (item.AccountType != null && item.AccountType.ToString().ToLower() == "income")
+                            {
+                                AccountData.Type = "Income Account";
+                            }
+                            AccountData.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+                            AccountData.isActive = true;
+                            AccountData.isDelete = false;
+                            DB.Entry(AccountData);
+                            DB.SaveChanges();
+                        }
+                        
+                    }
+                }
+
                 return RedirectToAction("Tokens");
             }
             catch (DbEntityValidationException dbEx)

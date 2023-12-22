@@ -48,8 +48,6 @@ namespace EarthCo.Models
         public Nullable<int> QBId { get; set; }
         public string SyncToken { get; set; }
     
-        public virtual tblAccount tblAccount { get; set; }
-        public virtual tblAccount tblAccount1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBillItem> tblBillItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -62,5 +60,7 @@ namespace EarthCo.Models
         public virtual ICollection<tblEstimateItem> tblEstimateItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoiceItem> tblInvoiceItems { get; set; }
+        public virtual tblAccount tblAccount { get; set; }
+        public virtual tblAccount tblAccount1 { get; set; }
     }
 }

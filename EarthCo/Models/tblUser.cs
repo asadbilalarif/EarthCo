@@ -22,6 +22,9 @@ namespace EarthCo.Models
             this.tblEstimates1 = new HashSet<tblEstimate>();
             this.tblEstimates2 = new HashSet<tblEstimate>();
             this.tblEstimates3 = new HashSet<tblEstimate>();
+            this.tblGoolgeCalendars = new HashSet<tblGoolgeCalendar>();
+            this.tblInvoices = new HashSet<tblInvoice>();
+            this.tblInvoices1 = new HashSet<tblInvoice>();
             this.tblIrrigations = new HashSet<tblIrrigation>();
             this.tblPunchlists = new HashSet<tblPunchlist>();
             this.tblPunchlists1 = new HashSet<tblPunchlist>();
@@ -32,9 +35,6 @@ namespace EarthCo.Models
             this.tblServiceRequests = new HashSet<tblServiceRequest>();
             this.tblServiceRequests1 = new HashSet<tblServiceRequest>();
             this.tblSettings = new HashSet<tblSetting>();
-            this.tblGoolgeCalendars = new HashSet<tblGoolgeCalendar>();
-            this.tblInvoices = new HashSet<tblInvoice>();
-            this.tblInvoices1 = new HashSet<tblInvoice>();
         }
     
         public int UserId { get; set; }
@@ -68,6 +68,7 @@ namespace EarthCo.Models
         public bool isDelete { get; set; }
         public Nullable<int> QBId { get; set; }
         public string SyncToken { get; set; }
+        public string ContactName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBill> tblBills { get; set; }
@@ -80,6 +81,12 @@ namespace EarthCo.Models
         public virtual ICollection<tblEstimate> tblEstimates2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblEstimate> tblEstimates3 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblGoolgeCalendar> tblGoolgeCalendars { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblInvoice> tblInvoices1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblIrrigation> tblIrrigations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -102,11 +109,5 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSetting> tblSettings { get; set; }
         public virtual tblUserType tblUserType { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblGoolgeCalendar> tblGoolgeCalendars { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblInvoice> tblInvoices { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblInvoice> tblInvoices1 { get; set; }
     }
 }

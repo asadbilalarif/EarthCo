@@ -44,5 +44,6 @@ namespace EarthCo.Models
         public bool isDelete { get; set; }
         public Nullable<int> QBId { get; set; }
         public string SyncToken { get; set; }
+        public string ContactName { get; set; }
     }
 }

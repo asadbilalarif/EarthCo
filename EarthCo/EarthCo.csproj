@@ -473,6 +473,7 @@
     <Compile Include="Models\PurchaseOrderFile.cs" />
     <Compile Include="Models\PurchaseOrderList.cs" />
     <Compile Include="Models\PurchaseOrderQB.cs" />
+    <Compile Include="Models\QBAccount.cs" />
     <Compile Include="Models\QBBill.cs" />
     <Compile Include="Models\QBBillCUClass.cs" />
     <Compile Include="Models\QBCustomer.cs" />

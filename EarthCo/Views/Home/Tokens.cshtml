@@ -38,7 +38,7 @@
         @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
         {
             <input type="text" name="Type" value="Item" hidden />
-            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Item From QB" /></div>
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Items From QB" /></div>
 
         }
     </div>
@@ -46,7 +46,7 @@
         @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
         {
             <input type="text" name="Type" value="Customer" hidden />
-            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Customer From QB" /></div>
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Customers From QB" /></div>
 
         }
     </div>
@@ -54,7 +54,7 @@
         @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
         {
             <input type="text" name="Type" value="Employee" hidden />
-            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Staff From QB" /></div>
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Staffs From QB" /></div>
 
         }
     </div>
@@ -62,7 +62,7 @@
         @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
         {
             <input type="text" name="Type" value="Vendor" hidden />
-            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Vendor From QB" /></div>
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Vendors From QB" /></div>
 
         }
     </div>
@@ -70,7 +70,7 @@
         @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
         {
             <input type="text" name="Type" value="PurchaseOrder" hidden />
-            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get PurchaseOrder From QB" /></div>
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Purchase Orders From QB" /></div>
 
         }
     </div>
@@ -86,7 +86,7 @@
         @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
         {
             <input type="text" name="Type" value="Bill" hidden />
-            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Bill From QB" /></div>
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Bills From QB" /></div>
 
         }
     </div>
@@ -94,7 +94,15 @@
         @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
         {
             <input type="text" name="Type" value="Invoice" hidden />
-            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Invoice From QB" /></div>
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Invoices From QB" /></div>
+
+        }
+    </div>
+    <div class="col-md-3 mt-2">
+        @using (Html.BeginForm("GetItemsFromQB", "Home", FormMethod.Post))
+        {
+            <input type="text" name="Type" value="Account" hidden />
+            <div><input type="submit" class="btn btn-primary" name="submitButton" value="Get Accounts From QB" /></div>
 
         }
     </div>
