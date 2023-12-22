@@ -746,6 +746,7 @@ namespace EarthCo.Controllers
                         return ResponseMessage(responseMessage);
                     }
                     Data.CompanyName = Customer.CompanyName;
+                    Data.ContactName = Customer.ContactName;
                     Data.FirstName = Customer.FirstName;
                     Data.LastName = Customer.LastName;
                     Data.Address = Customer.Address;
