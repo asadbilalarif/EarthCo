@@ -130,6 +130,8 @@
         <AssociationConnector Association="earthcoModel.FK_tblWeeklyReportRC_tblServiceLocation" />
         <AssociationConnector Association="earthcoModel.FK_tblWeeklyReportRC_tblUser" />
         <AssociationConnector Association="earthcoModel.FK_tblWeeklyReportRC_tblUser1" />
+        <EntityTypeShape EntityType="earthcoModel.tblWeeklyReportRCFile" Width="1.5" PointX="27.75" PointY="13" />
+        <AssociationConnector Association="earthcoModel.FK_tblWeeklyReportRCFile_tblWeeklyReportRC" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

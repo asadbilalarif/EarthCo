@@ -77,6 +77,7 @@ namespace EarthCo.Models
         public virtual DbSet<tblAccount> tblAccounts { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
         public virtual DbSet<tblWeeklyReportRC> tblWeeklyReportRCs { get; set; }
+        public virtual DbSet<tblWeeklyReportRCFile> tblWeeklyReportRCFiles { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {
@@ -436,6 +437,41 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetCustomerData_Result>("SPGetCustomerData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetWeeklyReportRCListData_Result> SPGetWeeklyReportRCListData()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetWeeklyReportRCListData_Result>("SPGetWeeklyReportRCListData");
+        }
+    
+        public virtual ObjectResult<SPGetWeeklyReportRCData_Result> SPGetWeeklyReportRCData(Nullable<int> iD, Nullable<int> customerId, Nullable<int> year, Nullable<int> month)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            var customerIdParameter = customerId.HasValue ?
+                new ObjectParameter("CustomerId", customerId) :
+                new ObjectParameter("CustomerId", typeof(int));
+    
+            var yearParameter = year.HasValue ?
+                new ObjectParameter("Year", year) :
+                new ObjectParameter("Year", typeof(int));
+    
+            var monthParameter = month.HasValue ?
+                new ObjectParameter("Month", month) :
+                new ObjectParameter("Month", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetWeeklyReportRCData_Result>("SPGetWeeklyReportRCData", iDParameter, customerIdParameter, yearParameter, monthParameter);
+        }
+    
+        public virtual ObjectResult<SPGetWeeklyReportRCFileData_Result> SPGetWeeklyReportRCFileData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetWeeklyReportRCFileData_Result>("SPGetWeeklyReportRCFileData", iDParameter);
         }
     }
 }

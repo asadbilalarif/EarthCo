@@ -10,16 +10,9 @@
 namespace EarthCo.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class tblWeeklyReportRC
+    public partial class SPGetWeeklyReportRCData_Result
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tblWeeklyReportRC()
-        {
-            this.tblWeeklyReportRCFiles = new HashSet<tblWeeklyReportRCFile>();
-        }
-    
         public int WeeklyReportRCId { get; set; }
         public Nullable<int> CustomerId { get; set; }
         public Nullable<int> ContactId { get; set; }
@@ -54,12 +47,12 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
-    
-        public virtual tblContact tblContact { get; set; }
-        public virtual tblServiceLocation tblServiceLocation { get; set; }
-        public virtual tblUser tblUser { get; set; }
-        public virtual tblUser tblUser1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblWeeklyReportRCFile> tblWeeklyReportRCFiles { get; set; }
+        public string CompanyName { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+        public string RegionalManagerName { get; set; }
+        public string ServiceLocationName { get; set; }
+        public string ContactCompany1 { get; set; }
+        public string ContactName1 { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using EarthCo.Models;
+using Ganss.Xss;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -15,8 +16,10 @@ namespace EarthCo.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     [Authorize]
+    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, Location = System.Web.UI.OutputCacheLocation.None)]
     public class EmailController : ApiController
     {
+       
         earthcoEntities DB = new earthcoEntities();
         [HttpGet]
         public IHttpActionResult SendEmail(string Link,int UserId=0,int ContactId=0,bool isVendor=false)
@@ -133,13 +136,20 @@ namespace EarthCo.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
+        [System.Web.Mvc.ValidateInput(false)]
+        
+
         public IHttpActionResult SendEmailWithFile()
         {
             try
             {
+                //JsonStringClass JsonData=new JsonStringClass();
+                //string emailData = HttpContext.Current.Request.Params.Get("EmailData");
+                //JsonData.Data = HttpContext.Current.Request.Params.Get("EmailData");
                 var Data1 = HttpContext.Current.Request.Params.Get("EmailData");
                 //HttpPostedFile file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+                string emailData = Request.Headers.GetValues("EmailData").FirstOrDefault();
 
                 EmailFile Email = new EmailFile();
                 Email.Files = new List<HttpPostedFile>();
@@ -147,8 +157,14 @@ namespace EarthCo.Controllers
                 {
                     Email.Files.Add(HttpContext.Current.Request.Files[i]); ;
                 }
+                HtmlSanitizer sanitizer = new HtmlSanitizer();
+                sanitizer.AllowedTags.Add("p");
+                var sanitizedHtml = sanitizer.Sanitize(HttpContext.Current.Request.Params.Get("EmailData"));
 
-                Email.EmailData = JsonSerializer.Deserialize<EmailClass>(Data1);
+                Email.EmailData = JsonSerializer.Deserialize<EmailClass>(sanitizedHtml);
+                Email.EmailData = JsonSerializer.Deserialize<EmailClass>(HttpContext.Current.Request.Params.Get("EmailData"));
+                //Email.EmailData = JsonSerializer.Deserialize<EmailClass>(Data1);
+                //Email.EmailData = EmailData;
 
 
                 string[] AllEmail = Email.EmailData.Email.Split(',');
