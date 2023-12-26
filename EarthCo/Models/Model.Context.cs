@@ -76,6 +76,7 @@ namespace EarthCo.Models
         public virtual DbSet<tblInvoice> tblInvoices { get; set; }
         public virtual DbSet<tblAccount> tblAccounts { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
+        public virtual DbSet<tblWeeklyReportRC> tblWeeklyReportRCs { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {

@@ -747,6 +747,9 @@
     <Compile Include="Models\tblWeeklyReportFile.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblWeeklyReportRC.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\UpdateStatus.cs" />
     <Compile Include="Models\VerifySignature.cs" />
     <Compile Include="Models\WeeklyReportFile.cs" />

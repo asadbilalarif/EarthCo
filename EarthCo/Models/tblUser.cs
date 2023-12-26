@@ -35,6 +35,8 @@ namespace EarthCo.Models
             this.tblServiceRequests = new HashSet<tblServiceRequest>();
             this.tblServiceRequests1 = new HashSet<tblServiceRequest>();
             this.tblSettings = new HashSet<tblSetting>();
+            this.tblWeeklyReportRCs = new HashSet<tblWeeklyReportRC>();
+            this.tblWeeklyReportRCs1 = new HashSet<tblWeeklyReportRC>();
         }
     
         public int UserId { get; set; }
@@ -109,5 +111,9 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblSetting> tblSettings { get; set; }
         public virtual tblUserType tblUserType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblWeeklyReportRC> tblWeeklyReportRCs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblWeeklyReportRC> tblWeeklyReportRCs1 { get; set; }
     }
 }

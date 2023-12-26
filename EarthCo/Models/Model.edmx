@@ -917,6 +917,45 @@
           <Property Name="isActive" Type="bit" Nullable="false" />
           <Property Name="isDelete" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="tblWeeklyReportRC">
+          <Key>
+            <PropertyRef Name="WeeklyReportRCId" />
+          </Key>
+          <Property Name="WeeklyReportRCId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerId" Type="int" />
+          <Property Name="ContactId" Type="int" />
+          <Property Name="ServiceLocationId" Type="int" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="500" />
+          <Property Name="ContactName" Type="nvarchar" MaxLength="500" />
+          <Property Name="ContactCompany" Type="nvarchar" MaxLength="500" />
+          <Property Name="ContactEmail" Type="nvarchar" MaxLength="500" />
+          <Property Name="RegionalManagerId" Type="int" />
+          <Property Name="ReportForWeekOf" Type="datetime" />
+          <Property Name="Didyoucheckthehealthofalltheplantsandtreesontheproperty" Type="bit" />
+          <Property Name="Didyouremovealldeceasedplantsortrees" Type="bit" />
+          <Property Name="Didyoucheckirrigationtomakesureallplantsarereceivingwater" Type="bit" />
+          <Property Name="Didyoucheckirrigationclock" Type="bit" />
+          <Property Name="Didyoufixallleaksorflooding" Type="bit" />
+          <Property Name="Weretheweedspulledorsprayed" Type="bit" />
+          <Property Name="Wasthetrashanddebriscollectedandproperlydisposedof" Type="bit" />
+          <Property Name="Didthedoorentrywayplantersgetaddressed" Type="bit" />
+          <Property Name="Didtheparkinglotgetcleaned" Type="bit" />
+          <Property Name="Isthemulchsufficient" Type="bit" />
+          <Property Name="Arethereanyareasofconcern" Type="nvarchar" MaxLength="500" />
+          <Property Name="Describethemulchconditionandifweneedtoaddany" Type="nvarchar" MaxLength="500" />
+          <Property Name="Describetheentrancecondition" Type="nvarchar" MaxLength="500" />
+          <Property Name="Describethedrivethroughcondition" Type="nvarchar" MaxLength="500" />
+          <Property Name="Describetheperimeterofbuildingincludingsignagestreetfacingplantersetccondition" Type="nvarchar" MaxLength="500" />
+          <Property Name="Anyadditionalnotesmanagementshouldbeawareof" Type="nvarchar" MaxLength="500" />
+          <Property Name="SignatureofRConsitemanager" Type="nvarchar" MaxLength="500" />
+          <Property Name="NameofRConsitemanager" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="isDelete" Type="bit" Nullable="false" />
+        </EntityType>
         <Association Name="FK__tblContro__Irrig__5441852A">
           <End Role="tblIrrigation" Type="Self.tblIrrigation" Multiplicity="1" />
           <End Role="tblController" Type="Self.tblController" Multiplicity="*" />
@@ -1757,6 +1796,54 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_tblWeeklyReportRC_tblContact">
+          <End Role="tblContact" Type="Self.tblContact" Multiplicity="0..1" />
+          <End Role="tblWeeklyReportRC" Type="Self.tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblContact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblWeeklyReportRC_tblServiceLocation">
+          <End Role="tblServiceLocation" Type="Self.tblServiceLocation" Multiplicity="0..1" />
+          <End Role="tblWeeklyReportRC" Type="Self.tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceLocation">
+              <PropertyRef Name="ServiceLocationId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="ServiceLocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblWeeklyReportRC_tblUser">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblWeeklyReportRC" Type="Self.tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblWeeklyReportRC_tblUser1">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblWeeklyReportRC" Type="Self.tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="RegionalManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="SPGetBillData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
         </Function>
@@ -1921,6 +2008,7 @@
           <EntitySet Name="tblUserType" EntityType="Self.tblUserType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblWeeklyReport" EntityType="Self.tblWeeklyReport" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblWeeklyReportFile" EntityType="Self.tblWeeklyReportFile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblWeeklyReportRC" EntityType="Self.tblWeeklyReportRC" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__tblContro__Irrig__5441852A" Association="Self.FK__tblContro__Irrig__5441852A">
             <End Role="tblIrrigation" EntitySet="tblIrrigation" />
             <End Role="tblController" EntitySet="tblController" />
@@ -2200,6 +2288,22 @@
           <AssociationSet Name="FK_tblWeeklyReportFile_tblWeeklyReport" Association="Self.FK_tblWeeklyReportFile_tblWeeklyReport">
             <End Role="tblWeeklyReport" EntitySet="tblWeeklyReport" />
             <End Role="tblWeeklyReportFile" EntitySet="tblWeeklyReportFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblWeeklyReportRC_tblContact" Association="Self.FK_tblWeeklyReportRC_tblContact">
+            <End Role="tblContact" EntitySet="tblContact" />
+            <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblWeeklyReportRC_tblServiceLocation" Association="Self.FK_tblWeeklyReportRC_tblServiceLocation">
+            <End Role="tblServiceLocation" EntitySet="tblServiceLocation" />
+            <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblWeeklyReportRC_tblUser" Association="Self.FK_tblWeeklyReportRC_tblUser">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblWeeklyReportRC_tblUser1" Association="Self.FK_tblWeeklyReportRC_tblUser1">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRC" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -2787,8 +2891,25 @@
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SPGetCustomerData" ReturnType="Collection(earthcoModel.SPGetCustomerData_Result)">
-            <Parameter Name="ID" Mode="In" Type="Int32" />
+          <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="tblWeeklyReportRCs" EntityType="earthcoModel.tblWeeklyReportRC" />
+          <AssociationSet Name="FK_tblWeeklyReportRC_tblContact" Association="earthcoModel.FK_tblWeeklyReportRC_tblContact">
+            <End Role="tblContact" EntitySet="tblContacts" />
+            <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRCs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblWeeklyReportRC_tblServiceLocation" Association="earthcoModel.FK_tblWeeklyReportRC_tblServiceLocation">
+            <End Role="tblServiceLocation" EntitySet="tblServiceLocations" />
+            <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRCs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblWeeklyReportRC_tblUser" Association="earthcoModel.FK_tblWeeklyReportRC_tblUser">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRCs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblWeeklyReportRC_tblUser1" Association="earthcoModel.FK_tblWeeklyReportRC_tblUser1">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRCs" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="tblSetting">
           <Key>
@@ -2857,6 +2978,7 @@
           <NavigationProperty Name="tblPunchlists" Relationship="earthcoModel.FK_tblPunchlist_tblContact" FromRole="tblContact" ToRole="tblPunchlist" />
           <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK_tblEstimate_tblContact" FromRole="tblContact" ToRole="tblEstimate" />
           <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblContact" FromRole="tblContact" ToRole="tblInvoice" />
+          <NavigationProperty Name="tblWeeklyReportRCs" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblContact" FromRole="tblContact" ToRole="tblWeeklyReportRC" />
           </EntityType>
         <EntityType Name="tblUserType">
           <Key>
@@ -3633,6 +3755,7 @@
           <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK_tblEstimate_tblServiceLocation" FromRole="tblServiceLocation" ToRole="tblEstimate" />
           <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblServiceLocation" FromRole="tblServiceLocation" ToRole="tblInvoice" />
           <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblServiceLocation_tblCustomer" FromRole="tblServiceLocation" ToRole="tblUser" />
+          <NavigationProperty Name="tblWeeklyReportRCs" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblServiceLocation" FromRole="tblServiceLocation" ToRole="tblWeeklyReportRC" />
         </EntityType>
         <Association Name="FK_tblPunchlist_tblServiceLocation">
           <End Type="earthcoModel.tblServiceLocation" Role="tblServiceLocation" Multiplicity="0..1" />
@@ -5071,6 +5194,8 @@
           <NavigationProperty Name="tblServiceRequests1" Relationship="earthcoModel.FK_tblServiceRequest_tblUser" FromRole="tblUser" ToRole="tblServiceRequest" />
           <NavigationProperty Name="tblSettings" Relationship="earthcoModel.FK_tblSetting_tblUser" FromRole="tblUser" ToRole="tblSetting" />
           <NavigationProperty Name="tblUserType" Relationship="earthcoModel.FK_tblUser_tblUserType" FromRole="tblUser" ToRole="tblUserType" />
+          <NavigationProperty Name="tblWeeklyReportRCs" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblUser" FromRole="tblUser" ToRole="tblWeeklyReportRC" />
+          <NavigationProperty Name="tblWeeklyReportRCs1" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblUser1" FromRole="tblUser" ToRole="tblWeeklyReportRC" />
         </EntityType>
         <Association Name="FK_tblBill_tblUser">
           <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
@@ -5392,6 +5517,97 @@
           <Property Type="String" Name="SyncToken" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="ContactName" Nullable="true" MaxLength="500" />
         </ComplexType>
+        <EntityType Name="tblWeeklyReportRC">
+          <Key>
+            <PropertyRef Name="WeeklyReportRCId" />
+          </Key>
+          <Property Name="WeeklyReportRCId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="ContactId" Type="Int32" />
+          <Property Name="ServiceLocationId" Type="Int32" />
+          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ContactName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ContactCompany" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ContactEmail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="RegionalManagerId" Type="Int32" />
+          <Property Name="ReportForWeekOf" Type="DateTime" Precision="3" />
+          <Property Name="Didyoucheckthehealthofalltheplantsandtreesontheproperty" Type="Boolean" />
+          <Property Name="Didyouremovealldeceasedplantsortrees" Type="Boolean" />
+          <Property Name="Didyoucheckirrigationtomakesureallplantsarereceivingwater" Type="Boolean" />
+          <Property Name="Didyoucheckirrigationclock" Type="Boolean" />
+          <Property Name="Didyoufixallleaksorflooding" Type="Boolean" />
+          <Property Name="Weretheweedspulledorsprayed" Type="Boolean" />
+          <Property Name="Wasthetrashanddebriscollectedandproperlydisposedof" Type="Boolean" />
+          <Property Name="Didthedoorentrywayplantersgetaddressed" Type="Boolean" />
+          <Property Name="Didtheparkinglotgetcleaned" Type="Boolean" />
+          <Property Name="Isthemulchsufficient" Type="Boolean" />
+          <Property Name="Arethereanyareasofconcern" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Describethemulchconditionandifweneedtoaddany" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Describetheentrancecondition" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Describethedrivethroughcondition" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Describetheperimeterofbuildingincludingsignagestreetfacingplantersetccondition" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Anyadditionalnotesmanagementshouldbeawareof" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SignatureofRConsitemanager" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="NameofRConsitemanager" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblContact" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblContact" FromRole="tblWeeklyReportRC" ToRole="tblContact" />
+          <NavigationProperty Name="tblServiceLocation" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblServiceLocation" FromRole="tblWeeklyReportRC" ToRole="tblServiceLocation" />
+          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblUser" FromRole="tblWeeklyReportRC" ToRole="tblUser" />
+          <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblUser1" FromRole="tblWeeklyReportRC" ToRole="tblUser" />
+        </EntityType>
+        <Association Name="FK_tblWeeklyReportRC_tblContact">
+          <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblContact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblWeeklyReportRC_tblServiceLocation">
+          <End Type="earthcoModel.tblServiceLocation" Role="tblServiceLocation" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceLocation">
+              <PropertyRef Name="ServiceLocationId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="ServiceLocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblWeeklyReportRC_tblUser">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblWeeklyReportRC_tblUser1">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="RegionalManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -7331,6 +7547,46 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="tblWeeklyReportRCs">
+            <EntityTypeMapping TypeName="earthcoModel.tblWeeklyReportRC">
+              <MappingFragment StoreEntitySet="tblWeeklyReportRC">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="NameofRConsitemanager" ColumnName="NameofRConsitemanager" />
+                <ScalarProperty Name="SignatureofRConsitemanager" ColumnName="SignatureofRConsitemanager" />
+                <ScalarProperty Name="Anyadditionalnotesmanagementshouldbeawareof" ColumnName="Anyadditionalnotesmanagementshouldbeawareof" />
+                <ScalarProperty Name="Describetheperimeterofbuildingincludingsignagestreetfacingplantersetccondition" ColumnName="Describetheperimeterofbuildingincludingsignagestreetfacingplantersetccondition" />
+                <ScalarProperty Name="Describethedrivethroughcondition" ColumnName="Describethedrivethroughcondition" />
+                <ScalarProperty Name="Describetheentrancecondition" ColumnName="Describetheentrancecondition" />
+                <ScalarProperty Name="Describethemulchconditionandifweneedtoaddany" ColumnName="Describethemulchconditionandifweneedtoaddany" />
+                <ScalarProperty Name="Arethereanyareasofconcern" ColumnName="Arethereanyareasofconcern" />
+                <ScalarProperty Name="Isthemulchsufficient" ColumnName="Isthemulchsufficient" />
+                <ScalarProperty Name="Didtheparkinglotgetcleaned" ColumnName="Didtheparkinglotgetcleaned" />
+                <ScalarProperty Name="Didthedoorentrywayplantersgetaddressed" ColumnName="Didthedoorentrywayplantersgetaddressed" />
+                <ScalarProperty Name="Wasthetrashanddebriscollectedandproperlydisposedof" ColumnName="Wasthetrashanddebriscollectedandproperlydisposedof" />
+                <ScalarProperty Name="Weretheweedspulledorsprayed" ColumnName="Weretheweedspulledorsprayed" />
+                <ScalarProperty Name="Didyoufixallleaksorflooding" ColumnName="Didyoufixallleaksorflooding" />
+                <ScalarProperty Name="Didyoucheckirrigationclock" ColumnName="Didyoucheckirrigationclock" />
+                <ScalarProperty Name="Didyoucheckirrigationtomakesureallplantsarereceivingwater" ColumnName="Didyoucheckirrigationtomakesureallplantsarereceivingwater" />
+                <ScalarProperty Name="Didyouremovealldeceasedplantsortrees" ColumnName="Didyouremovealldeceasedplantsortrees" />
+                <ScalarProperty Name="Didyoucheckthehealthofalltheplantsandtreesontheproperty" ColumnName="Didyoucheckthehealthofalltheplantsandtreesontheproperty" />
+                <ScalarProperty Name="ReportForWeekOf" ColumnName="ReportForWeekOf" />
+                <ScalarProperty Name="RegionalManagerId" ColumnName="RegionalManagerId" />
+                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
+                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="WeeklyReportRCId" ColumnName="WeeklyReportRCId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

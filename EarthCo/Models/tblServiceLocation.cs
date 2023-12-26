@@ -21,6 +21,7 @@ namespace EarthCo.Models
             this.tblServiceRequests = new HashSet<tblServiceRequest>();
             this.tblEstimates = new HashSet<tblEstimate>();
             this.tblInvoices = new HashSet<tblInvoice>();
+            this.tblWeeklyReportRCs = new HashSet<tblWeeklyReportRC>();
         }
     
         public int ServiceLocationId { get; set; }
@@ -48,5 +49,7 @@ namespace EarthCo.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblInvoice> tblInvoices { get; set; }
         public virtual tblUser tblUser { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblWeeklyReportRC> tblWeeklyReportRCs { get; set; }
     }
 }
