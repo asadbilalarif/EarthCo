@@ -125,13 +125,27 @@
         <AssociationConnector Association="earthcoModel.FK_tblServiceRequest_tblUser" />
         <AssociationConnector Association="earthcoModel.FK_tblSetting_tblUser" />
         <AssociationConnector Association="earthcoModel.FK_tblUser_tblUserType" />
-        <EntityTypeShape EntityType="earthcoModel.tblWeeklyReportRC" Width="1.5" PointX="25.5" PointY="13.5" />
+        <EntityTypeShape EntityType="earthcoModel.tblWeeklyReportRCFile" Width="1.5" PointX="27.75" PointY="13" />
+        <EntityTypeShape EntityType="earthcoModel.tblStoreLocation" Width="1.5" PointX="13.375" PointY="0.75" />
+        <EntityTypeShape EntityType="earthcoModel.tblWeeklyReportRC" Width="1.5" PointX="25.5" PointY="13.125" />
         <AssociationConnector Association="earthcoModel.FK_tblWeeklyReportRC_tblContact" />
         <AssociationConnector Association="earthcoModel.FK_tblWeeklyReportRC_tblServiceLocation" />
+        <AssociationConnector Association="earthcoModel.FK__tblWeekly__Store__6D181FEC" />
         <AssociationConnector Association="earthcoModel.FK_tblWeeklyReportRC_tblUser" />
         <AssociationConnector Association="earthcoModel.FK_tblWeeklyReportRC_tblUser1" />
-        <EntityTypeShape EntityType="earthcoModel.tblWeeklyReportRCFile" Width="1.5" PointX="27.75" PointY="13" />
         <AssociationConnector Association="earthcoModel.FK_tblWeeklyReportRCFile_tblWeeklyReportRC" />
+        <EntityTypeShape EntityType="earthcoModel.tblPunchlistPhotoOnly" Width="1.5" PointX="20.25" PointY="0.75" />
+        <EntityTypeShape EntityType="earthcoModel.tblPunchlistPhotoOnlyFile" Width="1.5" PointX="22.5" PointY="8.875" />
+        <AssociationConnector Association="earthcoModel.FK_tblPunchlistPhotoOnly_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK_tblPunchlistPhotoOnlyFile_tblPunchlistPhotoOnly" />
+        <EntityTypeShape EntityType="earthcoModel.tblControllerAuditReport" Width="1.5" PointX="30.75" PointY="2.75" />
+        <EntityTypeShape EntityType="earthcoModel.tblControllerAuditReportFile" Width="1.5" PointX="33" PointY="3.375" />
+        <EntityTypeShape EntityType="earthcoModel.tblIrrigationAuditReport" Width="1.5" PointX="28.5" PointY="3.625" />
+        <AssociationConnector Association="earthcoModel.FK_tblIrrigationAuditReport_tblContact" />
+        <AssociationConnector Association="earthcoModel.FK_tblControllerAuditReport_tblIrrigationAuditReport" />
+        <AssociationConnector Association="earthcoModel.FK_tblControllerAuditReportFile_tblControllerAuditReport" />
+        <AssociationConnector Association="earthcoModel.FK_tblIrrigationAuditReport_tblUser" />
+        <AssociationConnector Association="earthcoModel.FK_tblIrrigationAuditReport_tblUser1" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

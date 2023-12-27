@@ -417,9 +417,12 @@
     <Compile Include="Controllers\EstimateController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
+    <Compile Include="Controllers\IrrigationAuditReportController.cs" />
     <Compile Include="Controllers\IrrigationController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\MonthlyLandsacpeController.cs" />
+    <Compile Include="Controllers\PunchlistPhotoOnlyController.cs" />
+    <Compile Include="Models\ControllerAuditReportClass.cs" />
     <Compile Include="Models\EmailClass.cs" />
     <Compile Include="Models\EmailFile.cs" />
     <Compile Include="Models\EstimateQB.cs" />
@@ -489,6 +492,7 @@
       <DependentUpon>Model.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\PunchlistDetailItems.cs" />
+    <Compile Include="Models\PunchlistPhotoOnlyFile.cs" />
     <Compile Include="Models\PurchaseOrderFile.cs" />
     <Compile Include="Models\PurchaseOrderList.cs" />
     <Compile Include="Models\PurchaseOrderQB.cs" />
@@ -517,6 +521,9 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SPGetBillItemData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetControllerAuditReportFileData_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SPGetCustomerContactData_Result.cs">
@@ -549,6 +556,12 @@
     <Compile Include="Models\SPGetInvoiceItemData_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SPGetIrrigationAuditReportData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetIrrigationControllerAuditReportData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SPGetIrrigationControllerData_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -577,6 +590,15 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SPGetPunchlistItemData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetPunchlistPhotoOnlyData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetPunchlistPhotoOnlyFileData_Result.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SPGetPunchlistPhotoOnlyList_Result.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SPGetPurchaseOrderData_Result.cs">
@@ -647,6 +669,12 @@
     <Compile Include="Models\tblController.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblControllerAuditReport.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblControllerAuditReportFile.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tblCustomer.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -686,6 +714,9 @@
     <Compile Include="Models\tblIrrigation.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblIrrigationAuditReport.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tblItem.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -705,6 +736,12 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblPunchlistItem.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblPunchlistPhotoOnly.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblPunchlistPhotoOnlyFile.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblPunchlistStatu.cs">
@@ -747,6 +784,9 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblSRType.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblStoreLocation.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblSyncLog.cs">

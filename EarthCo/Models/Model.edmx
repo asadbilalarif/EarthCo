@@ -159,6 +159,45 @@
           <Property Name="isActive" Type="bit" Nullable="false" />
           <Property Name="isDelete" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="tblControllerAuditReport">
+          <Key>
+            <PropertyRef Name="ControllerAuditReportId" />
+          </Key>
+          <Property Name="ControllerAuditReportId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ControllerPhotoPath" Type="nvarchar" MaxLength="500" />
+          <Property Name="ControllerName" Type="nvarchar" MaxLength="500" />
+          <Property Name="BrokenValve" Type="bit" />
+          <Property Name="BrokenLaterals" Type="bit" />
+          <Property Name="BrokenHeads" Type="bit" />
+          <Property Name="HowMany" Type="int" />
+          <Property Name="RepairMadeOrNeeded" Type="nvarchar" MaxLength="500" />
+          <Property Name="PhotoPath" Type="nvarchar" MaxLength="200" />
+          <Property Name="IrrigationAuditReportId" Type="int" Nullable="false" />
+          <Property Name="MorePhotos" Type="bit" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="isDelete" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblControllerAuditReportFile">
+          <Key>
+            <PropertyRef Name="ControllerAuditReportFileId" />
+          </Key>
+          <Property Name="ControllerAuditReportFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Caption" Type="nvarchar" MaxLength="150" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Share" Type="nvarchar" MaxLength="150" />
+          <Property Name="ControllerAuditReportId" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="isDelete" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="tblCustomer">
           <Key>
             <PropertyRef Name="CustomerId" />
@@ -412,6 +451,27 @@
           <Property Name="isActive" Type="bit" Nullable="false" />
           <Property Name="isDelete" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="tblIrrigationAuditReport">
+          <Key>
+            <PropertyRef Name="IrrigationAuditReportId" />
+          </Key>
+          <Property Name="IrrigationAuditReportId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="500" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="500" />
+          <Property Name="ContactId" Type="int" />
+          <Property Name="ContactName" Type="nvarchar" MaxLength="500" />
+          <Property Name="ContactCompany" Type="nvarchar" MaxLength="500" />
+          <Property Name="ContactEmail" Type="nvarchar" MaxLength="500" />
+          <Property Name="RegionalManagerId" Type="int" />
+          <Property Name="ReportDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="isDelete" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="tblItem">
           <Key>
             <PropertyRef Name="ItemId" />
@@ -555,6 +615,39 @@
           <Property Name="Tax" Type="float" />
           <Property Name="PunchlistDetailId" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="isDelete" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblPunchlistPhotoOnly">
+          <Key>
+            <PropertyRef Name="PunchlistPhotoOnlyId" />
+          </Key>
+          <Property Name="PunchlistPhotoOnlyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerId" Type="int" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="500" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" />
+          <Property Name="isDelete" Type="bit" />
+        </EntityType>
+        <EntityType Name="tblPunchlistPhotoOnlyFile">
+          <Key>
+            <PropertyRef Name="PunchlistPhotoOnlyFileId" />
+          </Key>
+          <Property Name="PunchlistPhotoOnlyFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="500" />
+          <Property Name="Caption" Type="nvarchar" MaxLength="500" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="500" />
+          <Property Name="Share" Type="nvarchar" MaxLength="500" />
+          <Property Name="PunchlistPhotoOnlyId" Type="int" />
+          <Property Name="isAdditional" Type="bit" />
+          <Property Name="CreatedBy" Type="int" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="EditBy" Type="int" />
           <Property Name="EditDate" Type="datetime" />
@@ -786,6 +879,19 @@
           <Property Name="SRTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Type" Type="nvarchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="tblStoreLocation">
+          <Key>
+            <PropertyRef Name="StoreLocationId" />
+          </Key>
+          <Property Name="StoreLocationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Location" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CretaedDate" Type="datetime" />
+          <Property Name="EditBy" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
+          <Property Name="isActive" Type="bit" />
+          <Property Name="isDelete" Type="bit" />
+        </EntityType>
         <EntityType Name="tblSyncLog">
           <Key>
             <PropertyRef Name="SyncLogId" />
@@ -955,6 +1061,7 @@
           <Property Name="EditDate" Type="datetime" />
           <Property Name="isActive" Type="bit" Nullable="false" />
           <Property Name="isDelete" Type="bit" Nullable="false" />
+          <Property Name="StoreLocationId" Type="int" />
         </EntityType>
         <EntityType Name="tblWeeklyReportRCFile">
           <Key>
@@ -1153,6 +1260,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__tblWeekly__Store__6D181FEC">
+          <End Role="tblStoreLocation" Type="Self.tblStoreLocation" Multiplicity="0..1" />
+          <End Role="tblWeeklyReportRC" Type="Self.tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblStoreLocation">
+              <PropertyRef Name="StoreLocationId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="StoreLocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_AccessManu">
           <End Role="tblMenu" Type="Self.tblMenu" Multiplicity="0..1" />
           <End Role="tblAccessLevel" Type="Self.tblAccessLevel" Multiplicity="*" />
@@ -1246,6 +1365,30 @@
             </Principal>
             <Dependent Role="tblBillItem">
               <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblControllerAuditReport_tblIrrigationAuditReport">
+          <End Role="tblIrrigationAuditReport" Type="Self.tblIrrigationAuditReport" Multiplicity="1" />
+          <End Role="tblControllerAuditReport" Type="Self.tblControllerAuditReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblIrrigationAuditReport">
+              <PropertyRef Name="IrrigationAuditReportId" />
+            </Principal>
+            <Dependent Role="tblControllerAuditReport">
+              <PropertyRef Name="IrrigationAuditReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblControllerAuditReportFile_tblControllerAuditReport">
+          <End Role="tblControllerAuditReport" Type="Self.tblControllerAuditReport" Multiplicity="1" />
+          <End Role="tblControllerAuditReportFile" Type="Self.tblControllerAuditReportFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblControllerAuditReport">
+              <PropertyRef Name="ControllerAuditReportId" />
+            </Principal>
+            <Dependent Role="tblControllerAuditReportFile">
+              <PropertyRef Name="ControllerAuditReportId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1489,6 +1632,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_tblIrrigationAuditReport_tblContact">
+          <End Role="tblContact" Type="Self.tblContact" Multiplicity="0..1" />
+          <End Role="tblIrrigationAuditReport" Type="Self.tblIrrigationAuditReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblContact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="tblIrrigationAuditReport">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblIrrigationAuditReport_tblUser">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="1" />
+          <End Role="tblIrrigationAuditReport" Type="Self.tblIrrigationAuditReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblIrrigationAuditReport">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblIrrigationAuditReport_tblUser1">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblIrrigationAuditReport" Type="Self.tblIrrigationAuditReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblIrrigationAuditReport">
+              <PropertyRef Name="RegionalManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_tblItem_tblAccount">
           <End Role="tblAccount" Type="Self.tblAccount" Multiplicity="0..1" />
           <End Role="tblItem" Type="Self.tblItem" Multiplicity="*" />
@@ -1582,6 +1761,30 @@
             </Principal>
             <Dependent Role="tblPunchlistItem">
               <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlistPhotoOnly_tblUser">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblPunchlistPhotoOnly" Type="Self.tblPunchlistPhotoOnly" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblPunchlistPhotoOnly">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlistPhotoOnlyFile_tblPunchlistPhotoOnly">
+          <End Role="tblPunchlistPhotoOnly" Type="Self.tblPunchlistPhotoOnly" Multiplicity="0..1" />
+          <End Role="tblPunchlistPhotoOnlyFile" Type="Self.tblPunchlistPhotoOnlyFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPunchlistPhotoOnly">
+              <PropertyRef Name="PunchlistPhotoOnlyId" />
+            </Principal>
+            <Dependent Role="tblPunchlistPhotoOnlyFile">
+              <PropertyRef Name="PunchlistPhotoOnlyId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1882,6 +2085,9 @@
         <Function Name="SPGetBillItemData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
         </Function>
+        <Function Name="SPGetControllerAuditReportFileData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
         <Function Name="SPGetCustomerContactData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
         </Function>
@@ -1912,6 +2118,12 @@
           <Parameter Name="ID" Type="int" Mode="In" />
         </Function>
         <Function Name="SPGetInvoiceItemData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SPGetIrrigationAuditReportData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SPGetIrrigationControllerAuditReportData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
         </Function>
         <Function Name="SPGetIrrigationControllerData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -1948,6 +2160,13 @@
         <Function Name="SPGetPunchlistItemData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
         </Function>
+        <Function Name="SPGetPunchlistPhotoOnlyData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SPGetPunchlistPhotoOnlyFileData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SPGetPunchlistPhotoOnlyList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SPGetPurchaseOrderData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="int" Mode="In" />
         </Function>
@@ -2005,6 +2224,8 @@
           <EntitySet Name="tblBillItem" EntityType="Self.tblBillItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblContact" EntityType="Self.tblContact" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblController" EntityType="Self.tblController" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblControllerAuditReport" EntityType="Self.tblControllerAuditReport" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblControllerAuditReportFile" EntityType="Self.tblControllerAuditReportFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblCustomer" EntityType="Self.tblCustomer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblCustomerType" EntityType="Self.tblCustomerType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblEmployee" EntityType="Self.tblEmployee" Schema="dbo" store:Type="Tables" />
@@ -2018,6 +2239,7 @@
           <EntitySet Name="tblInvoiceItem" EntityType="Self.tblInvoiceItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblInvoiceStatus" EntityType="Self.tblInvoiceStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblIrrigation" EntityType="Self.tblIrrigation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblIrrigationAuditReport" EntityType="Self.tblIrrigationAuditReport" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblItem" EntityType="Self.tblItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblLog" EntityType="Self.tblLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblMenu" EntityType="Self.tblMenu" Schema="dbo" store:Type="Tables" />
@@ -2025,6 +2247,8 @@
           <EntitySet Name="tblPunchlist" EntityType="Self.tblPunchlist" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPunchlistDetail" EntityType="Self.tblPunchlistDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPunchlistItem" EntityType="Self.tblPunchlistItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPunchlistPhotoOnly" EntityType="Self.tblPunchlistPhotoOnly" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPunchlistPhotoOnlyFile" EntityType="Self.tblPunchlistPhotoOnlyFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPunchlistStatus" EntityType="Self.tblPunchlistStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPurchaseOrder" EntityType="Self.tblPurchaseOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblPurchaseOrderFile" EntityType="Self.tblPurchaseOrderFile" Schema="dbo" store:Type="Tables" />
@@ -2039,6 +2263,7 @@
           <EntitySet Name="tblSRItem" EntityType="Self.tblSRItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblSRStatus" EntityType="Self.tblSRStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblSRType" EntityType="Self.tblSRType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblStoreLocation" EntityType="Self.tblStoreLocation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblSyncLog" EntityType="Self.tblSyncLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblTag" EntityType="Self.tblTag" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblTerm" EntityType="Self.tblTerm" Schema="dbo" store:Type="Tables" />
@@ -2109,6 +2334,10 @@
             <End Role="tblServiceRequest" EntitySet="tblServiceRequest" />
             <End Role="tblSRItem" EntitySet="tblSRItem" />
           </AssociationSet>
+          <AssociationSet Name="FK__tblWeekly__Store__6D181FEC" Association="Self.FK__tblWeekly__Store__6D181FEC">
+            <End Role="tblStoreLocation" EntitySet="tblStoreLocation" />
+            <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRC" />
+          </AssociationSet>
           <AssociationSet Name="FK_AccessManu" Association="Self.FK_AccessManu">
             <End Role="tblMenu" EntitySet="tblMenu" />
             <End Role="tblAccessLevel" EntitySet="tblAccessLevel" />
@@ -2140,6 +2369,14 @@
           <AssociationSet Name="FK_tblBillItem_tblItem" Association="Self.FK_tblBillItem_tblItem">
             <End Role="tblItem" EntitySet="tblItem" />
             <End Role="tblBillItem" EntitySet="tblBillItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblControllerAuditReport_tblIrrigationAuditReport" Association="Self.FK_tblControllerAuditReport_tblIrrigationAuditReport">
+            <End Role="tblIrrigationAuditReport" EntitySet="tblIrrigationAuditReport" />
+            <End Role="tblControllerAuditReport" EntitySet="tblControllerAuditReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblControllerAuditReportFile_tblControllerAuditReport" Association="Self.FK_tblControllerAuditReportFile_tblControllerAuditReport">
+            <End Role="tblControllerAuditReport" EntitySet="tblControllerAuditReport" />
+            <End Role="tblControllerAuditReportFile" EntitySet="tblControllerAuditReportFile" />
           </AssociationSet>
           <AssociationSet Name="FK_tblEstimate_tblContact" Association="Self.FK_tblEstimate_tblContact">
             <End Role="tblContact" EntitySet="tblContact" />
@@ -2221,6 +2458,18 @@
             <End Role="tblUser" EntitySet="tblUser" />
             <End Role="tblIrrigation" EntitySet="tblIrrigation" />
           </AssociationSet>
+          <AssociationSet Name="FK_tblIrrigationAuditReport_tblContact" Association="Self.FK_tblIrrigationAuditReport_tblContact">
+            <End Role="tblContact" EntitySet="tblContact" />
+            <End Role="tblIrrigationAuditReport" EntitySet="tblIrrigationAuditReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblIrrigationAuditReport_tblUser" Association="Self.FK_tblIrrigationAuditReport_tblUser">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblIrrigationAuditReport" EntitySet="tblIrrigationAuditReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblIrrigationAuditReport_tblUser1" Association="Self.FK_tblIrrigationAuditReport_tblUser1">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblIrrigationAuditReport" EntitySet="tblIrrigationAuditReport" />
+          </AssociationSet>
           <AssociationSet Name="FK_tblItem_tblAccount" Association="Self.FK_tblItem_tblAccount">
             <End Role="tblAccount" EntitySet="tblAccount" />
             <End Role="tblItem" EntitySet="tblItem" />
@@ -2252,6 +2501,14 @@
           <AssociationSet Name="FK_tblPunchlistItem_tblItem" Association="Self.FK_tblPunchlistItem_tblItem">
             <End Role="tblItem" EntitySet="tblItem" />
             <End Role="tblPunchlistItem" EntitySet="tblPunchlistItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlistPhotoOnly_tblUser" Association="Self.FK_tblPunchlistPhotoOnly_tblUser">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblPunchlistPhotoOnly" EntitySet="tblPunchlistPhotoOnly" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlistPhotoOnlyFile_tblPunchlistPhotoOnly" Association="Self.FK_tblPunchlistPhotoOnlyFile_tblPunchlistPhotoOnly">
+            <End Role="tblPunchlistPhotoOnly" EntitySet="tblPunchlistPhotoOnly" />
+            <End Role="tblPunchlistPhotoOnlyFile" EntitySet="tblPunchlistPhotoOnlyFile" />
           </AssociationSet>
           <AssociationSet Name="FK_tblPurchaseOrder_tblEstimate" Association="Self.FK_tblPurchaseOrder_tblEstimate">
             <End Role="tblEstimate" EntitySet="tblEstimate" />
@@ -2937,6 +3194,18 @@
           <FunctionImport Name="SPGetCustomerData" ReturnType="Collection(earthcoModel.SPGetCustomerData_Result)">
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="tblWeeklyReportRCFiles" EntityType="earthcoModel.tblWeeklyReportRCFile" />
+          <FunctionImport Name="SPGetWeeklyReportRCFileData" ReturnType="Collection(earthcoModel.SPGetWeeklyReportRCFileData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetWeeklyReportRCListData" ReturnType="Collection(earthcoModel.SPGetWeeklyReportRCListData_Result)" />
+          <FunctionImport Name="SPGetWeeklyReportRCData" ReturnType="Collection(earthcoModel.SPGetWeeklyReportRCData_Result)">
+            <Parameter Name="ID" Mode="In" Type="Int32" />
+            <Parameter Name="CustomerId" Mode="In" Type="Int32" />
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+            <Parameter Name="Month" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="tblStoreLocations" EntityType="earthcoModel.tblStoreLocation" />
           <EntitySet Name="tblWeeklyReportRCs" EntityType="earthcoModel.tblWeeklyReportRC" />
           <AssociationSet Name="FK_tblWeeklyReportRC_tblContact" Association="earthcoModel.FK_tblWeeklyReportRC_tblContact">
             <End Role="tblContact" EntitySet="tblContacts" />
@@ -2944,6 +3213,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_tblWeeklyReportRC_tblServiceLocation" Association="earthcoModel.FK_tblWeeklyReportRC_tblServiceLocation">
             <End Role="tblServiceLocation" EntitySet="tblServiceLocations" />
+            <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRCs" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblWeekly__Store__6D181FEC" Association="earthcoModel.FK__tblWeekly__Store__6D181FEC">
+            <End Role="tblStoreLocation" EntitySet="tblStoreLocations" />
             <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRCs" />
           </AssociationSet>
           <AssociationSet Name="FK_tblWeeklyReportRC_tblUser" Association="earthcoModel.FK_tblWeeklyReportRC_tblUser">
@@ -2954,19 +3227,57 @@
             <End Role="tblUser" EntitySet="tblUsers" />
             <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRCs" />
           </AssociationSet>
-          <EntitySet Name="tblWeeklyReportRCFiles" EntityType="earthcoModel.tblWeeklyReportRCFile" />
           <AssociationSet Name="FK_tblWeeklyReportRCFile_tblWeeklyReportRC" Association="earthcoModel.FK_tblWeeklyReportRCFile_tblWeeklyReportRC">
             <End Role="tblWeeklyReportRC" EntitySet="tblWeeklyReportRCs" />
             <End Role="tblWeeklyReportRCFile" EntitySet="tblWeeklyReportRCFiles" />
           </AssociationSet>
-          <FunctionImport Name="SPGetWeeklyReportRCListData" ReturnType="Collection(earthcoModel.SPGetWeeklyReportRCListData_Result)" />
-          <FunctionImport Name="SPGetWeeklyReportRCData" ReturnType="Collection(earthcoModel.SPGetWeeklyReportRCData_Result)">
-            <Parameter Name="ID" Mode="In" Type="Int32" />
-            <Parameter Name="CustomerId" Mode="In" Type="Int32" />
-            <Parameter Name="Year" Mode="In" Type="Int32" />
-            <Parameter Name="Month" Mode="In" Type="Int32" />
+          <EntitySet Name="tblPunchlistPhotoOnlies" EntityType="earthcoModel.tblPunchlistPhotoOnly" />
+          <EntitySet Name="tblPunchlistPhotoOnlyFiles" EntityType="earthcoModel.tblPunchlistPhotoOnlyFile" />
+          <AssociationSet Name="FK_tblPunchlistPhotoOnly_tblUser" Association="earthcoModel.FK_tblPunchlistPhotoOnly_tblUser">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblPunchlistPhotoOnly" EntitySet="tblPunchlistPhotoOnlies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPunchlistPhotoOnlyFile_tblPunchlistPhotoOnly" Association="earthcoModel.FK_tblPunchlistPhotoOnlyFile_tblPunchlistPhotoOnly">
+            <End Role="tblPunchlistPhotoOnly" EntitySet="tblPunchlistPhotoOnlies" />
+            <End Role="tblPunchlistPhotoOnlyFile" EntitySet="tblPunchlistPhotoOnlyFiles" />
+          </AssociationSet>
+          <FunctionImport Name="SPGetPunchlistPhotoOnlyData" ReturnType="Collection(earthcoModel.SPGetPunchlistPhotoOnlyData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="SPGetWeeklyReportRCFileData" ReturnType="Collection(earthcoModel.SPGetWeeklyReportRCFileData_Result)">
+          <FunctionImport Name="SPGetPunchlistPhotoOnlyFileData" ReturnType="Collection(earthcoModel.SPGetPunchlistPhotoOnlyFileData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetPunchlistPhotoOnlyList" ReturnType="Collection(earthcoModel.SPGetPunchlistPhotoOnlyList_Result)" />
+          <EntitySet Name="tblControllerAuditReports" EntityType="earthcoModel.tblControllerAuditReport" />
+          <EntitySet Name="tblControllerAuditReportFiles" EntityType="earthcoModel.tblControllerAuditReportFile" />
+          <EntitySet Name="tblIrrigationAuditReports" EntityType="earthcoModel.tblIrrigationAuditReport" />
+          <AssociationSet Name="FK_tblIrrigationAuditReport_tblContact" Association="earthcoModel.FK_tblIrrigationAuditReport_tblContact">
+            <End Role="tblContact" EntitySet="tblContacts" />
+            <End Role="tblIrrigationAuditReport" EntitySet="tblIrrigationAuditReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblControllerAuditReport_tblIrrigationAuditReport" Association="earthcoModel.FK_tblControllerAuditReport_tblIrrigationAuditReport">
+            <End Role="tblIrrigationAuditReport" EntitySet="tblIrrigationAuditReports" />
+            <End Role="tblControllerAuditReport" EntitySet="tblControllerAuditReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblControllerAuditReportFile_tblControllerAuditReport" Association="earthcoModel.FK_tblControllerAuditReportFile_tblControllerAuditReport">
+            <End Role="tblControllerAuditReport" EntitySet="tblControllerAuditReports" />
+            <End Role="tblControllerAuditReportFile" EntitySet="tblControllerAuditReportFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblIrrigationAuditReport_tblUser" Association="earthcoModel.FK_tblIrrigationAuditReport_tblUser">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblIrrigationAuditReport" EntitySet="tblIrrigationAuditReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblIrrigationAuditReport_tblUser1" Association="earthcoModel.FK_tblIrrigationAuditReport_tblUser1">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblIrrigationAuditReport" EntitySet="tblIrrigationAuditReports" />
+          </AssociationSet>
+          <FunctionImport Name="SPGetControllerAuditReportFileData" ReturnType="Collection(earthcoModel.SPGetControllerAuditReportFileData_Result)">
+            <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetIrrigationAuditReportData" ReturnType="Collection(earthcoModel.SPGetIrrigationAuditReportData_Result)">
+            <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetIrrigationControllerAuditReportData" ReturnType="Collection(earthcoModel.SPGetIrrigationControllerAuditReportData_Result)">
             <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
@@ -3038,6 +3349,7 @@
           <NavigationProperty Name="tblEstimates" Relationship="earthcoModel.FK_tblEstimate_tblContact" FromRole="tblContact" ToRole="tblEstimate" />
           <NavigationProperty Name="tblInvoices" Relationship="earthcoModel.FK_tblInvoice_tblContact" FromRole="tblContact" ToRole="tblInvoice" />
           <NavigationProperty Name="tblWeeklyReportRCs" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblContact" FromRole="tblContact" ToRole="tblWeeklyReportRC" />
+          <NavigationProperty Name="tblIrrigationAuditReports" Relationship="earthcoModel.FK_tblIrrigationAuditReport_tblContact" FromRole="tblContact" ToRole="tblIrrigationAuditReport" />
           </EntityType>
         <EntityType Name="tblUserType">
           <Key>
@@ -5255,7 +5567,10 @@
           <NavigationProperty Name="tblUserType" Relationship="earthcoModel.FK_tblUser_tblUserType" FromRole="tblUser" ToRole="tblUserType" />
           <NavigationProperty Name="tblWeeklyReportRCs" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblUser" FromRole="tblUser" ToRole="tblWeeklyReportRC" />
           <NavigationProperty Name="tblWeeklyReportRCs1" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblUser1" FromRole="tblUser" ToRole="tblWeeklyReportRC" />
-        </EntityType>
+          <NavigationProperty Name="tblPunchlistPhotoOnlies" Relationship="earthcoModel.FK_tblPunchlistPhotoOnly_tblUser" FromRole="tblUser" ToRole="tblPunchlistPhotoOnly" />
+          <NavigationProperty Name="tblIrrigationAuditReports" Relationship="earthcoModel.FK_tblIrrigationAuditReport_tblUser" FromRole="tblUser" ToRole="tblIrrigationAuditReport" />
+          <NavigationProperty Name="tblIrrigationAuditReports1" Relationship="earthcoModel.FK_tblIrrigationAuditReport_tblUser1" FromRole="tblUser" ToRole="tblIrrigationAuditReport" />
+          </EntityType>
         <Association Name="FK_tblBill_tblUser">
           <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
           <End Type="earthcoModel.tblBill" Role="tblBill" Multiplicity="*" />
@@ -5576,98 +5891,6 @@
           <Property Type="String" Name="SyncToken" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="ContactName" Nullable="true" MaxLength="500" />
         </ComplexType>
-        <EntityType Name="tblWeeklyReportRC">
-          <Key>
-            <PropertyRef Name="WeeklyReportRCId" />
-          </Key>
-          <Property Name="WeeklyReportRCId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustomerId" Type="Int32" />
-          <Property Name="ContactId" Type="Int32" />
-          <Property Name="ServiceLocationId" Type="Int32" />
-          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ContactName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ContactCompany" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ContactEmail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="RegionalManagerId" Type="Int32" />
-          <Property Name="ReportForWeekOf" Type="DateTime" Precision="3" />
-          <Property Name="Didyoucheckthehealthofalltheplantsandtreesontheproperty" Type="Boolean" />
-          <Property Name="Didyouremovealldeceasedplantsortrees" Type="Boolean" />
-          <Property Name="Didyoucheckirrigationtomakesureallplantsarereceivingwater" Type="Boolean" />
-          <Property Name="Didyoucheckirrigationclock" Type="Boolean" />
-          <Property Name="Didyoufixallleaksorflooding" Type="Boolean" />
-          <Property Name="Weretheweedspulledorsprayed" Type="Boolean" />
-          <Property Name="Wasthetrashanddebriscollectedandproperlydisposedof" Type="Boolean" />
-          <Property Name="Didthedoorentrywayplantersgetaddressed" Type="Boolean" />
-          <Property Name="Didtheparkinglotgetcleaned" Type="Boolean" />
-          <Property Name="Isthemulchsufficient" Type="Boolean" />
-          <Property Name="Arethereanyareasofconcern" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Describethemulchconditionandifweneedtoaddany" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Describetheentrancecondition" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Describethedrivethroughcondition" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Describetheperimeterofbuildingincludingsignagestreetfacingplantersetccondition" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Anyadditionalnotesmanagementshouldbeawareof" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="SignatureofRConsitemanager" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="NameofRConsitemanager" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EditBy" Type="Int32" />
-          <Property Name="EditDate" Type="DateTime" Precision="3" />
-          <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="tblContact" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblContact" FromRole="tblWeeklyReportRC" ToRole="tblContact" />
-          <NavigationProperty Name="tblServiceLocation" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblServiceLocation" FromRole="tblWeeklyReportRC" ToRole="tblServiceLocation" />
-          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblUser" FromRole="tblWeeklyReportRC" ToRole="tblUser" />
-          <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblUser1" FromRole="tblWeeklyReportRC" ToRole="tblUser" />
-          <NavigationProperty Name="tblWeeklyReportRCFiles" Relationship="earthcoModel.FK_tblWeeklyReportRCFile_tblWeeklyReportRC" FromRole="tblWeeklyReportRC" ToRole="tblWeeklyReportRCFile" />
-        </EntityType>
-        <Association Name="FK_tblWeeklyReportRC_tblContact">
-          <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblContact">
-              <PropertyRef Name="ContactId" />
-            </Principal>
-            <Dependent Role="tblWeeklyReportRC">
-              <PropertyRef Name="ContactId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblWeeklyReportRC_tblServiceLocation">
-          <End Type="earthcoModel.tblServiceLocation" Role="tblServiceLocation" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblServiceLocation">
-              <PropertyRef Name="ServiceLocationId" />
-            </Principal>
-            <Dependent Role="tblWeeklyReportRC">
-              <PropertyRef Name="ServiceLocationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblWeeklyReportRC_tblUser">
-          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblUser">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="tblWeeklyReportRC">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_tblWeeklyReportRC_tblUser1">
-          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblUser">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="tblWeeklyReportRC">
-              <PropertyRef Name="RegionalManagerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="tblWeeklyReportRCFile">
           <Key>
             <PropertyRef Name="WeeklyReportRCFileId" />
@@ -5686,18 +5909,20 @@
           <Property Name="isDelete" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="tblWeeklyReportRC" Relationship="earthcoModel.FK_tblWeeklyReportRCFile_tblWeeklyReportRC" FromRole="tblWeeklyReportRCFile" ToRole="tblWeeklyReportRC" />
         </EntityType>
-        <Association Name="FK_tblWeeklyReportRCFile_tblWeeklyReportRC">
-          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="0..1" />
-          <End Type="earthcoModel.tblWeeklyReportRCFile" Role="tblWeeklyReportRCFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblWeeklyReportRC">
-              <PropertyRef Name="WeeklyReportRCId" />
-            </Principal>
-            <Dependent Role="tblWeeklyReportRCFile">
-              <PropertyRef Name="WeeklyReportRCId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
+        <ComplexType Name="SPGetWeeklyReportRCFileData_Result">
+          <Property Type="Int32" Name="WeeklyReportRCFileId" Nullable="false" />
+          <Property Type="String" Name="FileName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Caption" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="FilePath" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Share" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="WeeklyReportRCId" Nullable="true" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+        </ComplexType>
         <ComplexType Name="SPGetWeeklyReportRCListData_Result">
           <Property Type="Int32" Name="WeeklyReportRCId" Nullable="false" />
           <Property Type="Int32" Name="CustomerId" Nullable="true" />
@@ -5738,8 +5963,8 @@
           <Property Type="String" Name="Address" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="RegionalManagerName" Nullable="false" MaxLength="101" />
           <Property Type="String" Name="ServiceLocationName" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="ContactCompany1" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="ContactName1" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ContactCompanyFromtblContact" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ContactNameFromtblContact" Nullable="true" MaxLength="500" />
         </ComplexType>
         <ComplexType Name="SPGetWeeklyReportRCData_Result">
           <Property Type="Int32" Name="WeeklyReportRCId" Nullable="false" />
@@ -5781,16 +6006,411 @@
           <Property Type="String" Name="Address" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="RegionalManagerName" Nullable="false" MaxLength="101" />
           <Property Type="String" Name="ServiceLocationName" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="ContactCompany1" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="ContactName1" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ContactCompanyFromtblContact" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ContactNameFromtblContact" Nullable="true" MaxLength="500" />
         </ComplexType>
-        <ComplexType Name="SPGetWeeklyReportRCFileData_Result">
-          <Property Type="Int32" Name="WeeklyReportRCFileId" Nullable="false" />
+        <EntityType Name="tblStoreLocation">
+          <Key>
+            <PropertyRef Name="StoreLocationId" />
+          </Key>
+          <Property Name="StoreLocationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Location" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CretaedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="isDelete" Type="Boolean" />
+          <NavigationProperty Name="tblWeeklyReportRCs" Relationship="earthcoModel.FK__tblWeekly__Store__6D181FEC" FromRole="tblStoreLocation" ToRole="tblWeeklyReportRC" />
+        </EntityType>
+        <EntityType Name="tblWeeklyReportRC">
+          <Key>
+            <PropertyRef Name="WeeklyReportRCId" />
+          </Key>
+          <Property Name="WeeklyReportRCId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="ContactId" Type="Int32" />
+          <Property Name="ServiceLocationId" Type="Int32" />
+          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ContactName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ContactCompany" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ContactEmail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="RegionalManagerId" Type="Int32" />
+          <Property Name="ReportForWeekOf" Type="DateTime" Precision="3" />
+          <Property Name="Didyoucheckthehealthofalltheplantsandtreesontheproperty" Type="Boolean" />
+          <Property Name="Didyouremovealldeceasedplantsortrees" Type="Boolean" />
+          <Property Name="Didyoucheckirrigationtomakesureallplantsarereceivingwater" Type="Boolean" />
+          <Property Name="Didyoucheckirrigationclock" Type="Boolean" />
+          <Property Name="Didyoufixallleaksorflooding" Type="Boolean" />
+          <Property Name="Weretheweedspulledorsprayed" Type="Boolean" />
+          <Property Name="Wasthetrashanddebriscollectedandproperlydisposedof" Type="Boolean" />
+          <Property Name="Didthedoorentrywayplantersgetaddressed" Type="Boolean" />
+          <Property Name="Didtheparkinglotgetcleaned" Type="Boolean" />
+          <Property Name="Isthemulchsufficient" Type="Boolean" />
+          <Property Name="Arethereanyareasofconcern" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Describethemulchconditionandifweneedtoaddany" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Describetheentrancecondition" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Describethedrivethroughcondition" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Describetheperimeterofbuildingincludingsignagestreetfacingplantersetccondition" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Anyadditionalnotesmanagementshouldbeawareof" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SignatureofRConsitemanager" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="NameofRConsitemanager" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <Property Name="StoreLocationId" Type="Int32" />
+          <NavigationProperty Name="tblContact" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblContact" FromRole="tblWeeklyReportRC" ToRole="tblContact" />
+          <NavigationProperty Name="tblServiceLocation" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblServiceLocation" FromRole="tblWeeklyReportRC" ToRole="tblServiceLocation" />
+          <NavigationProperty Name="tblStoreLocation" Relationship="earthcoModel.FK__tblWeekly__Store__6D181FEC" FromRole="tblWeeklyReportRC" ToRole="tblStoreLocation" />
+          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblUser" FromRole="tblWeeklyReportRC" ToRole="tblUser" />
+          <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblWeeklyReportRC_tblUser1" FromRole="tblWeeklyReportRC" ToRole="tblUser" />
+          <NavigationProperty Name="tblWeeklyReportRCFiles" Relationship="earthcoModel.FK_tblWeeklyReportRCFile_tblWeeklyReportRC" FromRole="tblWeeklyReportRC" ToRole="tblWeeklyReportRCFile" />
+        </EntityType>
+        <Association Name="FK_tblWeeklyReportRC_tblContact">
+          <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblContact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblWeeklyReportRC_tblServiceLocation">
+          <End Type="earthcoModel.tblServiceLocation" Role="tblServiceLocation" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblServiceLocation">
+              <PropertyRef Name="ServiceLocationId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="ServiceLocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblWeekly__Store__6D181FEC">
+          <End Type="earthcoModel.tblStoreLocation" Role="tblStoreLocation" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblStoreLocation">
+              <PropertyRef Name="StoreLocationId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="StoreLocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblWeeklyReportRC_tblUser">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblWeeklyReportRC_tblUser1">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRC">
+              <PropertyRef Name="RegionalManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblWeeklyReportRCFile_tblWeeklyReportRC">
+          <End Type="earthcoModel.tblWeeklyReportRC" Role="tblWeeklyReportRC" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblWeeklyReportRCFile" Role="tblWeeklyReportRCFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblWeeklyReportRC">
+              <PropertyRef Name="WeeklyReportRCId" />
+            </Principal>
+            <Dependent Role="tblWeeklyReportRCFile">
+              <PropertyRef Name="WeeklyReportRCId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblPunchlistPhotoOnly">
+          <Key>
+            <PropertyRef Name="PunchlistPhotoOnlyId" />
+          </Key>
+          <Property Name="PunchlistPhotoOnlyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="isDelete" Type="Boolean" />
+          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblPunchlistPhotoOnly_tblUser" FromRole="tblPunchlistPhotoOnly" ToRole="tblUser" />
+          <NavigationProperty Name="tblPunchlistPhotoOnlyFiles" Relationship="earthcoModel.FK_tblPunchlistPhotoOnlyFile_tblPunchlistPhotoOnly" FromRole="tblPunchlistPhotoOnly" ToRole="tblPunchlistPhotoOnlyFile" />
+        </EntityType>
+        <EntityType Name="tblPunchlistPhotoOnlyFile">
+          <Key>
+            <PropertyRef Name="PunchlistPhotoOnlyFileId" />
+          </Key>
+          <Property Name="PunchlistPhotoOnlyFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Caption" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FilePath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Share" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="PunchlistPhotoOnlyId" Type="Int32" />
+          <Property Name="isAdditional" Type="Boolean" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblPunchlistPhotoOnly" Relationship="earthcoModel.FK_tblPunchlistPhotoOnlyFile_tblPunchlistPhotoOnly" FromRole="tblPunchlistPhotoOnlyFile" ToRole="tblPunchlistPhotoOnly" />
+        </EntityType>
+        <Association Name="FK_tblPunchlistPhotoOnly_tblUser">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblPunchlistPhotoOnly" Role="tblPunchlistPhotoOnly" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblPunchlistPhotoOnly">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPunchlistPhotoOnlyFile_tblPunchlistPhotoOnly">
+          <End Type="earthcoModel.tblPunchlistPhotoOnly" Role="tblPunchlistPhotoOnly" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblPunchlistPhotoOnlyFile" Role="tblPunchlistPhotoOnlyFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPunchlistPhotoOnly">
+              <PropertyRef Name="PunchlistPhotoOnlyId" />
+            </Principal>
+            <Dependent Role="tblPunchlistPhotoOnlyFile">
+              <PropertyRef Name="PunchlistPhotoOnlyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="SPGetPunchlistPhotoOnlyData_Result">
+          <Property Type="Int32" Name="PunchlistPhotoOnlyId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="true" />
+          <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Notes" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="true" />
+          <Property Type="Boolean" Name="isDelete" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="SPGetPunchlistPhotoOnlyFileData_Result">
+          <Property Type="Int32" Name="PunchlistPhotoOnlyFileId" Nullable="false" />
           <Property Type="String" Name="FileName" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="Caption" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="FilePath" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="Share" Nullable="true" MaxLength="500" />
-          <Property Type="Int32" Name="WeeklyReportRCId" Nullable="true" />
+          <Property Type="Int32" Name="PunchlistPhotoOnlyId" Nullable="true" />
+          <Property Type="Boolean" Name="isAdditional" Nullable="true" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SPGetPunchlistPhotoOnlyList_Result">
+          <Property Type="Int32" Name="PunchlistPhotoOnlyId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="true" />
+          <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Notes" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="true" />
+          <Property Type="Boolean" Name="isDelete" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="tblControllerAuditReport">
+          <Key>
+            <PropertyRef Name="ControllerAuditReportId" />
+          </Key>
+          <Property Name="ControllerAuditReportId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ControllerPhotoPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ControllerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="BrokenValve" Type="Boolean" />
+          <Property Name="BrokenLaterals" Type="Boolean" />
+          <Property Name="BrokenHeads" Type="Boolean" />
+          <Property Name="HowMany" Type="Int32" />
+          <Property Name="RepairMadeOrNeeded" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="PhotoPath" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="IrrigationAuditReportId" Type="Int32" Nullable="false" />
+          <Property Name="MorePhotos" Type="Boolean" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblIrrigationAuditReport" Relationship="earthcoModel.FK_tblControllerAuditReport_tblIrrigationAuditReport" FromRole="tblControllerAuditReport" ToRole="tblIrrigationAuditReport" />
+          <NavigationProperty Name="tblControllerAuditReportFiles" Relationship="earthcoModel.FK_tblControllerAuditReportFile_tblControllerAuditReport" FromRole="tblControllerAuditReport" ToRole="tblControllerAuditReportFile" />
+        </EntityType>
+        <EntityType Name="tblControllerAuditReportFile">
+          <Key>
+            <PropertyRef Name="ControllerAuditReportFileId" />
+          </Key>
+          <Property Name="ControllerAuditReportFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Caption" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="FilePath" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Share" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ControllerAuditReportId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblControllerAuditReport" Relationship="earthcoModel.FK_tblControllerAuditReportFile_tblControllerAuditReport" FromRole="tblControllerAuditReportFile" ToRole="tblControllerAuditReport" />
+        </EntityType>
+        <EntityType Name="tblIrrigationAuditReport">
+          <Key>
+            <PropertyRef Name="IrrigationAuditReportId" />
+          </Key>
+          <Property Name="IrrigationAuditReportId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ContactId" Type="Int32" />
+          <Property Name="ContactName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ContactCompany" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ContactEmail" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="RegionalManagerId" Type="Int32" />
+          <Property Name="ReportDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EditBy" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblContact" Relationship="earthcoModel.FK_tblIrrigationAuditReport_tblContact" FromRole="tblIrrigationAuditReport" ToRole="tblContact" />
+          <NavigationProperty Name="tblControllerAuditReports" Relationship="earthcoModel.FK_tblControllerAuditReport_tblIrrigationAuditReport" FromRole="tblIrrigationAuditReport" ToRole="tblControllerAuditReport" />
+          <NavigationProperty Name="tblUser" Relationship="earthcoModel.FK_tblIrrigationAuditReport_tblUser" FromRole="tblIrrigationAuditReport" ToRole="tblUser" />
+          <NavigationProperty Name="tblUser1" Relationship="earthcoModel.FK_tblIrrigationAuditReport_tblUser1" FromRole="tblIrrigationAuditReport" ToRole="tblUser" />
+        </EntityType>
+        <Association Name="FK_tblIrrigationAuditReport_tblContact">
+          <End Type="earthcoModel.tblContact" Role="tblContact" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblIrrigationAuditReport" Role="tblIrrigationAuditReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblContact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="tblIrrigationAuditReport">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblControllerAuditReport_tblIrrigationAuditReport">
+          <End Type="earthcoModel.tblIrrigationAuditReport" Role="tblIrrigationAuditReport" Multiplicity="1" />
+          <End Type="earthcoModel.tblControllerAuditReport" Role="tblControllerAuditReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblIrrigationAuditReport">
+              <PropertyRef Name="IrrigationAuditReportId" />
+            </Principal>
+            <Dependent Role="tblControllerAuditReport">
+              <PropertyRef Name="IrrigationAuditReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblControllerAuditReportFile_tblControllerAuditReport">
+          <End Type="earthcoModel.tblControllerAuditReport" Role="tblControllerAuditReport" Multiplicity="1" />
+          <End Type="earthcoModel.tblControllerAuditReportFile" Role="tblControllerAuditReportFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblControllerAuditReport">
+              <PropertyRef Name="ControllerAuditReportId" />
+            </Principal>
+            <Dependent Role="tblControllerAuditReportFile">
+              <PropertyRef Name="ControllerAuditReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblIrrigationAuditReport_tblUser">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="1" />
+          <End Type="earthcoModel.tblIrrigationAuditReport" Role="tblIrrigationAuditReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblIrrigationAuditReport">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblIrrigationAuditReport_tblUser1">
+          <End Type="earthcoModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+          <End Type="earthcoModel.tblIrrigationAuditReport" Role="tblIrrigationAuditReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="tblIrrigationAuditReport">
+              <PropertyRef Name="RegionalManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="SPGetControllerAuditReportFileData_Result">
+          <Property Type="Int32" Name="ControllerAuditReportFileId" Nullable="false" />
+          <Property Type="String" Name="FileName" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="Caption" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="FilePath" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="Share" Nullable="true" MaxLength="150" />
+          <Property Type="Int32" Name="ControllerAuditReportId" Nullable="false" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SPGetIrrigationAuditReportData_Result">
+          <Property Type="Int32" Name="IrrigationAuditReportId" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="ContactId" Nullable="true" />
+          <Property Type="String" Name="ContactName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ContactCompany" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ContactEmail" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="RegionalManagerId" Nullable="true" />
+          <Property Type="DateTime" Name="ReportDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SPGetIrrigationControllerAuditReportData_Result">
+          <Property Type="Int32" Name="ControllerAuditReportId" Nullable="false" />
+          <Property Type="String" Name="ControllerPhotoPath" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ControllerName" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="BrokenValve" Nullable="true" />
+          <Property Type="Boolean" Name="BrokenLaterals" Nullable="true" />
+          <Property Type="Boolean" Name="BrokenHeads" Nullable="true" />
+          <Property Type="Int32" Name="HowMany" Nullable="true" />
+          <Property Type="String" Name="RepairMadeOrNeeded" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="PhotoPath" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="IrrigationAuditReportId" Nullable="false" />
+          <Property Type="Boolean" Name="MorePhotos" Nullable="true" />
           <Property Type="Int32" Name="CreatedBy" Nullable="true" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
           <Property Type="Int32" Name="EditBy" Nullable="true" />
@@ -7737,46 +8357,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="tblWeeklyReportRCs">
-            <EntityTypeMapping TypeName="earthcoModel.tblWeeklyReportRC">
-              <MappingFragment StoreEntitySet="tblWeeklyReportRC">
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="NameofRConsitemanager" ColumnName="NameofRConsitemanager" />
-                <ScalarProperty Name="SignatureofRConsitemanager" ColumnName="SignatureofRConsitemanager" />
-                <ScalarProperty Name="Anyadditionalnotesmanagementshouldbeawareof" ColumnName="Anyadditionalnotesmanagementshouldbeawareof" />
-                <ScalarProperty Name="Describetheperimeterofbuildingincludingsignagestreetfacingplantersetccondition" ColumnName="Describetheperimeterofbuildingincludingsignagestreetfacingplantersetccondition" />
-                <ScalarProperty Name="Describethedrivethroughcondition" ColumnName="Describethedrivethroughcondition" />
-                <ScalarProperty Name="Describetheentrancecondition" ColumnName="Describetheentrancecondition" />
-                <ScalarProperty Name="Describethemulchconditionandifweneedtoaddany" ColumnName="Describethemulchconditionandifweneedtoaddany" />
-                <ScalarProperty Name="Arethereanyareasofconcern" ColumnName="Arethereanyareasofconcern" />
-                <ScalarProperty Name="Isthemulchsufficient" ColumnName="Isthemulchsufficient" />
-                <ScalarProperty Name="Didtheparkinglotgetcleaned" ColumnName="Didtheparkinglotgetcleaned" />
-                <ScalarProperty Name="Didthedoorentrywayplantersgetaddressed" ColumnName="Didthedoorentrywayplantersgetaddressed" />
-                <ScalarProperty Name="Wasthetrashanddebriscollectedandproperlydisposedof" ColumnName="Wasthetrashanddebriscollectedandproperlydisposedof" />
-                <ScalarProperty Name="Weretheweedspulledorsprayed" ColumnName="Weretheweedspulledorsprayed" />
-                <ScalarProperty Name="Didyoufixallleaksorflooding" ColumnName="Didyoufixallleaksorflooding" />
-                <ScalarProperty Name="Didyoucheckirrigationclock" ColumnName="Didyoucheckirrigationclock" />
-                <ScalarProperty Name="Didyoucheckirrigationtomakesureallplantsarereceivingwater" ColumnName="Didyoucheckirrigationtomakesureallplantsarereceivingwater" />
-                <ScalarProperty Name="Didyouremovealldeceasedplantsortrees" ColumnName="Didyouremovealldeceasedplantsortrees" />
-                <ScalarProperty Name="Didyoucheckthehealthofalltheplantsandtreesontheproperty" ColumnName="Didyoucheckthehealthofalltheplantsandtreesontheproperty" />
-                <ScalarProperty Name="ReportForWeekOf" ColumnName="ReportForWeekOf" />
-                <ScalarProperty Name="RegionalManagerId" ColumnName="RegionalManagerId" />
-                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
-                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
-                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
-                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
-                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
-                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="WeeklyReportRCId" ColumnName="WeeklyReportRCId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblWeeklyReportRCFiles">
             <EntityTypeMapping TypeName="earthcoModel.tblWeeklyReportRCFile">
               <MappingFragment StoreEntitySet="tblWeeklyReportRCFile">
@@ -7795,6 +8375,24 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SPGetWeeklyReportRCFileData" FunctionName="earthcoModel.Store.SPGetWeeklyReportRCFileData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetWeeklyReportRCFileData_Result">
+                <ScalarProperty Name="WeeklyReportRCFileId" ColumnName="WeeklyReportRCFileId" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Share" ColumnName="Share" />
+                <ScalarProperty Name="WeeklyReportRCId" ColumnName="WeeklyReportRCId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SPGetWeeklyReportRCListData" FunctionName="earthcoModel.Store.SPGetWeeklyReportRCListData">
             <ResultMapping>
               <ComplexTypeMapping TypeName="earthcoModel.SPGetWeeklyReportRCListData_Result">
@@ -7837,8 +8435,8 @@
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="RegionalManagerName" ColumnName="RegionalManagerName" />
                 <ScalarProperty Name="ServiceLocationName" ColumnName="ServiceLocationName" />
-                <ScalarProperty Name="ContactCompany1" ColumnName="ContactCompany1" />
-                <ScalarProperty Name="ContactName1" ColumnName="ContactName1" />
+                <ScalarProperty Name="ContactCompanyFromtblContact" ColumnName="ContactCompanyFromtblContact" />
+                <ScalarProperty Name="ContactNameFromtblContact" ColumnName="ContactNameFromtblContact" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -7884,20 +8482,269 @@
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="RegionalManagerName" ColumnName="RegionalManagerName" />
                 <ScalarProperty Name="ServiceLocationName" ColumnName="ServiceLocationName" />
-                <ScalarProperty Name="ContactCompany1" ColumnName="ContactCompany1" />
-                <ScalarProperty Name="ContactName1" ColumnName="ContactName1" />
+                <ScalarProperty Name="ContactCompanyFromtblContact" ColumnName="ContactCompanyFromtblContact" />
+                <ScalarProperty Name="ContactNameFromtblContact" ColumnName="ContactNameFromtblContact" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SPGetWeeklyReportRCFileData" FunctionName="earthcoModel.Store.SPGetWeeklyReportRCFileData">
+          <EntitySetMapping Name="tblStoreLocations">
+            <EntityTypeMapping TypeName="earthcoModel.tblStoreLocation">
+              <MappingFragment StoreEntitySet="tblStoreLocation">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CretaedDate" ColumnName="CretaedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="StoreLocationId" ColumnName="StoreLocationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblWeeklyReportRCs">
+            <EntityTypeMapping TypeName="earthcoModel.tblWeeklyReportRC">
+              <MappingFragment StoreEntitySet="tblWeeklyReportRC">
+                <ScalarProperty Name="StoreLocationId" ColumnName="StoreLocationId" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="NameofRConsitemanager" ColumnName="NameofRConsitemanager" />
+                <ScalarProperty Name="SignatureofRConsitemanager" ColumnName="SignatureofRConsitemanager" />
+                <ScalarProperty Name="Anyadditionalnotesmanagementshouldbeawareof" ColumnName="Anyadditionalnotesmanagementshouldbeawareof" />
+                <ScalarProperty Name="Describetheperimeterofbuildingincludingsignagestreetfacingplantersetccondition" ColumnName="Describetheperimeterofbuildingincludingsignagestreetfacingplantersetccondition" />
+                <ScalarProperty Name="Describethedrivethroughcondition" ColumnName="Describethedrivethroughcondition" />
+                <ScalarProperty Name="Describetheentrancecondition" ColumnName="Describetheentrancecondition" />
+                <ScalarProperty Name="Describethemulchconditionandifweneedtoaddany" ColumnName="Describethemulchconditionandifweneedtoaddany" />
+                <ScalarProperty Name="Arethereanyareasofconcern" ColumnName="Arethereanyareasofconcern" />
+                <ScalarProperty Name="Isthemulchsufficient" ColumnName="Isthemulchsufficient" />
+                <ScalarProperty Name="Didtheparkinglotgetcleaned" ColumnName="Didtheparkinglotgetcleaned" />
+                <ScalarProperty Name="Didthedoorentrywayplantersgetaddressed" ColumnName="Didthedoorentrywayplantersgetaddressed" />
+                <ScalarProperty Name="Wasthetrashanddebriscollectedandproperlydisposedof" ColumnName="Wasthetrashanddebriscollectedandproperlydisposedof" />
+                <ScalarProperty Name="Weretheweedspulledorsprayed" ColumnName="Weretheweedspulledorsprayed" />
+                <ScalarProperty Name="Didyoufixallleaksorflooding" ColumnName="Didyoufixallleaksorflooding" />
+                <ScalarProperty Name="Didyoucheckirrigationclock" ColumnName="Didyoucheckirrigationclock" />
+                <ScalarProperty Name="Didyoucheckirrigationtomakesureallplantsarereceivingwater" ColumnName="Didyoucheckirrigationtomakesureallplantsarereceivingwater" />
+                <ScalarProperty Name="Didyouremovealldeceasedplantsortrees" ColumnName="Didyouremovealldeceasedplantsortrees" />
+                <ScalarProperty Name="Didyoucheckthehealthofalltheplantsandtreesontheproperty" ColumnName="Didyoucheckthehealthofalltheplantsandtreesontheproperty" />
+                <ScalarProperty Name="ReportForWeekOf" ColumnName="ReportForWeekOf" />
+                <ScalarProperty Name="RegionalManagerId" ColumnName="RegionalManagerId" />
+                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
+                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="ServiceLocationId" ColumnName="ServiceLocationId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="WeeklyReportRCId" ColumnName="WeeklyReportRCId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPunchlistPhotoOnlies">
+            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistPhotoOnly">
+              <MappingFragment StoreEntitySet="tblPunchlistPhotoOnly">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="PunchlistPhotoOnlyId" ColumnName="PunchlistPhotoOnlyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPunchlistPhotoOnlyFiles">
+            <EntityTypeMapping TypeName="earthcoModel.tblPunchlistPhotoOnlyFile">
+              <MappingFragment StoreEntitySet="tblPunchlistPhotoOnlyFile">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="isAdditional" ColumnName="isAdditional" />
+                <ScalarProperty Name="PunchlistPhotoOnlyId" ColumnName="PunchlistPhotoOnlyId" />
+                <ScalarProperty Name="Share" ColumnName="Share" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="PunchlistPhotoOnlyFileId" ColumnName="PunchlistPhotoOnlyFileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SPGetPunchlistPhotoOnlyData" FunctionName="earthcoModel.Store.SPGetPunchlistPhotoOnlyData">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="earthcoModel.SPGetWeeklyReportRCFileData_Result">
-                <ScalarProperty Name="WeeklyReportRCFileId" ColumnName="WeeklyReportRCFileId" />
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetPunchlistPhotoOnlyData_Result">
+                <ScalarProperty Name="PunchlistPhotoOnlyId" ColumnName="PunchlistPhotoOnlyId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetPunchlistPhotoOnlyFileData" FunctionName="earthcoModel.Store.SPGetPunchlistPhotoOnlyFileData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetPunchlistPhotoOnlyFileData_Result">
+                <ScalarProperty Name="PunchlistPhotoOnlyFileId" ColumnName="PunchlistPhotoOnlyFileId" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="Caption" ColumnName="Caption" />
                 <ScalarProperty Name="FilePath" ColumnName="FilePath" />
                 <ScalarProperty Name="Share" ColumnName="Share" />
-                <ScalarProperty Name="WeeklyReportRCId" ColumnName="WeeklyReportRCId" />
+                <ScalarProperty Name="PunchlistPhotoOnlyId" ColumnName="PunchlistPhotoOnlyId" />
+                <ScalarProperty Name="isAdditional" ColumnName="isAdditional" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetPunchlistPhotoOnlyList" FunctionName="earthcoModel.Store.SPGetPunchlistPhotoOnlyList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetPunchlistPhotoOnlyList_Result">
+                <ScalarProperty Name="PunchlistPhotoOnlyId" ColumnName="PunchlistPhotoOnlyId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tblControllerAuditReports">
+            <EntityTypeMapping TypeName="earthcoModel.tblControllerAuditReport">
+              <MappingFragment StoreEntitySet="tblControllerAuditReport">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="MorePhotos" ColumnName="MorePhotos" />
+                <ScalarProperty Name="IrrigationAuditReportId" ColumnName="IrrigationAuditReportId" />
+                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
+                <ScalarProperty Name="RepairMadeOrNeeded" ColumnName="RepairMadeOrNeeded" />
+                <ScalarProperty Name="HowMany" ColumnName="HowMany" />
+                <ScalarProperty Name="BrokenHeads" ColumnName="BrokenHeads" />
+                <ScalarProperty Name="BrokenLaterals" ColumnName="BrokenLaterals" />
+                <ScalarProperty Name="BrokenValve" ColumnName="BrokenValve" />
+                <ScalarProperty Name="ControllerName" ColumnName="ControllerName" />
+                <ScalarProperty Name="ControllerPhotoPath" ColumnName="ControllerPhotoPath" />
+                <ScalarProperty Name="ControllerAuditReportId" ColumnName="ControllerAuditReportId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblControllerAuditReportFiles">
+            <EntityTypeMapping TypeName="earthcoModel.tblControllerAuditReportFile">
+              <MappingFragment StoreEntitySet="tblControllerAuditReportFile">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ControllerAuditReportId" ColumnName="ControllerAuditReportId" />
+                <ScalarProperty Name="Share" ColumnName="Share" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="ControllerAuditReportFileId" ColumnName="ControllerAuditReportFileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblIrrigationAuditReports">
+            <EntityTypeMapping TypeName="earthcoModel.tblIrrigationAuditReport">
+              <MappingFragment StoreEntitySet="tblIrrigationAuditReport">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
+                <ScalarProperty Name="RegionalManagerId" ColumnName="RegionalManagerId" />
+                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
+                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="IrrigationAuditReportId" ColumnName="IrrigationAuditReportId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SPGetControllerAuditReportFileData" FunctionName="earthcoModel.Store.SPGetControllerAuditReportFileData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetControllerAuditReportFileData_Result">
+                <ScalarProperty Name="ControllerAuditReportFileId" ColumnName="ControllerAuditReportFileId" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="Share" ColumnName="Share" />
+                <ScalarProperty Name="ControllerAuditReportId" ColumnName="ControllerAuditReportId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetIrrigationAuditReportData" FunctionName="earthcoModel.Store.SPGetIrrigationAuditReportData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetIrrigationAuditReportData_Result">
+                <ScalarProperty Name="IrrigationAuditReportId" ColumnName="IrrigationAuditReportId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
+                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
+                <ScalarProperty Name="RegionalManagerId" ColumnName="RegionalManagerId" />
+                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetIrrigationControllerAuditReportData" FunctionName="earthcoModel.Store.SPGetIrrigationControllerAuditReportData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetIrrigationControllerAuditReportData_Result">
+                <ScalarProperty Name="ControllerAuditReportId" ColumnName="ControllerAuditReportId" />
+                <ScalarProperty Name="ControllerPhotoPath" ColumnName="ControllerPhotoPath" />
+                <ScalarProperty Name="ControllerName" ColumnName="ControllerName" />
+                <ScalarProperty Name="BrokenValve" ColumnName="BrokenValve" />
+                <ScalarProperty Name="BrokenLaterals" ColumnName="BrokenLaterals" />
+                <ScalarProperty Name="BrokenHeads" ColumnName="BrokenHeads" />
+                <ScalarProperty Name="HowMany" ColumnName="HowMany" />
+                <ScalarProperty Name="RepairMadeOrNeeded" ColumnName="RepairMadeOrNeeded" />
+                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
+                <ScalarProperty Name="IrrigationAuditReportId" ColumnName="IrrigationAuditReportId" />
+                <ScalarProperty Name="MorePhotos" ColumnName="MorePhotos" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="EditBy" ColumnName="EditBy" />

@@ -76,8 +76,14 @@ namespace EarthCo.Models
         public virtual DbSet<tblInvoice> tblInvoices { get; set; }
         public virtual DbSet<tblAccount> tblAccounts { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
-        public virtual DbSet<tblWeeklyReportRC> tblWeeklyReportRCs { get; set; }
         public virtual DbSet<tblWeeklyReportRCFile> tblWeeklyReportRCFiles { get; set; }
+        public virtual DbSet<tblStoreLocation> tblStoreLocations { get; set; }
+        public virtual DbSet<tblWeeklyReportRC> tblWeeklyReportRCs { get; set; }
+        public virtual DbSet<tblPunchlistPhotoOnly> tblPunchlistPhotoOnlies { get; set; }
+        public virtual DbSet<tblPunchlistPhotoOnlyFile> tblPunchlistPhotoOnlyFiles { get; set; }
+        public virtual DbSet<tblControllerAuditReport> tblControllerAuditReports { get; set; }
+        public virtual DbSet<tblControllerAuditReportFile> tblControllerAuditReportFiles { get; set; }
+        public virtual DbSet<tblIrrigationAuditReport> tblIrrigationAuditReports { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {
@@ -439,6 +445,15 @@ namespace EarthCo.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetCustomerData_Result>("SPGetCustomerData", iDParameter);
         }
     
+        public virtual ObjectResult<SPGetWeeklyReportRCFileData_Result> SPGetWeeklyReportRCFileData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetWeeklyReportRCFileData_Result>("SPGetWeeklyReportRCFileData", iDParameter);
+        }
+    
         public virtual ObjectResult<SPGetWeeklyReportRCListData_Result> SPGetWeeklyReportRCListData()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetWeeklyReportRCListData_Result>("SPGetWeeklyReportRCListData");
@@ -465,13 +480,54 @@ namespace EarthCo.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetWeeklyReportRCData_Result>("SPGetWeeklyReportRCData", iDParameter, customerIdParameter, yearParameter, monthParameter);
         }
     
-        public virtual ObjectResult<SPGetWeeklyReportRCFileData_Result> SPGetWeeklyReportRCFileData(Nullable<int> iD)
+        public virtual ObjectResult<SPGetPunchlistPhotoOnlyData_Result> SPGetPunchlistPhotoOnlyData(Nullable<int> iD)
         {
             var iDParameter = iD.HasValue ?
                 new ObjectParameter("ID", iD) :
                 new ObjectParameter("ID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetWeeklyReportRCFileData_Result>("SPGetWeeklyReportRCFileData", iDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPunchlistPhotoOnlyData_Result>("SPGetPunchlistPhotoOnlyData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetPunchlistPhotoOnlyFileData_Result> SPGetPunchlistPhotoOnlyFileData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPunchlistPhotoOnlyFileData_Result>("SPGetPunchlistPhotoOnlyFileData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetPunchlistPhotoOnlyList_Result> SPGetPunchlistPhotoOnlyList()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetPunchlistPhotoOnlyList_Result>("SPGetPunchlistPhotoOnlyList");
+        }
+    
+        public virtual ObjectResult<SPGetControllerAuditReportFileData_Result> SPGetControllerAuditReportFileData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetControllerAuditReportFileData_Result>("SPGetControllerAuditReportFileData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetIrrigationAuditReportData_Result> SPGetIrrigationAuditReportData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetIrrigationAuditReportData_Result>("SPGetIrrigationAuditReportData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetIrrigationControllerAuditReportData_Result> SPGetIrrigationControllerAuditReportData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetIrrigationControllerAuditReportData_Result>("SPGetIrrigationControllerAuditReportData", iDParameter);
         }
     }
 }

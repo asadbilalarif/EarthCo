@@ -54,9 +54,11 @@ namespace EarthCo.Models
         public Nullable<System.DateTime> EditDate { get; set; }
         public bool isActive { get; set; }
         public bool isDelete { get; set; }
+        public Nullable<int> StoreLocationId { get; set; }
     
         public virtual tblContact tblContact { get; set; }
         public virtual tblServiceLocation tblServiceLocation { get; set; }
+        public virtual tblStoreLocation tblStoreLocation { get; set; }
         public virtual tblUser tblUser { get; set; }
         public virtual tblUser tblUser1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -37,6 +37,9 @@ namespace EarthCo.Models
             this.tblSettings = new HashSet<tblSetting>();
             this.tblWeeklyReportRCs = new HashSet<tblWeeklyReportRC>();
             this.tblWeeklyReportRCs1 = new HashSet<tblWeeklyReportRC>();
+            this.tblPunchlistPhotoOnlies = new HashSet<tblPunchlistPhotoOnly>();
+            this.tblIrrigationAuditReports = new HashSet<tblIrrigationAuditReport>();
+            this.tblIrrigationAuditReports1 = new HashSet<tblIrrigationAuditReport>();
         }
     
         public int UserId { get; set; }
@@ -115,5 +118,11 @@ namespace EarthCo.Models
         public virtual ICollection<tblWeeklyReportRC> tblWeeklyReportRCs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblWeeklyReportRC> tblWeeklyReportRCs1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblPunchlistPhotoOnly> tblPunchlistPhotoOnlies { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblIrrigationAuditReport> tblIrrigationAuditReports { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblIrrigationAuditReport> tblIrrigationAuditReports1 { get; set; }
     }
 }

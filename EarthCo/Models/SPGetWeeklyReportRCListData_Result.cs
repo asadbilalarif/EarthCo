@@ -52,7 +52,7 @@ namespace EarthCo.Models
         public string Address { get; set; }
         public string RegionalManagerName { get; set; }
         public string ServiceLocationName { get; set; }
-        public string ContactCompany1 { get; set; }
-        public string ContactName1 { get; set; }
+        public string ContactCompanyFromtblContact { get; set; }
+        public string ContactNameFromtblContact { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace EarthCo.Models
     {
         public string Email { get; set; }
         public string CCEmail { get; set; }
+        [AllowHtml]
         public string Subject { get; set; }
         [AllowHtml]
         public string Body { get; set; }
