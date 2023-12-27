@@ -24,11 +24,11 @@ namespace EarthCo.Controllers
         {
             try
             {
-
+                DB.Configuration.ProxyCreationEnabled = false;
                 List<tblIrrigationAuditReport> Data = new List<tblIrrigationAuditReport>();
                 //List<IrrigationList> Result = new List<IrrigationList>();
 
-                var totalRecords = DB.tblIrrigations.Count(x => !x.isDelete);
+                var totalRecords = DB.tblIrrigationAuditReports.Count(x => !x.isDelete);
                 DisplayStart = (DisplayStart - 1) * DisplayLength;
                 if (Search == null)
                 {
@@ -99,25 +99,40 @@ namespace EarthCo.Controllers
                 List<SPGetControllerAuditReportFileData_Result> FileData = new List<SPGetControllerAuditReportFileData_Result>();
                 Data = DB.SPGetIrrigationAuditReportData(id).FirstOrDefault();
                 ControllerData = DB.SPGetIrrigationControllerAuditReportData(id).ToList();
-                int ControllerId = 0;
-                if(ControllerData!=null && ControllerData.Count!=0)
-                {
-                    ControllerId = ControllerData.FirstOrDefault().ControllerAuditReportId;
-                }
-                FileData = DB.SPGetControllerAuditReportFileData(ControllerId).ToList();
+                //int ControllerId = 0;
+                //if(ControllerData!=null && ControllerData.Count!=0)
+                //{
+                //    ControllerId = ControllerData.FirstOrDefault().ControllerAuditReportId;
+                //}
+                //FileData = DB.SPGetControllerAuditReportFileData(ControllerId).ToList();
+
+
+                List<IrrigationControllerAuditReportClass> Result = new List<IrrigationControllerAuditReportClass>();
 
                 if (Data == null)
                 {
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
                     return ResponseMessage(responseMessage);
                 }
-
-                var Result = new
+                else
                 {
-                    Data = Data,
-                    ControllerData = ControllerData,
-                    FileData = FileData
-                };
+                    foreach (var item in ControllerData)
+                    {
+                        IrrigationControllerAuditReportClass Temp = new IrrigationControllerAuditReportClass();
+                        Temp.Data = Data;
+                        Temp.ControllerData = item;
+                        Temp.FileData = DB.SPGetControllerAuditReportFileData(item.ControllerAuditReportId).ToList();
+                        Result.Add(Temp);
+                    }
+                    
+                }
+
+                //var Result = new
+                //{
+                //    Data = Data,
+                //    ControllerData = ControllerData,
+                //    FileData = FileData
+                //};
 
                 return Ok(Result);
             }
@@ -306,6 +321,7 @@ namespace EarthCo.Controllers
                         ParaData.ControllerPhoto.SaveAs(path);
                         path = Path.Combine("\\Uploading\\IrrigationAuditReport", Path.GetFileName("ControllerPhoto" + ParaData.IrrigationAuditReportId.ToString() + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(ParaData.ControllerPhoto.FileName)));
                         ConData.ControllerPhotoPath = path;
+                        
                     }
                     if (ParaData.Photo != null)
                     {
@@ -328,6 +344,8 @@ namespace EarthCo.Controllers
                             item.SaveAs(path);
                             path = Path.Combine("\\Uploading\\IrrigationAuditReport", Path.GetFileName("MorePhoto" + ConData.ControllerAuditReportId.ToString() + Count + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             Temp.FilePath = path;
+                            Temp.FileName = "MorePhoto" + ConData.ControllerAuditReportId.ToString() + Count + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
+                            Temp.Caption = item.FileName;
                             Temp.ControllerAuditReportId = ConData.ControllerAuditReportId;
                             Temp.CreatedBy = UserId;
                             Temp.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
@@ -408,6 +426,8 @@ namespace EarthCo.Controllers
                             item.SaveAs(path);
                             path = Path.Combine("\\Uploading\\IrrigationAuditReport", Path.GetFileName("MorePhoto" + ConData.ControllerAuditReportId.ToString() + Count + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName)));
                             Temp.FilePath = path;
+                            Temp.FileName = "MorePhoto" + ConData.ControllerAuditReportId.ToString() + Count + DateTime.Now.ToString("ddMMyyyyHHmmss") + Path.GetExtension(item.FileName);
+                            Temp.Caption = item.FileName;
                             Temp.ControllerAuditReportId = ConData.ControllerAuditReportId;
                             Temp.CreatedBy = UserId;
                             Temp.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));

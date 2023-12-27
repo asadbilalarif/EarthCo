@@ -429,6 +429,7 @@
     <Compile Include="Models\GetWeeklyReportFiles.cs" />
     <Compile Include="Models\GetWeeklyReportRCFiles.cs" />
     <Compile Include="Models\InvoiceQB.cs" />
+    <Compile Include="Models\IrrigationControllerAuditReportClass.cs" />
     <Compile Include="Models\JsonStringClass.cs" />
     <Compile Include="Models\MonthlyLanscapeClass.cs" />
     <Compile Include="Controllers\PunchListController.cs" />
