@@ -106,9 +106,6 @@ namespace EarthCo.Controllers
                 //}
                 //FileData = DB.SPGetControllerAuditReportFileData(ControllerId).ToList();
 
-
-                List<IrrigationControllerAuditReportClass> Result = new List<IrrigationControllerAuditReportClass>();
-
                 if (Data == null)
                 {
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
@@ -116,14 +113,30 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
-                    foreach (var item in ControllerData)
+                    if(ControllerData!=null && ControllerData.Count!=0)
                     {
+                        List<IrrigationControllerAuditReportClass> Result = new List<IrrigationControllerAuditReportClass>();
+                        foreach (var item in ControllerData)
+                        {
+                            IrrigationControllerAuditReportClass Temp = new IrrigationControllerAuditReportClass();
+                            Temp.Data = Data;
+                            Temp.ControllerData = item;
+                            Temp.FileData = DB.SPGetControllerAuditReportFileData(item.ControllerAuditReportId).ToList();
+                            Result.Add(Temp);
+                        }
+                        return Ok(Result);
+                    }
+                    else
+                    {
+                        List<IrrigationControllerAuditReportClass> Result = new List<IrrigationControllerAuditReportClass>();
                         IrrigationControllerAuditReportClass Temp = new IrrigationControllerAuditReportClass();
                         Temp.Data = Data;
-                        Temp.ControllerData = item;
-                        Temp.FileData = DB.SPGetControllerAuditReportFileData(item.ControllerAuditReportId).ToList();
+                        Temp.ControllerData = null;
+                        Temp.FileData = null;
                         Result.Add(Temp);
+                        return Ok(Result);
                     }
+                    
                     
                 }
 
@@ -134,7 +147,7 @@ namespace EarthCo.Controllers
                 //    FileData = FileData
                 //};
 
-                return Ok(Result);
+                
             }
             catch (DbEntityValidationException dbEx)
             {

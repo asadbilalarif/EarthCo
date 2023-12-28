@@ -192,7 +192,7 @@ namespace EarthCo.Controllers
                 }
                 else
                 {
-                    Data = DB.tblItems.Take(10).ToList();
+                    Data = DB.tblItems.Where(x =>  x.isDelete != true).Take(10).ToList();
                 }
                 
                 //Data = DB.tblUsers.Where(x => x.UserTypeId == 2 && x.isDelete != true).ToList();

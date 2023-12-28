@@ -512,15 +512,6 @@ namespace EarthCo.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetControllerAuditReportFileData_Result>("SPGetControllerAuditReportFileData", iDParameter);
         }
     
-        public virtual ObjectResult<SPGetIrrigationAuditReportData_Result> SPGetIrrigationAuditReportData(Nullable<int> iD)
-        {
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetIrrigationAuditReportData_Result>("SPGetIrrigationAuditReportData", iDParameter);
-        }
-    
         public virtual ObjectResult<SPGetIrrigationControllerAuditReportData_Result> SPGetIrrigationControllerAuditReportData(Nullable<int> iD)
         {
             var iDParameter = iD.HasValue ?
@@ -528,6 +519,15 @@ namespace EarthCo.Models
                 new ObjectParameter("ID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetIrrigationControllerAuditReportData_Result>("SPGetIrrigationControllerAuditReportData", iDParameter);
+        }
+    
+        public virtual ObjectResult<SPGetIrrigationAuditReportData_Result> SPGetIrrigationAuditReportData(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetIrrigationAuditReportData_Result>("SPGetIrrigationAuditReportData", iDParameter);
         }
     }
 }

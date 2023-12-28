@@ -3272,12 +3272,12 @@
             <End Role="tblIrrigationAuditReport" EntitySet="tblIrrigationAuditReports" />
           </AssociationSet>
           <FunctionImport Name="SPGetControllerAuditReportFileData" ReturnType="Collection(earthcoModel.SPGetControllerAuditReportFileData_Result)">
-            <Parameter Name="ID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="SPGetIrrigationAuditReportData" ReturnType="Collection(earthcoModel.SPGetIrrigationAuditReportData_Result)">
-            <Parameter Name="ID" Mode="In" Type="Int32" />
+          <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SPGetIrrigationControllerAuditReportData" ReturnType="Collection(earthcoModel.SPGetIrrigationControllerAuditReportData_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SPGetIrrigationAuditReportData" ReturnType="Collection(earthcoModel.SPGetIrrigationAuditReportData_Result)">
             <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
@@ -6381,24 +6381,6 @@
           <Property Type="Boolean" Name="isActive" Nullable="false" />
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
         </ComplexType>
-        <ComplexType Name="SPGetIrrigationAuditReportData_Result">
-          <Property Type="Int32" Name="IrrigationAuditReportId" Nullable="false" />
-          <Property Type="String" Name="Title" Nullable="true" MaxLength="500" />
-          <Property Type="Int32" Name="CustomerId" Nullable="false" />
-          <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="500" />
-          <Property Type="Int32" Name="ContactId" Nullable="true" />
-          <Property Type="String" Name="ContactName" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="ContactCompany" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="ContactEmail" Nullable="true" MaxLength="500" />
-          <Property Type="Int32" Name="RegionalManagerId" Nullable="true" />
-          <Property Type="DateTime" Name="ReportDate" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
-          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
-          <Property Type="Int32" Name="EditBy" Nullable="true" />
-          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
-          <Property Type="Boolean" Name="isActive" Nullable="false" />
-          <Property Type="Boolean" Name="isDelete" Nullable="false" />
-        </ComplexType>
         <ComplexType Name="SPGetIrrigationControllerAuditReportData_Result">
           <Property Type="Int32" Name="ControllerAuditReportId" Nullable="false" />
           <Property Type="String" Name="ControllerPhotoPath" Nullable="true" MaxLength="500" />
@@ -6411,6 +6393,24 @@
           <Property Type="String" Name="PhotoPath" Nullable="true" MaxLength="200" />
           <Property Type="Int32" Name="IrrigationAuditReportId" Nullable="false" />
           <Property Type="Boolean" Name="MorePhotos" Nullable="true" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="EditBy" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isActive" Nullable="false" />
+          <Property Type="Boolean" Name="isDelete" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SPGetIrrigationAuditReportData_Result">
+          <Property Type="Int32" Name="IrrigationAuditReportId" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="ContactId" Nullable="true" />
+          <Property Type="String" Name="ContactName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ContactCompany" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ContactEmail" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="RegionalManagerId" Nullable="true" />
+          <Property Type="DateTime" Name="ReportDate" Nullable="true" Precision="23" />
           <Property Type="Int32" Name="CreatedBy" Nullable="true" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
           <Property Type="Int32" Name="EditBy" Nullable="true" />
@@ -8709,28 +8709,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SPGetIrrigationAuditReportData" FunctionName="earthcoModel.Store.SPGetIrrigationAuditReportData">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="earthcoModel.SPGetIrrigationAuditReportData_Result">
-                <ScalarProperty Name="IrrigationAuditReportId" ColumnName="IrrigationAuditReportId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
-                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
-                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
-                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
-                <ScalarProperty Name="RegionalManagerId" ColumnName="RegionalManagerId" />
-                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SPGetIrrigationControllerAuditReportData" FunctionName="earthcoModel.Store.SPGetIrrigationControllerAuditReportData">
             <ResultMapping>
               <ComplexTypeMapping TypeName="earthcoModel.SPGetIrrigationControllerAuditReportData_Result">
@@ -8745,6 +8723,28 @@
                 <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
                 <ScalarProperty Name="IrrigationAuditReportId" ColumnName="IrrigationAuditReportId" />
                 <ScalarProperty Name="MorePhotos" ColumnName="MorePhotos" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EditBy" ColumnName="EditBy" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPGetIrrigationAuditReportData" FunctionName="earthcoModel.Store.SPGetIrrigationAuditReportData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="earthcoModel.SPGetIrrigationAuditReportData_Result">
+                <ScalarProperty Name="IrrigationAuditReportId" ColumnName="IrrigationAuditReportId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="ContactCompany" ColumnName="ContactCompany" />
+                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
+                <ScalarProperty Name="RegionalManagerId" ColumnName="RegionalManagerId" />
+                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="EditBy" ColumnName="EditBy" />

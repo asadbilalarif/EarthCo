@@ -670,6 +670,121 @@ namespace EarthCo.Controllers
                 }
 
 
+                apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/upload";
+                //apiUrl = "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365351126570/estimate?minorversion=23";
+
+                using (HttpClient client = new HttpClient())
+                using (MultipartFormDataContent formData = new MultipartFormDataContent())
+                {
+                    var httpClient = new HttpClient();
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + oauthValidator.AccessToken);
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    // Convert JSON metadata to StringContent
+                    string jsonMetadata = "{\"AttachableRef\":[{\"EntityRef\":{\"type\":\"Estimate\",\"value\":\"1107\"}},\"FileName\":\"receipt_nov16.jpg\",\"ContentType\":\"image/jpg\"}]";
+                    StringContent metadataContent = new StringContent(jsonMetadata, Encoding.UTF8, "application/json");
+
+                    // Add file metadata to the form data
+                    formData.Add(metadataContent, "file_metadata_0");
+
+                    // Convert base64-encoded file content to ByteArrayContent
+                    //string base64FileContent = "/9j/4AAQSkZJRgABAQEAlgCWAAD/4ge4SUNDX1BST0ZJTEUAAQEAAAeoYXBwbAIgAABtbnRyUkdC"+
+                    //                            "IFhZWiAH2QACABkACwAaAAthY3NwQVBQTAAAAABhcHBsAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAA"+
+                    //                            "AADTLWFwcGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtk"+
+                    //                            "ZXNjAAABCAAAAG9kc2NtAAABeAAABWxjcHJ0AAAG5AAAADh3dHB0AAAHHAAAABRyWFlaAAAHMAAA"+
+                    //                            "ABRnWFlaAAAHRAAAABRiWFlaAAAHWAAAABRyVFJDAAAHbAAAAA5jaGFkAAAHfAAAACxiVFJDAAAH"+
+                    //                            "bAAAAA5nVFJDAAAHbAAAAA5kZXNjAAAAAAAAABRHZW5lcmljIFJHQiBQcm9maWxlAAAAAAAAAAAA"+
+                    //                            "AAAUR2VuZXJpYyBSR0IgUHJvZmlsZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"+
+                    //                            "AAAAAAAAAAAAAAAAAAAAbWx1YwAAAAAAAAAeAAAADHNrU0sAAAAoAAABeGhySFIAAAAoAAABoGNh"+
+                    //                            "RVMAAAAkAAAByHB0QlIAAAAmAAAB7HVrVUEAAAAqAAACEmZyRlUAAAAoAAACPHpoVFcAAAAWAAAC"+
+                    //                            "ZGl0SVQAAAAoAAACem5iTk8AAAAmAAAComtvS1IAAAAWAAACyGNzQ1oAAAAiAAAC3mhlSUwAAAAe"+
+                    //                            "AAADAGRlREUAAAAsAAADHmh1SFUAAAAoAAADSnN2U0UAAAAmAAAConpoQ04AAAAWAAADcmphSlAA"+
+                    //                            "AAAaAAADiHJvUk8AAAAkAAADomVsR1IAAAAiAAADxnB0UE8AAAAmAAAD6G5sTkwAAAAoAAAEDmVz"+
+                    //                            "RVMAAAAmAAAD6HRoVEgAAAAkAAAENnRyVFIAAAAiAAAEWmZpRkkAAAAoAAAEfHBsUEwAAAAsAAAE"+
+                    //                            "pHJ1UlUAAAAiAAAE0GFyRUcAAAAmAAAE8mVuVVMAAAAmAAAFGGRhREsAAAAuAAAFPgBWAWEAZQBv"+
+                    //                            "AGIAZQBjAG4A/QAgAFIARwBCACAAcAByAG8AZgBpAGwARwBlAG4AZQByAGkBDQBrAGkAIABSAEcA"+
+                    //                            "QgAgAHAAcgBvAGYAaQBsAFAAZQByAGYAaQBsACAAUgBHAEIAIABnAGUAbgDoAHIAaQBjAFAAZQBy"+
+                    //                            "AGYAaQBsACAAUgBHAEIAIABHAGUAbgDpAHIAaQBjAG8EFwQwBDMEMAQ7BEwEPQQ4BDkAIAQ/BEAE"+
+                    //                            "PgREBDAEOQQ7ACAAUgBHAEIAUAByAG8AZgBpAGwAIABnAOkAbgDpAHIAaQBxAHUAZQAgAFIAVgBC"+
+                    //                            "kBp1KAAgAFIARwBCACCCcl9pY8+P8ABQAHIAbwBmAGkAbABvACAAUgBHAEIAIABnAGUAbgBlAHIA"+
+                    //                            "aQBjAG8ARwBlAG4AZQByAGkAcwBrACAAUgBHAEIALQBwAHIAbwBmAGkAbMd8vBgAIABSAEcAQgAg"+
+                    //                            "1QS4XNMMx3wATwBiAGUAYwBuAP0AIABSAEcAQgAgAHAAcgBvAGYAaQBsBeQF6AXVBeQF2QXcACAA"+
+                    //                            "UgBHAEIAIAXbBdwF3AXZAEEAbABsAGcAZQBtAGUAaQBuAGUAcwAgAFIARwBCAC0AUAByAG8AZgBp"+
+                    //                            "AGwAwQBsAHQAYQBsAOEAbgBvAHMAIABSAEcAQgAgAHAAcgBvAGYAaQBsZm6QGgAgAFIARwBCACBj"+
+                    //                            "z4/wZYdO9k4AgiwAIABSAEcAQgAgMNcw7TDVMKEwpDDrAFAAcgBvAGYAaQBsACAAUgBHAEIAIABn"+
+                    //                            "AGUAbgBlAHIAaQBjA5MDtQO9A7kDugPMACADwAPBA78DxgOvA7sAIABSAEcAQgBQAGUAcgBmAGkA"+
+                    //                            "bAAgAFIARwBCACAAZwBlAG4A6QByAGkAYwBvAEEAbABnAGUAbQBlAGUAbgAgAFIARwBCAC0AcABy"+
+                    //                            "AG8AZgBpAGUAbA5CDhsOIw5EDh8OJQ5MACAAUgBHAEIAIA4XDjEOSA4nDkQOGwBHAGUAbgBlAGwA"+
+                    //                            "IABSAEcAQgAgAFAAcgBvAGYAaQBsAGkAWQBsAGUAaQBuAGUAbgAgAFIARwBCAC0AcAByAG8AZgBp"+
+                    //                            "AGkAbABpAFUAbgBpAHcAZQByAHMAYQBsAG4AeQAgAHAAcgBvAGYAaQBsACAAUgBHAEIEHgQxBEkE"+
+                    //                            "OAQ5ACAEPwRABD4ERAQ4BDsETAAgAFIARwBCBkUGRAZBACAGKgY5BjEGSgZBACAAUgBHAEIAIAYn"+
+                    //                            "BkQGOQYnBkUARwBlAG4AZQByAGkAYwAgAFIARwBCACAAUAByAG8AZgBpAGwAZQBHAGUAbgBlAHIA"+
+                    //                            "ZQBsACAAUgBHAEIALQBiAGUAcwBrAHIAaQB2AGUAbABzAGV0ZXh0AAAAAENvcHlyaWdodCAyMDA3"+
+                    //                            "IEFwcGxlIEluYy4sIGFsbCByaWdodHMgcmVzZXJ2ZWQuAFhZWiAAAAAAAADzUgABAAAAARbPWFla"+
+                    //                            "IAAAAAAAAHRNAAA97gAAA9BYWVogAAAAAAAAWnUAAKxzAAAXNFhZWiAAAAAAAAAoGgAAFZ8AALg2"+
+                    //                            "Y3VydgAAAAAAAAABAc0AAHNmMzIAAAAAAAEMQgAABd7///MmAAAHkgAA/ZH///ui///9owAAA9wA"+
+                    //                            "AMBs/+EAgEV4aWYAAE1NACoAAAAIAAUBEgADAAAAAQABAAABGgAFAAAAAQAAAEoBGwAFAAAAAQAA"+
+                    //                            "AFIBKAADAAAAAQACAACHaQAEAAAAAQAAAFoAAAAAAAA6mQAAAGQAADqZAAAAZAACoAIABAAAAAEA"+
+                    //                            "AAAuoAMABAAAAAEAAAAUAAAAAP/bAEMAAgEBAgEBAgIBAgICAgIDBQMDAwMDBgQEAwUHBgcHBwYG"+
+                    //                            "BgcICwkHCAoIBgYJDQkKCwsMDAwHCQ0ODQwOCwwMC//bAEMBAgICAwIDBQMDBQsIBggLCwsLCwsL"+
+                    //                            "CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLC//AABEIABQALgMBIgAC"+
+                    //                            "EQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAA"+
+                    //                            "AX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4"+
+                    //                            "OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaan"+
+                    //                            "qKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQAD"+
+                    //                            "AQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEG"+
+                    //                            "EkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpT"+
+                    //                            "VFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4"+
+                    //                            "ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/APkb41eO"+
+                    //                            "NYtfi94oSDVdRVF1a74FzJgfvn96j+Kmj+O/gj/wj3/C159Q0MeK9Et/EekmfU1IvdPuN/kzrtkO"+
+                    //                            "0N5b/K2GGOQKzvjnz8YPFX/YVvP/AEc9fePiv9qXwn4K+Eut674A8S+Br3xl4e/Zd8MaZ4dF0LPU"+
+                    //                            "HtvENte3TtbwwThla8h3RuYipI+UspFfueIryw6p8kOa+n5Ja62310Z+V4XDRxU5RlPl8z4O0S/8"+
+                    //                            "YeJfB+t+IfD1xrN7oPhpbZtV1GG7ZrXTxczeRb+bJvwDLLlEAyWYHA4OK/hTxP4i8ceKdI0Xwrq9"+
+                    //                            "1eanr13FY6fANS2fappZFjRVdnCgF2UFiQozkkDmv0r+KX7VPhO/8JftJaX8I/HPwu0qXxf4c8C+"+
+                    //                            "JZIA1hDb63cpldfjtwI2WS7NvFGnkINyyMpXY7Fqq/GDUvhB4d+IXxP17TPHvwc1nTfiB8a/h/4o"+
+                    //                            "0O10zVbW4lstChubNbxpoto+zxARztLHyAgZnADc8NPN5ydpUbXtbfqob6dOZ9vha8zu/smElpXX"+
+                    //                            "W+3eW2vku+5+fXjvw38RPhlZm58eRa7ptp/a97oCXT3m+3nv7Jtt3BDKkhWUwtwzISgPG4mux/ZD"+
+                    //                            "8Y6tefEO++06nqL7dOkxm6k4/exf7VfRX/BRD9oTTfiz+xBaaD8NPGfgK803wz8XvFf2nRLOWzjv"+
+                    //                            "30+XU5pNKntIUQSPbeU+8yxkKUK7i+AB8x/sc/8AJQ7/AP7Bz/8Ao2KuqlWnicLOdSKTu1b0em/d"+
+                    //                            "anFVpRw+IjCnK60d/X0O/wDil+zfoWofE7xJNcXOqb31W7JxJHj/AF7/APTOsH/hmPw//wA/Gqf9"+
+                    //                            "/I//AI3RRXRTk+VamM4rmegv/DMfh/H/AB8ap/38j/8AjdB/Zj8Pn/l41Trn/WR9f+/dFFVzPuRZ"+
+                    //                            "XEP7Mfh89bjVOP8AppFx/wCQ69I/Zf8A2d9F0z4hXP2S61Qb9Olzl4z0lh/6Z+9FFY4mT9lLU1oJ"+
+                    //                            "c6P /2Q==";
+
+                    var fileUrl = "https://earthcoapi.yehtohoga.com/Uploading/Estimate/Estimate122122023150737.jpg";
+                    var fileBytes = await httpClient.GetByteArrayAsync(fileUrl);
+                    //string base64String = Convert.ToBase64String(fileBytes);
+                    var fileContent = new ByteArrayContent(fileBytes);
+                    //byte[] fileBytes = Convert.FromBase64String(base64FileContent);
+                    //ByteArrayContent fileContent = new ByteArrayContent(fileBytes);
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+
+                    // Add file content to the form data
+                    formData.Add(fileContent, "file_content_0", "398535758.jpg");
+
+                    // Send the POST request
+                    HttpResponseMessage response = await client.PostAsync(apiUrl, formData);
+
+                    if(response.IsSuccessStatusCode)
+                    {
+                        // Handle success
+                        Console.WriteLine("File uploaded successfully!");
+
+                        var jsonResponse = response.Content.ReadAsStringAsync();
+                        jsonResponse.Wait();
+                        var Result = jsonResponse.Result;
+                    }
+                    else
+                    {
+                        // Handle failure
+                        Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+
+                        string errorMessage = await response.Content.ReadAsStringAsync();
+                    }
+                    // Read and return the response content
+                    //return await response.Content.ReadAsStringAsync();
+                }
+
+
 
                 //using (var client = new HttpClient())
                 //{
