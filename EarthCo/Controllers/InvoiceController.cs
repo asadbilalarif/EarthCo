@@ -85,7 +85,7 @@ namespace EarthCo.Controllers
                         InvoiceList Temp = new InvoiceList();
                         Temp.InvoiceId = item.InvoiceId;
                         Temp.InvoiceNumber = item.InvoiceNumber;
-                        Temp.CustomerName = item.tblUser.FirstName + " " + item.tblUser.LastName;
+                        Temp.CustomerName = item.tblUser.CompanyName;
                         if(item.IssueDate!=null)
                         {
                             Temp.IssueDate = (DateTime)item.IssueDate;

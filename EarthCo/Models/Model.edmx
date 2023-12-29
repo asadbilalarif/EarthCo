@@ -6417,6 +6417,7 @@
           <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
           <Property Type="Boolean" Name="isActive" Nullable="false" />
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
+          <Property Type="String" Name="RegionalManagerName" Nullable="false" MaxLength="101" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -8751,6 +8752,7 @@
                 <ScalarProperty Name="EditDate" ColumnName="EditDate" />
                 <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="RegionalManagerName" ColumnName="RegionalManagerName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
