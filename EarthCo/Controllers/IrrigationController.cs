@@ -61,7 +61,7 @@ namespace EarthCo.Controllers
                     {
                         IrrigationList Temp = new IrrigationList();
                         Temp.IrrigationId = item.IrrigationId;
-                        Temp.CustomerName = item.tblUser.FirstName+" "+item.tblUser.LastName;
+                        Temp.CustomerName = item.tblUser.CompanyName;
                         Temp.CreatedDate = item.CreatedDate;
                         Temp.ControllerNumbers = item.tblControllers.Select(s=>s.SerialNumber).ToList();
                         Result.Add(Temp);

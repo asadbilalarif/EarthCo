@@ -455,7 +455,64 @@ namespace EarthCo.Controllers
 
         }
 
+        [HttpGet]
+        public IHttpActionResult UpdatePunchlistStatus(int PunchlistId,int StatusId)
+        {
+            try
+            {
+                var userIdClaim = User.Identity as ClaimsIdentity;
+                int UserId = int.Parse(userIdClaim.FindFirst("userid")?.Value);
+                tblPunchlist Data = new tblPunchlist();
+                tblPunchlistStatu StatusData = new tblPunchlistStatu();
+                Data = DB.tblPunchlists.Where(x=>x.PunchlistId== PunchlistId).FirstOrDefault();
+                StatusData = DB.tblPunchlistStatus.Where(x=>x.PunchlistStatusId==StatusId).FirstOrDefault();
+                if (Data == null || StatusData==null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Data.StatusId = StatusId;
+                    Data.EditBy = UserId;
+                    Data.EditDate = DateTime.Now;
+                    DB.Entry(Data);
+                    DB.SaveChanges();
+                }
 
+                return Ok("Punchlist status updated successfully.");
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+
+        }
         [HttpPost]
         public IHttpActionResult AddPunchList([FromBody] tblPunchlist PunchList)
         {
