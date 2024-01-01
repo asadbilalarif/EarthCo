@@ -808,6 +808,9 @@
     <Compile Include="Models\tblUserType.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblVerificationCode.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tblWeeklyReport.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

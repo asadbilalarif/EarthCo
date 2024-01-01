@@ -84,6 +84,7 @@ namespace EarthCo.Models
         public virtual DbSet<tblControllerAuditReport> tblControllerAuditReports { get; set; }
         public virtual DbSet<tblControllerAuditReportFile> tblControllerAuditReportFiles { get; set; }
         public virtual DbSet<tblIrrigationAuditReport> tblIrrigationAuditReports { get; set; }
+        public virtual DbSet<tblVerificationCode> tblVerificationCodes { get; set; }
     
         public virtual ObjectResult<SPGetEstimateFileData_Result> SPGetEstimateFileData(Nullable<int> iD)
         {

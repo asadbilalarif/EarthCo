@@ -982,6 +982,19 @@
           <Property Name="UserTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserType" Type="nvarchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="tblVerificationCode">
+          <Key>
+            <PropertyRef Name="VerificationCodeId" />
+          </Key>
+          <Property Name="VerificationCodeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="500" />
+          <Property Name="Email" Type="nvarchar" MaxLength="500" />
+          <Property Name="ExpiryDate" Type="datetime" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="isActive" Type="bit" />
+          <Property Name="isDelete" Type="bit" />
+        </EntityType>
         <EntityType Name="tblWeeklyReport">
           <Key>
             <PropertyRef Name="WeeklyReportId" />
@@ -2270,6 +2283,7 @@
           <EntitySet Name="tblToken" EntityType="Self.tblToken" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblUser" EntityType="Self.tblUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblUserType" EntityType="Self.tblUserType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblVerificationCode" EntityType="Self.tblVerificationCode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblWeeklyReport" EntityType="Self.tblWeeklyReport" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblWeeklyReportFile" EntityType="Self.tblWeeklyReportFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblWeeklyReportRC" EntityType="Self.tblWeeklyReportRC" Schema="dbo" store:Type="Tables" />
@@ -3278,8 +3292,9 @@
           <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SPGetIrrigationAuditReportData" ReturnType="Collection(earthcoModel.SPGetIrrigationAuditReportData_Result)">
-            <Parameter Name="ID" Mode="In" Type="Int32" />
+          <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="tblVerificationCodes" EntityType="earthcoModel.tblVerificationCode" />
           </EntityContainer>
         <EntityType Name="tblSetting">
           <Key>
@@ -6419,6 +6434,19 @@
           <Property Type="Boolean" Name="isDelete" Nullable="false" />
           <Property Type="String" Name="RegionalManagerName" Nullable="false" MaxLength="101" />
         </ComplexType>
+        <EntityType Name="tblVerificationCode">
+          <Key>
+            <PropertyRef Name="VerificationCodeId" />
+          </Key>
+          <Property Name="VerificationCodeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ExpiryDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="isDelete" Type="Boolean" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8756,6 +8784,20 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="tblVerificationCodes">
+            <EntityTypeMapping TypeName="earthcoModel.tblVerificationCode">
+              <MappingFragment StoreEntitySet="tblVerificationCode">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="VerificationCodeId" ColumnName="VerificationCodeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

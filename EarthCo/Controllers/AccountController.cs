@@ -240,9 +240,10 @@ namespace EarthCo.Controllers
         {
             try
             {
+
                 if (DB.tblUsers.Where(x => x.Email == User.Email).FirstOrDefault() != null)
                 {
-
+                    tblVerificationCode verificationCodeData = new tblVerificationCode();
 
                     tblSetting setting = DB.tblSettings.Find(1);
                     //string SenderEmail = System.Configuration.ConfigurationManager.AppSettings["SenderEmail"].ToString();
@@ -267,12 +268,24 @@ namespace EarthCo.Controllers
 
                     byte[] t = System.Text.ASCIIEncoding.ASCII.GetBytes(DateTime.Now.ToString());
                     string encryptedTime = Convert.ToBase64String(t);
+                    Random random = new Random();
+                    int randomNumber = random.Next(1, 99999999);
+                    string Code = randomNumber.ToString();
+
+                    verificationCodeData.Code = Code;
+                    verificationCodeData.Email = User.Email;
+                    verificationCodeData.ExpiryDate = DateTime.Now.AddMinutes(60);
+                    verificationCodeData.CreatedDate = DateTime.Now;
+                    verificationCodeData.isActive = true;
+                    verificationCodeData.isDelete = false;
+                    DB.tblVerificationCodes.Add(verificationCodeData);
+                    DB.SaveChanges();
 
 
                     string body1 = "";
                     body1 += "Welcome to EarthCo!";
-                    body1 += "<br />To Change your password, please click on the button below: ";
-                    body1 += "<br /> <button style='padding: 10px 28px 11px 28px;color: #fff;background:#77993D;'><a style='color:white !important' href = '" + link + "?Email=" + encrypted + "&&Expire=" + encryptedTime + "'>Change Account Password</a></button>";
+                    body1 += "<br />This code is only valid for 60 mints ";
+                    body1 += "<br /> <button style='padding: 10px 28px 11px 28px;color: #fff;background:#77993D;'>" + Code+ "</button>";
                     body1 += "<br /><br />Yours,<br />The EarthCo Team";
 
                     string body = "";
@@ -343,6 +356,65 @@ namespace EarthCo.Controllers
             }
         }
 
+        [HttpGet]
+        public IHttpActionResult VerifyForgetPasswordCode(string Email,string Code)
+        {
+            try
+            {
+
+                tblVerificationCode Data = new tblVerificationCode();
+
+                Data=DB.tblVerificationCodes.OrderByDescending(o=>o.VerificationCodeId).Where(x => x.Email == Email && x.Code==Code).FirstOrDefault();
+
+                if (Data == null)
+                {
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    return ResponseMessage(responseMessage);
+                }
+                else if(Data.ExpiryDate<DateTime.Now)
+                {
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    responseMessage.Content = new StringContent("Given code is expired.", Encoding.UTF8, "string");
+                    return ResponseMessage(responseMessage);
+                }
+                else
+                {
+                  return Ok("Code verification successfull.");
+
+                }
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                string ErrorString = "";
+                // Handle DbEntityValidationException
+                foreach (var item in dbEx.EntityValidationErrors)
+                {
+                    foreach (var item1 in item.ValidationErrors)
+                    {
+                        ErrorString += item1.ErrorMessage + " ,";
+                    }
+                }
+
+                Console.WriteLine($"DbEntityValidationException occurred: {dbEx.Message}");
+                // Additional handling specific to DbEntityValidationException
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(ErrorString);
+
+                return ResponseMessage(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+                // Additional handling for generic exceptions
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = ex.InnerException != null && ex.InnerException.InnerException != null ? new StringContent(ex.InnerException.InnerException.Message) : new StringContent(ex.Message);
+
+                return ResponseMessage(responseMessage);
+            }
+
+        }
         public string DecrypteEmail([FromBody] tblUser User)
         {
             try
@@ -366,12 +438,12 @@ namespace EarthCo.Controllers
             string pass = null;
             try
             {
-                byte[] b = Convert.FromBase64String(ParaData.Email);
-                string decrypted = System.Text.ASCIIEncoding.ASCII.GetString(b);
+                //byte[] b = Convert.FromBase64String(ParaData.Email);
+                //string decrypted = System.Text.ASCIIEncoding.ASCII.GetString(b);
                 
                 byte[] EncDataBtye = null;
                 tblUser Data = new tblUser();
-                Data = DB.tblUsers.Select(r => r).Where(x => x.Email == decrypted).FirstOrDefault();
+                Data = DB.tblUsers.Select(r => r).Where(x => x.Email == ParaData.Email).FirstOrDefault();
                 if (Data != null)
                 {
                     if (ParaData.NewPassword == ParaData.ConfirmPassword)

@@ -146,6 +146,7 @@
         <AssociationConnector Association="earthcoModel.FK_tblControllerAuditReportFile_tblControllerAuditReport" />
         <AssociationConnector Association="earthcoModel.FK_tblIrrigationAuditReport_tblUser" />
         <AssociationConnector Association="earthcoModel.FK_tblIrrigationAuditReport_tblUser1" />
+        <EntityTypeShape EntityType="earthcoModel.tblVerificationCode" Width="1.5" PointX="3.375" PointY="13.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
